@@ -1,0 +1,15 @@
+#
+# oryol-samples
+#
+---
+imports:
+    fips-sx:
+        git: https://github.com/kochol/fips-sx.git
+
+exports:
+    header-dirs :
+        - src
+    modules :
+        # engine modules
+        ari_core :          src/core
+        ari_io   :          src/io
