@@ -3,14 +3,15 @@ namespace ari
 {
     namespace core
     {
-		LockScope::LockScope()
+		LockScope::LockScope(SpinLock* pLock)
 		{
-			m_lock.Lock();
+			m_plock = pLock;
+			m_plock->Lock();
 		}
 
 		LockScope::~LockScope()
 		{
-			m_lock.UnLock();
+			m_plock->UnLock();
 		}
 
 	} // namespace core

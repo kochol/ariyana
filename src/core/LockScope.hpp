@@ -7,15 +7,17 @@ namespace ari
 		//! This is an atomic lock useful for the short time of locks for longer locks use mutexes.
         struct LockScope
         {
-            LockScope();
+            LockScope(SpinLock* pLock);
 
             ~LockScope();
 
         private:
 
-			SpinLock	m_lock;
+			SpinLock	*	m_plock;
 
         };
+
+#define LOCKSCOPE static ari::core::SpinLock ari_lock; ari::core::LockScope ari_lock_scope(&ari_lock);
         
     } // namespace core
     
