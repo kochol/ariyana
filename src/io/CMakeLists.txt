@@ -8,7 +8,7 @@ fips_begin_module(ari_io)
     if (FIPS_WINDOWS)
         fips_dir(private/win)
         fips_files(
-            Window.cpp
+            WindowWin32.cpp
         )
     endif()
 fips_end_module()

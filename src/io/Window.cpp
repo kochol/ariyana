@@ -1,5 +1,5 @@
 #include "Window.hpp"
-#include "core/StaticArray.hpp"
+#include "core/containers/StaticArray.hpp"
 
 namespace ari
 {
