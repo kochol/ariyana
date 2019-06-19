@@ -8,6 +8,7 @@ fips_begin_module(ari_core)
         Memory.hpp          Memory.cpp
         Ptr.hpp
         SpinLock.hpp        SpinLock.cpp
+        Types.hpp
     )
 
     fips_dir(containers)
@@ -15,6 +16,7 @@ fips_begin_module(ari_core)
         elementBuffer.hpp
         KeyValuePair.hpp
         Map.hpp
+        Queue.hpp
         StaticArray.hpp
     )
 fips_end_module()

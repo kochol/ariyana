@@ -4,6 +4,7 @@
 #include <initializer_list>
 #include "elementBuffer.hpp"
 #include "KeyValuePair.hpp"
+#include "../Types.hpp"
 
 namespace ari
 {
