@@ -1,5 +1,6 @@
 #pragma once
 #include "../Assertion.hpp"
+#include "../Memory.hpp"
 
 namespace ari
 {
@@ -327,7 +328,7 @@ namespace ari
 
 			// allocate new buffer
 			const int newBufSize = newCapacity * sizeof(TYPE);
-			TYPE* newBuffer = (TYPE*)Memory::Alloc(newBufSize);
+			TYPE* newBuffer = (TYPE*)core::Memory::Alloc(newBufSize);
 			TYPE* newElmStart = newBuffer + newStart;
 
 			// need to move any elements?
@@ -349,7 +350,7 @@ namespace ari
 			// need to free old buffer?
 			if (nullptr != this->buf)
 			{
-				Memory::Free(this->buf);
+				core::Memory::Free(this->buf);
 			}
 
 			// replace pointers
@@ -371,7 +372,7 @@ namespace ari
 					a_assert_range_dbg(i, this->cap);
 					this->buf[i].~TYPE();
 				}
-				Memory::Free(this->buf);
+				core::Memory::Free(this->buf);
 			}
 			this->buf = nullptr;
 			this->cap = 0;
@@ -873,7 +874,7 @@ namespace ari
 		{
 			if (this->buf)
 			{
-				// NOTE: the returned pointer may point to invalid memory!
+				// NOTE: the returned pointer may point to invalid core::Memory!
 				return &this->buf[this->start];
 			}
 			return nullptr;
@@ -886,7 +887,7 @@ namespace ari
 		{
 			if (this->buf)
 			{
-				// NOTE: the returned pointer may point to invalid memory!
+				// NOTE: the returned pointer may point to invalid core::Memory!
 				return &this->buf[this->start];
 			}
 			else
@@ -902,7 +903,7 @@ namespace ari
 		{
 			if (this->buf)
 			{
-				// NOTE: the returned pointer may point to invalid memory!
+				// NOTE: the returned pointer may point to invalid core::Memory!
 				return &this->buf[this->end];
 			}
 			else
@@ -918,7 +919,7 @@ namespace ari
 		{
 			if (this->buf)
 			{
-				// NOTE: the returned pointer may point to invalid memory!
+				// NOTE: the returned pointer may point to invalid core::Memory!
 				return &this->buf[this->end];
 			}
 			else

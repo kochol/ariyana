@@ -3,7 +3,7 @@ fips_begin_module(ari_core)
     fips_files(
         Assertion.hpp
         defines.hpp
-        HandleManager.hpp
+        HandleManager.hpp   HandleManager.cpp
         LockScope.hpp       LockScope.cpp
         Memory.hpp          Memory.cpp
         Ptr.hpp
@@ -13,6 +13,8 @@ fips_begin_module(ari_core)
     fips_dir(containers)
     fips_files(
         elementBuffer.hpp
+        KeyValuePair.hpp
+        Map.hpp
         StaticArray.hpp
     )
 fips_end_module()

@@ -3,6 +3,7 @@
 #include <assert.h>     // assert
 
 #define a_assert(cond) assert(cond)
+#define a_assert_dbg(cond) assert(cond)
 #define a_assert_range(val, max) assert((val >= 0) && (val < max))
 
 #if FIPS_DEBUG
