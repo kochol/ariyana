@@ -6,20 +6,40 @@ namespace ari
 {
     namespace core
     {
+		template <typename T>
         struct HandleManager
-        {
-			
-			uint32_t GetNewHandle(uint32_t& index);
+        {		
+			static uint32_t GetNewHandle(uint32_t& index)
+			{
+				index = m_iLastIndex;
+				if (m_qRemovedIndex.Size() > 0)
+					m_qRemovedIndex.Dequeue(index);
 
-			bool IsHandleValid(const uint32_t& handle) const;
+				m_mHandleIndexMap.Add(m_iLastIndex, index);
+				return m_iLastIndex++;
+			}
 
-			void RemoveHandle(const uint32_t& handle);
+			static bool IsHandleValid(const uint32_t& handle)
+			{
+				return m_mHandleIndexMap.Contains(handle);
+			}
+
+			static void RemoveHandle(const uint32_t& handle)
+			{
+				const int i = m_mHandleIndexMap.FindIndex(handle);
+				if (i != InvalidIndex)
+				{
+					uint32_t removed = m_mHandleIndexMap.ValueAtIndex(i);
+					m_mHandleIndexMap.EraseIndex(i);
+					m_qRemovedIndex.Enqueue(removed);
+				}
+			}
 
         private:
 
-			Map<uint32_t, uint32_t> m_mHandleIndexMap;
-			Queue<uint32_t>			m_qRemovedIndex;
-			uint32_t				m_iLastIndex = 0;
+			static Map<uint32_t, uint32_t>	m_mHandleIndexMap;
+			static Queue<uint32_t>			m_qRemovedIndex;
+			static uint32_t					m_iLastIndex;
         };
         
     } // namespace core
