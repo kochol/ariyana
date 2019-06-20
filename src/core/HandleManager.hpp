@@ -19,8 +19,19 @@ namespace ari
 				return m_iLastIndex++;
 			}
 
+			static uint32_t GetHandleByIndex(const uint32_t& index)
+			{
+				for (auto h : m_mHandleIndexMap)
+					if (h.Value() == index)
+						return h.Key();
+
+				return aInvalidHandle;
+			}
+
 			static bool IsHandleValid(const uint32_t& handle)
 			{
+				if (handle == aInvalidHandle)
+					return false;
 				return m_mHandleIndexMap.Contains(handle);
 			}
 

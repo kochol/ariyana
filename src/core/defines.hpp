@@ -1,10 +1,10 @@
 #pragma once
 
 #include <cstdint>
-#include <climits>
+#include "Types.hpp"
 
 #define ARI_HANDLE(_name) \
 struct _name \
 { \
-    uint32_t Handle = UINT32_MAX; \
+    uint32_t Handle = aInvalidHandle; \
 };
