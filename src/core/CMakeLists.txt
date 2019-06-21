@@ -3,7 +3,7 @@ fips_begin_module(ari_core)
     fips_files(
         Assertion.hpp
         defines.hpp
-        HandleManager.hpp   HandleManager.cpp
+        HandleManager.hpp
         LockScope.hpp       LockScope.cpp
         Memory.hpp          Memory.cpp
         Ptr.hpp

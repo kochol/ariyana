@@ -51,7 +51,16 @@ namespace ari
 			static Queue<uint32_t>			m_qRemovedIndex;
 			static uint32_t					m_iLastIndex;
         };
-        
+
+		template <class T>
+		Map<uint32_t, uint32_t> HandleManager<T>::m_mHandleIndexMap;
+
+		template <class T>
+		Queue<uint32_t> HandleManager<T>::m_qRemovedIndex;
+
+		template <class T>
+		uint32_t HandleManager<T>::m_iLastIndex = 0;
+
     } // namespace core
     
 } // namespace ari
