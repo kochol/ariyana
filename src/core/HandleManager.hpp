@@ -30,8 +30,6 @@ namespace ari
 
 			static bool IsHandleValid(const uint32_t& handle)
 			{
-				if (handle == aInvalidHandle)
-					return false;
 				return m_mHandleIndexMap.Contains(handle);
 			}
 
