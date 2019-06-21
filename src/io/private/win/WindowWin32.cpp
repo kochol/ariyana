@@ -13,6 +13,7 @@ namespace ari
 		core::StaticArray<WindowWin32, MaxWindow>	g_Windows;
 		static bool Initialized = false;
 
+		//------------------------------------------------------------------------------
 		WindowHandle FindHandle(HWND hwnd)
 		{
 			LOCKSCOPE;
@@ -60,7 +61,7 @@ namespace ari
 		static SETPROCESSDPIAWARENESS_T _sapp_win32_setprocessdpiawareness;
 		static GETDPIFORMONITOR_T _sapp_win32_getdpiformonitor;
 
-
+		//------------------------------------------------------------------------------
 		LRESULT CALLBACK win32_wndproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			// FIXME: refresh rendering during resize with a WM_TIMER event
 			WindowHandle handle = FindHandle(hWnd);
@@ -192,6 +193,7 @@ namespace ari
 			return DefWindowProcW(hWnd, uMsg, wParam, lParam);
 		}
 
+		//------------------------------------------------------------------------------
 		void win32_create_window(WindowWin32& window, const char* _title) {
 			WNDCLASSW wndclassw;
 			memset(&wndclassw, 0, sizeof(wndclassw));
@@ -240,11 +242,13 @@ namespace ari
 			//_sapp_win32_update_dimensions();
 		}
 
+		//------------------------------------------------------------------------------
 		void win32_destroy_window(void) {
 			//DestroyWindow(_sapp_win32_hwnd); _sapp_win32_hwnd = 0;
 			//UnregisterClassW(L"SOKOLAPP", GetModuleHandleW(NULL));
 		}
 
+		//------------------------------------------------------------------------------
 		void _sapp_win32_init_dpi(WindowWin32& window) {
 			a_assert(0 == _sapp_win32_setprocessdpiaware);
 			a_assert(0 == _sapp_win32_setprocessdpiawareness);
@@ -303,6 +307,7 @@ namespace ari
 			}
 		}
 
+		//------------------------------------------------------------------------------
 		WindowHandle CreateAriWindow(int _width, int _height, const char* _title)
 		{
 			uint32_t index;
@@ -322,6 +327,7 @@ namespace ari
 			return { handle, index };
 		}
 
+		//------------------------------------------------------------------------------
 		bool Run()
 		{
 			MSG msg;

@@ -12,8 +12,12 @@ namespace ari
 		
 		struct Window
 		{
-			/* data */
-		};
+			int Width = 640;
+			int Height = 480;
+			bool FullScreen = false;
+			bool HighDpi = false;
+			float DpiScale = 1.0f;
+		};        
 
 		WindowHandle CreateAriWindow(int _width, int _height, const char* _title);
 

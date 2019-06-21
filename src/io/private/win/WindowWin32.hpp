@@ -4,19 +4,15 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
+#include "io/Window.hpp"
 
 namespace ari
 {
     namespace io
     {
-        struct WindowWin32
+        struct WindowWin32 : public Window
         {
 			bool win32_in_create_window = false;
-			int Width;
-			int Height;
-			bool FullScreen = false;
-			bool HighDpi = false;
-			float DpiScale = 1.0f;
 			HWND hWnd = nullptr;
 			HDC hdc = nullptr;
         };

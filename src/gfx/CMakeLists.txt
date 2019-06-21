@@ -1,8 +1,9 @@
-# fips_begin_module(ari_gfx)
-#     fips_vs_warning_level(3)
-#     fips_deps(ari_io)
-#     fips_files(
-#     )
+fips_begin_module(ari_gfx)
+    fips_vs_warning_level(3)
+    fips_deps(ari_io)
+    fips_files(
+        gfx.hpp
+    )
     
 #     if (FIPS_WINDOWS)
 #         fips_dir(private/win)
@@ -10,5 +11,5 @@
 #             WindowWin32.hpp WindowWin32.cpp
 #         )
 #     endif()
-# fips_end_module()
+fips_end_module()
 
