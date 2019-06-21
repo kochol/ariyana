@@ -8,7 +8,11 @@ namespace ari
         struct gfxSetup
         {
 			io::Window	window;
-        };
+			int sample_count = 0;                   /* MSAA sample count */
+			int swap_interval = 0;                  /* the preferred swap interval (ignored on some platforms) */
+		};
+
+		bool SetupGfx(gfxSetup& setup);
         
     } // namespace gfx
     

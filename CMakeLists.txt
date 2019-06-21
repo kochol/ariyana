@@ -8,6 +8,7 @@ get_filename_component(FIPS_ROOT_DIR "../fips" ABSOLUTE)
 include("${FIPS_ROOT_DIR}/cmake/fips.cmake")
 
 option(ARI_BUILD_TESTS "Build engine test projects" ON)
+option(ARI_OPENGL "Use OpenGL as rendering backend" ON)
 
 fips_setup(PROJECT ari)
 	include_directories(src)

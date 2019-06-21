@@ -19,7 +19,7 @@ namespace ari
 			float DpiScale = 1.0f;
 		};        
 
-		WindowHandle CreateAriWindow(int _width, int _height, const char* _title);
+		WindowHandle CreateAriWindow(Window& window, const char* _title);
 
         /**
          * @brief Run the windows and handle the events.
@@ -30,7 +30,9 @@ namespace ari
          * @return false when the user request to close the application
          */
 		bool Run();
-		
+
+		void* GetWin32HDC(const WindowHandle& handle);
+
 	} // namespace io
 	
 } // namespace ari

@@ -91,7 +91,7 @@ namespace ari
 						switch (wParam & 0xFFF0) {
 						case SC_SCREENSAVE:
 						case SC_MONITORPOWER:
-							if (window_win32.FullScreen) {
+							if (window_win32.window.FullScreen) {
 								/* disable screen saver and blanking in fullscreen mode */
 								return 0;
 							}
@@ -208,15 +208,15 @@ namespace ari
 			DWORD win_style;
 			const DWORD win_ex_style = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
 			RECT rect = { 0, 0, 0, 0 };
-			if (window.FullScreen) {
+			if (window.window.FullScreen) {
 				win_style = WS_POPUP | WS_SYSMENU | WS_VISIBLE;
 				rect.right = GetSystemMetrics(SM_CXSCREEN);
 				rect.bottom = GetSystemMetrics(SM_CYSCREEN);
 			}
 			else {
 				win_style = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SIZEBOX;
-				rect.right = (int)((float)window.Width *_sapp_win32_window_scale);
-				rect.bottom = (int)((float)window.Height *_sapp_win32_window_scale);
+				rect.right = (int)((float)window.window.Width *_sapp_win32_window_scale);
+				rect.bottom = (int)((float)window.window.Height *_sapp_win32_window_scale);
 			}
 			AdjustWindowRectEx(&rect, win_style, FALSE, win_ex_style);
 			const int win_width = rect.right - rect.left;
@@ -266,7 +266,7 @@ namespace ari
 				/* if the app didn't request HighDPI rendering, let Windows do the upscaling */
 				PROCESS_DPI_AWARENESS process_dpi_awareness = PROCESS_SYSTEM_DPI_AWARE;
 				_sapp_win32_dpi_aware = true;
-				if (!window.HighDpi) {
+				if (!window.window.HighDpi) {
 					process_dpi_awareness = PROCESS_DPI_UNAWARE;
 					_sapp_win32_dpi_aware = false;
 				}
@@ -290,15 +290,14 @@ namespace ari
 			else {
 				_sapp_win32_window_scale = 1.0f;
 			}
-			if (window.HighDpi) {
+			if (window.window.HighDpi) {
 				_sapp_win32_content_scale = _sapp_win32_window_scale;
 				_sapp_win32_mouse_scale = 1.0f;
 			}
 			else {
 				_sapp_win32_content_scale = 1.0f;
 				_sapp_win32_mouse_scale = 1.0f / _sapp_win32_window_scale;
-			}
-			window.DpiScale = _sapp_win32_content_scale;
+			}			
 			if (user32) {
 				FreeLibrary(user32);
 			}
@@ -308,22 +307,25 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
-		WindowHandle CreateAriWindow(int _width, int _height, const char* _title)
+		WindowHandle CreateAriWindow(Window& win, const char* _title)
 		{
 			uint32_t index;
 			const uint32_t handle = core::HandleManager<WindowHandle>::GetNewHandle(index);
 			a_assert(index < MaxWindow);
 			WindowWin32 window;
-			window.Width = _width;
-			window.Height = _height;
-
+			window.window = win;
+			
 			if (!Initialized)
 			{
 				Initialized = true;
 				_sapp_win32_init_dpi(window);
 			}
+			window.window.DpiScale = _sapp_win32_content_scale;
 			win32_create_window(window, _title);
 			g_Windows[index] = window;
+
+			win	= window.window;
+
 			return { handle, index };
 		}
 
@@ -338,6 +340,11 @@ namespace ari
 				DispatchMessage(&msg);
 			}
 			return true;
+		}
+
+		void* GetWin32HDC(const WindowHandle& handle)
+		{
+			return g_Windows[handle.Index].hdc;
 		}
 
 	} // io

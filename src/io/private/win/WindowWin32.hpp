@@ -10,8 +10,9 @@ namespace ari
 {
     namespace io
     {
-        struct WindowWin32 : public Window
+        struct WindowWin32
         {
+			Window window;
 			bool win32_in_create_window = false;
 			HWND hWnd = nullptr;
 			HDC hdc = nullptr;

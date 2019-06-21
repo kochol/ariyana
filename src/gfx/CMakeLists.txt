@@ -4,12 +4,17 @@ fips_begin_module(ari_gfx)
     fips_files(
         gfx.hpp
     )
-    
-#     if (FIPS_WINDOWS)
-#         fips_dir(private/win)
-#         fips_files(
-#             WindowWin32.hpp WindowWin32.cpp
-#         )
-#     endif()
-fips_end_module()
 
+    if (ARI_OPENGL)
+        fips_dir(private/ogl)
+        fips_files(
+            gfx_ogl.hpp             gfx_ogl.cpp
+        )
+        if (FIPS_WINDOWS)
+            fips_dir(private/ogl/win)
+            fips_files(
+                gfx_ogl_win.cpp
+            )
+        endif()
+    endif()
+fips_end_module()

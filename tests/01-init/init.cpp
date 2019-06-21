@@ -2,7 +2,8 @@
 
 int main(int argc, char* argv[])
 {
-	auto winh = ari::io::CreateAriWindow(640, 480, "01-init");
+	ari::io::Window window;
+	auto winh = ari::io::CreateAriWindow(window, "01-init");
 	while(ari::io::Run())
 	{
 		

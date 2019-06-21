@@ -9,7 +9,7 @@ struct _name \
 { \
     uint32_t Handle = ari::core::aInvalidHandle; \
 	uint32_t Index = ari::core::aInvalidHandle; \
-	bool IsValid() \
+	bool IsValid() const\
 	{ \
 		if (Handle == ari::core::aInvalidHandle || Index == ari::core::aInvalidHandle) \
 			return false; \
