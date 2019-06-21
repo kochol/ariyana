@@ -18,6 +18,7 @@ namespace ari
 			bool HighDpi = false;
 			float DpiScale = 1.0f;
 			HWND hWnd = nullptr;
+			HDC hdc = nullptr;
         };
         
     } // namespace io
