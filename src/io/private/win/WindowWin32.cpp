@@ -1,4 +1,5 @@
 #include "WindowWin32.hpp"
+#include <windowsx.h>
 #include "io/Window.hpp"
 #include "core/LockScope.hpp"
 #include "core/containers/StaticArray.hpp"
@@ -10,6 +11,7 @@ namespace ari
 	{
 		// globals
 		core::StaticArray<WindowWin32, MaxWindow>	g_Windows;
+		static bool Initialized = false;
 
 		WindowHandle FindHandle(HWND hwnd)
 		{
@@ -25,6 +27,39 @@ namespace ari
 
 			return { };
 		}
+
+		// sapp globals
+#ifndef WM_MOUSEHWHEEL
+#define WM_MOUSEHWHEEL (0x020E)
+#endif
+
+#ifndef DPI_ENUMS_DECLARED
+		typedef enum PROCESS_DPI_AWARENESS
+		{
+			PROCESS_DPI_UNAWARE = 0,
+			PROCESS_SYSTEM_DPI_AWARE = 1,
+			PROCESS_PER_MONITOR_DPI_AWARE = 2
+		} PROCESS_DPI_AWARENESS;
+		typedef enum MONITOR_DPI_TYPE {
+			MDT_EFFECTIVE_DPI = 0,
+			MDT_ANGULAR_DPI = 1,
+			MDT_RAW_DPI = 2,
+			MDT_DEFAULT = MDT_EFFECTIVE_DPI
+		} MONITOR_DPI_TYPE;
+#endif /*DPI_ENUMS_DECLARED*/
+
+		static bool _sapp_win32_dpi_aware;
+		static float _sapp_win32_content_scale;
+		static float _sapp_win32_window_scale;
+		static float _sapp_win32_mouse_scale;
+
+		typedef BOOL(WINAPI* SETPROCESSDPIAWARE_T)(void);
+		typedef HRESULT(WINAPI* SETPROCESSDPIAWARENESS_T)(PROCESS_DPI_AWARENESS);
+		typedef HRESULT(WINAPI* GETDPIFORMONITOR_T)(HMONITOR, MONITOR_DPI_TYPE, UINT*, UINT*);
+		static SETPROCESSDPIAWARE_T _sapp_win32_setprocessdpiaware;
+		static SETPROCESSDPIAWARENESS_T _sapp_win32_setprocessdpiawareness;
+		static GETDPIFORMONITOR_T _sapp_win32_getdpiformonitor;
+
 
 		LRESULT CALLBACK win32_wndproc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 			// FIXME: refresh rendering during resize with a WM_TIMER event
@@ -178,8 +213,8 @@ namespace ari
 			}
 			else {
 				win_style = WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SIZEBOX;
-				rect.right = (int)((float)window.Width);// *_sapp_win32_window_scale);
-				rect.bottom = (int)((float)window.Height);// *_sapp_win32_window_scale);
+				rect.right = (int)((float)window.Width *_sapp_win32_window_scale);
+				rect.bottom = (int)((float)window.Height *_sapp_win32_window_scale);
 			}
 			AdjustWindowRectEx(&rect, win_style, FALSE, win_ex_style);
 			const int win_width = rect.right - rect.left;
@@ -210,6 +245,64 @@ namespace ari
 			//UnregisterClassW(L"SOKOLAPP", GetModuleHandleW(NULL));
 		}
 
+		void _sapp_win32_init_dpi(WindowWin32& window) {
+			a_assert(0 == _sapp_win32_setprocessdpiaware);
+			a_assert(0 == _sapp_win32_setprocessdpiawareness);
+			a_assert(0 == _sapp_win32_getdpiformonitor);
+			HINSTANCE user32 = LoadLibraryA("user32.dll");
+			if (user32) {
+				_sapp_win32_setprocessdpiaware = (SETPROCESSDPIAWARE_T)GetProcAddress(user32, "SetProcessDPIAware");
+			}
+			HINSTANCE shcore = LoadLibraryA("shcore.dll");
+			if (shcore) {
+				_sapp_win32_setprocessdpiawareness = (SETPROCESSDPIAWARENESS_T)GetProcAddress(shcore, "SetProcessDpiAwareness");
+				_sapp_win32_getdpiformonitor = (GETDPIFORMONITOR_T)GetProcAddress(shcore, "GetDpiForMonitor");
+			}
+			if (_sapp_win32_setprocessdpiawareness) {
+				/* if the app didn't request HighDPI rendering, let Windows do the upscaling */
+				PROCESS_DPI_AWARENESS process_dpi_awareness = PROCESS_SYSTEM_DPI_AWARE;
+				_sapp_win32_dpi_aware = true;
+				if (!window.HighDpi) {
+					process_dpi_awareness = PROCESS_DPI_UNAWARE;
+					_sapp_win32_dpi_aware = false;
+				}
+				_sapp_win32_setprocessdpiawareness(process_dpi_awareness);
+			}
+			else if (_sapp_win32_setprocessdpiaware) {
+				_sapp_win32_setprocessdpiaware();
+				_sapp_win32_dpi_aware = true;
+			}
+			/* get dpi scale factor for main monitor */
+			if (_sapp_win32_getdpiformonitor && _sapp_win32_dpi_aware) {
+				POINT pt = { 1, 1 };
+				HMONITOR hm = MonitorFromPoint(pt, MONITOR_DEFAULTTONEAREST);
+				UINT dpix, dpiy;
+				HRESULT hr = _sapp_win32_getdpiformonitor(hm, MDT_EFFECTIVE_DPI, &dpix, &dpiy);
+				sx_unused(hr);
+				a_assert(SUCCEEDED(hr));
+				/* clamp window scale to an integer factor */
+				_sapp_win32_window_scale = (float)dpix / 96.0f;
+			}
+			else {
+				_sapp_win32_window_scale = 1.0f;
+			}
+			if (window.HighDpi) {
+				_sapp_win32_content_scale = _sapp_win32_window_scale;
+				_sapp_win32_mouse_scale = 1.0f;
+			}
+			else {
+				_sapp_win32_content_scale = 1.0f;
+				_sapp_win32_mouse_scale = 1.0f / _sapp_win32_window_scale;
+			}
+			window.DpiScale = _sapp_win32_content_scale;
+			if (user32) {
+				FreeLibrary(user32);
+			}
+			if (shcore) {
+				FreeLibrary(shcore);
+			}
+		}
+
 		WindowHandle CreateAriWindow(int _width, int _height, const char* _title)
 		{
 			uint32_t index;
@@ -218,6 +311,12 @@ namespace ari
 			WindowWin32 window;
 			window.Width = _width;
 			window.Height = _height;
+
+			if (!Initialized)
+			{
+				Initialized = true;
+				_sapp_win32_init_dpi(window);
+			}
 			win32_create_window(window, _title);
 			g_Windows[index] = window;
 			return { handle, index };

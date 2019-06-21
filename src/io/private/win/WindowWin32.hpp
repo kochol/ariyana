@@ -1,5 +1,9 @@
 #pragma once
-#include <Windows.h>
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
 
 namespace ari
 {
@@ -11,6 +15,8 @@ namespace ari
 			int Width;
 			int Height;
 			bool FullScreen = false;
+			bool HighDpi = false;
+			float DpiScale = 1.0f;
 			HWND hWnd = nullptr;
         };
         
