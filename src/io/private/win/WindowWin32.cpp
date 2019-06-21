@@ -185,10 +185,10 @@ namespace ari
 			const int win_width = rect.right - rect.left;
 			const int win_height = rect.bottom - rect.top;
 			window.win32_in_create_window = true;
-			window.hWnd = CreateWindowExW(
+			window.hWnd = CreateWindowEx(
 				win_ex_style,               /* dwExStyle */
-				L"Ariyana",                /* lpClassName */
-				(LPCWSTR)_title,    /* lpWindowName */
+				"Ariyana",                /* lpClassName */
+				_title,    /* lpWindowName */
 				win_style,                  /* dwStyle */
 				CW_USEDEFAULT,              /* X */
 				CW_USEDEFAULT,              /* Y */
@@ -218,9 +218,21 @@ namespace ari
 			WindowWin32 window;
 			window.Width = _width;
 			window.Height = _height;
-			g_Windows[index] = window;
 			win32_create_window(window, _title);
+			g_Windows[index] = window;
 			return { handle, index };
+		}
+
+		bool Run()
+		{
+			MSG msg;
+			while (PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE)) {
+				if (WM_QUIT == msg.message)
+					return false;
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+			return true;
 		}
 
 	} // io

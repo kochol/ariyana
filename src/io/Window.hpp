@@ -16,6 +16,16 @@ namespace ari
 		};
 
 		WindowHandle CreateAriWindow(int _width, int _height, const char* _title);
+
+        /**
+         * @brief Run the windows and handle the events.
+         * 
+         * Need to call it every frame.
+         * 
+         * @return true when the application wants to continue
+         * @return false when the user request to close the application
+         */
+		bool Run();
 		
 	} // namespace io
 	
