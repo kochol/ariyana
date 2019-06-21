@@ -235,8 +235,8 @@ namespace ari
 				NULL);                      /* lParam */
 			ShowWindow(window.hWnd, SW_SHOW);
 			window.win32_in_create_window = false;
-			//_sapp_win32_dc = GetDC(_sapp_win32_hwnd);
-			//a_assert(_sapp_win32_dc);
+			window.hdc = GetDC(window.hWnd);
+			a_assert(window.hdc);
 			//_sapp_win32_update_dimensions();
 		}
 
