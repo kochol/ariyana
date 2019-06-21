@@ -7,7 +7,7 @@ namespace ari
 {
 	namespace io
 	{
-		const int MaxWindow = 16;
+		static const int MaxWindow = 16;
 
 		ARI_HANDLE(WindowHandle);
 		
@@ -16,7 +16,7 @@ namespace ari
 			/* data */
 		};
 
-		WindowHandle CreateWindow(int _width, int _height, const char* _title);
+		WindowHandle CreateAriWindow(int _width, int _height, const char* _title);
 		
 	} // namespace io
 	

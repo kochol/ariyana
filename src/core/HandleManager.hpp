@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdint>
 #include "containers/Map.hpp"
 #include "containers/Queue.hpp"

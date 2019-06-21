@@ -5,7 +5,6 @@ namespace ari
 {
 	namespace io
 	{
-		core::StaticArray<Window, MaxWindow>	g_Windows;
 
 	} // io
 
