@@ -115,8 +115,8 @@ void _sapp_wgl_init(void) {
 	a_assert(_sapp_wglMakeCurrent);
 
 	_sapp_win32_msg_hwnd = CreateWindowExW(WS_EX_OVERLAPPEDWINDOW,
-		L"SOKOLAPP",
-		L"sokol-app message window",
+		L"Ariyana",
+		L"ariyana-app message window",
 		WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
 		0, 0, 1, 1,
 		NULL, NULL,

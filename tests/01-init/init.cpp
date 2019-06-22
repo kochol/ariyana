@@ -1,9 +1,10 @@
 #include "io/Window.hpp"
+#include "gfx/gfx.hpp"
 
 int main(int argc, char* argv[])
 {
-	ari::io::Window window;
-	auto winh = ari::io::CreateAriWindow(window, "01-init");
+	ari::gfx::gfxSetup setup;
+	SetupGfx(setup);
 	while(ari::io::Run())
 	{
 		
