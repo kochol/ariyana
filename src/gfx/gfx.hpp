@@ -13,6 +13,8 @@ namespace ari
 		};
 
 		bool SetupGfx(gfxSetup& setup);
+
+		void Present();
         
     } // namespace gfx
     

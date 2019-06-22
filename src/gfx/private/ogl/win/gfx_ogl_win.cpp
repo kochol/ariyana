@@ -941,6 +941,12 @@ namespace ari
 			return true;
 		}
 
+		void Present()
+		{
+			io::WindowHandle window{ 0 , 0 };
+			_sapp_wgl_swap_buffers(window);
+		}
+
     } // namespace gfx
     
 } // namespace ari

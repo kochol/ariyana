@@ -7,7 +7,7 @@ int main(int argc, char* argv[])
 	SetupGfx(setup);
 	while(ari::io::Run())
 	{
-		
+		ari::gfx::Present();
 	}
 	return 0;
 }
