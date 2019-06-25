@@ -15,6 +15,8 @@ namespace ari
 		bool SetupGfx(gfxSetup& setup);
 
 		void Present();
+
+		void Present(const io::WindowHandle& handle);
         
     } // namespace gfx
     

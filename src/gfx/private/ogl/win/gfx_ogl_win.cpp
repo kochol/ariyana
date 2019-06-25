@@ -5,6 +5,7 @@
 #include <windows.h>
 #include "io/Window.hpp"
 #include "../gfx_ogl.hpp"
+#include "core/containers/StaticArray.hpp"
 
 #define WGL_NUMBER_PIXEL_FORMATS_ARB 0x2000
 #define WGL_SUPPORT_OPENGL_ARB 0x2010
@@ -64,7 +65,6 @@ typedef PROC(WINAPI* PFN_wglGetProcAddress)(LPCSTR);
 typedef HDC(WINAPI* PFN_wglGetCurrentDC)(void);
 typedef BOOL(WINAPI* PFN_wglMakeCurrent)(HDC, HGLRC);
 static HINSTANCE _sapp_opengl32;
-static HGLRC _sapp_gl_ctx;
 static PFN_wglCreateContext _sapp_wglCreateContext;
 static PFN_wglDeleteContext _sapp_wglDeleteContext;
 static PFN_wglGetProcAddress _sapp_wglGetProcAddress;
@@ -82,6 +82,8 @@ static bool _sapp_arb_create_context;
 static bool _sapp_arb_create_context_profile;
 static HWND _sapp_win32_msg_hwnd;
 static HDC _sapp_win32_msg_dc;
+
+ari::core::StaticArray<HGLRC, ari::io::MaxWindow>	g_GlContexts;
 
 void _sapp_fail(const char* msg) {
 	/*if (_sapp.desc.fail_cb) {
@@ -312,8 +314,8 @@ void _sapp_wgl_create_context(const ari::io::WindowHandle& handle, ari::gfx::gfx
 		WGL_CONTEXT_PROFILE_MASK_ARB, WGL_CONTEXT_CORE_PROFILE_BIT_ARB,
 		0, 0
 	};
-	_sapp_gl_ctx = _sapp_CreateContextAttribsARB(hdc, 0, attrs);
-	if (!_sapp_gl_ctx) {
+	g_GlContexts[handle.Index] = _sapp_CreateContextAttribsARB(hdc, 0, attrs);
+	if (!g_GlContexts[handle.Index]) {
 		const DWORD err = GetLastError();
 		if (err == (0xc0070000 | ERROR_INVALID_VERSION_ARB)) {
 			_sapp_fail("WGL: Driver does not support OpenGL version 3.3\n");
@@ -328,7 +330,7 @@ void _sapp_wgl_create_context(const ari::io::WindowHandle& handle, ari::gfx::gfx
 			_sapp_fail("WGL: Failed to create OpenGL context");
 		}
 	}
-	_sapp_wglMakeCurrent(hdc, _sapp_gl_ctx);
+	_sapp_wglMakeCurrent(hdc, g_GlContexts[handle.Index]);
 	if (_sapp_ext_swap_control) {
 		/* FIXME: DwmIsCompositionEnabled() (see GLFW) */
 		_sapp_SwapIntervalEXT(gfx_setup.swap_interval);
@@ -338,9 +340,9 @@ void _sapp_wgl_create_context(const ari::io::WindowHandle& handle, ari::gfx::gfx
 void _sapp_wgl_destroy_context(const ari::io::WindowHandle& handle)
 {
 	// TODO: Destroy the window context
-	a_assert(_sapp_gl_ctx);
-	_sapp_wglDeleteContext(_sapp_gl_ctx);
-	_sapp_gl_ctx = 0;
+	a_assert(g_GlContexts[handle.Index]);
+	_sapp_wglDeleteContext(g_GlContexts[handle.Index]);
+	g_GlContexts[handle.Index] = nullptr;
 }
 
 void _sapp_wgl_swap_buffers(const ari::io::WindowHandle& handle) 
@@ -943,8 +945,13 @@ namespace ari
 
 		void Present()
 		{
-			io::WindowHandle window{ 0 , 0 };
-			_sapp_wgl_swap_buffers(window);
+			const io::WindowHandle window{ 0 , 0 };
+			Present(window);
+		}
+
+		void Present(const io::WindowHandle& handle)
+		{
+			_sapp_wgl_swap_buffers(handle);
 		}
 
     } // namespace gfx
