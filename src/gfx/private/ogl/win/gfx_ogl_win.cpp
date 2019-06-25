@@ -924,6 +924,10 @@ void _sapp_win32_gl_loadfuncs(void) {
 
 #endif /* SOKOL_WIN32_NO_GL_LOADER */
 
+#define SOKOL_IMPL
+//#define SOKOL_GLCORE33
+#include "sokol_gfx.h"
+
 namespace ari
 {
     namespace gfx
@@ -940,6 +944,12 @@ namespace ari
 #if !defined(SOKOL_WIN32_NO_GL_LOADER)
 			_sapp_win32_gl_loadfuncs();
 #endif
+
+			// Setup sokol gfx
+			sg_desc desc;
+			core::Memory::Fill(&desc, sizeof(sg_desc), 0);
+			sg_setup(&desc);
+
 			return true;
 		}
 
@@ -952,7 +962,7 @@ namespace ari
 		void Present(const io::WindowHandle& handle)
 		{
 			_sapp_wgl_swap_buffers(handle);
-		}
+		}		
 
     } // namespace gfx
     

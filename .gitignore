@@ -33,3 +33,6 @@
 
 # Folders
 .vscode/ipch
+
+# Files
+.fips-imports.cmake

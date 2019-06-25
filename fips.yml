@@ -5,7 +5,10 @@
 imports:
     fips-sx:
         git: https://github.com/kochol/fips-sx.git
-
+    sokol:
+        git: https://github.com/floooh/sokol.git
+    sokol-tools-bin:
+        git: https://github.com/floooh/sokol-tools-bin      
 exports:
     header-dirs :
         - src
