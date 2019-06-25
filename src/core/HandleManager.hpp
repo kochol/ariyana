@@ -20,6 +20,12 @@ namespace ari
 				return m_iLastIndex++;
 			}
 
+			static uint32_t CreateHandleByIndex(const uint32_t& index)
+			{
+				m_mHandleIndexMap.Add(m_iLastIndex, index);
+				return  m_iLastIndex++;
+			}
+
 			static uint32_t GetHandleByIndex(const uint32_t& index)
 			{
 				for (auto h : m_mHandleIndexMap)

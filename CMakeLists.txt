@@ -40,6 +40,8 @@ fips_setup(PROJECT ari)
         endif()
     endif()
 
+    set(CMAKE_CXX_STANDARD 17)
+
 	include_directories(src)
     fips_add_subdirectory(src)
 

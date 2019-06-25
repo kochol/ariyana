@@ -19,6 +19,7 @@ int main(int argc, char* argv[])
 
 	ari::gfx::ShaderHanlde shader = ari::gfx::CreateShader(triangle_shader_desc());
 
+	
 	while(ari::io::Run())
 	{
 		ari::gfx::Present();

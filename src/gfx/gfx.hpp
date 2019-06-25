@@ -2,6 +2,8 @@
 #include "io/Window.hpp"
 
 struct sg_shader_desc;
+#define ARI_MAX_SHADERSTAGE_BUFFERS 4
+#define ARI_MAX_VERTEX_ATTRIBUTES 16
 
 namespace ari
 {
@@ -25,6 +27,56 @@ namespace ari
 			Stream
 		};
 
+		enum class VertexStep
+		{
+			PerVertex = 1,
+			PerInstance
+		};
+
+		struct BufferLayoutSetup
+		{
+			int stride = 0;
+			VertexStep step = VertexStep::PerVertex;
+			int stepRate = 0;
+		};
+
+		enum class VertexFormat
+		{
+			Invalid,
+			Float,
+			Float2,
+			Float3,
+			Float4,
+			Byte4,
+			Byte4N,
+			UByte4,
+			UByte4N,
+			Short2,
+			Short2N,
+			Short4,
+			Short4N,
+			UInt10N2
+		};
+
+		struct VertexAttrSetup
+		{
+			int bufferIndex = 0;
+			int offset = 0;
+			VertexFormat format = VertexFormat::Invalid;
+		};
+
+		struct LayoutSetup
+		{
+			BufferLayoutSetup buffers[ARI_MAX_SHADERSTAGE_BUFFERS];
+			VertexAttrSetup attrs[ARI_MAX_VERTEX_ATTRIBUTES];
+		};
+
+		struct PipelineSetup
+		{
+			LayoutSetup layout;
+			ShaderHanlde shader;
+		};
+
 		bool SetupGfx(gfxSetup& setup);
 
 		void Present();
@@ -36,6 +88,8 @@ namespace ari
 		BufferHandle CreateIndexBuffer(int size, void* content, BufferUsage usage = BufferUsage::Immutable);
 
 		ShaderHanlde CreateShader(const sg_shader_desc* desc);
+
+		PipelineHandle CreatePipeline(const PipelineSetup& setup);
 
     } // namespace gfx
     
