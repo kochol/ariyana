@@ -19,9 +19,25 @@ int main(int argc, char* argv[])
 
 	ari::gfx::ShaderHanlde shader = ari::gfx::CreateShader(triangle_shader_desc());
 
-	
+	ari::gfx::PipelineSetup pipeline_setup;
+	pipeline_setup.shader = shader;
+	pipeline_setup.layout.attrs[0].format = ari::gfx::VertexFormat::Float3;
+	pipeline_setup.layout.attrs[1].format = ari::gfx::VertexFormat::Float4;
+
+	ari::gfx::PipelineHandle pipeline = CreatePipeline(pipeline_setup);
+
+	ari::gfx::Bindings binds;
+	binds.vertexBuffers[0] = vb;
+	ari::gfx::BindingHandle binding = CreateBinding(binds);
+
 	while(ari::io::Run())
 	{
+		ari::gfx::BeginDefaultPass();
+		ApplyPipeline(pipeline);
+		ApplyBindings(binding);
+		ari::gfx::Draw(0, 3, 1);
+		ari::gfx::EndPass();
+		ari::gfx::Commit();
 		ari::gfx::Present();
 	}
 	return 0;

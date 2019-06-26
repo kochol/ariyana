@@ -2,6 +2,7 @@
 #include "io/Window.hpp"
 
 struct sg_shader_desc;
+#define ARI_MAX_SHADERSTAGE_TEXTURES 12
 #define ARI_MAX_SHADERSTAGE_BUFFERS 4
 #define ARI_MAX_VERTEX_ATTRIBUTES 16
 
@@ -12,6 +13,8 @@ namespace ari
 		ARI_HANDLE(BufferHandle);
 		ARI_HANDLE(ShaderHanlde);
 		ARI_HANDLE(PipelineHandle);
+		ARI_HANDLE(TextureHandle);
+		ARI_HANDLE(BindingHandle);
 
         struct gfxSetup
         {
@@ -77,6 +80,16 @@ namespace ari
 			ShaderHanlde shader;
 		};
 
+		struct Bindings
+		{
+			BufferHandle vertexBuffers[ARI_MAX_SHADERSTAGE_BUFFERS];
+			int vertexBufferOffsets[ARI_MAX_SHADERSTAGE_BUFFERS] = { 0,0,0,0 };
+			BufferHandle indexBuffer;
+			int indexBufferOffset = 0;
+			TextureHandle vsTextures[ARI_MAX_SHADERSTAGE_TEXTURES];
+			TextureHandle fsTextures[ARI_MAX_SHADERSTAGE_TEXTURES];
+		};
+
 		bool SetupGfx(gfxSetup& setup);
 
 		void Present();
@@ -90,6 +103,20 @@ namespace ari
 		ShaderHanlde CreateShader(const sg_shader_desc* desc);
 
 		PipelineHandle CreatePipeline(const PipelineSetup& setup);
+
+		void ApplyPipeline(PipelineHandle pipeline);
+
+		BindingHandle CreateBinding(const Bindings& bindings);
+
+		void ApplyBindings(const BindingHandle& handle);
+
+		void BeginDefaultPass();
+
+		void EndPass();
+
+		void Commit();
+
+		void Draw(int base_element, int num_elements, int num_instances);
 
     } // namespace gfx
     

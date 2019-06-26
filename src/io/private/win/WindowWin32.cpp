@@ -22,7 +22,7 @@ namespace ari
 			for(const auto& w: g_Windows)
 			{
 				if (w.hWnd == hwnd)
-					return { core::HandleManager<WindowHandle>::GetHandleByIndex(i), i };
+					return { core::HandleManager<WindowHandle>::FindHandleByIndex(i), i };
 				i++;
 			}
 

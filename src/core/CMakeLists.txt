@@ -13,10 +13,12 @@ fips_begin_module(ari_core)
 
     fips_dir(containers)
     fips_files(
+        Array.hpp
         elementBuffer.hpp
         KeyValuePair.hpp
         Map.hpp
         Queue.hpp
+        Slice.hpp
         StaticArray.hpp
     )
 fips_end_module()

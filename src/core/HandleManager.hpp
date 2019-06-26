@@ -26,7 +26,7 @@ namespace ari
 				return  m_iLastIndex++;
 			}
 
-			static uint32_t GetHandleByIndex(const uint32_t& index)
+			static uint32_t FindHandleByIndex(const uint32_t& index)
 			{
 				for (auto h : m_mHandleIndexMap)
 					if (h.Value() == index)
