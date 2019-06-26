@@ -2,6 +2,8 @@
 
 #include "core/defines.hpp"
 
+struct GLFWwindow;
+
 namespace ari
 {
 	namespace io
@@ -21,6 +23,8 @@ namespace ari
 
 		WindowHandle CreateAriWindow(Window& window, const char* _title);
 
+		GLFWwindow* GetGlfwWindow(const WindowHandle& handle);
+
         /**
          * @brief Run the windows and handle the events.
          * 
@@ -30,8 +34,6 @@ namespace ari
          * @return false when the user request to close the application
          */
 		bool Run();
-
-		void* GetWin32HDC(const WindowHandle& handle);
 
 	} // namespace io
 	

@@ -6,14 +6,11 @@ fips_begin_module(ari_gfx)
     )
 
     if (ARI_OPENGL)
-        fips_dir(private/ogl)
-        fips_files(
-            gfx_ogl.hpp             gfx_ogl.cpp
-        )
-        if (FIPS_WINDOWS)
-            fips_dir(private/ogl/win)
+        if (ARI_GLFW)
+            fips_deps(glfw3)
+            fips_dir(private/glfw)
             fips_files(
-                gfx_ogl_win.cpp
+                gfx_glfw.cpp
             )
         endif()
     endif()

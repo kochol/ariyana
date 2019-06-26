@@ -9,6 +9,9 @@ imports:
         git: https://github.com/floooh/sokol.git
     sokol-tools-bin:
         git: https://github.com/floooh/sokol-tools-bin      
+    fips-glfw:
+        git: https://github.com/fips-libs/fips-glfw.git
+
 exports:
     header-dirs :
         - src
