@@ -14,6 +14,8 @@ namespace ari
 			if (!window.IsValid())
 				return false;
 
+			glfwSwapInterval(setup.swap_interval);
+
 			// Setup sokol gfx
 			sg_desc desc;
 			core::Memory::Fill(&desc, sizeof(sg_desc), 0);
