@@ -2,35 +2,44 @@
 #include "gfx/gfx.hpp"
 #include "sokol_gfx.h"
 #include "triangle.glsl.h"
+#include "gfx/Application.hpp"
 
-int main(int argc, char* argv[])
+class TriangleApp : public ari::Application
 {
-	ari::gfx::gfxSetup setup;
-	SetupGfx(setup);
+public:
 
-	/* a vertex buffer */
-	const float vertices[] = {
-		// positions            // colors
-		 0.0f,  0.5f, 0.5f,     1.0f, 0.0f, 0.0f, 1.0f,
-		 0.5f, -0.5f, 0.5f,     0.0f, 1.0f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f,     0.0f, 0.0f, 1.0f, 1.0f
-	};
-	ari::gfx::BufferHandle vb = ari::gfx::CreateVertexBuffer(sizeof(vertices), (void*)vertices);
+	~TriangleApp() = default;
 
-	ari::gfx::ShaderHanlde shader = ari::gfx::CreateShader(triangle_shader_desc());
+	ari::gfx::GfxSetup* GetGfxSetup() override
+	{
+		return &m_setup;
+	}
 
-	ari::gfx::PipelineSetup pipeline_setup;
-	pipeline_setup.shader = shader;
-	pipeline_setup.layout.attrs[0].format = ari::gfx::VertexFormat::Float3;
-	pipeline_setup.layout.attrs[1].format = ari::gfx::VertexFormat::Float4;
+	void OnInit() override
+	{
+		/* a vertex buffer */
+		const float vertices[] = {
+			// positions            // colors
+			 0.0f,  0.5f, 0.5f,     1.0f, 0.0f, 0.0f, 1.0f,
+			 0.5f, -0.5f, 0.5f,     0.0f, 1.0f, 0.0f, 1.0f,
+			-0.5f, -0.5f, 0.5f,     0.0f, 0.0f, 1.0f, 1.0f
+		};
+		vb = ari::gfx::CreateVertexBuffer(sizeof(vertices), (void*)vertices);
 
-	ari::gfx::PipelineHandle pipeline = CreatePipeline(pipeline_setup);
+		shader = ari::gfx::CreateShader(triangle_shader_desc());
 
-	ari::gfx::Bindings binds;
-	binds.vertexBuffers[0] = vb;
-	ari::gfx::BindingHandle binding = CreateBinding(binds);
+		pipeline_setup.shader = shader;
+		pipeline_setup.layout.attrs[0].format = ari::gfx::VertexFormat::Float3;
+		pipeline_setup.layout.attrs[1].format = ari::gfx::VertexFormat::Float4;
 
-	while(ari::io::Run())
+		pipeline = CreatePipeline(pipeline_setup);
+
+		ari::gfx::Bindings binds;
+		binds.vertexBuffers[0] = vb;
+		binding = CreateBinding(binds);
+	}
+
+	void OnFrame() override
 	{
 		ari::gfx::BeginDefaultPass();
 		ApplyPipeline(pipeline);
@@ -38,7 +47,22 @@ int main(int argc, char* argv[])
 		ari::gfx::Draw(0, 3, 1);
 		ari::gfx::EndPass();
 		ari::gfx::Commit();
-		ari::gfx::Present();
 	}
-	return 0;
-}
+
+	void OnCleanup() override
+	{
+		
+	}
+
+private:
+
+	ari::gfx::GfxSetup			m_setup;
+	ari::gfx::BufferHandle		vb;
+	ari::gfx::ShaderHanlde		shader;
+	ari::gfx::PipelineSetup		pipeline_setup;
+	ari::gfx::PipelineHandle	pipeline;
+	ari::gfx::BindingHandle		binding;
+
+};
+
+ARI_MAIN(TriangleApp)

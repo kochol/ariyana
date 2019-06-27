@@ -6,6 +6,7 @@ fips_begin_module(ari_io)
     )
     
     if (ARI_GLFW AND ARI_OPENGL)
+        fips_deps(glfw3)
         fips_dir(private/glfw)
         fips_files(
             WindowGlfw.cpp
@@ -15,7 +16,10 @@ fips_begin_module(ari_io)
             flextGL.h           flextGL.c
         )
     else()
-
+        fips_dir(private/sapp)
+        fips_files(
+            WindowSapp.cpp
+        )
     endif()
 
 fips_end_module()

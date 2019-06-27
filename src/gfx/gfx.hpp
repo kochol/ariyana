@@ -16,7 +16,7 @@ namespace ari
 		ARI_HANDLE(TextureHandle);
 		ARI_HANDLE(BindingHandle);
 
-        struct gfxSetup
+        struct GfxSetup
         {
 			io::Window	window;
 			int sample_count = 0;                   /* MSAA sample count */
@@ -90,7 +90,7 @@ namespace ari
 			TextureHandle fsTextures[ARI_MAX_SHADERSTAGE_TEXTURES];
 		};
 
-		bool SetupGfx(gfxSetup& setup);
+		bool SetupGfx(GfxSetup& setup);
 
 		void Present();
 

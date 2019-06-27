@@ -1,13 +1,32 @@
 #include "io/Window.hpp"
+#include "gfx/Application.hpp"
 #include "gfx/gfx.hpp"
 
-int main(int argc, char* argv[])
+class InitApp: public ari::Application
 {
-	ari::gfx::gfxSetup setup;
-	SetupGfx(setup);
-	while(ari::io::Run())
+public:
+
+	ari::gfx::GfxSetup* GetGfxSetup() override
 	{
-		ari::gfx::Present();
+		return &m_gfx_setup;
 	}
-	return 0;
-}
+
+	void OnInit() override
+	{
+		
+	}
+
+	void OnFrame() override
+	{
+		
+	}
+
+	void OnCleanup() override
+	{
+		
+	}
+
+	ari::gfx::GfxSetup m_gfx_setup;
+};
+
+ARI_MAIN(InitApp)
