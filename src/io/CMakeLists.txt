@@ -5,17 +5,17 @@ fips_begin_module(ari_io)
         Window.hpp
     )
     
-    if (ARI_OPENGL)
-        if (ARI_GLFW)
-            fips_dir(private/glfw)
-            fips_files(
-                WindowGlfw.cpp
-            )
-            fips_dir(private/flextgl)
-            fips_files(
-                flextGL.h           flextGL.c
-            )
-        endif()
+    if (ARI_GLFW AND ARI_OPENGL)
+        fips_dir(private/glfw)
+        fips_files(
+            WindowGlfw.cpp
+        )
+        fips_dir(private/flextgl)
+        fips_files(
+            flextGL.h           flextGL.c
+        )
+    else()
+
     endif()
 
 fips_end_module()

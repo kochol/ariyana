@@ -5,13 +5,14 @@ fips_begin_module(ari_gfx)
         gfx.hpp                     gfx.cpp
     )
 
-    if (ARI_OPENGL)
-        if (ARI_GLFW)
-            fips_deps(glfw3)
-            fips_dir(private/glfw)
-            fips_files(
-                gfx_glfw.cpp
-            )
-        endif()
+    if (ARI_GLFW AND ARI_OPENGL)
+        fips_deps(glfw3)
+        fips_dir(private/glfw)
+        fips_files(
+            gfx_glfw.cpp
+        )
+    else()
+
     endif()
+
 fips_end_module()
