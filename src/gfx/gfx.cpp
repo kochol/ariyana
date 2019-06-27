@@ -105,7 +105,8 @@ namespace ari
 		{
 			sg_pass_action pass;
 			core::Memory::Fill(&pass, sizeof(sg_pass_action), 0);
-			sg_begin_default_pass(&pass, 640, 480);
+			const core::RectI r = io::GetWindowSize({});
+			sg_begin_default_pass(&pass, r.width, r.height);
 		}
 
 		void EndPass()

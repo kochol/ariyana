@@ -4,9 +4,11 @@ fips_begin_module(ari_core)
         Assertion.hpp
         defines.hpp
         HandleManager.hpp
+        HandmadeMath.h      HandmadeMath.cpp
         LockScope.hpp       LockScope.cpp
         Memory.hpp          Memory.cpp
         Ptr.hpp
+        Rect.hpp
         SpinLock.hpp        SpinLock.cpp
         Types.hpp
     )

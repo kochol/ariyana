@@ -23,6 +23,15 @@ namespace ari
 			return true;
 		}
 
+		core::RectI GetWindowSize(const WindowHandle& handle)
+		{
+			core::RectI v;
+			v.width = sapp_width();
+			v.height = sapp_height();
+
+			return v;
+		}
+
     } // namespace io
     
 } // namespace ari

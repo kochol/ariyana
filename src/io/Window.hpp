@@ -1,6 +1,7 @@
 #pragma once
 
 #include "core/defines.hpp"
+#include "core/Rect.hpp"
 
 struct GLFWwindow;
 
@@ -34,6 +35,8 @@ namespace ari
          * @return false when the user request to close the application
          */
 		bool Run();
+
+		core::RectI GetWindowSize(const WindowHandle& handle);
 
 	} // namespace io
 	
