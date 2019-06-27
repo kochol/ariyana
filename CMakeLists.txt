@@ -40,7 +40,7 @@ fips_setup(PROJECT ari)
             set(slang "glsl330")
             set(ARI_BUILD_TESTS ON)
             set(ARI_OPENGL ON)
-            set(ARI_GLFW OFF)
+            set(ARI_GLFW ON)
         endif()
     endif()
 

@@ -63,6 +63,14 @@ namespace ari
 			return !glfwWindowShouldClose(g_FirstWindow);
 		}
         
+        core::RectI GetWindowSize(const WindowHandle& handle)
+		{
+			core::RectI v;
+            glfwGetFramebufferSize(g_Windows[handle.Index], &v.width, &v.height);
+
+			return v;
+		}
+
     } // namespace io
     
 } // namespace ari

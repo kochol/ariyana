@@ -3,12 +3,13 @@
 #define SOKOL_IMPL
 #include "sokol_gfx.h"
 #include "GLFW/glfw3.h"
+#include "gfx/Application.hpp"
 
 namespace ari
 {
     namespace gfx
     {
-		bool ari::gfx::SetupGfx(gfxSetup& setup)
+		bool ari::gfx::SetupGfx(GfxSetup& setup)
 		{
 			const io::WindowHandle window = io::CreateAriWindow(setup.window, "Ari 0.1");
 			if (!window.IsValid())
@@ -38,3 +39,27 @@ namespace ari
     } // namespace gfx
     
 } // namespace ari
+
+ari::Application* g_application = nullptr;
+
+int main(int argc, char* argv[]) 
+{
+    // call ari main
+	g_application = ari_main(argc, argv);
+
+	// set the params
+	auto setup = g_application->GetGfxSetup();
+
+    ari::gfx::SetupGfx(*setup);
+    g_application->OnInit();
+
+    while (ari::io::Run())
+    {
+        g_application->OnFrame();
+        ari::gfx::Present();
+    }
+
+    g_application->OnCleanup();
+	ari::core::Memory::Delete(g_application);
+    sg_shutdown();
+}
