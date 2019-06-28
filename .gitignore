@@ -36,3 +36,4 @@
 
 # Files
 .fips-imports.cmake
+.fips-settings.yml

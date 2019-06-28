@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 #include "Config.hpp"
+#include <new>
+#include <utility>
 
 namespace ari
 {

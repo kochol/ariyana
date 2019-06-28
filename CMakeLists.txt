@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 2.8)
 get_filename_component(FIPS_ROOT_DIR "../fips" ABSOLUTE)
 include("${FIPS_ROOT_DIR}/cmake/fips.cmake")
 
-option(ARI_BUILD_TESTS "Build engine test projects" OFF)
+option(ARI_BUILD_TESTS "Build engine test projects" ON)
 option(ARI_OPENGL "Use OpenGL as rendering backend" ON)
 option(ARI_GLFW "Use glfw on desktop" OFF)
 
