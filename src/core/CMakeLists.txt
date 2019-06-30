@@ -1,5 +1,6 @@
 fips_begin_module(ari_core)
-	fips_vs_warning_level(3)
+    fips_vs_warning_level(3)
+    fips_deps(memory-allocators)
     fips_files(
         Assertion.hpp
         defines.hpp
@@ -7,6 +8,7 @@ fips_begin_module(ari_core)
         HandmadeMath.h      HandmadeMath.cpp
         LockScope.hpp       LockScope.cpp
         Memory.hpp          Memory.cpp
+        MemoryPool.hpp
         Ptr.hpp
         Rect.hpp
         SpinLock.hpp        SpinLock.cpp

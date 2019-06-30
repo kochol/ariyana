@@ -11,6 +11,8 @@ imports:
         git: https://github.com/floooh/sokol-tools-bin      
     fips-glfw:
         git: https://github.com/fips-libs/fips-glfw.git
+    fips-memory-allocators:
+        git: https://github.com/kochol/fips-memory-allocators.git
 
 exports:
     header-dirs :
