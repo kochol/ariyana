@@ -43,19 +43,20 @@ namespace ari::core
 				m_pAlloc = nullptr;
 			}
 			m_bValid = false;
+			m_vObjects.Clear();
 		}
 
-		template<typename... ARGS>
+		template<typename TYPE, typename... ARGS>
 		static T* New(const uint32_t& index, ARGS&& ... args) 
     	{
-			T* ptr = (T*)m_pAlloc->Allocate(sizeof(T), 32);
+			T* ptr = (T*)m_pAlloc->Allocate(sizeof(TYPE), 32);
 			
 			if (index < (uint32_t)m_vObjects.Size())
 				m_vObjects[index] = ptr;
 			else
 				m_vObjects.Add(ptr);
 
-			return new(ptr) T(std::forward<ARGS>(args)...);
+			return new(ptr) TYPE(std::forward<ARGS>(args)...);
 		};
 
 		/// replacement delete (see Memory::New())
