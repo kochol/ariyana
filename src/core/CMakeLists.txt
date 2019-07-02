@@ -4,6 +4,7 @@ fips_begin_module(ari_core)
     fips_files(
         Assertion.hpp
         defines.hpp
+        Delegate.hpp
         HandleManager.hpp
         HandmadeMath.h      HandmadeMath.cpp
         LockScope.hpp       LockScope.cpp

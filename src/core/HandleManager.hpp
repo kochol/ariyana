@@ -56,6 +56,11 @@ namespace ari
 				}
 			}
 
+			static const Map<uint32_t, uint32_t>& GetHandles()
+			{
+				return m_mHandleIndexMap;
+			}
+
         private:
 
 			static Map<uint32_t, uint32_t>	m_mHandleIndexMap;

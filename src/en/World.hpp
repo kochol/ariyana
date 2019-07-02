@@ -44,6 +44,9 @@ namespace ari
 			template<class T>
 			void AddComponent(const EntityHandle& _entity, const ComponentHandle<T>& _cmp);
 
+			template<class T, class BASE>
+			void AddDerivedComponent(const EntityHandle& _entity, const ComponentHandle<T>& _cmp);
+
 			//! Removes a component from an entity
 			void RemoveComponent(const EntityHandle& _entity, const uint32_t& _id);
 
@@ -57,6 +60,9 @@ namespace ari
 
 			template<class T, typename Func>
 			void GetComponents(uint32_t _id, Func _func);
+
+			template<class BASE, typename FUNC>
+			void GetDerivedComponents(FUNC _func);
 
 			sx_job_context	*	JobContext = nullptr;
 
@@ -108,6 +114,16 @@ namespace ari
 			
 			m_mEntityComponents[cmpId].Add(_entity.Handle, _cmp.Handle);
 		}
+
+		template<class T, class BASE>
+		void World::AddDerivedComponent(const EntityHandle& _entity, const ComponentHandle<T>& _cmp)
+		{
+			const uint32_t cmpId = BASE::Id;
+			if (!m_mEntityComponents.Contains(cmpId))
+				m_mEntityComponents.Add(cmpId, core::Map<uint32_t, uint32_t>());
+
+			m_mEntityComponents[cmpId].Add(_entity.Handle, _cmp.Handle);
+		}
 	
 		template<class T, typename Func>
 		void World::GetComponents(uint32_t _id, Func _func)
@@ -118,6 +134,19 @@ namespace ari
 				uint32_t h = it->value;
 				uint32_t i = core::HandleManager<T>::FindIndex(h);
 				ComponentHandle<T> cmp = { h, i, core::ObjectPool<T>::GetByIndex(i) };
+				_func(it->key, cmp);
+			}
+		}
+
+		template<class BASE, typename FUNC>
+		void World::GetDerivedComponents(FUNC _func)
+		{
+			auto& m = m_mEntityComponents[BASE::Id];
+			for (auto it = m.begin(); it != m.end(); ++it)
+			{
+				uint32_t h = it->value;
+				uint32_t i = core::HandleManager<BASE>::FindIndex(h);
+				ComponentHandle<BASE> cmp = { h, i, core::MemoryPool<BASE>::GetByIndex(i) };
 				_func(it->key, cmp);
 			}
 		}
