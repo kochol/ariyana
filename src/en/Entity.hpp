@@ -9,7 +9,8 @@ namespace ari
 			
 		struct Entity
         {
-
+			EntityHandle dummy1;
+			EntityHandle dummy2;
         };        
 
 	} // en

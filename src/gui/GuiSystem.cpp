@@ -42,7 +42,7 @@ namespace ari
 			UpdateState::Enum _state)
 		{
 			core::RectI size = io::GetWindowSize({ 0,0 });
-			simgui_new_frame(size.width, size.height, 0);
+			simgui_new_frame(size.width, size.height, _elapsed);
 
 			_world->GetDerivedComponents<Gui>([this](uint32_t _entity_handle, const ComponentHandle<Gui>& gui)
 				{

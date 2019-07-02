@@ -83,7 +83,7 @@ namespace ari
 			uint32_t i;
 			const uint32_t h = core::HandleManager<T>::GetNewHandle(i);
 			
-			return { h, i, core::ObjectPool<T>::New() };
+			return { h, i, core::ObjectPool<T>::New(i) };
 		}
 
 		//! Creates a component from memory pool
@@ -94,7 +94,7 @@ namespace ari
 			uint32_t i;
 			const uint32_t h = core::HandleManager<BASE>::GetNewHandle(i);
 
-			return { h, i, (T*)core::MemoryPool<BASE>::New<T>() };
+			return { h, i, (T*)core::MemoryPool<BASE>::New<T>(i) };
 		}
 
 		template<class T>

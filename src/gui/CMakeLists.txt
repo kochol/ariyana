@@ -12,4 +12,9 @@ fips_begin_module(ari_gui)
 			TextBox.cpp		TextBox.hpp
 			Window.cpp		Window.hpp
     )
+    
+    if (ARI_GLFW)
+        add_definitions(-DARI_GLFW)
+    endif()
+
 fips_end_module()

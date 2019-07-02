@@ -41,6 +41,7 @@ namespace ari
 
 		EntityHandle World::CreateEntity()
 		{
+			core::MemoryPool<Entity>::Setup(65536);
 			uint32_t i;
 			uint32_t h = core::HandleManager<EntityHandle>::GetNewHandle(i);
 			core::MemoryPool<Entity>::New<Entity>(i);
