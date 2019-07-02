@@ -38,7 +38,7 @@ namespace ari
 			simgui_shutdown();
 		}
 
-		void GuiSystem::Update(World* _world, float _elapsed,
+		void GuiSystem::Update(World* _world, const float& _elapsed,
 			UpdateState::Enum _state)
 		{
 			core::RectI size = io::GetWindowSize({ 0,0 });
