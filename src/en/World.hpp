@@ -5,6 +5,7 @@
 #include "ComponentHandle.hpp"
 #include "core/containers/Array.hpp"
 #include "core/memory/ObjectPool.hpp"
+#include "core/memory/MemoryPool.hpp"
 
 namespace ari
 {
@@ -28,8 +29,12 @@ namespace ari
 			//! Creates a new entity
 			EntityHandle CreateEntity();
 
-			//! Creates a component from pool
+			//! Creates a component from object pool
 			template<class T>
+			ComponentHandle<T> CreateComponent();
+
+			//! Creates a component from memory pool
+			template<class T, class BASE>
 			ComponentHandle<T> CreateComponent();
 
 			template<class T>
@@ -73,6 +78,17 @@ namespace ari
 			const uint32_t h = core::HandleManager<T>::GetNewHandle(i);
 			
 			return { h, i, core::ObjectPool<T>::New() };
+		}
+
+		//! Creates a component from memory pool
+		template<class T, class BASE>
+		ComponentHandle<T> World::CreateComponent()
+		{
+			core::MemoryPool<BASE>::Setup(4096);
+			uint32_t i;
+			const uint32_t h = core::HandleManager<BASE>::GetNewHandle(i);
+
+			return { h, i, (T*)core::MemoryPool<BASE>::New<T>() };
 		}
 
 		template<class T>
