@@ -1,7 +1,7 @@
 #pragma once
 #include "FreeListAllocator.h"
 #include "Memory.hpp"
-#include "containers/Array.hpp"
+#include "../containers/Array.hpp"
 
 namespace ari::core
 {

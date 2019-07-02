@@ -7,11 +7,10 @@ fips_begin_module(ari_core)
         HandleManager.hpp
         HandmadeMath.h      HandmadeMath.cpp
         LockScope.hpp       LockScope.cpp
-        Memory.hpp          Memory.cpp
-        MemoryPool.hpp
         Ptr.hpp
         Rect.hpp
         SpinLock.hpp        SpinLock.cpp
+        StringHash.hpp
         Types.hpp
     )
 
@@ -25,4 +24,11 @@ fips_begin_module(ari_core)
         Slice.hpp
         StaticArray.hpp
     )
+
+    fips_dir(memory)
+    fips_files(
+        Memory.hpp          Memory.cpp
+        MemoryPool.hpp
+    )
+
 fips_end_module()

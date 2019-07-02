@@ -32,7 +32,7 @@
 *.app
 
 # Folders
-.vscode/ipch
+.vscode
 
 # Files
 .fips-imports.cmake
