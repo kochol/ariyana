@@ -1,6 +1,6 @@
 #pragma once
 #include "../Assertion.hpp"
-#include "../Memory.hpp"
+#include "../memory/Memory.hpp"
 
 namespace ari
 {

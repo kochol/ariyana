@@ -1,6 +1,6 @@
 #include "WorldManager.hpp"
 #include "World.hpp"
-#include <core/Memory.hpp>
+#include <core/memory/Memory.hpp>
 
 namespace ari
 {

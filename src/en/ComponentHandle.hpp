@@ -16,7 +16,7 @@ namespace ari
 			
 			T*					Component;
 
-			ComponentTag		Tag;
+			ComponentTag		Tag = General;
 
 			T* operator->() const
 			{

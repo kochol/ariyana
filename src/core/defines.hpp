@@ -19,5 +19,5 @@ struct _name \
 };
 
 #define ARI_COMPONENT(_name) \
-static const uint32_t Id = ari::StringHash::StaticHash(#_name); \
+static const uint32_t Id = COMPILE_TIME_CRC32_STR(#_name); \
 virtual uint32_t GetId() { return Id; }

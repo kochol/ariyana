@@ -29,6 +29,7 @@ fips_begin_module(ari_core)
     fips_files(
         Memory.hpp          Memory.cpp
         MemoryPool.hpp
+        ObjectPool.hpp
     )
 
 fips_end_module()

@@ -9,6 +9,7 @@ namespace ari
 			
 		struct Entity
         {
+
         };        
 
 	} // en

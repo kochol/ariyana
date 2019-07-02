@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include "Config.hpp"
+#include "../Config.hpp"
 #include <new>
 #include <utility>
 

@@ -35,6 +35,11 @@ namespace ari
 				return aInvalidHandle;
 			}
 
+			static uint32_t FindIndex(const uint32_t& handle)
+			{
+				return m_mHandleIndexMap[handle];
+			}
+
 			static bool IsHandleValid(const uint32_t& handle)
 			{
 				return m_mHandleIndexMap.Contains(handle);
