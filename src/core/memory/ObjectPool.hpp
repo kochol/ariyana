@@ -49,7 +49,7 @@ namespace ari::core
 		template<typename... ARGS>
 		static T* New(const uint32_t& index, ARGS&& ... args) 
     	{
-			T* ptr = (T*)m_pAlloc->Allocate(sizeof(T), 32);
+			T* ptr = (T*)m_pAlloc->Allocate(sizeof(T), 8);
 			
 			if (index < (uint32_t)m_vObjects.Size())
 				m_vObjects[index] = ptr;
