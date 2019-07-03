@@ -1,5 +1,10 @@
 fips_begin_module(ari_core)
+
     fips_vs_warning_level(3)
+    if (FIPS_MSVC)
+        add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+    endif()
+
     fips_deps(memory-allocators)
     fips_files(
         Assertion.hpp
@@ -8,6 +13,7 @@ fips_begin_module(ari_core)
         HandleManager.hpp
         HandmadeMath.h      HandmadeMath.cpp
         LockScope.hpp       LockScope.cpp
+        log.h               log.c
         Ptr.hpp
         Rect.hpp
         SpinLock.hpp        SpinLock.cpp
