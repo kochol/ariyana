@@ -33,7 +33,7 @@ namespace ari
 			simgui_setup(&desc);
 		}
 
-		void GuiSystem::UnConfigure(World* _world)
+		void GuiSystem::Unconfigure(World* _world)
 		{
 			simgui_shutdown();
 		}

@@ -21,7 +21,7 @@ namespace ari
 
 			void Configure(World* _world) override;
 
-			void UnConfigure(World* _world) override;
+			void Unconfigure(World* _world) override;
 
 			void Update(World* _world, const float& _elapsed,
 				UpdateState::Enum _state) override;

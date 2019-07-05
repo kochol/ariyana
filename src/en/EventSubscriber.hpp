@@ -2,8 +2,8 @@
 
 namespace ari::en
 {
-	class World;
-	class Entity;
+	struct World;
+	struct Entity;
 	class Component;
 	class FrameData;
 

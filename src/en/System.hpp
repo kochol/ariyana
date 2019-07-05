@@ -16,7 +16,7 @@ namespace ari
 
 			virtual void Configure(World* _world) { }
 
-			virtual void UnConfigure(World* _world) { }
+			virtual void Unconfigure(World* _world) { }
 
 			virtual void Update(World* _world, const float& _elapsed,
 				UpdateState::Enum _state) { }

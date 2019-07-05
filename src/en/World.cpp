@@ -69,7 +69,7 @@ namespace ari
 				if (m_aSystems[i] == _system)
 				{
 					m_aSystems.EraseSwap(i);
-					_system->UnConfigure(this);
+					_system->Unconfigure(this);
 					return;
 				}
 			}
