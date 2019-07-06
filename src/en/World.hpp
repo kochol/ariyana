@@ -68,7 +68,7 @@ namespace ari::en
 		* Subscribe to an event.
 		*/
 		template<typename T>
-		void subscribe(EventSubscriber<T>* subscriber)
+		void Subscribe(EventSubscriber<T>* subscriber)
 		{
 			auto index = AriTypeId<T>::GetTypeId();
 			const int found = subscribers.FindIndex(index);
@@ -104,11 +104,13 @@ namespace ari::en
 		/**
 		* Unsubscribe from all events. Don't be afraid of the void pointer, just pass in your subscriber as normal.
 		*/
-		void unsubscribeAll(Internal::BaseEventSubscriber* subscriber)
+		void unsubscribeAll(void* subscriber)
 		{
 			for (auto kv : subscribers)
 			{
-				const int subIndex = kv.value.FindIndexLinear(subscriber, 0, kv.value.Size());
+				const int subIndex = kv.value.FindIndexLinear(
+					reinterpret_cast<Internal::BaseEventSubscriber*>(subscriber),
+					0, kv.value.Size());
 				kv.value.EraseSwap(subIndex);
 			}
 		}
@@ -194,6 +196,9 @@ namespace ari::en
 			m_mEntityComponents.Add(cmpId, core::Map<uint32_t, uint32_t>());
 
 		m_mEntityComponents[cmpId].Add(_entity.Handle, _cmp.Handle);
+
+		// Also add T class to the list
+		AddComponent(_entity, _cmp);
 	}
 
 	template<class T, typename Func>

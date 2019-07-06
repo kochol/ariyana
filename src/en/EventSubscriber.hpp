@@ -19,7 +19,7 @@ namespace ari::en
 	} // Internal
 
 	/**
-	* Subclass this as EventSubscriber<EventType> and then call World::subscribe() in order to subscribe to events. Make sure
+	* Subclass this as EventSubscriber<EventType> and then call World::Subscribe() in order to Subscribe to events. Make sure
 	* to call World::unsubscribe() or World::unsubscribeAll() when your subscriber is deleted!
 	*/
 	template<typename T>
