@@ -2,7 +2,7 @@
 #include "../Assertion.hpp"
 #include "../memory/Memory.hpp"
 
-namespace ari
+namespace ari::core
 {
 	namespace _priv
 	{

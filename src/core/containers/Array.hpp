@@ -2,6 +2,8 @@
 #include "../Config.hpp"
 #include "../Types.hpp"
 #include "Slice.hpp"
+#include <initializer_list>
+#include "elementBuffer.hpp"
 
 namespace ari
 {
