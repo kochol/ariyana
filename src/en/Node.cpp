@@ -28,6 +28,15 @@ namespace ari
 			return m_mChilds[_id];
 		}
 
+		Node* Node::GetChild(uint32_t _id)
+		{
+			const int i = m_mChilds.FindIndex(_id);
+			if (i != core::InvalidIndex)
+				if (m_mChilds.ValueAtIndex(i).Size() > 0)
+					return m_mChilds.ValueAtIndex(i)[0];
+
+			return nullptr;
+		}
 	} // en
 	
 } // ari
