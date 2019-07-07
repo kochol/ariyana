@@ -2,8 +2,8 @@
 
 #include "core/defines.hpp"
 #include "en/Node.hpp"
-#include "core/HandmadeMath.h"
 #include "sx/macros.h"
+#include "sx/math.h"
 
 namespace ari::en
 {
@@ -16,22 +16,22 @@ namespace ari::en
 		//! Constructor
 		Node3D() : _isRenderable(false)
 		{
-			Position = HMM_Vec3(0.0f, 0.0f, 0.0f);
-			Scale = HMM_Vec3(1.0f, 1.0f, 1.0f);
-			Rotation = HMM_Quaternion(0.0f, 0.0f, 0.0f, 1.0f);
+			Position = sx_vec3f(0.0f, 0.0f, 0.0f);
+			Scale = sx_vec3f(1.0f, 1.0f, 1.0f);
+			Rotation = sx_quat_ident();
 		}
 
 		//! Destructor
 		virtual ~Node3D() = default;
 
 		//! Render
-		virtual void Render(const hmm_mat4& matrix) { sx_unused(matrix); }
+		virtual void Render(const int& _frameTurnIndex) { sx_unused(_frameTurnIndex); }
 
-		hmm_vec3 Position;
-		hmm_quaternion Rotation;
-		hmm_vec3 Scale;
+		sx_vec3 Position;
+		sx_quat Rotation;
+		sx_vec3 Scale;
 
-		hmm_mat4 _finalMat;
+		sx_mat4 _finalMat[3];
 		bool _isRenderable;
 
 	}; // Node3D
