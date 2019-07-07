@@ -4,6 +4,8 @@ fips_begin_module(ari_gfx)
     fips_files(
         Application.hpp
         gfx.hpp                     gfx.cpp
+        Vertices.hpp
+        Viewport.hpp
     )
 
     if (ARI_GLFW AND ARI_OPENGL)

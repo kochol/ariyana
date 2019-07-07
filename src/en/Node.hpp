@@ -25,6 +25,8 @@ namespace ari
 
 			const core::Array<Node*>& GetChildren(uint32_t _id);
 
+			Node* GetChild(uint32_t _id);
+
 		private:
 
 			core::Map<uint32_t, core::Array<Node*>>	m_mChilds;

@@ -11,7 +11,6 @@ fips_begin_module(ari_core)
         defines.hpp
         Delegate.hpp
         HandleManager.hpp
-        HandmadeMath.h      HandmadeMath.cpp
         LockScope.hpp       LockScope.cpp
         log.h               log.c
         Ptr.hpp

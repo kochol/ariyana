@@ -96,6 +96,8 @@ namespace ari
 
 		void Present(const io::WindowHandle& handle);
 
+		uint32_t GetFrameNumber();
+
 		BufferHandle CreateVertexBuffer(int size, void* content, BufferUsage usage = BufferUsage::Immutable);
 
 		BufferHandle CreateIndexBuffer(int size, void* content, BufferUsage usage = BufferUsage::Immutable);
@@ -118,8 +120,6 @@ namespace ari
 
 		void Draw(int base_element, int num_elements, int num_instances);
         
-        uint32_t GetFrameNumber();
-
     } // namespace gfx
     
 } // namespace ari
