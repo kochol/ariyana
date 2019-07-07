@@ -117,6 +117,8 @@ namespace ari
 		void Commit();
 
 		void Draw(int base_element, int num_elements, int num_instances);
+        
+        uint32_t GetFrameNumber();
 
     } // namespace gfx
     

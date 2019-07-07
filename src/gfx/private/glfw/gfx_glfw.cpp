@@ -5,6 +5,8 @@
 #include "GLFW/glfw3.h"
 #include "gfx/Application.hpp"
 
+static uint32_t g_FrameNumber = 0;
+
 namespace ari
 {
     namespace gfx
@@ -36,6 +38,11 @@ namespace ari
 			glfwSwapBuffers(io::GetGlfwWindow(handle));
 		}
 
+        uint32_t GetFrameNumber()
+        {
+            return g_FrameNumber;
+        }
+
     } // namespace gfx
     
 } // namespace ari
@@ -55,6 +62,7 @@ int main(int argc, char* argv[])
 
     while (ari::io::Run())
     {
+        g_FrameNumber++;
         g_application->OnFrame();
         ari::gfx::Present();
     }

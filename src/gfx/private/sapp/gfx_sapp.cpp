@@ -8,6 +8,7 @@
 #include "gfx/gfx.hpp"
 
 ari::Application* g_application = nullptr;
+static uint32_t g_FrameNumber = 0;
 
 void ari_init_cb()
 {
@@ -27,6 +28,7 @@ void ari_init_cb()
 
 void ari_frame_cb()
 {
+    g_FrameNumber++;
 	g_application->OnFrame();
 }
 
@@ -88,6 +90,11 @@ namespace ari
 		void Present(const io::WindowHandle& handle)
 		{
 		}
+
+        uint32_t GetFrameNumber()
+        {
+            return g_FrameNumber;
+        }
 
 	}
 
