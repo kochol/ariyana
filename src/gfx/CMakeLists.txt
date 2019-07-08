@@ -1,6 +1,6 @@
 fips_begin_module(ari_gfx)
     fips_vs_warning_level(3)
-    fips_deps(ari_io)
+    fips_deps(ari_io sx)
     fips_files(
         Application.hpp
         gfx.hpp                     gfx.cpp

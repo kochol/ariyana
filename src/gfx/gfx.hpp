@@ -1,5 +1,6 @@
 #pragma once
 #include "io/Window.hpp"
+#include "sx/math.h"
 
 struct sg_shader_desc;
 #define ARI_MAX_SHADERSTAGE_TEXTURES 12
@@ -90,6 +91,12 @@ namespace ari
 			TextureHandle fsTextures[ARI_MAX_SHADERSTAGE_TEXTURES];
 		};
 
+		enum class ShaderStage
+		{
+			VertexShader,
+			FragmentShader
+		};
+
 		bool SetupGfx(GfxSetup& setup);
 
 		void Present();
@@ -102,15 +109,25 @@ namespace ari
 
 		BufferHandle CreateIndexBuffer(int size, void* content, BufferUsage usage = BufferUsage::Immutable);
 
+		void DestroyBuffer(BufferHandle& buffer);
+
 		ShaderHanlde CreateShader(const sg_shader_desc* desc);
+
+		void DestroyShader(ShaderHanlde& shader);
 
 		PipelineHandle CreatePipeline(const PipelineSetup& setup);
 
-		void ApplyPipeline(PipelineHandle pipeline);
+		void DestroyPipeline(PipelineHandle& pipeline);
+
+		void ApplyPipeline(const PipelineHandle& pipeline);
 
 		BindingHandle CreateBinding(const Bindings& bindings);
 
+		void DestroyBinding(BindingHandle& binding);
+
 		void ApplyBindings(const BindingHandle& handle);
+
+		void ApplyUniforms(ShaderStage _stage, int _ub_index, const void* _data, int _size);
 
 		void BeginDefaultPass();
 
@@ -119,6 +136,16 @@ namespace ari
 		void Commit();
 
 		void Draw(int base_element, int num_elements, int num_instances);
+
+		void SetViewMatrix(const sx_mat4& _view);
+
+		sx_mat4 GetViewMatrix();
+
+		void SetProjMatrix(const sx_mat4& _proj);
+
+		sx_mat4 GetProjMatrix();
+
+		sx_mat4 GetViewProjMatrix();
         
     } // namespace gfx
     

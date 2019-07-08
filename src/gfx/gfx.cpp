@@ -8,6 +8,8 @@ namespace ari
     {
 		core::Array<sg_bindings> g_binds_array;
 
+		static sx_mat4 g_mView, g_mProj, g_mViewProj;
+
 		BufferHandle CreateVertexBuffer(int size, void* content, BufferUsage usage)
 		{
 			sg_buffer_desc desc;
@@ -31,10 +33,24 @@ namespace ari
 			return { core::HandleManager<BufferHandle>::CreateHandleByIndex(buffer.id), buffer.id };
 		}
 
+		void DestroyBuffer(BufferHandle& buffer)
+		{
+			sg_destroy_buffer({ buffer.Index });
+			core::HandleManager<BufferHandle>::RemoveHandle(buffer.Handle);
+			buffer.Handle = buffer.Index = core::aInvalidHandle;
+		}
+
 		ShaderHanlde CreateShader(const sg_shader_desc* desc)
 		{
 			const sg_shader shader = sg_make_shader(desc);
 			return { core::HandleManager<ShaderHanlde>::CreateHandleByIndex(shader.id), shader.id };
+		}
+
+		void DestroyShader(ShaderHanlde& shader)
+		{
+			sg_destroy_shader({ shader.Index });
+			core::HandleManager<ShaderHanlde>::RemoveHandle(shader.Handle);
+			shader.Handle = shader.Index = core::aInvalidHandle;
 		}
 
 		PipelineHandle CreatePipeline(const PipelineSetup& setup)
@@ -58,7 +74,14 @@ namespace ari
 			return { core::HandleManager<PipelineHandle>::CreateHandleByIndex(pipeline.id), pipeline.id };
 		}
 
-		void ApplyPipeline(PipelineHandle pipeline)
+		void DestroyPipeline(PipelineHandle& pipeline)
+		{
+			sg_destroy_pipeline({ pipeline.Index });
+			core::HandleManager<PipelineHandle>::RemoveHandle(pipeline.Handle);
+			pipeline.Handle = pipeline.Index = core::aInvalidHandle;
+		}
+
+		void ApplyPipeline(const PipelineHandle& pipeline)
 		{
 			sg_apply_pipeline({ pipeline.Index });
 		}
@@ -96,9 +119,20 @@ namespace ari
 			return { h , i };
 		}
 
+		void DestroyBinding(BindingHandle& binding)
+		{
+			core::HandleManager<BindingHandle>::RemoveHandle(binding.Handle);
+			binding.Handle = binding.Index = core::aInvalidHandle;
+		}
+
 		void ApplyBindings(const BindingHandle& handle)
 		{
 			sg_apply_bindings(&g_binds_array[handle.Index]);
+		}
+
+		void ApplyUniforms(ShaderStage _stage, int _ub_index, const void* _data, int _size)
+		{
+			sg_apply_uniforms((sg_shader_stage)_stage, _ub_index, _data, _size);
 		}
 
 		void BeginDefaultPass()
@@ -122,6 +156,33 @@ namespace ari
 		void Draw(int base_element, int num_elements, int num_instances)
 		{
 			sg_draw(base_element, num_elements, num_instances);
+		}
+
+		void SetViewMatrix(const sx_mat4& _view)
+		{
+			g_mView = _view;
+			g_mViewProj = g_mProj * g_mView;
+		}
+
+		sx_mat4 GetViewMatrix()
+		{
+			return g_mView;
+		}
+
+		void SetProjMatrix(const sx_mat4& _proj)
+		{
+			g_mProj = _proj;
+			g_mViewProj = g_mProj * g_mView;
+		}
+
+		sx_mat4 GetProjMatrix()
+		{
+			return g_mProj;
+		}
+
+		sx_mat4 GetViewProjMatrix()
+		{
+			return g_mViewProj;
 		}
 
     } // namespace gfx
