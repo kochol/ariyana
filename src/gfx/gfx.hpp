@@ -145,6 +145,8 @@ namespace ari
 
 		sx_mat4 GetProjMatrix();
 
+		void SetViewProjMatrix(const sx_mat4& _view, const sx_mat4& _proj);
+
 		sx_mat4 GetViewProjMatrix();
         
     } // namespace gfx

@@ -180,6 +180,13 @@ namespace ari
 			return g_mProj;
 		}
 
+		void SetViewProjMatrix(const sx_mat4& _view, const sx_mat4& _proj)
+		{
+			g_mView = _view;
+			g_mProj = _proj;
+			g_mViewProj = g_mProj * g_mView;
+		}
+
 		sx_mat4 GetViewProjMatrix()
 		{
 			return g_mViewProj;
