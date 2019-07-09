@@ -55,7 +55,8 @@ namespace ari::en
 
 	void RenderSystem::Receive(World * world, const events::OnComponentAssigned<BoxShape>& event)
 	{
-		sx_unused(world, event);
+		sx_unused(world);
+		sx_unused(event);
 		BoxShape::Init(this);
 	}
 

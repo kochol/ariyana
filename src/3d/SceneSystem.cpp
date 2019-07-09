@@ -66,8 +66,6 @@ namespace ari::en
 	{
 		p_world->Subscribe<events::OnComponentAssigned<Camera>>(this);
 		p_world->Subscribe<events::OnComponentRemoved<Camera>>(this);
-		p_world->Subscribe<events::OnComponentAssigned<BoxShape>>(this);
-		p_world->Subscribe<events::OnComponentRemoved<BoxShape>>(this);
 	}
 
 	void SceneSystem::Unconfigure(World * p_world)
@@ -104,16 +102,6 @@ namespace ari::en
 		{
 			m_pActiveCamera = nullptr;
 		}
-	}
-
-	void SceneSystem::Receive(World* world, const events::OnComponentAssigned<BoxShape>& event)
-	{
-		sx_unused(world, event);
-	}
-
-	void SceneSystem::Receive(World* world, const events::OnComponentRemoved<BoxShape>& event)
-	{
-		sx_unused(world, event);
 	}
 
 	void SceneSystem::CalcTransform(Node3D* node, sx_mat4* parentMat)

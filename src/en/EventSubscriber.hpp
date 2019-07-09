@@ -5,7 +5,7 @@ namespace ari::en
 	struct World;
 	struct Entity;
 	class Component;
-	class FrameData;
+	struct FrameData;
 
 	namespace Internal
 	{
