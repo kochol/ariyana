@@ -1,10 +1,10 @@
 #pragma once
 
+#include "Entity.hpp"
+
 namespace ari::en
 {
 	struct World;
-	struct Entity;
-	class Component;
 	struct FrameData;
 
 	namespace Internal
@@ -42,20 +42,20 @@ namespace ari::en
 		// Called when a new entity is created.
 		struct OnEntityCreated
 		{
-			Entity* entity;
+			EntityHandle entity;
 		};
 
 		// Called when an entity is about to be destroyed.
 		struct OnEntityDestroyed
 		{
-			Entity* entity;
+			EntityHandle entity;
 		};
 
 		// Called when a component is assigned (not necessarily created).
 		template <class T>
 		struct OnComponentAssigned
 		{
-			Entity* entity;
+			EntityHandle entity;
 			T* component;
 		};
 
@@ -63,7 +63,7 @@ namespace ari::en
 		template <class T>
 		struct OnComponentRemoved
 		{
-			Entity* entity;
+			EntityHandle entity;
 			T* component;
 		};
 

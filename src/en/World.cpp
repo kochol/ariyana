@@ -3,6 +3,8 @@
 #include "sx/allocator.h"
 #include "core/memory/MemoryPool.hpp"
 
+ari::TypeIndex ari::TypeRegistry::nextIndex = 0;
+
 static void thread_init(sx_job_context* ctx, int thread_index, uint32_t thread_id, void* user) 
 {
 }
@@ -45,6 +47,7 @@ namespace ari
 			uint32_t i;
 			uint32_t h = core::HandleManager<EntityHandle>::GetNewHandle(i);
 			core::MemoryPool<Entity>::New<Entity>(i);
+			emit<events::OnEntityCreated>({ h , i });
 			return { h , i };
 		}	
 
@@ -170,7 +173,8 @@ namespace ari
 				}
 
 				// Wait on frame rendering updates
-				sx_job_wait_and_del(JobContext, frameJobHandle);
+				if (!frameJobs.Empty())
+					sx_job_wait_and_del(JobContext, frameJobHandle);
 			}		
 		}
 

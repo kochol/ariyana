@@ -186,6 +186,8 @@ namespace ari::en
 			m_mEntityComponents.Add(cmpId, core::Map<uint32_t, uint32_t>());
 		
 		m_mEntityComponents[cmpId].Add(_entity.Handle, _cmp.Handle);
+
+		emit<events::OnComponentAssigned<T>>({ _entity, _cmp.Component });
 	}
 
 	template<class T, class BASE>

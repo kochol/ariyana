@@ -120,9 +120,12 @@ namespace ari::en
 			// Add it to frame data
 			m_pFrameDataTransforms->Nodes.Add(node);
 		}
-		for (auto child: node->GetChildren(Node3D::Id))
+		if (node->HasChildWithId(Node3D::Id))
 		{
-			CalcTransform(static_cast<Node3D*>(child), parentMat);
+			for (auto child : node->GetChildren(Node3D::Id))
+			{
+				CalcTransform(static_cast<Node3D*>(child), parentMat);
+			}
 		}
 	} // CalcTransform
 	

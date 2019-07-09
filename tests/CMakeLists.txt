@@ -1,3 +1,4 @@
 fips_add_subdirectory(01-init)
 fips_add_subdirectory(02-triangle)
 fips_add_subdirectory(03-gui)
+fips_add_subdirectory(04-3d)

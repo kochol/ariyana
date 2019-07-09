@@ -64,7 +64,7 @@ namespace ari::en
 
 	void BoxShape::Init(RenderSystem * render_system)
 	{
-		if (m_sVBPos.Handle != core::aInvalidHandle)
+		if (m_sVBPos.Handle == core::aInvalidHandle)
 		{
 			// Create static vertex buffers.
 			m_sVBPos = gfx::CreateVertexBuffer(sizeof(s_cubePosVertices),
@@ -84,6 +84,7 @@ namespace ari::en
 			pipeline_setup.layout.attrs[0].format = gfx::VertexFormat::Float3;
 			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::Float4;
 			pipeline_setup.layout.attrs[1].bufferIndex = 1;
+			pipeline_setup.index_type = gfx::IndexType::Uint16;
 
 			m_sPipeline = gfx::CreatePipeline(pipeline_setup);
 

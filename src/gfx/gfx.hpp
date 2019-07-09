@@ -75,10 +75,18 @@ namespace ari
 			VertexAttrSetup attrs[ARI_MAX_VERTEX_ATTRIBUTES];
 		};
 
+		enum class IndexType
+		{
+			None = 1,
+			Uint16,
+			Uint32
+		};
+
 		struct PipelineSetup
 		{
 			LayoutSetup layout;
 			ShaderHanlde shader;
+			IndexType index_type = IndexType::None;
 		};
 
 		struct Bindings

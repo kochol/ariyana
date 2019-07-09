@@ -70,6 +70,7 @@ namespace ari
 				desc.layout.attrs[i].buffer_index = setup.layout.attrs[i].bufferIndex;
 				desc.layout.attrs[i].offset = setup.layout.attrs[i].offset;
 			}
+			desc.index_type = (sg_index_type)setup.index_type;
 			const sg_pipeline pipeline = sg_make_pipeline(&desc);
 			return { core::HandleManager<PipelineHandle>::CreateHandleByIndex(pipeline.id), pipeline.id };
 		}

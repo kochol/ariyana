@@ -18,6 +18,8 @@ namespace ari::en
 
 	void RenderSystem::Update(World* _world, const float& _elapsed, UpdateState::Enum _state)
 	{
+		gfx::BeginDefaultPass();
+
 		m_pFrameDataCurrent = m_pFrameDataNext;
 		if (m_pFrameDataCurrent)
 		{
@@ -33,6 +35,10 @@ namespace ari::en
 				node->Render(m_pFrameDataCurrent->FrameDataTurnIndex);
 			}
 		}
+
+		gfx::EndPass();
+		gfx::Commit();
+
 	} // Update
 
 	void RenderSystem::Configure(World * p_world)
@@ -48,7 +54,7 @@ namespace ari::en
 
 	} // Unconfigure
 
-	bool NeedUpdateOn(UpdateState::Enum state)
+	bool RenderSystem::NeedUpdateOn(UpdateState::Enum state)
 	{
 		return state == UpdateState::MainThreadState;
 	}
