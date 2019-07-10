@@ -71,6 +71,7 @@ namespace ari
 				desc.layout.attrs[i].offset = setup.layout.attrs[i].offset;
 			}
 			desc.index_type = (sg_index_type)setup.index_type;
+			desc.rasterizer.cull_mode = SG_CULLMODE_BACK;
 			const sg_pipeline pipeline = sg_make_pipeline(&desc);
 			return { core::HandleManager<PipelineHandle>::CreateHandleByIndex(pipeline.id), pipeline.id };
 		}

@@ -54,8 +54,8 @@ namespace ari::en
 				{
 					rect = io::GetWindowSize({ 0, 0 });
 				}
-				m_pActiveCamera->_proj = sx_mat4_perspectiveFOV(m_pActiveCamera->Fov,
-					float(rect.width) / float(rect.height), 1.0f, 1000.0f, false);
+				m_pActiveCamera->_proj = sx_mat4_perspectiveFOV(sx_torad(m_pActiveCamera->Fov),
+					float(rect.width) / float(rect.height), 1.0f, 1000.0f, true);
 			}
 
 			m_FameDataTurnIndex++;

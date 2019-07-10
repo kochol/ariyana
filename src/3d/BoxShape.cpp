@@ -82,9 +82,9 @@ namespace ari::en
 			gfx::PipelineSetup pipeline_setup;
 			pipeline_setup.shader = m_sProgram;
 			pipeline_setup.layout.attrs[0].format = gfx::VertexFormat::Float3;
-			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::Float4;
+			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::UByte4N;
 			pipeline_setup.layout.attrs[1].bufferIndex = 1;
-			pipeline_setup.index_type = gfx::IndexType::Uint16;
+			pipeline_setup.index_type = gfx::IndexType::Uint16;			
 
 			m_sPipeline = gfx::CreatePipeline(pipeline_setup);
 
