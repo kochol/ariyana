@@ -8,6 +8,11 @@ fips_begin_module(ari_gfx)
         Viewport.hpp
     )
 
+    fips_dir(private)
+    fips_files(
+        tinyktx.h                   tinyktx.cpp
+    )
+
     if (ARI_GLFW AND ARI_OPENGL)
         fips_dir(private/glfw)
         fips_files(
