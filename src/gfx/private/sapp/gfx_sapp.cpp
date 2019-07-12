@@ -14,6 +14,7 @@ void ari_init_cb()
 {
 	sg_desc desc;
 	ari::core::Memory::Fill(&desc, sizeof(sg_desc), 0);
+	desc.gl_force_gles2 = sapp_gles2();
 	desc.mtl_device = sapp_metal_get_device();
 	desc.mtl_renderpass_descriptor_cb = sapp_metal_get_renderpass_descriptor;
 	desc.mtl_drawable_cb = sapp_metal_get_drawable;
