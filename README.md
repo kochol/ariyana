@@ -1,2 +1,2 @@
-# ari2
+# Ariyana
 Ariana Game Engine

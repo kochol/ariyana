@@ -2258,7 +2258,7 @@ bool TinyKtx_WriteImageGL(TinyKtx_WriteCallbacks const *callbacks,
 			if (size > mipmapsizes[i]) {
 				callbacks->write(user, &size, sizeof(uint32_t));
 
-				uint8_t const *src = mipmaps[i];
+				uint8_t const *src = (const uint8_t *)mipmaps[i];
 				for (uint32_t ww = 0u; ww < sl; ++ww) {
 					for (uint32_t zz = 0; zz < d; ++zz) {
 						for (uint32_t yy = 0; yy < h; ++yy) {
