@@ -5,6 +5,7 @@ fips_begin_module(ari_io)
         FileSystem.hpp          FileSystem.cpp
         FileSystemBase.hpp
         IOStatus.hpp            IOStatus.cpp
+        URL.hpp                 URL.cpp
         Window.hpp
     )
     

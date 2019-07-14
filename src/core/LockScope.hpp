@@ -16,9 +16,9 @@ namespace ari
 			SpinLock	*	m_plock;
 
         };
-
-#define LOCKSCOPE static ari::core::SpinLock ari_lock; ari::core::LockScope ari_lock_scope(&ari_lock);
-        
+       
     } // namespace core
     
 } // namespace ari
+
+#define LOCKSCOPE static ari::core::SpinLock ari_lock; ari::core::LockScope ari_lock_scope(&ari_lock);

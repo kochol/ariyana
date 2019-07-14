@@ -16,4 +16,6 @@ namespace ari::io
 
 	FileHandle LoadFile(DelegateOneParam<void, int> OnData);
 
+	core::String ResolveAssigns(const core::String& _path);
+
 } // namespace ari::io
