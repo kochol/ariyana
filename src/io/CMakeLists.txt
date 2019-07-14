@@ -2,6 +2,9 @@ fips_begin_module(ari_io)
     fips_vs_warning_level(3)
     fips_deps(ari_core)
     fips_files(
+        FileSystem.hpp          FileSystem.cpp
+        FileSystemBase.hpp
+        IOStatus.hpp            IOStatus.cpp
         Window.hpp
     )
     
