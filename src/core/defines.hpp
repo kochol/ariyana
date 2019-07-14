@@ -3,7 +3,7 @@
 #include <cstdint>
 #include "Types.hpp"
 #include "HandleManager.hpp"
-#include "StringHash.hpp"
+#include "string/StringHash.hpp"
 
 #define ARI_HANDLE(_name) \
 struct _name \

@@ -16,7 +16,6 @@ fips_begin_module(ari_core)
         Ptr.hpp
         Rect.hpp
         SpinLock.hpp        SpinLock.cpp
-        StringHash.hpp
         Types.hpp
     )
 
@@ -36,6 +35,11 @@ fips_begin_module(ari_core)
         Memory.hpp          Memory.cpp
         MemoryPool.hpp
         ObjectPool.hpp
+    )
+
+    fips_dir(string)
+    fips_files(
+        StringHash.hpp
     )
 
 fips_end_module()
