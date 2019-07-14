@@ -2,7 +2,7 @@
 //------------------------------------------------------------------------------
 /**
     @class ari::core::Set
-    @ingroup Core
+    @ingroup core
     @brief a sorted, dynamic array of values
 
     The Set class provides a dynamic array of binary-sorted values similar

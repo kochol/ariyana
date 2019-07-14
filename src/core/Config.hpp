@@ -1,7 +1,7 @@
 #pragma once
 //------------------------------------------------------------------------------
 /**
-    @file Core/Config.h
+    @file core/Config.hpp
     @brief global configuration defines
 */
 

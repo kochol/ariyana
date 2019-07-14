@@ -2,7 +2,7 @@
 //------------------------------------------------------------------------------
 /**
     @class ari::core::HashSet
-    @ingroup Core
+    @ingroup core
     @brief a Set using hashing for fast access
     
     Implements a hash set with a fixed number of buckets, each
