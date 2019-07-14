@@ -1,21 +1,24 @@
 #pragma once
 
-#include "core/defines.hpp"
-#include "core/Delegate.hpp"
 #include "core/string/String.hpp"
+#include <functional>
+#include "core/memory/Buffer.hpp"
+#include "IOStatus.hpp"
 
 namespace ari::io
 {
+	class URL;
 	class FileSystemBase;
-
-    ARI_HANDLE(FileHandle);
 
 	void RegisterFileSystem(const core::String& _scheme, FileSystemBase* _fs);
 
 	void AddAssigns(const core::String& _assign, const core::String& _path);
 
-	FileHandle LoadFile(DelegateOneParam<void, int> OnData);
-
 	core::String ResolveAssigns(const core::String& _path);
+
+	void LoadFile(core::String _path, std::function<void(core::Buffer*)> OnData);
+
+	void LoadFile(const core::String& _path, std::function<void(core::Buffer*)> OnData,
+		std::function<void(IOStatus::Code)> OnFail);
 
 } // namespace ari::io
