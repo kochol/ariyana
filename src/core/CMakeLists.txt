@@ -34,6 +34,7 @@ fips_begin_module(ari_core)
 
     fips_dir(memory)
     fips_files(
+        Buffer.hpp              Buffer.cpp
         Memory.hpp              Memory.cpp
         MemoryPool.hpp
         ObjectPool.hpp
