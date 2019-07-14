@@ -11,11 +11,11 @@ fips_begin_module(ari_core)
         defines.hpp
         Delegate.hpp
         HandleManager.hpp
-        LockScope.hpp       LockScope.cpp
-        log.h               log.c
+        LockScope.hpp           LockScope.cpp
+        log.h                   log.c
         Ptr.hpp
         Rect.hpp
-        SpinLock.hpp        SpinLock.cpp
+        SpinLock.hpp            SpinLock.cpp
         Types.hpp
     )
 
@@ -23,23 +23,35 @@ fips_begin_module(ari_core)
     fips_files(
         Array.hpp
         elementBuffer.hpp
+        HashSet.hpp
         KeyValuePair.hpp
         Map.hpp
         Queue.hpp
+        Set.hpp
         Slice.hpp
         StaticArray.hpp
     )
 
     fips_dir(memory)
     fips_files(
-        Memory.hpp          Memory.cpp
+        Memory.hpp              Memory.cpp
         MemoryPool.hpp
         ObjectPool.hpp
     )
 
     fips_dir(string)
     fips_files(
+        String.hpp              String.cpp
+        StringAtom.hpp          StringAtom.cpp
+        StringAtomBuffer.hpp    StringAtomBuffer.cpp
+        StringAtomTable.hpp     StringAtomTable.cpp
         StringHash.hpp
+    )
+
+    fips_dir(threading)
+    fips_files(
+        ThreadLocalData.hpp     ThreadLocalData.cpp
+        ThreadLocalPtr.hpp
     )
 
 fips_end_module()
