@@ -45,6 +45,7 @@ fips_begin_module(ari_core)
         StringAtom.hpp          StringAtom.cpp
         StringAtomBuffer.hpp    StringAtomBuffer.cpp
         StringAtomTable.hpp     StringAtomTable.cpp
+        StringBuilder.hpp       StringBuilder.cpp
         StringHash.hpp
     )
 

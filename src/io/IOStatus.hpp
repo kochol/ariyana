@@ -6,7 +6,7 @@ namespace ari::io
 {
     //------------------------------------------------------------------------------
     /**
-        @class Oryol::IOStatus
+        @class ari::io::IOStatus
         @ingroup IO
         @brief IO request status codes
         
@@ -66,7 +66,7 @@ namespace ari::io
             GatewayTimeout = 504,
             HTTPVersionNotSupported = 505,
             
-            // these are custom Oryol status codes
+            // these are custom Ariyana status codes
             Cancelled = 1000,
             DownloadError = 1001,
             
