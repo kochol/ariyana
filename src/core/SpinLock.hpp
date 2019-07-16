@@ -1,3 +1,4 @@
+#pragma once
 #include "sx/atomic.h"
 
 namespace ari

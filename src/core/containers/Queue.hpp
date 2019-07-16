@@ -1,5 +1,7 @@
 #pragma once
 
+#include "elementBuffer.hpp"
+
 namespace ari
 {
     namespace core
