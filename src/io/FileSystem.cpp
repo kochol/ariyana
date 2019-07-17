@@ -6,25 +6,35 @@
 #include "core/string/StringBuilder.hpp"
 #include "URL.hpp"
 #include "core/log.h"
+#include "sx/jobs.h"
+#include "sx/lin-alloc.h"
 
 namespace ari::io
 {
 	core::Map<core::String, FileSystemBase*>	g_mFileSystems;
 	core::Map<core::String, core::String>		g_mAssigns;
-	core::SpinLock								g_lAssigns;
+	sx_job_context							*	g_job_context = nullptr;
 
 	//------------------------------------------------------------------------------
 	void RegisterFileSystem(const core::String& _scheme, FileSystemBase* _fs)
 	{
-        LOCKSCOPE;
+#if ARI_HAS_THREADS
+		if (!g_job_context)
+		{
+			// Create IO job fibers
+			sx_job_context_desc desc;
+			core::Memory::Fill(&desc, sizeof(sx_job_context_desc), 0);
+			desc.num_threads = 2;
+			desc.fiber_stack_sz = 65536; // 64 KB
+			g_job_context = sx_job_create_context(sx_alloc_malloc, &desc);
+		}
+#endif
 		g_mFileSystems.Add(_scheme, _fs);
 	}
 
 	//------------------------------------------------------------------------------
 	void AddAssigns(const core::String& _assign, const core::String& _path)
 	{
-		core::LockScope lock(&g_lAssigns);
-
 		a_assert(_assign.Length() > 2);
 
 		g_mAssigns.Add(_assign, _path);
@@ -33,7 +43,6 @@ namespace ari::io
 	//------------------------------------------------------------------------------
 	core::String ResolveAssigns(const core::String& _path)
 	{
-		core::LockScope lock(&g_lAssigns);
 		core::StringBuilder builder;
 		builder.Set(_path);
 
@@ -80,7 +89,13 @@ namespace ari::io
 			log_error("No file system registered for scheme %s.", url.Scheme().AsCStr());
 			return;
 		}
-		g_mFileSystems[url.Scheme()]->LoadFile(_path, std::move(OnData), std::move(OnFail));
+		g_mFileSystems[url.Scheme()]->LoadFile(url, std::move(OnData), std::move(OnFail));
+	}
+
+	//------------------------------------------------------------------------------
+	sx_job_context* GetIoJobContext()
+	{
+		return g_job_context;
 	}
 
 } // namespace ari::io

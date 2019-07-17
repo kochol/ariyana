@@ -5,6 +5,8 @@
 #include "core/memory/Buffer.hpp"
 #include "IOStatus.hpp"
 
+struct sx_job_context;
+
 namespace ari::io
 {
 	class URL;
@@ -20,5 +22,7 @@ namespace ari::io
 
 	void LoadFile(const core::String& _path, std::function<void(core::Buffer*)> OnData,
 		std::function<void(IOStatus::Code)> OnFail);
+
+	sx_job_context* GetIoJobContext();
 
 } // namespace ari::io

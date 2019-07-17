@@ -26,6 +26,7 @@ fips_begin_module(ari_core)
         HashSet.hpp
         KeyValuePair.hpp
         Map.hpp
+        Pair.hpp
         Queue.hpp
         Set.hpp
         Slice.hpp

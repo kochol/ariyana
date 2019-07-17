@@ -24,6 +24,7 @@ exports:
         ari_3d   :          src/3d
         ari_core :          src/core
         ari_en   :          src/en
+        ari_fs_local    :   src/fs_local
         ari_gfx  :          src/gfx
         ari_gui  :          src/gui
         ari_io   :          src/io
