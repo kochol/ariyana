@@ -23,6 +23,8 @@ namespace ari::io
 	void LoadFile(const core::String& _path, std::function<void(core::Buffer*)> OnData,
 		std::function<void(IOStatus::Code)> OnFail);
 
+	void Update();
+
 	sx_job_context* GetIoJobContext();
 
 } // namespace ari::io

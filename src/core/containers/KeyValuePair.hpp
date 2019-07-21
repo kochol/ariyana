@@ -17,7 +17,7 @@ namespace ari
 			/// copy-constructor
 			KeyValuePair(const KeyValuePair& rhs);
 			/// move-constructor
-			KeyValuePair(KeyValuePair&& rhs);
+			KeyValuePair(KeyValuePair&& rhs) noexcept;
 
 			/// copy-assignment
 			void operator=(const KeyValuePair& rhs);
@@ -81,7 +81,7 @@ namespace ari
 
 		//------------------------------------------------------------------------------
 		template <class KEY, class VALUE>
-		KeyValuePair<KEY, VALUE>::KeyValuePair(KeyValuePair&& rhs) : key(std::move(rhs.key)),
+		KeyValuePair<KEY, VALUE>::KeyValuePair(KeyValuePair&& rhs) noexcept : key(std::move(rhs.key)),
 			value(std::move(rhs.value))
 		{
 			// empty

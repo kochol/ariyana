@@ -4,6 +4,7 @@
 #include "sokol_gfx.h"
 #include "GLFW/glfw3.h"
 #include "gfx/Application.hpp"
+#include "io/FileSystem.hpp"
 
 static uint32_t g_FrameNumber = 0;
 
@@ -62,6 +63,7 @@ int main(int argc, char* argv[])
 
     while (ari::io::Run())
     {
+		ari::io::Update();
         g_FrameNumber++;
         g_application->OnFrame();
         ari::gfx::Present();

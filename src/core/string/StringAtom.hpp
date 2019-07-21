@@ -31,14 +31,14 @@ public:
     /// copy-constructor (fast if rhs was created in same thread)
     StringAtom(const StringAtom& rhs);
     /// move-constructor
-    StringAtom(StringAtom&& rhs);
+    StringAtom(StringAtom&& rhs) noexcept;
     /// destructor
     ~StringAtom();
     
     /// copy assignment
     void operator=(const StringAtom& rhs);
     /// move assignment
-    void operator=(StringAtom&& rhs);
+    void operator=(StringAtom&& rhs) noexcept;
     /// assign raw string (slow)
     void operator=(const char* rhs);
     /// assign raw string (slow)
@@ -122,7 +122,8 @@ StringAtom::StringAtom(const StringAtom& rhs) {
 
 //------------------------------------------------------------------------------
 inline
-StringAtom::StringAtom(StringAtom&& rhs) {
+StringAtom::StringAtom(StringAtom&& rhs) noexcept
+{
     this->copy(rhs);
     rhs.data = nullptr;
 }
@@ -144,7 +145,8 @@ StringAtom::operator=(const StringAtom& rhs) {
 
 //------------------------------------------------------------------------------
 inline void
-StringAtom::operator=(StringAtom&& rhs) {
+StringAtom::operator=(StringAtom&& rhs) noexcept
+{
     if (&rhs != this) {
         this->Clear();
         this->copy(rhs);

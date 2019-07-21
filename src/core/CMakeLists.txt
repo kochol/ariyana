@@ -12,7 +12,7 @@ fips_begin_module(ari_core)
         Delegate.hpp
         HandleManager.hpp
         LockScope.hpp           LockScope.cpp
-        log.h                   log.c
+        log.h                   log.cpp
         Ptr.hpp
         Rect.hpp
         SpinLock.hpp            SpinLock.cpp

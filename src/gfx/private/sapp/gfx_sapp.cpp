@@ -6,6 +6,7 @@
 #include "core/Memory.hpp"
 #include "../../Application.hpp"
 #include "gfx/gfx.hpp"
+#include "io/FileSystem.hpp"
 
 ari::Application* g_application = nullptr;
 static uint32_t g_FrameNumber = 0;
@@ -30,6 +31,7 @@ void ari_init_cb()
 void ari_frame_cb()
 {
     g_FrameNumber++;
+	ari::io::Update();
 	g_application->OnFrame();
 }
 

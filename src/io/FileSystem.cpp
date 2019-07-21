@@ -93,6 +93,13 @@ namespace ari::io
 	}
 
 	//------------------------------------------------------------------------------
+	void Update()
+	{
+		for (auto fs : g_mFileSystems)
+			fs.Value()->Update();
+	}
+
+	//------------------------------------------------------------------------------
 	sx_job_context* GetIoJobContext()
 	{
 		return g_job_context;

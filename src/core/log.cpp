@@ -86,8 +86,8 @@ void log_set_quiet(int enable) {
   L.quiet = enable ? 1 : 0;
 }
 
-
-void log_log(int level, const char *file, int line, const char *fmt, ...) {
+void log_log(int level, const char* file, int line, const char* fmt, ...)
+{
   if (level < L.level) {
     return;
   }
