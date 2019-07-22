@@ -4,6 +4,8 @@ namespace ari
 {
 	namespace en
 	{
+		ARI_COMPONENT_IMP(Node)
+
 		void Node::AddChild(Node * _child)
 		{
 			if (!m_mChilds.Contains(_child->GetId()))

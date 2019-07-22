@@ -17,6 +17,8 @@ namespace ari
 {
 	namespace gui
 	{
+		ARI_COMPONENT_IMP(Gui)
+
 		GuiSystem::GuiSystem()
 		{
 			core::MemoryPool<Gui>::Setup(65536);

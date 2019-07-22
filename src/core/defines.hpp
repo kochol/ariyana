@@ -18,6 +18,9 @@ struct _name \
 	} \
 };
 
-#define ARI_COMPONENT(_name) \
-static const uint32_t Id = COMPILE_TIME_CRC32_STR(#_name); \
+#define ARI_COMPONENT \
+static const uint32_t Id; \
 virtual uint32_t GetId() { return Id; }
+
+#define ARI_COMPONENT_IMP(_name) \
+const uint32_t _name::Id = COMPILE_TIME_CRC32_STR(#_name);

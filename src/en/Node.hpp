@@ -13,7 +13,7 @@ namespace ari
 		{			
 		public:
 
-			ARI_COMPONENT(Node)
+			ARI_COMPONENT
 
 			virtual ~Node() = default;
 

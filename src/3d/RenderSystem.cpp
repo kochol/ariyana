@@ -7,6 +7,8 @@
 
 namespace ari::en
 {
+	ARI_COMPONENT_IMP(Node3D)
+
 	RenderSystem::RenderSystem(): m_pFrameDataCurrent(nullptr), m_pFrameDataNext(nullptr)
 	{
 	}

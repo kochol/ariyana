@@ -1,4 +1,4 @@
-fips_begin_app(02-triangle cmdline)
+fips_begin_app(t02triangle cmdline)
     fips_vs_warning_level(3)
     fips_deps(ari_gfx)
     fips_files(

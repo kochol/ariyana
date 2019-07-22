@@ -11,7 +11,7 @@ namespace ari::en
 	{
 	public:
 
-		ARI_COMPONENT(Node3D)
+		ARI_COMPONENT
 
 		//! Constructor
 		Node3D() : _isRenderable(false)
@@ -35,5 +35,5 @@ namespace ari::en
 		bool _isRenderable;
 
 	}; // Node3D
-	
+
 } // ari

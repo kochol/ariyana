@@ -38,13 +38,6 @@ namespace ari
 	{
 		World::World()
 		{
-			// Create Job context
-			const sx_alloc* alloc = sx_alloc_malloc();
-			sx_job_context_desc cd;
-			core::Memory::Fill(&cd, sizeof(sx_job_context_desc), 0);
-			cd.thread_init_cb = thread_init;
-			cd.thread_shutdown_cb = thread_shutdown;
-			JobContext = sx_job_create_context(alloc, &cd);
 		}
 
 		EntityHandle World::CreateEntity()
@@ -118,6 +111,17 @@ namespace ari
 			}
 			else
 			{
+				if (!JobContext)
+				{
+					// Create Job context
+					const sx_alloc* alloc = sx_alloc_malloc();
+					sx_job_context_desc cd;
+					core::Memory::Fill(&cd, sizeof(sx_job_context_desc), 0);
+					cd.thread_init_cb = thread_init;
+					cd.thread_shutdown_cb = thread_shutdown;
+					JobContext = sx_job_create_context(alloc, &cd);
+				}
+
 				// Dispatch jobs
 				static ari::core::Array<UpdateJobData>	 	gameplayJobs,
 															sceneJobs,
