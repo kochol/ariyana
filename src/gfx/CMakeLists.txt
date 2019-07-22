@@ -25,4 +25,8 @@ fips_begin_module(ari_gfx)
         )
     endif()
 
+    if (FIPS_ANDROID)
+        fips_libs(GLESv3 EGL android log)
+    endif()
+
 fips_end_module()

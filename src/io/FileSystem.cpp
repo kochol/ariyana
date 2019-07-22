@@ -26,7 +26,7 @@ namespace ari::io
 			core::Memory::Fill(&desc, sizeof(sx_job_context_desc), 0);
 			desc.num_threads = 2;
 			desc.fiber_stack_sz = 65536; // 64 KB
-			g_job_context = sx_job_create_context(sx_alloc_malloc, &desc);
+			g_job_context = sx_job_create_context(sx_alloc_malloc(), &desc);
 		}
 #endif
 		g_mFileSystems.Add(_scheme, _fs);
@@ -72,7 +72,7 @@ namespace ari::io
 	{
 		LoadFile(_path, std::move(OnData), [_path](IOStatus::Code status)
 			{
-				log_error("failed to load file %s reasone %s", _path, IOStatus::ToString(status));
+				log_error("failed to load file %s reasone %s", _path.AsCStr(), IOStatus::ToString(status));
 			});
 	}
 

@@ -3,7 +3,7 @@
 #include "sokol_app.h"
 #define SOKOL_IMPL
 #include "sokol_gfx.h"
-#include "core/Memory.hpp"
+#include "core/memory/Memory.hpp"
 #include "../../Application.hpp"
 #include "gfx/gfx.hpp"
 #include "io/FileSystem.hpp"

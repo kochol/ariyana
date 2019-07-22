@@ -1,6 +1,7 @@
 #include "World.hpp"
 #include "System.hpp"
 #include "sx/allocator.h"
+#include "sx/jobs.h"
 #include "core/memory/MemoryPool.hpp"
 
 ari::TypeIndex ari::TypeRegistry::nextIndex = 0;
@@ -21,10 +22,14 @@ struct UpdateJobData
 	float						ElaspedTime;
 };
 
-static void system_update_job_cb(int _index, void* _userData)
+static void system_update_job_cb(int range_start, int range_end, int thread_index, void* _userData)
 {
-	UpdateJobData* data = reinterpret_cast<UpdateJobData*>(_userData);
-	data->System->Update(data->World, data->ElaspedTime, data->UpdateState);
+	auto jobDataArray = reinterpret_cast<ari::core::Array<UpdateJobData>*>(_userData);
+	for (int i = range_start; i < range_end; i++)
+	{
+		const auto& data = (*jobDataArray)[i];
+		data.System->Update(data.World, data.ElaspedTime, data.UpdateState);
+	}
 }
 
 namespace ari
@@ -34,7 +39,7 @@ namespace ari
 		World::World()
 		{
 			// Create Job context
-			const sx_alloc* alloc = sx_alloc_malloc;
+			const sx_alloc* alloc = sx_alloc_malloc();
 			sx_job_context_desc cd;
 			core::Memory::Fill(&cd, sizeof(sx_job_context_desc), 0);
 			cd.thread_init_cb = thread_init;
@@ -114,31 +119,25 @@ namespace ari
 			else
 			{
 				// Dispatch jobs
-				static core::Array<sx_job_desc> 	gameplayJobs,
-													sceneJobs,
-													frameJobs;
-				static core::Array<UpdateJobData>	jobDatas;
-				sx_job_t							frameJobHandle;
-
+				static ari::core::Array<UpdateJobData>	 	gameplayJobs,
+															sceneJobs,
+															frameJobs;
+				sx_job_t									frameJobHandle;
 				gameplayJobs.Clear();
 				sceneJobs.Clear();
 				frameJobs.Clear();
-				jobDatas.Clear();
-				int c = 0;
 
 				// 2nd Run frame update state
 				for (int i = 0; i < m_aSystems.Size(); i++)
 				{
 					if (m_aSystems[i]->NeedUpdateOn(UpdateState::FrameState))
 					{
-						jobDatas.Add({m_aSystems[i], this, UpdateState::FrameState, _elapsedTime });
-						frameJobs.Add({system_update_job_cb, &jobDatas[c], SX_JOB_PRIORITY_HIGH});
-						c++;
+						frameJobs.Add({m_aSystems[i], this, UpdateState::FrameState, _elapsedTime });
 					}
 				}				
 				if (!frameJobs.Empty())
 				{
-					frameJobHandle = sx_job_dispatch(JobContext, &frameJobs[0], frameJobs.Size());
+					frameJobHandle = sx_job_dispatch(JobContext, frameJobs.Size(), system_update_job_cb, &frameJobs);
 				}
 
 				// 3rd, Run gameplay update state
@@ -146,14 +145,12 @@ namespace ari
 				{
 					if (m_aSystems[i]->NeedUpdateOn(UpdateState::GamePlayState))
 					{
-						jobDatas.Add({m_aSystems[i], this, UpdateState::GamePlayState, _elapsedTime });
-						gameplayJobs.Add({system_update_job_cb, &jobDatas[c], SX_JOB_PRIORITY_HIGH});
-						c++;
+						gameplayJobs.Add({m_aSystems[i], this, UpdateState::GamePlayState, _elapsedTime });
 					}
 				}				
 				if (!gameplayJobs.Empty())
 				{
-					auto h = sx_job_dispatch(JobContext, &gameplayJobs[0], gameplayJobs.Size());
+					auto h = sx_job_dispatch(JobContext, gameplayJobs.Size(), system_update_job_cb, &gameplayJobs);
 					sx_job_wait_and_del(JobContext, h);
 				}
 
@@ -162,14 +159,12 @@ namespace ari
 				{
 					if (m_aSystems[i]->NeedUpdateOn(UpdateState::SceneState))
 					{
-						jobDatas.Add({m_aSystems[i], this, UpdateState::SceneState, _elapsedTime });
-						sceneJobs.Add({system_update_job_cb, &jobDatas[c], SX_JOB_PRIORITY_HIGH});
-						c++;
+						sceneJobs.Add({m_aSystems[i], this, UpdateState::SceneState, _elapsedTime });
 					}
 				}
 				if (!sceneJobs.Empty())
 				{
-					auto h = sx_job_dispatch(JobContext, &sceneJobs[0], sceneJobs.Size());
+					auto h = sx_job_dispatch(JobContext, sceneJobs.Size(), system_update_job_cb, &sceneJobs);
 					sx_job_wait_and_del(JobContext, h);
 				}
 

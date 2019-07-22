@@ -167,7 +167,7 @@ namespace ari::en
 		uint32_t i;
 		const uint32_t h = core::HandleManager<BASE>::GetNewHandle(i);
 
-		return { h, i, (T*)core::MemoryPool<BASE>::New<T>(i) };
+		return { h, i, (T*)core::MemoryPool<BASE>::template New<T>(i) };
 	}
 
 	template<class T>

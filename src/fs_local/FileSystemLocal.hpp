@@ -13,7 +13,7 @@ namespace ari::io
 
     private:
 
-		static void ReadFileJob(int _index, void* _userdata);
+		static void ReadFileJob(int range_start, int range_end, int thread_index, void* _userdata);
 
 		core::Array<sx_job_t>	m_aJobs;
     };

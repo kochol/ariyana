@@ -24,11 +24,7 @@ namespace ari::io
 		// Create IO job
 		if (request)
 		{
-			sx_job_desc desc;
-			desc.callback = ReadFileJob;
-			desc.priority = SX_JOB_PRIORITY_NORMAL;
-			desc.user = reinterpret_cast<void*>(request);
-			sx_job_t job = sx_job_dispatch(GetIoJobContext(), &desc, 1);
+			sx_job_t job = sx_job_dispatch(GetIoJobContext(), 1, ReadFileJob, request);
 			m_aJobs.Add(job);
 		}
 
@@ -73,7 +69,7 @@ namespace ari::io
 	}
 
 	//------------------------------------------------------------------------------
-	void FileSystemLocal::ReadFileJob(int _index, void* _userdata)
+	void FileSystemLocal::ReadFileJob(int range_start, int range_end, int thread_index, void* _userdata)
 	{
 		auto request = reinterpret_cast<Request*>(_userdata);
 
