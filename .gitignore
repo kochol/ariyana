@@ -38,3 +38,4 @@
 .fips-imports.cmake
 .fips-settings.yml
 *.pyc
+*.ktx
