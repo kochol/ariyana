@@ -2,6 +2,8 @@
 #include "core/LockScope.hpp"
 #include "sx/jobs.h"
 #include "io/FileSystem.hpp"
+#include "sx/os.h"
+#include "core/string/StringBuilder.hpp"
 
 namespace ari::io
 {
@@ -10,6 +12,14 @@ namespace ari::io
 	FileSystemLocal::FileSystemLocal()
 	{
 		fs_local_instance = this;
+		
+		// Set root: and res:
+		core::StringBuilder root = "file://";
+		root.Append(sx_os_path_pwd(nullptr, 0));
+		root.Append("/");
+		AddAssigns("root:", root.GetString());
+		root.Append("assets/");
+		AddAssigns("res:", root.GetString());
 	}
 
 	//------------------------------------------------------------------------------
@@ -75,9 +85,9 @@ namespace ari::io
 
 #if SX_COMPILER_MSVC
 		FILE* pFile;
-		fopen_s(&pFile, request->Url.AsCStr(), "r");
+		fopen_s(&pFile, request->Url.Path().AsCStr(), "rb");
 #else
-		FILE* pFile = fopen(request->Url.AsCStr(), "r");
+		FILE* pFile = fopen(request->Url.Path().AsCStr(), "rb");
 #endif
 		if (pFile == nullptr)
 		{
@@ -95,8 +105,11 @@ namespace ari::io
 
 		// copy the file into the buffer:
 		request->Buffer.Clear();
-		request->Buffer.Reserve(int(lSize));
-		size_t result = fread((void*)request->Buffer.Data(), 1, lSize, pFile);
+		size_t result = fread((void*)request->Buffer.Add(int(lSize)), 1, lSize, pFile);
+
+		// terminate
+		fclose(pFile);
+
 		if (result != (size_t)lSize)
 		{
 			// Reading error
@@ -106,9 +119,6 @@ namespace ari::io
 		}
 
 		/* the whole file is now loaded in the memory buffer. */
-
-		// terminate
-		fclose(pFile);
 
 		// Add the request to the done queue.
 		fs_local_instance->AddDoneRequest(request);

@@ -45,6 +45,13 @@ namespace ari::core
         /// get read/write pointer to content (throws assert if would return nullptr)
         uint8_t* Data();
 
+		/// Read size bytes from buffer and copy to data.
+		int Read(void* data, int _size);
+		/// Seek the buffer to the desired position
+		bool Seek(int offset);
+		/// Tell the where is the buffer offset
+		int Tell() const;
+
     private:
         /// (re-)allocate buffer
         void alloc(int newCapacity);
@@ -56,6 +63,7 @@ namespace ari::core
         int size;
         int capacity;
         uint8_t* data;
+		int pos;
 
     };
     

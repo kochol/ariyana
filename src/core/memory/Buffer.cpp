@@ -5,16 +5,18 @@
 namespace ari::core
 {
 	//------------------------------------------------------------------------------
-	Buffer::Buffer(): size(0), capacity(0), data(nullptr)
+	Buffer::Buffer(): size(0), capacity(0), data(nullptr), pos(0)
 	{
 	}
 
 	//------------------------------------------------------------------------------
 	Buffer::Buffer(Buffer&& rhs): size(rhs.size), capacity(rhs.capacity), data(rhs.data)
+		, pos(rhs.pos)
 	{
 		rhs.size = 0;
 		rhs.capacity = 0;
 		rhs.data = nullptr;
+		rhs.pos = 0;
 	}
 
 	//------------------------------------------------------------------------------
@@ -30,9 +32,11 @@ namespace ari::core
 		this->size = rhs.size;
 		this->capacity = rhs.capacity;
 		this->data = rhs.data;
+		this->pos = rhs.pos;
 		rhs.size = 0;
 		rhs.capacity = 0;
 		rhs.data = nullptr;
+		rhs.pos = 0;
 	}
 
 	//------------------------------------------------------------------------------
@@ -113,6 +117,7 @@ namespace ari::core
 	void Buffer::Clear()
 	{
 		size = 0;
+		pos = 0;
 	}
 
 	//------------------------------------------------------------------------------
@@ -127,6 +132,33 @@ namespace ari::core
 	{
 		a_assert(data);
 		return data;
+	}
+
+	//------------------------------------------------------------------------------
+	int Buffer::Read(void* data, int _size)
+	{
+		if (_size > size - pos)
+			_size = size - pos;
+
+		core::Memory::Copy(reinterpret_cast<void*>(Data()[pos]), data, _size);
+		pos += _size;
+
+		return _size;
+	}
+
+	//------------------------------------------------------------------------------
+	bool Buffer::Seek(int offset)
+	{
+		if (offset > size || offset < 0)
+			return false;
+
+		pos = offset;
+		return true;
+	}
+
+	int Buffer::Tell() const
+	{
+		return pos;
 	}
 
 	//------------------------------------------------------------------------------
@@ -156,6 +188,7 @@ namespace ari::core
 		this->data = nullptr;
 		this->size = 0;
 		this->capacity = 0;
+		this->pos = 0;
 	}
 
 	//------------------------------------------------------------------------------
