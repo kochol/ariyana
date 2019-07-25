@@ -148,6 +148,12 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
+		void SetTexture(const BindingHandle& handle, int stage, TextureHandle texture)
+		{
+			g_binds_array[handle.Index].fs_images[stage].id = texture.Index;
+		}
+
+		//------------------------------------------------------------------------------
 		void ApplyUniforms(ShaderStage _stage, int _ub_index, const void* _data, int _size)
 		{
 			sg_apply_uniforms((sg_shader_stage)_stage, _ub_index, _data, _size);
@@ -318,7 +324,9 @@ namespace ari
 				desc.height = h;
 				desc.depth = d;
 				desc.num_mipmaps = int(TinyKtx_NumberOfMipmaps(ctx));
-				desc.pixel_format = fmt;				
+				desc.pixel_format = fmt;
+				desc.min_filter = SG_FILTER_LINEAR;
+				desc.mag_filter = SG_FILTER_LINEAR;
 
 				for (auto i = 0u; i < TinyKtx_NumberOfMipmaps(ctx); ++i) {
 					desc.content.subimage[0][i].size = TinyKtx_ImageSize(ctx, i);

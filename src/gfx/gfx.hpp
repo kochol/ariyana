@@ -136,6 +136,8 @@ namespace ari
 
 		void ApplyBindings(const BindingHandle& handle);
 
+		void SetTexture(const BindingHandle& handle, int stage, TextureHandle texture);
+
 		void ApplyUniforms(ShaderStage _stage, int _ub_index, const void* _data, int _size);
 
 		void BeginDefaultPass();
