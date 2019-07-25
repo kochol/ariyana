@@ -1,6 +1,7 @@
 #pragma once
 #include "io/Window.hpp"
 #include "sx/math.h"
+#include "core/string/String.hpp"
 
 struct sg_shader_desc;
 #define ARI_MAX_SHADERSTAGE_TEXTURES 12
@@ -156,6 +157,8 @@ namespace ari
 		void SetViewProjMatrix(const sx_mat4& _view, const sx_mat4& _proj);
 
 		sx_mat4 GetViewProjMatrix();
+
+		TextureHandle CreateTexture(core::String _path);
         
     } // namespace gfx
     

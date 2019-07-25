@@ -140,7 +140,7 @@ namespace ari::core
 		if (_size > size - pos)
 			_size = size - pos;
 
-		core::Memory::Copy(reinterpret_cast<void*>(Data()[pos]), data, _size);
+		core::Memory::Copy(reinterpret_cast<void*>(Data() + pos), data, _size);
 		pos += _size;
 
 		return _size;
