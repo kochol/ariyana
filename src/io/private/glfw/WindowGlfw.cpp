@@ -11,6 +11,7 @@ namespace ari
 		GLFWwindow* g_FirstWindow = nullptr;
 		core::StaticArray<GLFWwindow*, MaxWindow>	g_Windows;
 
+		//------------------------------------------------------------------------------
 		WindowHandle CreateAriWindow(Window& window, const char* _title)
 		{
 			// Init glfw
@@ -52,23 +53,32 @@ namespace ari
 			return { handle, index };
 		}
 
+		//------------------------------------------------------------------------------
 		GLFWwindow* GetGlfwWindow(const WindowHandle& handle)
 		{
 			return g_Windows[handle.Index];
 		}
 
+		//------------------------------------------------------------------------------
 		bool Run()
 		{
 			glfwPollEvents();
 			return !glfwWindowShouldClose(g_FirstWindow);
 		}
         
+		//------------------------------------------------------------------------------
         core::RectI GetWindowSize(const WindowHandle& handle)
 		{
 			core::RectI v;
             glfwGetFramebufferSize(g_Windows[handle.Index], &v.width, &v.height);
 
 			return v;
+		}
+
+		//------------------------------------------------------------------------------
+		const void* AndroidGetNativeActivity()
+		{
+			return nullptr;
 		}
 
     } // namespace io

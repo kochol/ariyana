@@ -38,6 +38,8 @@ namespace ari
 
 		core::RectI GetWindowSize(const WindowHandle& handle);
 
+		const void* AndroidGetNativeActivity();
+
 	} // namespace io
 	
 } // namespace ari
