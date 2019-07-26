@@ -38,8 +38,8 @@ void ari_frame_cb()
 void ari_cleanup_cb()
 {
 	g_application->OnCleanup();
-	sg_shutdown();
 	ari::core::Memory::Delete(g_application);
+	sg_shutdown();
 }
 
 void ari_event_cb(const sapp_event* event)
