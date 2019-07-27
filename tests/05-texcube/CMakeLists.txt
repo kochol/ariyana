@@ -5,6 +5,7 @@ fips_begin_app(t05texcube cmdline)
         texcube.cpp
     )
     ari_tex(assets/baboon.png ${texfmt})
+    ari_assets()    
 fips_end_app()
 
 ari_proj(t05texcube)
