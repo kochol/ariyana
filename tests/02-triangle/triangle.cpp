@@ -39,7 +39,7 @@ public:
 		binding = CreateBinding(binds);
 	}
 
-	void OnFrame() override
+	void OnFrame(float _elapsedTime) override
 	{
 		ari::gfx::BeginDefaultPass();
 		ApplyPipeline(pipeline);

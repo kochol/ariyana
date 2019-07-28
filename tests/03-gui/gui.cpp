@@ -32,10 +32,10 @@ public:
 		window.Component->AddChild(btn.Component);
 	}
 
-	void OnFrame() override
+	void OnFrame(float _elapsedTime) override
 	{
 		ari::gfx::BeginDefaultPass();
-		m_gui_system.Update(&m_world, 0.1f, UpdateState::MainThreadState);
+		m_gui_system.Update(&m_world, _elapsedTime, UpdateState::MainThreadState);
 		ari::gfx::EndPass();
 		ari::gfx::Commit();
 	}

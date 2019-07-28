@@ -16,7 +16,7 @@ public:
 		
 	}
 
-	void OnFrame() override
+	void OnFrame(float _elapsedTime) override
 	{
 		
 	}

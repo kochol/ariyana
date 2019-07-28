@@ -35,9 +35,9 @@ public:
 		m_world.AddDerivedComponent<ari::en::BoxShape, ari::en::Node3D>(entity, box);
 	}
 
-	void OnFrame() override
+	void OnFrame(float _elapsedTime) override
 	{
-		m_world.Update(0.01f);
+		m_world.Update(_elapsedTime);
 	}
 
 	void OnCleanup() override

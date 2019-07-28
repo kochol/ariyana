@@ -5,6 +5,7 @@
 #include "GLFW/glfw3.h"
 #include "gfx/Application.hpp"
 #include "io/FileSystem.hpp"
+#include "sx/timer.h"
 
 static uint32_t g_FrameNumber = 0;
 
@@ -58,14 +59,16 @@ int main(int argc, char* argv[])
 	// set the params
 	auto setup = g_application->GetGfxSetup();
 
-    ari::gfx::SetupGfx(*setup);
+	sx_tm_init();
+	uint64_t last_time = sx_tm_now();
+	ari::gfx::SetupGfx(*setup);
     g_application->OnInit();
 
     while (ari::io::Run())
     {
 		ari::io::Update();
-        g_FrameNumber++;
-        g_application->OnFrame();
+        g_FrameNumber++;		
+        g_application->OnFrame((float)sx_tm_sec(sx_tm_laptime(&last_time)));
         ari::gfx::Present();
     }
 

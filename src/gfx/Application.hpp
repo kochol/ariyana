@@ -17,7 +17,7 @@ namespace ari
 
 		virtual void OnInit() = 0;
 
-		virtual void OnFrame() = 0;
+		virtual void OnFrame(float _elapsedTime) = 0;
 
 		virtual void OnCleanup() = 0;
 

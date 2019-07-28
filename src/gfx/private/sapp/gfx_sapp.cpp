@@ -7,9 +7,11 @@
 #include "../../Application.hpp"
 #include "gfx/gfx.hpp"
 #include "io/FileSystem.hpp"
+#include "sx/timer.h"
 
 ari::Application* g_application = nullptr;
 static uint32_t g_FrameNumber = 0;
+static uint64_t last_time = 0;
 
 void ari_init_cb()
 {
@@ -25,6 +27,8 @@ void ari_init_cb()
 	desc.d3d11_depth_stencil_view_cb = sapp_d3d11_get_depth_stencil_view;
 
 	sg_setup(&desc);
+	sx_tm_init();
+	last_time = sx_tm_now();
 	g_application->OnInit();
 }
 
@@ -32,7 +36,7 @@ void ari_frame_cb()
 {
     g_FrameNumber++;
 	ari::io::Update();
-	g_application->OnFrame();
+    g_application->OnFrame((float)sx_tm_sec(sx_tm_laptime(&last_time)));
 }
 
 void ari_cleanup_cb()

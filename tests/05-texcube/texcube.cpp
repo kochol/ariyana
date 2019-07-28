@@ -40,11 +40,11 @@ public:
 		m_world.AddDerivedComponent<ari::en::BoxShape, ari::en::Node3D>(entity, box);
 	}
 
-	void OnFrame() override
+	void OnFrame(float _elapsedTime) override
 	{
-		m_pBox->Rotation.x += 0.0001f;
-		m_pBox->Rotation.y += 0.0001f;
-		m_world.Update(0.01f);
+		m_pBox->Rotation.x += 0.3f * _elapsedTime;
+		m_pBox->Rotation.y += 0.3f * _elapsedTime;
+		m_world.Update(_elapsedTime);
 	}
 
 	void OnCleanup() override
