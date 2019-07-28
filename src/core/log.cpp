@@ -28,6 +28,10 @@
 
 #include "log.h"
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#endif
+
 static struct {
   void *udata;
   log_LockFn lock;
@@ -105,15 +109,45 @@ void log_log(int level, const char* file, int line, const char* fmt, ...)
     va_list args;
     char buf[16];
     buf[strftime(buf, sizeof(buf), "%H:%M:%S", lt)] = '\0';
-#ifdef LOG_USE_COLOR
+#ifdef __ANDROID__
+	android_LogPriority log_type = ANDROID_LOG_DEFAULT;
+	switch (level)
+	{
+	case 0:
+		log_type = ANDROID_LOG_VERBOSE;
+		break;
+	case 1:
+		log_type = ANDROID_LOG_DEBUG;
+		break;
+	case 2:
+		log_type = ANDROID_LOG_INFO;
+		break;
+	case 3:
+		log_type = ANDROID_LOG_WARN;
+		break;
+	case 4:
+		log_type = ANDROID_LOG_ERROR;
+		break;
+	case 5:
+		log_type = ANDROID_LOG_FATAL;
+		break;
+	};
+	__android_log_print(log_type, "Ariyana", "%s %-5s %s:%d: ", buf, level_names[level], file, line);
+#else
+#	ifdef LOG_USE_COLOR
     fprintf(
       stderr, "%s %s%-5s\x1b[0m \x1b[90m%s:%d:\x1b[0m ",
       buf, level_colors[level], level_names[level], file, line);
-#else
+#	else
     fprintf(stderr, "%s %-5s %s:%d: ", buf, level_names[level], file, line);
+#	endif
 #endif
     va_start(args, fmt);
-    vfprintf(stderr, fmt, args);
+#ifdef __ANDROID__
+	__android_log_vprint(log_type, "Ariyana", fmt, args);
+#else
+	vfprintf(stderr, fmt, args);
+#endif
     va_end(args);
     fprintf(stderr, "\n");
     fflush(stderr);
