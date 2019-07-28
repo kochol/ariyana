@@ -4,6 +4,12 @@
 #include "io/FileSystem.hpp"
 #include "sx/os.h"
 #include "core/string/StringBuilder.hpp"
+#include "io/Window.hpp"
+
+#if SX_PLATFORM_ANDROID
+#include <android/asset_manager.h>
+#include <android/native_activity.h>
+#endif
 
 namespace ari::io
 {
@@ -18,7 +24,13 @@ namespace ari::io
 		root.Append(sx_os_path_pwd(nullptr, 0));
 		root.Append("/");
 		AddAssigns("root:", root.GetString());
+
+#if !SX_PLATFORM_ANDROID
 		root.Append("assets/");
+#else
+		// On android platform assets folder is inside the APK
+		root = "file://assets/";
+#endif
 		AddAssigns("res:", root.GetString());
 	}
 
@@ -83,6 +95,17 @@ namespace ari::io
 	{
 		auto request = reinterpret_cast<Request*>(_userdata);
 
+#if SX_PLATFORM_ANDROID
+		// Load the file from assets directory inside the APK.
+		if (ReadFileFromAssetsFolderAndroid(request))
+		{
+			// Add the request to the done queue.
+			request->Code = IOStatus::OK;
+			fs_local_instance->AddDoneRequest(request);
+			return;
+		}
+#endif
+
 #if SX_COMPILER_MSVC
 		FILE* pFile;
 		fopen_s(&pFile, request->Url.Path().AsCStr(), "rb");
@@ -121,7 +144,35 @@ namespace ari::io
 		/* the whole file is now loaded in the memory buffer. */
 
 		// Add the request to the done queue.
+		request->Code = IOStatus::OK;
 		fs_local_instance->AddDoneRequest(request);
+	}
+
+	//------------------------------------------------------------------------------
+	bool FileSystemLocal::ReadFileFromAssetsFolderAndroid(Request* request)
+	{
+#if SX_PLATFORM_ANDROID
+		auto nactivity = (ANativeActivity*)io::AndroidGetNativeActivity();
+		auto assetManager = nactivity->assetManager;
+
+		// Open your file
+		AAsset* file = AAssetManager_open(assetManager, request->Url.Path().AsCStr(), AASSET_MODE_BUFFER);
+		if (!file)
+		{
+			request->Code = IOStatus::NotFound;
+			return false;
+		}
+		// Get the file length
+		size_t fileLength = AAsset_getLength(file);
+
+		// Read your file
+		request->Buffer.Clear();
+		AAsset_read(file, (void*)request->Buffer.Add(int(fileLength)), fileLength);
+
+		return true;
+#else
+		return false;
+#endif
 	}
 
 } // namespace ari::io

@@ -14,6 +14,7 @@ namespace ari::io
     private:
 
 		static void ReadFileJob(int range_start, int range_end, int thread_index, void* _userdata);
+		static bool ReadFileFromAssetsFolderAndroid(Request* request);
 
 		core::Array<sx_job_t>	m_aJobs;
     };
