@@ -61,7 +61,10 @@ def generateHeader(hdrPath, fmt) :
 #-------------------------------------------------------------------------------
 def generate(input, out_src, out_hdr, args):
     out_tex = input + '.ktx'
-    if util.isDirty(Version, [input], [out_hdr]) or not os.path.exists(out_tex) or fileFormatDirty(out_hdr, args['texfmt']):
+    inputs = [input]
+    if (os.path.exists(out_tex)) :
+        inputs.append(out_tex)
+    if util.isDirty(Version, inputs, [out_hdr]) or not os.path.exists(out_tex) or fileFormatDirty(out_hdr, args['texfmt']):
         print('## texurec: {} {}'.format(input, args['texfmt']))
         cmd = [find_texc(), 
                 '-f', input,
