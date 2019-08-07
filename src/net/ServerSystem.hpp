@@ -21,7 +21,7 @@ namespace ari::net
 
 		bool NeedUpdateOn(en::UpdateState::Enum _state) override;
 
-		void CreateServer(const yojimbo::Address& address
+		bool CreateServer(const yojimbo::Address& address
 			, const yojimbo::ClientServerConfig& config = GameConnectionConfig()
 			, yojimbo::Adapter* adapter = nullptr);
 
