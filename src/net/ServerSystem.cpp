@@ -28,6 +28,15 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	void ServerSystem::Update(en::World* _world, const float& _elapsed, en::UpdateState::Enum _state)
 	{
+		if (!m_pServer || !m_pServer->IsRunning())
+			return;
+
+		m_pServer->AdvanceTime(m_time + _elapsed);
+		m_pServer->ReceivePackets();
+
+		// TODO: process packets
+
+		m_pServer->SendPackets();
 	}
 
 	//------------------------------------------------------------------------------

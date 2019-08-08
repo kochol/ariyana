@@ -34,6 +34,7 @@ namespace ari::net
 		en::World			*	m_pWorld	= nullptr;
 		yojimbo::Server		*	m_pServer	= nullptr;
 		yojimbo::Adapter	*	m_pAdapter	= nullptr;
+		double					m_time = 0.0;
     };
 
 } // namespace ari::net
