@@ -26,6 +26,11 @@ public:
 		
 	}
 
+	void OnEvent(ari::io::ari_event* event, ari::io::WindowHandle _window) override
+	{
+		
+	}
+
 	ari::gfx::GfxSetup m_gfx_setup;
 };
 
