@@ -12,7 +12,7 @@ namespace ari::net
 		if (m_pAdapter)
 			core::Memory::Delete(m_pAdapter);
 		if (m_pClient)
-		{
+		{			
 			core::Memory::Delete(m_pClient);
 		}
 	}

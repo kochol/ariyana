@@ -3,6 +3,10 @@
 
 namespace ari::net
 {
+	bool InitNetwork();
+
+	void ShutdownNetwork();
+
     /*// Server functions
     bool ServerSetup();
     void ServerUpdate();

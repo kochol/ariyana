@@ -13,7 +13,7 @@ namespace ari::net
 			core::Memory::Delete(m_pAdapter);
 		if (m_pServer)
 		{
-			m_pServer->DisconnectAllClients();
+			m_pServer->Stop();
 			core::Memory::Delete(m_pServer);
 		}
 	}
