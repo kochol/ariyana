@@ -89,6 +89,7 @@ fips_setup(PROJECT ari)
     set(CMAKE_CXX_STANDARD 17)
 
 	fips_include_directories(src)
+    fips_ide_group(Modules)
     fips_add_subdirectory(src)
 
     if (ARI_BUILD_TESTS)

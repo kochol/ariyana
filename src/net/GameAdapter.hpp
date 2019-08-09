@@ -8,7 +8,7 @@ namespace ari::net
 	// the adapter
 	class GameAdapter : public yojimbo::Adapter {
 	public:
-		explicit GameAdapter(ServerSystem* server = NULL) :
+		explicit GameAdapter(ServerSystem* server = nullptr) :
 			m_server(server) {}
 
 		yojimbo::MessageFactory* CreateMessageFactory(yojimbo::Allocator& allocator) override {

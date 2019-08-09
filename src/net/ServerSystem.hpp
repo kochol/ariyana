@@ -11,7 +11,7 @@ namespace ari::net
     class ServerSystem: public en::System
     {
     public:
-		virtual ~ServerSystem() override;
+		virtual ~ServerSystem();
 
 		void Configure(en::World* _world) override;
 
@@ -34,7 +34,7 @@ namespace ari::net
 		en::World			*	m_pWorld	= nullptr;
 		yojimbo::Server		*	m_pServer	= nullptr;
 		yojimbo::Adapter	*	m_pAdapter	= nullptr;
-		double					m_time = 0.0;
+		double					m_time		= 0.0;
     };
 
 } // namespace ari::net

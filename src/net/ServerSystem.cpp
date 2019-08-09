@@ -11,6 +11,11 @@ namespace ari::net
 	{
 		if (m_pAdapter)
 			core::Memory::Delete(m_pAdapter);
+		if (m_pServer)
+		{
+			m_pServer->DisconnectAllClients();
+			core::Memory::Delete(m_pServer);
+		}
 	}
 
 	//------------------------------------------------------------------------------
@@ -31,7 +36,8 @@ namespace ari::net
 		if (!m_pServer || !m_pServer->IsRunning())
 			return;
 
-		m_pServer->AdvanceTime(m_time + _elapsed);
+		m_time += _elapsed;
+		m_pServer->AdvanceTime(m_time);
 		m_pServer->ReceivePackets();
 
 		// TODO: process packets
