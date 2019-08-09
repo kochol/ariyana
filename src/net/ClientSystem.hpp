@@ -23,6 +23,8 @@ namespace ari::net
 			const yojimbo::ClientServerConfig& config = GameConnectionConfig()
 			, yojimbo::Adapter* adapter = nullptr);
 
+		void StopClient();
+
 	protected:
 
 		yojimbo::Client		*	m_pClient	= nullptr;

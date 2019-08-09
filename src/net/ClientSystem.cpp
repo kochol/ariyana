@@ -9,12 +9,9 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	ClientSystem::~ClientSystem()
 	{
+		StopClient();
 		if (m_pAdapter)
 			core::Memory::Delete(m_pAdapter);
-		if (m_pClient)
-		{			
-			core::Memory::Delete(m_pClient);
-		}
 	}
 
 	//------------------------------------------------------------------------------
@@ -72,6 +69,16 @@ namespace ari::net
 		uint64_t clientId;
 		yojimbo::random_bytes((uint8_t*)& clientId, 8);
 		m_pClient->InsecureConnect(DEFAULT_PRIVATE_KEY, clientId, serverAddress);
+	}
+
+	void ClientSystem::StopClient()
+	{
+		if (m_pClient)
+		{
+			m_pClient->Disconnect();
+			core::Memory::Delete(m_pClient);
+			m_pClient = nullptr;
+		}
 	}
 
 } // namespace ari::net

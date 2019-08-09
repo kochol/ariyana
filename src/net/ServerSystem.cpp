@@ -9,13 +9,9 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	ServerSystem::~ServerSystem()
 	{
+		StopServer();
 		if (m_pAdapter)
 			core::Memory::Delete(m_pAdapter);
-		if (m_pServer)
-		{
-			m_pServer->Stop();
-			core::Memory::Delete(m_pServer);
-		}
 	}
 
 	//------------------------------------------------------------------------------
@@ -75,6 +71,16 @@ namespace ari::net
 		log_info("Server address is %s", buffer);
 
 		return true;
+	}
+
+	void ServerSystem::StopServer()
+	{
+		if (m_pServer)
+		{
+			m_pServer->Stop();
+			core::Memory::Delete(m_pServer);
+			m_pServer = nullptr;
+		}
 	}
 
 	//------------------------------------------------------------------------------

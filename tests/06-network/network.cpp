@@ -57,6 +57,8 @@ public:
 	void OnCleanup() override
 	{
 		// Shutdown Network
+		m_client_system.StopClient();
+		m_server_system.StopServer();
 		ari::net::ShutdownNetwork();
 	}
 

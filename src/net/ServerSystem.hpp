@@ -25,6 +25,8 @@ namespace ari::net
 			, const yojimbo::ClientServerConfig& config = GameConnectionConfig()
 			, yojimbo::Adapter* adapter = nullptr);
 
+		void StopServer();
+
 		virtual void ClientConnected(int client_id);
 
 		virtual void ClientDisconnected(int client_id);
