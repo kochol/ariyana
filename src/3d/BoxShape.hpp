@@ -10,6 +10,8 @@ namespace ari::en
 	{
 	public:
 
+		ARI_COMPONENT_CHILD(Node3D)
+
 		// Constructor
 		BoxShape() { _isRenderable = true; }
 

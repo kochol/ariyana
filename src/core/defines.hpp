@@ -20,7 +20,13 @@ struct _name \
 
 #define ARI_COMPONENT \
 static const uint32_t Id; \
-virtual uint32_t GetId() { return Id; }
+virtual uint32_t GetId() { return Id; } \
+virtual uint32_t GetBaseId() { return Id; }
 
 #define ARI_COMPONENT_IMP(_name) \
 const uint32_t _name::Id = COMPILE_TIME_CRC32_STR(#_name);
+
+#define ARI_COMPONENT_CHILD(_base) \
+static const uint32_t Id; \
+virtual uint32_t GetId() override { return Id; } \
+virtual uint32_t GetBaseId() override { return _base::Id; }
