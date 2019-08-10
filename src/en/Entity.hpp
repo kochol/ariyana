@@ -11,6 +11,9 @@ namespace ari
         {
 			EntityHandle dummy1;
 			EntityHandle dummy2;
+
+			//! Should network replicates this entity?
+			bool bReplicates = false;
         };        
 
 	} // en
