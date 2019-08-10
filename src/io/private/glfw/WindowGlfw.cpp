@@ -2,6 +2,10 @@
 #include "io/private/flextgl/flextGL.h"
 #include "GLFW/glfw3.h"
 #include "core/containers/StaticArray.hpp"
+#include <io\IOEvents.hpp>
+#include "gfx/Application.hpp"
+
+extern ari::Application* g_application;
 
 namespace ari
 {
@@ -10,6 +14,142 @@ namespace ari
 		static bool g_GlfwInited = false;
 		GLFWwindow* g_FirstWindow = nullptr;
 		core::StaticArray<GLFWwindow*, MaxWindow>	g_Windows;
+
+		//------------------------------------------------------------------------------
+		WindowHandle get_window_handle(GLFWwindow* window)
+		{
+			WindowHandle window_handle;
+			for (uint32_t i = 0; i < MaxWindow; i++)
+			{
+				if (g_Windows[i] == window)
+				{
+					window_handle.Index = i;
+					window_handle.Handle = core::HandleManager<WindowHandle>::FindHandleByIndex(i);
+				}
+			}
+			return window_handle;
+		}
+
+		//------------------------------------------------------------------------------
+		void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+		{
+			if (!g_application)
+				return;
+
+			ari_event event;
+			if (GLFW_PRESS == action)
+				event.type = ARI_EVENTTYPE_KEY_DOWN;
+			else if (GLFW_RELEASE == action)
+				event.type = ARI_EVENTTYPE_KEY_UP;
+
+			event.key_code = ari_keycode(key);
+			event.modifiers = mods;
+
+			g_application->OnEvent(&event, get_window_handle(window));
+		}
+
+		//------------------------------------------------------------------------------
+		void character_callback(GLFWwindow* window, unsigned int codepoint)
+		{
+			if (!g_application)
+				return;
+
+			ari_event event;
+			event.type = ARI_EVENTTYPE_CHAR;
+			event.char_code = codepoint;
+
+			g_application->OnEvent(&event, get_window_handle(window));
+		}
+
+		//------------------------------------------------------------------------------
+		ari_mousebutton get_mouse_button(GLFWwindow* win)
+		{
+			if (GLFW_PRESS == glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_LEFT))
+				return ARI_MOUSEBUTTON_LEFT;
+			if (GLFW_PRESS == glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_RIGHT))
+				return ARI_MOUSEBUTTON_RIGHT;
+			if (GLFW_PRESS == glfwGetMouseButton(win, GLFW_MOUSE_BUTTON_MIDDLE))
+				return ARI_MOUSEBUTTON_MIDDLE;
+			return ARI_MOUSEBUTTON_INVALID;
+		}
+
+		//------------------------------------------------------------------------------
+		void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
+		{
+			if (!g_application)
+				return;
+
+			ari_event event;
+			event.type = ARI_EVENTTYPE_MOUSE_MOVE;
+			event.mouse_x = float(xpos);
+			event.mouse_y = float(ypos);
+			event.mouse_button = get_mouse_button(window);
+
+			g_application->OnEvent(&event, get_window_handle(window));
+		}
+
+		//------------------------------------------------------------------------------
+		void cursor_enter_callback(GLFWwindow* window, int entered)
+		{
+			if (!g_application)
+				return;
+
+			ari_event event;
+
+			if (entered)
+			{
+				// The cursor entered the content area of the window
+				event.type = ARI_EVENTTYPE_MOUSE_ENTER;
+			}
+			else
+			{
+				// The cursor left the content area of the window
+				event.type = ARI_EVENTTYPE_MOUSE_LEAVE;
+			}
+			g_application->OnEvent(&event, get_window_handle(window));
+		}
+		
+
+		void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+		{
+			if (!g_application)
+				return;
+
+			ari_event event;
+
+			if (GLFW_PRESS == action)
+				event.type = ARI_EVENTTYPE_MOUSE_DOWN;
+			else if (GLFW_RELEASE == action)
+				event.type = ARI_EVENTTYPE_MOUSE_UP;
+
+			if (button == GLFW_MOUSE_BUTTON_LEFT)
+				event.mouse_button = ARI_MOUSEBUTTON_LEFT;
+			else if (button == GLFW_MOUSE_BUTTON_RIGHT)
+				event.mouse_button = ARI_MOUSEBUTTON_RIGHT;
+			else if (button == GLFW_MOUSE_BUTTON_MIDDLE)
+				event.mouse_button = ARI_MOUSEBUTTON_MIDDLE;
+
+			double xpos, ypos;
+			glfwGetCursorPos(window, &xpos, &ypos); 
+			event.mouse_x = float(xpos);
+			event.mouse_y = float(ypos);
+
+			g_application->OnEvent(&event, get_window_handle(window));
+		}
+
+		//------------------------------------------------------------------------------
+		void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+		{
+			if (!g_application)
+				return;
+
+			ari_event event;
+			event.type = ARI_EVENTTYPE_MOUSE_SCROLL;
+			event.scroll_x = float(xoffset);
+			event.scroll_y = float(yoffset);
+
+			g_application->OnEvent(&event, get_window_handle(window));
+		}
 
 		//------------------------------------------------------------------------------
 		WindowHandle CreateAriWindow(Window& window, const char* _title)
@@ -50,6 +190,14 @@ namespace ari
 			a_assert(index < MaxWindow);
 			g_Windows[index] = win;
 
+			// Set the events callbacks
+			glfwSetKeyCallback(win, key_callback);
+			glfwSetCharCallback(win, character_callback);
+			glfwSetCursorPosCallback(win, cursor_position_callback);
+			glfwSetCursorEnterCallback(win, cursor_enter_callback);
+			glfwSetMouseButtonCallback(win, mouse_button_callback);
+			glfwSetScrollCallback(win, scroll_callback);
+				
 			return { handle, index };
 		}
 

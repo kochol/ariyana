@@ -4,6 +4,7 @@ fips_begin_module(ari_io)
     fips_files(
         FileSystem.hpp          FileSystem.cpp
         FileSystemBase.hpp      FileSystemBase.cpp
+        IOEvents.hpp
         IOStatus.hpp            IOStatus.cpp
         URL.hpp                 URL.cpp
         URLBuilder.hpp          URLBuilder.cpp
