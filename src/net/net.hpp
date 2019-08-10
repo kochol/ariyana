@@ -18,7 +18,8 @@ namespace ari::net
    
 	// a simple test message
 	enum class GameMessageType {
-		TEST,
+		CREATE_ENTITY,
+		DESTROY_ENTITY,
 		COUNT
 	};
 

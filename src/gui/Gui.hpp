@@ -9,7 +9,7 @@ namespace ari
 		{
 		public:
 
-			ARI_COMPONENT
+			ARI_COMPONENT(Gui)
 
 			virtual ~Gui() = default;
 

@@ -4,6 +4,7 @@ fips_begin_module(ari_en)
     fips_files(
         AriTypeId.hpp
         ComponentHandle.hpp
+        ComponentManager.hpp
         Entity.hpp
         EventSubscriber.hpp
 		Node.hpp			Node.cpp

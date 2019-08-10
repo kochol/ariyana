@@ -17,6 +17,8 @@ imports:
         git: https://github.com/fips-libs/fips-imgui.git
     yojimbo:
         git: https://github.com/kochol/yojimbo.git
+    fips-MetaStuff:
+        git: https://github.com/kochol/fips-MetaStuff.git
 
 exports:
     header-dirs :

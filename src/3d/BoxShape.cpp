@@ -2,10 +2,11 @@
 #include "gfx/Vertices.hpp"
 #include "sokol_gfx.h"
 #include "Box.glsl.h"
+#include "en/ComponentManager.hpp"
 
 namespace ari::en
 {
-	ARI_COMPONENT_IMP(BoxShape)
+	ARI_COMPONENT_IMP_CHILD(BoxShape)
 
 	gfx::BufferHandle BoxShape::m_sVBPos;
 	gfx::BufferHandle BoxShape::m_sVBColor;

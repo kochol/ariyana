@@ -5,10 +5,10 @@
 #include "3d/SceneSystem.hpp"
 #include "3d/Camera.hpp"
 #include "3d/BoxShape.hpp"
-#include "fs_local/FileSystemLocal.hpp"
-#include "io/FileSystem.hpp"
 #include "net/ServerSystem.hpp"
 #include "net/ClientSystem.hpp"
+#include "core/log.h"
+#include "en/ComponentManager.hpp"
 
 class NetworkApp : public ari::Application
 {
@@ -45,12 +45,22 @@ public:
 		m_world.AddSystem(&m_server_system);
 		m_client_system.Connect(yojimbo::Address("127.0.0.1", 55223));
 		m_world.AddSystem(&m_client_system);
+
+		auto c = ari::en::ComponentManager::CreateComponent(ari::en::BoxShape::Id, &m_world);
 	}
 
 	void OnFrame(float _elapsedTime) override
 	{
 		m_pBox->Rotation.x += 0.3f * _elapsedTime;
 		m_pBox->Rotation.y += 0.3f * _elapsedTime;
+		meta::doForAllMembers<ari::en::Node3D>(
+			[this](const auto& member)
+			{
+				//log_debug(member.getName());
+				//log_debug("%f", member.get(*m_pBox).x);
+			}
+		);
+
 		m_world.Update(_elapsedTime);
 	}
 

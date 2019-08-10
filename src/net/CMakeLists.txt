@@ -2,6 +2,7 @@ fips_begin_module(ari_net)
     fips_vs_warning_level(3)
     fips_libs(yojimbo)
     fips_deps(ari_en)
+    add_definitions(-DARI_NET)
     fips_files(
         ClientSystem.hpp            ClientSystem.cpp
         GameAdapter.hpp             GameAdapter.cpp

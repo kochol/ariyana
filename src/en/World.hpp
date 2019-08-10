@@ -29,6 +29,8 @@ namespace ari::en
 		//! Creates a new entity
 		EntityHandle CreateEntity();
 
+		Entity* GetEntity(const EntityHandle& _handle);
+
 		//! Creates a component from object pool
 		template<class T>
 		ComponentHandle<T> CreateComponent();

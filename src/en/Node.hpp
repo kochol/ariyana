@@ -3,6 +3,8 @@
 #include "core/containers/Map.hpp"
 #include "core/containers/Array.hpp"
 #include "core/defines.hpp"
+#include "World.hpp"
+#include "ComponentHandle.hpp"
 
 namespace ari
 {
@@ -12,7 +14,7 @@ namespace ari
 		{			
 		public:
 
-			ARI_COMPONENT
+			ARI_COMPONENT(Node)
 
 			virtual ~Node() = default;
 

@@ -3,8 +3,11 @@
 #include "sx/allocator.h"
 #include "sx/jobs.h"
 #include "core/memory/MemoryPool.hpp"
+#include "ComponentManager.hpp"
 
 ari::TypeIndex ari::TypeRegistry::nextIndex = 0;
+ari::core::Map<uint32_t, ari::en::ComponentManager::ComponentData>*	
+	ari::en::ComponentManager::m_mComponentsData = nullptr;
 
 static void thread_init(sx_job_context* ctx, int thread_index, uint32_t thread_id, void* user) 
 {
@@ -48,7 +51,12 @@ namespace ari
 			core::MemoryPool<Entity>::New<Entity>(i);
 			emit<events::OnEntityCreated>({ h , i });
 			return { h , i };
-		}	
+		}
+
+		Entity* World::GetEntity(const EntityHandle& _handle)
+		{
+			return core::MemoryPool<Entity>::GetByIndex(_handle.Index);
+		}
 
 		// Removes a component from an entity
 		void World::RemoveComponent(const EntityHandle& _entity, const uint32_t& _id)

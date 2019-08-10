@@ -11,7 +11,7 @@ namespace ari::en
 	{
 	public:
 
-		ARI_COMPONENT
+		ARI_COMPONENT(Node3D)
 
 		//! Constructor
 		Node3D() : _isRenderable(false)
@@ -37,3 +37,19 @@ namespace ari::en
 	}; // Node3D
 
 } // ari
+
+#include <Meta.h>
+
+namespace meta
+{
+	template <>
+	inline auto registerMembers<ari::en::Node3D>()
+	{
+		return members(
+			member("Position", &ari::en::Node3D::Position),
+			member("Rotation", &ari::en::Node3D::Rotation),
+			member("Scale", &ari::en::Node3D::Scale)
+			);
+	}
+
+}

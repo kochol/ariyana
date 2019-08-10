@@ -1,4 +1,5 @@
 #include "Node.hpp"
+#include "ComponentManager.hpp"
 
 namespace ari
 {

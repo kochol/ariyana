@@ -4,6 +4,7 @@
 #include "FrameData.hpp"
 #include "Camera.hpp"
 #include "en/World.hpp"
+#include "en/ComponentManager.hpp"
 
 namespace ari::en
 {

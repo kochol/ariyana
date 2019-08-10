@@ -2,6 +2,7 @@
 #include "core/Assertion.hpp"
 #include "core/memory/Memory.hpp"
 #include "core/log.h"
+#include "en/World.hpp"
 
 namespace ari::net
 {
@@ -18,12 +19,15 @@ namespace ari::net
 	void ServerSystem::Configure(en::World* _world)
 	{
 		m_pWorld = _world;
+		_world->Subscribe<en::events::OnEntityCreated>(this);
+		_world->Subscribe<en::events::OnEntityDestroyed>(this);
 	}
 
 	//------------------------------------------------------------------------------
 	void ServerSystem::Unconfigure(en::World* _world)
 	{
 		m_pWorld = nullptr;
+		_world->unsubscribeAll(this);
 	}
 
 	//------------------------------------------------------------------------------
@@ -87,12 +91,36 @@ namespace ari::net
 	void ServerSystem::ClientConnected(int client_id)
 	{
 		log_debug("A new client connected. client id = %d", client_id);
+		// TODO: Send the entities list to the client.
 	}
 
 	//------------------------------------------------------------------------------
 	void ServerSystem::ClientDisconnected(int client_id)
 	{
 		log_debug("Client with id %d has been disconnected.", client_id);
+	}
+
+	//------------------------------------------------------------------------------
+	void ServerSystem::Receive(en::World* world, const en::events::OnEntityCreated& event)
+	{
+		if (world->GetEntity(event.entity)->bReplicates)
+		{
+			m_aEntities.Add(event.entity);
+			// TODO: Send to the clients that they need to create a new entity
+		}
+	}
+
+	//------------------------------------------------------------------------------
+	void ServerSystem::Receive(en::World* world, const en::events::OnEntityDestroyed& event)
+	{
+		if (world->GetEntity(event.entity)->bReplicates)
+			for(int i = 0; i < m_aEntities.Size(); i++)
+				if (m_aEntities[i].Handle == event.entity.Handle)
+				{
+					// TODO: Send to the clients that they need to destroy an entity
+					m_aEntities.Erase(i);
+					return;
+				}
 	}
 
 } // namespace ari::net

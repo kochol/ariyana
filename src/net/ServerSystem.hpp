@@ -2,13 +2,17 @@
 #include "en/System.hpp"
 #include "yojimbo.h"
 #include "GameAdapter.hpp"
+#include "en/EventSubscriber.hpp"
+#include "core/containers/Array.hpp"
 
 namespace ari::net
 {
 	static const uint8_t DEFAULT_PRIVATE_KEY[yojimbo::KeyBytes] = { 0 };
 	static const int MAX_PLAYERS = 64;
 
-    class ServerSystem: public en::System
+    class ServerSystem: public en::System,
+		public en::EventSubscriber<en::events::OnEntityCreated>,
+		public en::EventSubscriber<en::events::OnEntityDestroyed>
     {
     public:
 		virtual ~ServerSystem();
@@ -31,12 +35,17 @@ namespace ari::net
 
 		virtual void ClientDisconnected(int client_id);
 
+		void Receive(en::World* world, const en::events::OnEntityCreated& event) override;
+
+		void Receive(en::World* world, const en::events::OnEntityDestroyed& event) override;
+
     protected:
 
 		en::World			*	m_pWorld	= nullptr;
 		yojimbo::Server		*	m_pServer	= nullptr;
 		yojimbo::Adapter	*	m_pAdapter	= nullptr;
 		double					m_time		= 0.0;
+		core::Array<en::EntityHandle>	m_aEntities;
     };
 
 } // namespace ari::net

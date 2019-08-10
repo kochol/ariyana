@@ -18,15 +18,32 @@ struct _name \
 	} \
 };
 
-#define ARI_COMPONENT \
+#define ARI_COMPONENT(_name) \
 static const uint32_t Id; \
+static bool IsRegisteredWithComponentManager; \
 virtual uint32_t GetId() { return Id; } \
-virtual uint32_t GetBaseId() { return Id; }
+static uint32_t GetBaseId() { return Id; } \
+inline static ari::en::ComponentHandleBase CreateComponent(ari::en::World* _world) \
+{ \
+	auto c = _world->CreateComponent<_name>(); \
+	return { c.Handle, c.Index }; \
+}
 
 #define ARI_COMPONENT_IMP(_name) \
-const uint32_t _name::Id = COMPILE_TIME_CRC32_STR(#_name);
+const uint32_t _name::Id = COMPILE_TIME_CRC32_STR(#_name); \
+bool _name::IsRegisteredWithComponentManager = ComponentManager::RegisterComponent<_name>();
 
-#define ARI_COMPONENT_CHILD(_base) \
+#define ARI_COMPONENT_CHILD(_name, _base) \
 static const uint32_t Id; \
+static bool IsRegisteredWithComponentManager; \
 virtual uint32_t GetId() override { return Id; } \
-virtual uint32_t GetBaseId() override { return _base::Id; }
+static uint32_t GetBaseId() { return _base::Id; } \
+inline static ari::en::ComponentHandleBase CreateComponent(ari::en::World* _world) \
+{ \
+	auto c = _world->CreateComponent<_name, _base>(); \
+	return { c.Handle, c.Index }; \
+}
+
+#define ARI_COMPONENT_IMP_CHILD(_name) \
+const uint32_t _name::Id = COMPILE_TIME_CRC32_STR(#_name); \
+bool _name::IsRegisteredWithComponentManager = ComponentManager::RegisterComponent<_name>();

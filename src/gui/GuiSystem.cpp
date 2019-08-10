@@ -12,6 +12,8 @@
 #define SOKOL_IMGUI_IMPL
 #include "util/sokol_imgui.h"
 #include "io/Window.hpp"
+#include "en/ComponentManager.hpp"
+#include "Gui.hpp"
 
 namespace ari
 {
