@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ComponentTag.hpp"
 #include <cstdint>
 
 namespace ari
@@ -15,8 +14,6 @@ namespace ari
 			uint32_t			Index = core::aInvalidHandle;
 			
 			T*					Component;
-
-			ComponentTag		Tag = General;
 
 			T* operator->() const
 			{

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "ComponentTag.hpp"
 #include "core/containers/Map.hpp"
 #include "core/containers/Array.hpp"
 #include "core/defines.hpp"
