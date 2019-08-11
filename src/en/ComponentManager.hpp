@@ -1,4 +1,7 @@
 #pragma once
+#if ARI_NET
+#include "yojimbo.h"
+#endif
 
 namespace ari::en
 {
@@ -8,8 +11,12 @@ namespace ari::en
 	{
 		struct ComponentData
 		{
-			ComponentHandleBase(*createFn)(World* world) = nullptr;
-			void* getAllMembers;
+			ComponentHandle<void>(*createFn)(World*) = nullptr;
+#if ARI_NET
+			bool(*serializeFn)(yojimbo::WriteStream&, void*) = nullptr;
+			bool(*deserializeFn)(yojimbo::ReadStream&, void*) = nullptr;
+			bool(*serializeMeasureFn)(yojimbo::MeasureStream&, void*) = nullptr;
+#endif
 		};
 
 	public:
@@ -23,11 +30,16 @@ namespace ari::en
 			}
 			ComponentData data;
 			data.createFn = T::CreateComponent;
+#if ARI_NET
+			data.serializeFn = &T::Serialize;
+			data.deserializeFn = &T::Serialize;
+			data.serializeMeasureFn = &T::Serialize;
+#endif
 			m_mComponentsData->Add(T::Id, data);
 			return true;
 		}
 
-		static ComponentHandleBase CreateComponent(uint32_t Id, World* pWorld)
+		static ComponentHandle<void> CreateComponent(uint32_t Id, World* pWorld)
 		{
 			return (*m_mComponentsData)[Id].createFn(pWorld);
 		}

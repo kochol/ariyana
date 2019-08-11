@@ -18,15 +18,22 @@ struct _name \
 	} \
 };
 
+#include "net/Serialize.hpp"
+
 #define ARI_COMPONENT(_name) \
 static const uint32_t Id; \
 static bool IsRegisteredWithComponentManager; \
 virtual uint32_t GetId() { return Id; } \
 static uint32_t GetBaseId() { return Id; } \
-inline static ari::en::ComponentHandleBase CreateComponent(ari::en::World* _world) \
+inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _world) \
 { \
 	auto c = _world->CreateComponent<_name>(); \
-	return { c.Handle, c.Index }; \
+	return { c.Handle, c.Index, (void*)c.Component }; \
+} \
+template <typename Stream> \
+inline static bool Serialize(Stream& stream, void* obj) \
+{ \
+	return ari::net::Serialize<_name, Stream>(stream, *((_name*)obj)); \
 }
 
 #define ARI_COMPONENT_IMP(_name) \
@@ -38,10 +45,10 @@ static const uint32_t Id; \
 static bool IsRegisteredWithComponentManager; \
 virtual uint32_t GetId() override { return Id; } \
 static uint32_t GetBaseId() { return _base::Id; } \
-inline static ari::en::ComponentHandleBase CreateComponent(ari::en::World* _world) \
+inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _world) \
 { \
 	auto c = _world->CreateComponent<_name, _base>(); \
-	return { c.Handle, c.Index }; \
+	return { c.Handle, c.Index, (void*)c.Component }; \
 }
 
 #define ARI_COMPONENT_IMP_CHILD(_name) \

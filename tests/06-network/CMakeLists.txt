@@ -1,6 +1,7 @@
 fips_begin_app(t06network cmdline)
     fips_vs_warning_level(3)
     fips_deps(ari_net ari_3d)
+    add_definitions(-DARI_NET=1)
     fips_files(
         network.cpp
     )
