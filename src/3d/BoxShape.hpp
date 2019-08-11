@@ -39,3 +39,16 @@ namespace ari::en
 
 	}; // BoxShape
 }
+
+#include "Meta.h"
+
+namespace meta
+{
+	template <>
+	inline auto registerMembers<ari::en::BoxShape>()
+	{
+		return std::tuple_cat(
+			meta::getMembers<ari::en::Node3D>()
+		);
+	}
+}

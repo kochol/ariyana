@@ -49,8 +49,9 @@ inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _wo
 { \
 	auto c = _world->CreateComponent<_name, _base>(); \
 	return { c.Handle, c.Index, (void*)c.Component }; \
+} \
+template <typename Stream> \
+inline static bool Serialize(Stream& stream, void* obj) \
+{ \
+	return ari::net::Serialize<_name, Stream>(stream, *((_name*)obj)); \
 }
-
-#define ARI_COMPONENT_IMP_CHILD(_name) \
-const uint32_t _name::Id = COMPILE_TIME_CRC32_STR(#_name); \
-bool _name::IsRegisteredWithComponentManager = ComponentManager::RegisterComponent<_name>();

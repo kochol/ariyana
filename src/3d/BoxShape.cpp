@@ -6,7 +6,7 @@
 
 namespace ari::en
 {
-	ARI_COMPONENT_IMP_CHILD(BoxShape)
+	ARI_COMPONENT_IMP(BoxShape)
 
 	gfx::BufferHandle BoxShape::m_sVBPos;
 	gfx::BufferHandle BoxShape::m_sVBColor;

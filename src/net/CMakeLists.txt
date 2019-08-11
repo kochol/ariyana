@@ -1,6 +1,5 @@
 fips_begin_module(ari_net)
     fips_vs_warning_level(3)
-    fips_libs(yojimbo)
     fips_deps(ari_en)
     fips_files(
         ClientSystem.hpp            ClientSystem.cpp
