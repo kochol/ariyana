@@ -49,13 +49,17 @@ namespace ari
 			uint32_t i;
 			uint32_t h = core::HandleManager<EntityHandle>::GetNewHandle(i);
 			core::MemoryPool<Entity>::New<Entity>(i);
-			emit<events::OnEntityCreated>({ h , i });
 			return { h , i };
 		}
 
 		Entity* World::GetEntity(const EntityHandle& _handle)
 		{
 			return core::MemoryPool<Entity>::GetByIndex(_handle.Index);
+		}
+
+		void World::AddEntity(const EntityHandle& _handle)
+		{
+			emit<events::OnEntityCreated>({ _handle });
 		}
 
 		// Removes a component from an entity

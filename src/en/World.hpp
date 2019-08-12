@@ -31,6 +31,8 @@ namespace ari::en
 
 		Entity* GetEntity(const EntityHandle& _handle);
 
+		void AddEntity(const EntityHandle& _handle);
+
 		//! Creates a component from object pool
 		template<class T>
 		ComponentHandle<T> CreateComponent();
