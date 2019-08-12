@@ -29,7 +29,7 @@ namespace ari::en
 	{
 		gfx::RenderToWindow(TargetWindow);
 
-		gfx::BeginDefaultPass();
+		gfx::BeginDefaultPass(TargetWindow);
 
 		m_pFrameDataCurrent = m_pFrameDataNext;
 		if (m_pFrameDataCurrent)

@@ -4,6 +4,7 @@
 #include "FrameData.hpp"
 #include "core/containers/StaticArray.hpp"
 #include "sx/math.h"
+#include "io/Window.hpp"
 
 namespace ari::en
 {
@@ -31,6 +32,8 @@ namespace ari::en
 
 		void Receive(World* world, const events::OnComponentAssigned<Camera>& event) override;
 		void Receive(World* world, const events::OnComponentRemoved<Camera>& event) override;
+
+		io::WindowHandle		TargetWindow;
 
 	protected:
 

@@ -13,6 +13,8 @@ namespace ari::en
 		m_aFrameData[0].FrameDataTurnIndex = 0;
 		m_aFrameData[1].FrameDataTurnIndex = 1;
 		m_aFrameData[2].FrameDataTurnIndex = 2;
+		TargetWindow.Handle = 0;
+		TargetWindow.Index = 0;
 	}
 
 	SceneSystem::~SceneSystem()
@@ -52,7 +54,7 @@ namespace ari::en
 					rect = p->Rect;
 				else
 				{
-					rect = io::GetWindowSize({ 0, 0 });
+					rect = io::GetWindowSize(TargetWindow);
 				}
 				m_pActiveCamera->_proj = sx_mat4_perspectiveFOV(sx_torad(m_pActiveCamera->Fov),
 					float(rect.width) / float(rect.height), 1.0f, 1000.0f, true);

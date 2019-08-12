@@ -160,11 +160,11 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
-		void BeginDefaultPass()
+		void BeginDefaultPass(const io::WindowHandle& _handle)
 		{
 			sg_pass_action pass;
 			core::Memory::Fill(&pass, sizeof(sg_pass_action), 0);
-			const core::RectI r = io::GetWindowSize({0, 0});
+			const core::RectI r = io::GetWindowSize(_handle);
 			sg_begin_default_pass(&pass, r.width, r.height);
 		}
 

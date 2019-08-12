@@ -21,24 +21,13 @@ struct Client
 	{
 		// Create a new window
 		ari::io::Window window;		
-		m_renderer.TargetWindow = ari::io::CreateAriWindow(window, "Client");
+		m_scene_mgr.TargetWindow = m_renderer.TargetWindow = ari::io::CreateAriWindow(window, "Client");
 
 		// Add systems
 		m_world.AddSystem(&m_renderer);
 		m_world.AddSystem(&m_scene_mgr);
 		m_client_system.Connect(yojimbo::Address("127.0.0.1", 55223));
 		m_world.AddSystem(&m_client_system);
-
-		// Create entity and add box and camera
-		ari::en::EntityHandle entity = m_world.CreateEntity();
-		auto camera = m_world.CreateComponent<ari::en::Camera, ari::en::Node3D>();
-		camera.Component->Position.x = 3.f;
-		camera.Component->Position.y = 3.f;
-		camera.Component->Position.z = 3.f;
-		camera.Component->Target.z = 0.0f;
-		m_world.AddDerivedComponent<ari::en::Camera, ari::en::Node3D>(entity, camera);
-		auto box = m_world.CreateComponent<ari::en::BoxShape, ari::en::Node3D>();
-		m_world.AddDerivedComponent<ari::en::BoxShape, ari::en::Node3D>(entity, box);
 	}
 
 	void Update(float _elasped)
@@ -71,6 +60,8 @@ public:
 		// Add systems
 		m_world.AddSystem(&m_renderer);
 		m_world.AddSystem(&m_scene_mgr);
+		m_server_system.CreateServer(yojimbo::Address("127.0.0.1", 55223));
+		m_world.AddSystem(&m_server_system);
 
 		// Create entity and add box and camera
 		ari::en::EntityHandle entity = m_world.CreateEntity();
@@ -83,8 +74,11 @@ public:
 		auto box = m_world.CreateComponent<ari::en::BoxShape, ari::en::Node3D>();
 		m_pBox = box.Component;
 		m_world.AddDerivedComponent<ari::en::BoxShape, ari::en::Node3D>(entity, box);
-		m_server_system.CreateServer(yojimbo::Address("127.0.0.1", 55223));
-		m_world.AddSystem(&m_server_system);
+
+		// Add entity to the worlld
+		auto en = m_world.GetEntity(entity);
+		en->bReplicates = true;
+		m_world.AddEntity(entity);
 
 		m_pBox->Position.x = 100.0f;
 		auto c = ari::en::ComponentManager::CreateComponent(ari::en::BoxShape::Id, &m_world);
@@ -123,7 +117,7 @@ public:
 
 	void OnEvent(ari::io::ari_event* event, ari::io::WindowHandle _window) override
 	{
-		if (event->type == ari::io::ARI_EVENTTYPE_KEY_UP)
+		if (event->type == ari::io::ARI_EVENTTYPE_KEY_UP && event->key_code == ari::io::ARI_KEYCODE_C)
 		{
 			Client* client = ari::core::Memory::New<Client>();
 			m_aClients.Add(client)->Init();

@@ -142,7 +142,7 @@ namespace ari
 
 		void ApplyUniforms(ShaderStage _stage, int _ub_index, const void* _data, int _size);
 
-		void BeginDefaultPass();
+		void BeginDefaultPass(const io::WindowHandle& _handle);
 
 		void EndPass();
 

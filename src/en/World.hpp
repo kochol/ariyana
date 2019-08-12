@@ -167,7 +167,7 @@ namespace ari::en
 	template<class T, class BASE>
 	ComponentHandle<T> World::CreateComponent()
 	{
-		core::MemoryPool<BASE>::Setup(4096);
+		core::MemoryPool<BASE>::Setup(102400);
 		uint32_t i;
 		const uint32_t h = core::HandleManager<BASE>::GetNewHandle(i);
 
