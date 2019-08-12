@@ -4,8 +4,10 @@
 #include "core/containers/StaticArray.hpp"
 #include <io\IOEvents.hpp>
 #include "gfx/Application.hpp"
+#include <sokol_gfx.h>
 
 extern ari::Application* g_application;
+ari::core::StaticArray<sg_context, ari::io::MaxWindow> g_sg_contexts;
 
 namespace ari
 {
@@ -178,17 +180,23 @@ namespace ari
 				// TODO: log the problem
 				return WindowHandle();
 			}
+
+			uint32_t index;
+			const uint32_t handle = core::HandleManager<WindowHandle>::GetNewHandle(index);
+			a_assert(index < MaxWindow);
+			g_Windows[index] = win;
+
 			if (!g_FirstWindow)
 			{
 				g_FirstWindow = win;
 				glfwMakeContextCurrent(win);
 				flextInit(win);
 			}
-
-			uint32_t index;
-			const uint32_t handle = core::HandleManager<WindowHandle>::GetNewHandle(index);
-			a_assert(index < MaxWindow);
-			g_Windows[index] = win;
+			else
+			{
+				glfwMakeContextCurrent(win);
+				g_sg_contexts[index] = sg_setup_context();
+			}
 
 			// Set the events callbacks
 			glfwSetKeyCallback(win, key_callback);

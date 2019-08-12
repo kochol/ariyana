@@ -28,6 +28,17 @@ struct Client
 		m_world.AddSystem(&m_scene_mgr);
 		m_client_system.Connect(yojimbo::Address("127.0.0.1", 55223));
 		m_world.AddSystem(&m_client_system);
+
+		// Create entity and add box and camera
+		ari::en::EntityHandle entity = m_world.CreateEntity();
+		auto camera = m_world.CreateComponent<ari::en::Camera, ari::en::Node3D>();
+		camera.Component->Position.x = 3.f;
+		camera.Component->Position.y = 3.f;
+		camera.Component->Position.z = 3.f;
+		camera.Component->Target.z = 0.0f;
+		m_world.AddDerivedComponent<ari::en::Camera, ari::en::Node3D>(entity, camera);
+		auto box = m_world.CreateComponent<ari::en::BoxShape, ari::en::Node3D>();
+		m_world.AddDerivedComponent<ari::en::BoxShape, ari::en::Node3D>(entity, box);
 	}
 
 	void Update(float _elasped)
