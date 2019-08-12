@@ -210,6 +210,8 @@ namespace ari::en
 	template<class T, typename Func>
 	void World::GetComponents(uint32_t _id, Func _func)
 	{
+		if (!m_mEntityComponents.Contains(_id))
+			return;
 		auto& m = m_mEntityComponents[_id];
 		for (auto it = m.begin(); it != m.end(); it++)
 		{
@@ -223,6 +225,8 @@ namespace ari::en
 	template<class BASE, typename FUNC>
 	void World::GetDerivedComponents(FUNC _func)
 	{
+		if (!m_mEntityComponents.Contains(BASE::Id))
+			return;
 		auto& m = m_mEntityComponents[BASE::Id];
 		for (auto it = m.begin(); it != m.end(); ++it)
 		{

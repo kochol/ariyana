@@ -1,6 +1,7 @@
 #pragma once
 #include "en/System.hpp"
 #include "en/EventSubscriber.hpp"
+#include "io/Window.hpp"
 
 namespace ari::en
 {
@@ -22,7 +23,9 @@ namespace ari::en
 
 		void Receive(World* world, const events::OnComponentAssigned<BoxShape>& event) override;
 		void Receive(World* world, const events::OnFrameData& event) override;
-	
+
+		io::WindowHandle		TargetWindow;
+
 	protected:
 
 		FrameData			*	m_pFrameDataCurrent,

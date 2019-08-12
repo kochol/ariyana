@@ -108,6 +108,8 @@ namespace ari
 
 		bool SetupGfx(GfxSetup& setup);
 
+		void RenderToWindow(const io::WindowHandle& handle);
+
 		void Present();
 
 		void Present(const io::WindowHandle& handle);

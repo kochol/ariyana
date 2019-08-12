@@ -29,6 +29,11 @@ namespace ari
 			return true;
 		}
 
+		void RenderToWindow(const io::WindowHandle& handle)
+		{
+			glfwMakeContextCurrent(io::GetGlfwWindow(handle));
+		}
+
 		void Present()
 		{
 			const io::WindowHandle window{ 0 , 0 };
@@ -69,7 +74,6 @@ int main(int argc, char* argv[])
 		ari::io::Update();
         g_FrameNumber++;		
         g_application->OnFrame((float)sx_tm_sec(sx_tm_laptime(&last_time)));
-        ari::gfx::Present();
     }
 
     g_application->OnCleanup();

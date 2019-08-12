@@ -12,6 +12,8 @@ namespace ari::en
 
 	RenderSystem::RenderSystem(): m_pFrameDataCurrent(nullptr), m_pFrameDataNext(nullptr)
 	{
+		TargetWindow.Handle = 0;
+		TargetWindow.Index = 0;
 	}
 
 	RenderSystem::~RenderSystem()
@@ -21,6 +23,8 @@ namespace ari::en
 
 	void RenderSystem::Update(World* _world, const float& _elapsed, UpdateState::Enum _state)
 	{
+		ari::gfx::RenderToWindow(TargetWindow);
+
 		gfx::BeginDefaultPass();
 
 		m_pFrameDataCurrent = m_pFrameDataNext;
@@ -41,6 +45,7 @@ namespace ari::en
 
 		gfx::EndPass();
 		gfx::Commit();
+		ari::gfx::Present(TargetWindow);
 
 	} // Update
 

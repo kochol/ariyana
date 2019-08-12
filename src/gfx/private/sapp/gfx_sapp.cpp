@@ -92,6 +92,11 @@ namespace ari
 			return true;
 		}
 
+		void RenderToWindow(const io::WindowHandle& handle)
+		{			
+			a_assert(handle.Handle == 0); // Only use this with glfw backend.
+		}
+
 		void Present()
 		{
 		}
