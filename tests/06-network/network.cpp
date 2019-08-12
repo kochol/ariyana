@@ -26,8 +26,8 @@ struct Client
 		// Add systems
 		m_world.AddSystem(&m_renderer);
 		m_world.AddSystem(&m_scene_mgr);
-		m_client_system.Connect(yojimbo::Address("127.0.0.1", 55223));
 		m_world.AddSystem(&m_client_system);
+		m_client_system.Connect(yojimbo::Address("127.0.0.1", 55223));
 	}
 
 	void Update(float _elasped)
@@ -60,8 +60,8 @@ public:
 		// Add systems
 		m_world.AddSystem(&m_renderer);
 		m_world.AddSystem(&m_scene_mgr);
-		m_server_system.CreateServer(yojimbo::Address("127.0.0.1", 55223));
 		m_world.AddSystem(&m_server_system);
+		m_server_system.CreateServer(yojimbo::Address("127.0.0.1", 55223));
 
 		// Create entity and add box and camera
 		ari::en::EntityHandle entity = m_world.CreateEntity();
@@ -79,19 +79,6 @@ public:
 		auto en = m_world.GetEntity(entity);
 		en->bReplicates = true;
 		m_world.AddEntity(entity);
-
-		m_pBox->Position.x = 100.0f;
-		auto c = ari::en::ComponentManager::CreateComponent(ari::en::BoxShape::Id, &m_world);
-		uint8_t buf[400];
-		yojimbo::WriteStream write_stream(yojimbo::GetDefaultAllocator(), buf, 400);
-		ari::en::ComponentManager::Serialize(ari::en::BoxShape::Id, write_stream, (void*)m_pBox);
-		m_pBox->Position.x = 0.0f;
-		m_pBox = (ari::en::BoxShape*)c.Component;
-		log_debug("%f", m_pBox->Position.x);
-		yojimbo::ReadStream read_stream(yojimbo::GetDefaultAllocator(), buf, 400);
-		ari::en::ComponentManager::Deserialize(ari::en::BoxShape::Id, read_stream, c.Component);
-		log_debug("%f", m_pBox->Position.x);
-
 	}
 
 	void OnFrame(float _elapsedTime) override

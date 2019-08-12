@@ -68,6 +68,9 @@ namespace ari::en
 		template<class BASE, typename FUNC>
 		void GetDerivedComponents(FUNC _func);
 
+		template<typename FUNC>
+		void GetEntityComponents(const EntityHandle& _handle, FUNC _func);
+
 		/**
 		* Subscribe to an event.
 		*/
@@ -141,8 +144,15 @@ namespace ari::en
 
 	private:
 
+		struct cmp_handle
+		{
+			uint32_t handle;
+			void* cmp;
+			bool IsBased = false;
+		};
+
 		core::Map<uint32_t /* cmp id */ , 
-			core::Map<uint32_t /* entity handle */, uint32_t /* cmp handle */>>
+			core::Map<uint32_t /* entity handle */, cmp_handle /* cmp handle */>>
 								m_mEntityComponents;
 
 		core::Map<TypeIndex,
@@ -187,9 +197,9 @@ namespace ari::en
 	{
 		const uint32_t cmpId = _cmp.Component->GetId();
 		if (!m_mEntityComponents.Contains(cmpId))
-			m_mEntityComponents.Add(cmpId, core::Map<uint32_t, uint32_t>());
+			m_mEntityComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
 		
-		m_mEntityComponents[cmpId].Add(_entity.Handle, _cmp.Handle);
+		m_mEntityComponents[cmpId].Add(_entity.Handle, { _cmp.Handle, (void*)_cmp.Component });
 
 		emit<events::OnComponentAssigned<T>>({ _entity, _cmp.Component });
 	}
@@ -199,9 +209,9 @@ namespace ari::en
 	{
 		const uint32_t cmpId = BASE::Id;
 		if (!m_mEntityComponents.Contains(cmpId))
-			m_mEntityComponents.Add(cmpId, core::Map<uint32_t, uint32_t>());
+			m_mEntityComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
 
-		m_mEntityComponents[cmpId].Add(_entity.Handle, _cmp.Handle);
+		m_mEntityComponents[cmpId].Add(_entity.Handle, { _cmp.Handle, (void*)_cmp.Component, true });
 
 		// Also add T class to the list
 		AddComponent(_entity, _cmp);
@@ -215,9 +225,9 @@ namespace ari::en
 		auto& m = m_mEntityComponents[_id];
 		for (auto it = m.begin(); it != m.end(); it++)
 		{
-			uint32_t h = it->value;
+			const cmp_handle& h = it->value;
 			uint32_t i = core::HandleManager<T>::FindIndex(h);
-			ComponentHandle<T> cmp = { h, i, core::ObjectPool<T>::GetByIndex(i) };
+			ComponentHandle<T> cmp = { h.handle, i, core::ObjectPool<T>::GetByIndex(i) };
 			_func(it->key, cmp);
 		}
 	}
@@ -230,10 +240,26 @@ namespace ari::en
 		auto& m = m_mEntityComponents[BASE::Id];
 		for (auto it = m.begin(); it != m.end(); ++it)
 		{
-			uint32_t h = it->value;
-			uint32_t i = core::HandleManager<BASE>::FindIndex(h);
-			ComponentHandle<BASE> cmp = { h, i, core::MemoryPool<BASE>::GetByIndex(i) };
+			const cmp_handle& h = it->value;
+			uint32_t i = core::HandleManager<BASE>::FindIndex(h.handle);
+			ComponentHandle<BASE> cmp = { h.handle, i, core::MemoryPool<BASE>::GetByIndex(i) };
 			_func(it->key, cmp);
+		}
+	}
+
+	template<typename FUNC>
+	void World::GetEntityComponents(const EntityHandle& _handle, FUNC _func)
+	{
+		for (auto it = m_mEntityComponents.begin(); it != m_mEntityComponents.end(); ++it)
+		{
+			if (it->value.Contains(_handle.Handle))
+			{
+				const auto& e = it->value[_handle.Handle];
+				if (e.IsBased)
+					continue;
+				uint32_t h = e.handle;
+				_func(it->key, h, e.cmp);
+			}
 		}
 	}
 

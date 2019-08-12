@@ -30,5 +30,7 @@ namespace ari::net
 		yojimbo::Client		*	m_pClient	= nullptr;
 		yojimbo::Adapter	*	m_pAdapter	= nullptr;
 		double					m_time		= 0.0;
+		en::World			*	m_pWorld	= nullptr;
+		yojimbo::ClientServerConfig m_connectionConfig;
 	};
 } // namespace ari::net

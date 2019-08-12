@@ -39,6 +39,8 @@ namespace ari::net
 
 		void Receive(en::World* world, const en::events::OnEntityDestroyed& event) override;
 
+		void SendToAll(int channel_id, yojimbo::Message*);
+
     protected:
 
 		en::World			*	m_pWorld	= nullptr;
@@ -46,6 +48,8 @@ namespace ari::net
 		yojimbo::Adapter	*	m_pAdapter	= nullptr;
 		double					m_time		= 0.0;
 		core::Array<en::EntityHandle>	m_aEntities;
+		int						m_iClientCount = 0;
+		yojimbo::ClientServerConfig m_connectionConfig;
     };
 
 } // namespace ari::net

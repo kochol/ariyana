@@ -10,6 +10,8 @@ namespace ari::en
 	{
 	public:
 
+		ARI_COMPONENT_CHILD(Camera, Node3D)
+
 		//! Constructor
 		Camera()
 		{

@@ -17,11 +17,13 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	void ClientSystem::Configure(en::World* _world)
 	{
+		m_pWorld = _world;
 	}
 
 	//------------------------------------------------------------------------------
 	void ClientSystem::Unconfigure(en::World* _world)
 	{
+		m_pWorld = nullptr;
 	}
 
 	//------------------------------------------------------------------------------
@@ -35,12 +37,16 @@ namespace ari::net
 		m_pClient->AdvanceTime(m_time);
 		m_pClient->ReceivePackets();
 
-		if (m_pClient->IsConnected()) {
-			// ProcessMessages();
-
-			// ... do connected stuff ...
-
-			// send a message when space is pressed
+		if (m_pClient->IsConnected()) 
+		{
+			for (int i = 0; i < m_connectionConfig.numChannels; i++) {
+				yojimbo::Message* message = m_pClient->ReceiveMessage(i);
+				while (message != NULL) {
+					//ProcessMessage(message);
+					m_pClient->ReleaseMessage(message);
+					message = m_pClient->ReceiveMessage(i);
+				}
+			}
 		}
 
 		m_pClient->SendPackets();
@@ -49,7 +55,7 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	bool ClientSystem::NeedUpdateOn(en::UpdateState::Enum _state)
 	{
-		return _state == en::UpdateState::SceneState;
+		return _state == en::UpdateState::MainThreadState;
 	}
 
 	//------------------------------------------------------------------------------
@@ -57,11 +63,13 @@ namespace ari::net
 		, const yojimbo::ClientServerConfig& config, yojimbo::Adapter* adapter)
 	{
 		a_assert(!m_pClient);
+		a_assert(m_pWorld); // Add system to the world first
 		if (!adapter)
 		{
-			adapter = core::Memory::New<GameAdapter>(nullptr);
+			adapter = core::Memory::New<GameAdapter>(m_pWorld, nullptr);
 			m_pAdapter = adapter;
 		}
+		m_connectionConfig = config;
 		m_pClient = core::Memory::New<yojimbo::Client>(
 			yojimbo::GetDefaultAllocator(), yojimbo::Address("0.0.0.0"), 
 			config, *adapter, 0.0

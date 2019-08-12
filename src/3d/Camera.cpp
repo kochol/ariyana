@@ -1,7 +1,10 @@
 #include "Camera.hpp"
+#include "en/ComponentManager.hpp"
 
 namespace ari::en
 {
+	ARI_COMPONENT_IMP(Camera);
+
 	void Camera::Rotate(float _angle, const sx_vec3& _axis)
 	{
 		sx_vec3 vLook;				// Looking point.
