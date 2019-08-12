@@ -6,8 +6,6 @@ namespace ari
 {
 	namespace en
 	{
-		ARI_HANDLE(ComponentHandleBase);
-
 		template<class T>
 		class ComponentHandle
 		{
