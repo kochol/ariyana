@@ -18,12 +18,16 @@ namespace ari::en
 
 	RenderSystem::~RenderSystem()
 	{
-		BoxShape::Shutdown();
+		if (TargetWindow.Index == 0)
+		{
+			gfx::RenderToWindow(TargetWindow);
+			BoxShape::Shutdown();
+		}
 	}
 
 	void RenderSystem::Update(World* _world, const float& _elapsed, UpdateState::Enum _state)
 	{
-		ari::gfx::RenderToWindow(TargetWindow);
+		gfx::RenderToWindow(TargetWindow);
 
 		gfx::BeginDefaultPass();
 
@@ -45,7 +49,7 @@ namespace ari::en
 
 		gfx::EndPass();
 		gfx::Commit();
-		ari::gfx::Present(TargetWindow);
+		gfx::Present(TargetWindow);
 
 	} // Update
 

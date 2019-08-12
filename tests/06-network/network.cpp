@@ -115,6 +115,8 @@ public:
 	void OnCleanup() override
 	{
 		// Shutdown Network
+		for (auto c : m_aClients)
+			c->Shutdown();
 		m_server_system.StopServer();
 		ari::net::ShutdownNetwork();
 	}
