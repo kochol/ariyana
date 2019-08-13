@@ -106,4 +106,12 @@ namespace ari::net
 		m_mEntities.Add(server_entity_handle, client_entity_handle);
 	}
 
+	//------------------------------------------------------------------------------
+	void ClientSystem::AddComponent(const uint32_t& component_id, const uint32_t& component_server_handle, const uint32_t& component_client_handle)
+	{
+		if (!m_mComponents.Contains(component_id))
+			m_mComponents.Add(component_id, core::Map<uint32_t, uint32_t>());
+		m_mComponents[component_id].Add(component_server_handle, component_client_handle);
+	}
+
 } // namespace ari::net

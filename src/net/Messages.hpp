@@ -21,9 +21,10 @@ namespace ari::net
 			serialize_uint32(stream, Entity.Handle);
 			if (Stream::IsWriting)
 			{
-				World->GetEntityComponents(Entity, [&stream, &Measure](uint32_t& CmpId, const uint32_t& CmpHandle, void* Cmp)
+				World->GetEntityComponents(Entity, [&stream, &Measure](uint32_t& CmpId, uint32_t& CmpHandle, void* Cmp)
 					{
 						serialize_uint32(stream, CmpId);
+						serialize_uint32(stream, CmpHandle);
 						if (Measure)
 						{
 							if (!en::ComponentManager::SerializeMeasure(CmpId, (void*)&stream, Cmp))
@@ -59,7 +60,13 @@ namespace ari::net
 					if (CmpId == 0) // Check for the end of components
 						return true;
 
+					uint32_t CmpHandle = 0;
+					serialize_uint32(stream, CmpHandle);
+
 					auto cmp = en::ComponentManager::CreateComponent(CmpId, World);
+					// Add component handle to client system
+					AddComponent(CmpId, CmpHandle, cmp.Handle);
+
 					if (!en::ComponentManager::Deserialize(CmpId, (void*)&stream, cmp.Component))
 						return false;
 
@@ -78,9 +85,33 @@ namespace ari::net
 
 		void AddEntity(const uint32_t& server_entity_handle,
 			const uint32_t& client_entity_handle);
+
+		void AddComponent(const uint32_t& component_id, const uint32_t& component_server_handle,
+			const uint32_t& component_client_handle);
 	};
 
-	class DestroyEntityMessage : public yojimbo::Message {
+	class UpdateEntityMessage : public yojimbo::Message
+	{
+	public:	
+		ClientSystem* client_system = nullptr;
+
+		template <typename Stream>
+		bool Serialize(Stream& stream) {
+			if (Stream::IsWriting)
+			{
+			}
+			else
+			{
+				a_assert(client_system);
+			}
+			return true;
+		}
+
+		YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
+	};
+
+	class DestroyEntityMessage : public yojimbo::Message 
+	{
 	public:
 		uint32_t EntityHandle = core::aInvalidHandle;
 

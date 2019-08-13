@@ -30,6 +30,9 @@ namespace ari::net
 		void AddEntity(const uint32_t& server_entity_handle,
 			const uint32_t& client_entity_handle);
 
+		void AddComponent(const uint32_t& component_id, const uint32_t& component_server_handle,
+			const uint32_t& component_client_handle);
+
 	protected:
 
 		yojimbo::Client		*	m_pClient	= nullptr;
@@ -39,5 +42,8 @@ namespace ari::net
 		yojimbo::ClientServerConfig m_connectionConfig;
 		core::Map<uint32_t // Server entity handle
 			, uint32_t/* Client entity handle*/> m_mEntities;
+		core::Map<uint32_t // Component ID
+			, core::Map<uint32_t/* Server component handle*/
+			, uint32_t /* Client component handle */>> m_mComponents;
 	};
 } // namespace ari::net

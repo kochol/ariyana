@@ -15,4 +15,10 @@ namespace ari::net
 		client_system->AddEntity(server_entity_handle, client_entity_handle);
 	}
 
+	//------------------------------------------------------------------------------
+	void CreateEntityMessage::AddComponent(const uint32_t& component_id, const uint32_t& component_server_handle, const uint32_t& component_client_handle)
+	{
+		client_system->AddComponent(component_id, component_server_handle, component_client_handle);
+	}
+
 } // namespace ari::net
