@@ -13,11 +13,6 @@ namespace ari::net
 		en::EntityHandle Entity;
 		en::World* World = nullptr;
 
-		CreateEntityMessage()
-		{
-			log_debug("CreateEntityMessage");
-		}
-
 		template <typename Stream>
 		bool Serialize(Stream& stream, bool Measure = false) {
 			a_assert(World);

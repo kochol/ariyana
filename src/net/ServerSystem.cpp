@@ -106,7 +106,7 @@ namespace ari::net
 	void ServerSystem::ClientConnected(int client_id)
 	{
 		m_iClientCount++;
-		log_debug("A new client connected. client id = %d", client_id);
+		log_info("A new client connected. client id = %d", client_id);
 		for (auto& e : m_aEntities)
 		{
 			auto msg = (CreateEntityMessage*)m_pServer->CreateMessage(client_id, int(GameMessageType::CREATE_ENTITY));
@@ -120,7 +120,7 @@ namespace ari::net
 	void ServerSystem::ClientDisconnected(int client_id)
 	{
 		m_iClientCount--;
-		log_debug("Client with id %d has been disconnected.", client_id);
+		log_info("Client with id %d has been disconnected.", client_id);
 	}
 
 	//------------------------------------------------------------------------------
