@@ -66,7 +66,7 @@ namespace ari::net
 		a_assert(m_pWorld); // Add system to the world first
 		if (!adapter)
 		{
-			adapter = core::Memory::New<GameAdapter>(m_pWorld, nullptr);
+			adapter = core::Memory::New<GameAdapter>(m_pWorld, nullptr, this);
 			m_pAdapter = adapter;
 		}
 		m_connectionConfig = config;
@@ -79,6 +79,7 @@ namespace ari::net
 		m_pClient->InsecureConnect(DEFAULT_PRIVATE_KEY, clientId, serverAddress);
 	}
 
+	//------------------------------------------------------------------------------
 	void ClientSystem::StopClient()
 	{
 		if (m_pClient)
@@ -87,6 +88,22 @@ namespace ari::net
 			core::Memory::Delete(m_pClient);
 			m_pClient = nullptr;
 		}
+	}
+
+	//------------------------------------------------------------------------------
+	en::EntityHandle ClientSystem::GetEntity(const uint32_t& server_entity_handle)
+	{
+		int found = m_mEntities.FindIndex(server_entity_handle);
+		if (found == core::InvalidIndex)
+			return en::EntityHandle();
+		uint32_t h = m_mEntities.ValueAtIndex(found);
+		return { h , core::HandleManager<en::EntityHandle>::FindIndex(h) };
+	}
+
+	//------------------------------------------------------------------------------
+	void ClientSystem::AddEntity(const uint32_t& server_entity_handle, const uint32_t& client_entity_handle)
+	{
+		m_mEntities.Add(server_entity_handle, client_entity_handle);
 	}
 
 } // namespace ari::net

@@ -8,10 +8,12 @@
 
 namespace ari::net
 {
+	class ClientSystem;
 	class CreateEntityMessage : public yojimbo::Message {
 	public:
 		en::EntityHandle Entity;
 		en::World* World = nullptr;
+		ClientSystem* client_system = nullptr;
 
 		template <typename Stream>
 		bool Serialize(Stream& stream, bool Measure = false) {
@@ -39,8 +41,15 @@ namespace ari::net
 			}
 			else
 			{
+				a_assert(client_system);
+				// Check if we already have this entity
+				uint32_t server_entity_handle = Entity.Handle;
+				if (GetEntity(server_entity_handle).Handle != core::aInvalidHandle)
+					return true;
+
 				// Create the entity
 				Entity = World->CreateEntity();
+				AddEntity(server_entity_handle, Entity.Handle);
 
 				// Now create the components
 				do
@@ -65,6 +74,10 @@ namespace ari::net
 		bool SerializeInternal(class yojimbo::WriteStream& stream) override { return Serialize(stream); };          
 		bool SerializeInternal(class yojimbo::MeasureStream& stream) override { return Serialize(stream, true); };
 
+		en::EntityHandle GetEntity(const uint32_t& server_entity_handle);
+
+		void AddEntity(const uint32_t& server_entity_handle,
+			const uint32_t& client_entity_handle);
 	};
 
 	class DestroyEntityMessage : public yojimbo::Message {

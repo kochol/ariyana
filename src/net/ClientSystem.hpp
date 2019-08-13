@@ -25,6 +25,11 @@ namespace ari::net
 
 		void StopClient();
 
+		en::EntityHandle GetEntity(const uint32_t& server_entity_handle);
+
+		void AddEntity(const uint32_t& server_entity_handle,
+			const uint32_t& client_entity_handle);
+
 	protected:
 
 		yojimbo::Client		*	m_pClient	= nullptr;
@@ -32,5 +37,7 @@ namespace ari::net
 		double					m_time		= 0.0;
 		en::World			*	m_pWorld	= nullptr;
 		yojimbo::ClientServerConfig m_connectionConfig;
+		core::Map<uint32_t // Server entity handle
+			, uint32_t/* Client entity handle*/> m_mEntities;
 	};
 } // namespace ari::net

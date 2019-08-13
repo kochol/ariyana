@@ -36,32 +36,34 @@ namespace ari::net
 		if (!m_pServer || !m_pServer->IsRunning())
 			return;
 
-		m_time += _elapsed;
-		m_pServer->AdvanceTime(m_time);
-		m_pServer->ReceivePackets();
+		if (_state == en::UpdateState::MainThreadState)
+		{
+			m_time += _elapsed;
+			m_pServer->AdvanceTime(m_time);
+			m_pServer->ReceivePackets();
 
-		// TODO: process packets
-		for (int i = 0; i < MAX_PLAYERS; i++) {
-			if (m_pServer->IsClientConnected(i)) {
-				for (int j = 0; j < m_connectionConfig.numChannels; j++) {
-					yojimbo::Message* message = m_pServer->ReceiveMessage(i, j);
-					while (message != NULL) {
-						//ProcessMessage(i, message);
-						m_pServer->ReleaseMessage(i, message);
-						message = m_pServer->ReceiveMessage(i, j);
+			// TODO: process packets
+			for (int i = 0; i < MAX_PLAYERS; i++) {
+				if (m_pServer->IsClientConnected(i)) {
+					for (int j = 0; j < m_connectionConfig.numChannels; j++) {
+						yojimbo::Message* message = m_pServer->ReceiveMessage(i, j);
+						while (message != NULL) {
+							//ProcessMessage(i, message);
+							m_pServer->ReleaseMessage(i, message);
+							message = m_pServer->ReceiveMessage(i, j);
+						}
 					}
 				}
 			}
 		}
-
-		m_pServer->SendPackets();
-
+		else if (_state == en::UpdateState::SceneState)
+			m_pServer->SendPackets();
 	}
 
 	//------------------------------------------------------------------------------
 	bool ServerSystem::NeedUpdateOn(en::UpdateState::Enum _state)
 	{
-		return _state == en::UpdateState::MainThreadState;
+		return _state == en::UpdateState::MainThreadState || _state == en::UpdateState::SceneState;
 	}
 
 	//------------------------------------------------------------------------------

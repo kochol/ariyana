@@ -79,9 +79,11 @@ inline static bool Serialize(Stream& stream, void* obj) \
     class factory_class : public yojimbo::MessageFactory                                                                                \
     {                                                                                                                                   \
 		ari::en::World*	m_pWorld;																										\
+		ari::net::ClientSystem* m_pClient;																								\
     public:                                                                                                                             \
-        factory_class( yojimbo::Allocator & allocator, ari::en::World* pWorld ) : MessageFactory( allocator, num_message_types ),       \
-			m_pWorld(pWorld)	{}																										\
+        factory_class( yojimbo::Allocator & allocator, ari::en::World* pWorld, ari::net::ClientSystem* pClient ):						\
+			MessageFactory( allocator, num_message_types ),																				\
+			m_pWorld(pWorld), m_pClient(pClient)	{}																					\
         yojimbo::Message * CreateMessageInternal( int type )                                                                            \
         {                                                                                                                               \
             yojimbo::Message * message;                                                                                                 \
@@ -94,6 +96,7 @@ inline static bool Serialize(Stream& stream, void* obj) \
                     if ( !message )                                                                                                     \
                         return NULL;                                                                                                    \
 					((CreateEntityMessage*)message)->World = m_pWorld;																	\
+					((CreateEntityMessage*)message)->client_system = m_pClient;															\
                     SetMessageType( message, 0 );			                                                                            \
                     return message;																										\
 

@@ -4,7 +4,7 @@ fips_begin_module(ari_net)
     fips_files(
         ClientSystem.hpp            ClientSystem.cpp
         GameAdapter.hpp             GameAdapter.cpp
-        Messages.hpp
+        Messages.hpp                Messages.cpp
         net.hpp                     net.cpp
         Serialize.hpp               Serialize.inl
         ServerSystem.hpp            ServerSystem.cpp
