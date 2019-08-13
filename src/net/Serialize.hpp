@@ -6,13 +6,13 @@ namespace ari::net
 	template<typename Class,
 		typename Stream,
 		typename = std::enable_if_t <meta::isRegistered<Class>()>>
-	bool Serialize(Stream & stream, Class & obj);
+	bool Serialize(Stream & stream, Class & obj, const int& member_index = -1);
 
 	template <typename Class,
 		typename Stream,
 		typename = std::enable_if_t <!meta::isRegistered<Class>()>,
 		typename = void>
-	bool Serialize(Stream & stream, Class & obj);
+	bool Serialize(Stream & stream, Class & obj, const int& member_index = -1);
 
 	template <typename Class, typename Stream>
 	bool SerializeBasic(Stream& stream, Class& obj);

@@ -20,9 +20,9 @@ namespace ari::en
 			ComponentHandle<void>(*createFn)(World*) = nullptr;
 			void(*AddComponentFn)(ari::en::World* _world,
 				const ari::en::EntityHandle& _entity, ari::en::ComponentHandle<void> cmp) = nullptr;
-			bool(*serializeFn)(yojimbo::WriteStream&, void*) = nullptr;
-			bool(*deserializeFn)(yojimbo::ReadStream&, void*) = nullptr;
-			bool(*serializeMeasureFn)(yojimbo::MeasureStream&, void*) = nullptr;
+			bool(*serializeFn)(yojimbo::WriteStream&, void*, const int&) = nullptr;
+			bool(*deserializeFn)(yojimbo::ReadStream&, void*, const int&) = nullptr;
+			bool(*serializeMeasureFn)(yojimbo::MeasureStream&, void*, const int&) = nullptr;
 		};
 
 	public:
@@ -56,35 +56,19 @@ namespace ari::en
 			(*m_mComponentsData)[Id].AddComponentFn(_world, _entity, cmp);
 		}
 
-		static bool Serialize(uint32_t Id, void* stream, void* obj)
+		static bool Serialize(uint32_t Id, void* stream, void* obj, const int& member_index = -1)
 		{
-			return (*m_mComponentsData)[Id].serializeFn(*((yojimbo::WriteStream*)stream), obj);
-		}
-		static bool Deserialize(uint32_t Id, void* stream, void* obj)
-		{
-			return (*m_mComponentsData)[Id].deserializeFn(*((yojimbo::ReadStream*)stream), obj);
-		}
-		static bool SerializeMeasure(uint32_t Id, void* stream, void* obj)
-		{
-			return (*m_mComponentsData)[Id].serializeMeasureFn(*((yojimbo::MeasureStream*)stream), obj);
+			return (*m_mComponentsData)[Id].serializeFn(*((yojimbo::WriteStream*)stream), obj, member_index);
 		}
 
-		template<typename T>
-		static bool S1(uint32_t Id, T& stream, void* obj)
+		static bool Deserialize(uint32_t Id, void* stream, void* obj, const int& member_index = -1)
 		{
-			return Deserialize(Id, stream, obj);
+			return (*m_mComponentsData)[Id].deserializeFn(*((yojimbo::ReadStream*)stream), obj, member_index);
 		}
 
-		template <typename T>
-		static bool Serialize(StreamType type, uint32_t Id, T& stream, void* obj)
+		static bool SerializeMeasure(uint32_t Id, void* stream, void* obj, const int& member_index = -1)
 		{
-			if (type == StreamType::ReadStream)
-				return S1(Id, stream, obj);
-			/*if (type == StreamType::WriteStream)
-				return Serialize(Id, stream, obj);
-			if (type == StreamType::MeasureStream)
-				return SerializeMeasure(Id, stream, obj);*/
-			return true;
+			return (*m_mComponentsData)[Id].serializeMeasureFn(*((yojimbo::MeasureStream*)stream), obj, member_index);
 		}
 
 	private:

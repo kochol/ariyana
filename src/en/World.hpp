@@ -51,6 +51,8 @@ namespace ari::en
 		template<class T, class BASE>
 		void AddDerivedComponent(const EntityHandle& _entity, const ComponentHandle<T>& _cmp);
 
+		void* GetComponent(const uint32_t& cmp_id, const uint32_t& cmp_handle);
+
 		//! Removes a component from an entity
 		void RemoveComponent(const EntityHandle& _entity, const uint32_t& _id);
 
@@ -153,7 +155,11 @@ namespace ari::en
 
 		core::Map<uint32_t /* cmp id */ , 
 			core::Map<uint32_t /* entity handle */, cmp_handle /* cmp handle */>>
-								m_mEntityComponents;
+			m_mEntityComponents;
+
+		core::Map<uint32_t /* cmp id */,
+			core::Map<uint32_t /* cmp handle */, cmp_handle /* cmp handle */>>
+			m_mComponents;
 
 		core::Map<TypeIndex,
 			core::Array<Internal::BaseEventSubscriber* >> subscribers;
@@ -197,9 +203,13 @@ namespace ari::en
 	{
 		const uint32_t cmpId = _cmp.Component->GetId();
 		if (!m_mEntityComponents.Contains(cmpId))
+		{
 			m_mEntityComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
+			m_mComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
+		}
 		
 		m_mEntityComponents[cmpId].Add(_entity.Handle, { _cmp.Handle, (void*)_cmp.Component });
+		m_mComponents[cmpId].Add(_cmp.Handle, { _cmp.Handle, (void*)_cmp.Component });
 
 		emit<events::OnComponentAssigned<T>>({ _entity, _cmp.Component });
 	}
@@ -209,9 +219,13 @@ namespace ari::en
 	{
 		const uint32_t cmpId = BASE::Id;
 		if (!m_mEntityComponents.Contains(cmpId))
+		{
 			m_mEntityComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
+			m_mComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
+		}
 
 		m_mEntityComponents[cmpId].Add(_entity.Handle, { _cmp.Handle, (void*)_cmp.Component, true });
+		m_mComponents[cmpId].Add(_cmp.Handle, { _cmp.Handle, (void*)_cmp.Component });
 
 		// Also add T class to the list
 		AddComponent(_entity, _cmp);

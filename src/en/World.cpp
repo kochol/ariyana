@@ -62,6 +62,11 @@ namespace ari
 			emit<events::OnEntityCreated>({ _handle });
 		}
 
+		void* World::GetComponent(const uint32_t& cmp_id, const uint32_t& cmp_handle)
+		{
+			return m_mComponents[cmp_id][cmp_handle].cmp;
+		}
+
 		// Removes a component from an entity
 		void World::RemoveComponent(const EntityHandle& _entity, const uint32_t& _id)
 		{

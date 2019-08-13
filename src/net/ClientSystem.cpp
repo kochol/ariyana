@@ -114,4 +114,11 @@ namespace ari::net
 		m_mComponents[component_id].Add(component_server_handle, component_client_handle);
 	}
 
+	//------------------------------------------------------------------------------
+	void* ClientSystem::GetComponent(const uint32_t& component_id, const uint32_t& component_server_handle)
+	{
+		uint32_t cmp_handle = m_mComponents[component_id][component_server_handle];
+		return m_pWorld->GetComponent(component_id, cmp_handle);
+	}
+
 } // namespace ari::net

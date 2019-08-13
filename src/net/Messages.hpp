@@ -94,20 +94,46 @@ namespace ari::net
 	{
 	public:	
 		ClientSystem* client_system = nullptr;
+		uint32_t CmpHandle;
+		uint32_t CmpId;
+		int MemberIndex;
+		void* Component = nullptr;
 
 		template <typename Stream>
-		bool Serialize(Stream& stream) {
+		bool Serialize(Stream& stream, bool Measure = false) {
+			serialize_uint32(stream, CmpId);
+			serialize_uint32(stream, CmpHandle);
+			serialize_int(stream, MemberIndex, 0, 31);
 			if (Stream::IsWriting)
 			{
+				a_assert(Component);
+				if (Measure)
+				{
+					if (!en::ComponentManager::SerializeMeasure(CmpId, (void*)& stream, Component, MemberIndex))
+						return false;
+				}
+				else
+				{
+					if (!en::ComponentManager::Serialize(CmpId, (void*)& stream, Component, MemberIndex))
+						return false;
+				}
 			}
 			else
 			{
 				a_assert(client_system);
+				Component = GetComponent(CmpId, CmpHandle);
+				if (!en::ComponentManager::Deserialize(CmpId, (void*)& stream, Component, MemberIndex))
+					return false;
 			}
 			return true;
 		}
 
-		YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
+		bool SerializeInternal(class yojimbo::ReadStream& stream) override { return Serialize(stream); };
+		bool SerializeInternal(class yojimbo::WriteStream& stream) override { return Serialize(stream); };
+		bool SerializeInternal(class yojimbo::MeasureStream& stream) override { return Serialize(stream, true); };
+
+		void* GetComponent(const uint32_t& component_id, const uint32_t& component_server_handle);
+
 	};
 
 	class DestroyEntityMessage : public yojimbo::Message 

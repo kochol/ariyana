@@ -21,4 +21,9 @@ namespace ari::net
 		client_system->AddComponent(component_id, component_server_handle, component_client_handle);
 	}
 
+	void* UpdateEntityMessage::GetComponent(const uint32_t& component_id, const uint32_t& component_server_handle)
+	{
+		return client_system->GetComponent(component_id, component_server_handle);
+	}
+
 } // namespace ari::net

@@ -33,6 +33,8 @@ namespace ari::net
 		void AddComponent(const uint32_t& component_id, const uint32_t& component_server_handle,
 			const uint32_t& component_client_handle);
 
+		void* GetComponent(const uint32_t& component_id, const uint32_t& component_server_handle);
+
 	protected:
 
 		yojimbo::Client		*	m_pClient	= nullptr;

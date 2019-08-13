@@ -40,9 +40,9 @@ inline static void AddComponent(ari::en::World* _world, \
 	_world->AddComponent(_entity, c); \
 } \
 template <typename Stream> \
-inline static bool Serialize(Stream& stream, void* obj) \
+inline static bool Serialize(Stream& stream, void* obj, const int& member_index = -1) \
 { \
-	return ari::net::Serialize<_name, Stream>(stream, *((_name*)obj)); \
+	return ari::net::Serialize<_name, Stream>(stream, *((_name*)obj), member_index); \
 }
 
 #define ARI_COMPONENT_IMP(_name) \
@@ -69,9 +69,9 @@ inline static void AddComponent(ari::en::World* _world, \
 	_world->AddDerivedComponent<_name, _base>(_entity, c); \
 } \
 template <typename Stream> \
-inline static bool Serialize(Stream& stream, void* obj) \
+inline static bool Serialize(Stream& stream, void* obj, const int& member_index = -1) \
 { \
-	return ari::net::Serialize<_name, Stream>(stream, *((_name*)obj)); \
+	return ari::net::Serialize<_name, Stream>(stream, *((_name*)obj), member_index); \
 }
 
 #define ARI_MESSAGE_FACTORY_START( factory_class, num_message_types )																	\
@@ -92,11 +92,22 @@ inline static bool Serialize(Stream& stream, void* obj) \
             switch ( type )                                                                                                             \
             {                                                                                                                           \
 				case 0: /* Create entity */																								\
-					message = YOJIMBO_NEW( allocator, CreateEntityMessage );                                                            \
-                    if ( !message )                                                                                                     \
+				{																														\
+					auto msg = YOJIMBO_NEW( allocator, CreateEntityMessage );                                                           \
+                    if ( !msg )																											\
                         return NULL;                                                                                                    \
-					((CreateEntityMessage*)message)->World = m_pWorld;																	\
-					((CreateEntityMessage*)message)->client_system = m_pClient;															\
-                    SetMessageType( message, 0 );			                                                                            \
-                    return message;																										\
+					msg->World = m_pWorld;																								\
+					msg->client_system = m_pClient;																						\
+                    SetMessageType( msg, 0 );																							\
+                    return msg;																											\
+				}																														\
+				case 1: /* Update entity */																								\
+				{																														\
+					auto msg = YOJIMBO_NEW( allocator, UpdateEntityMessage );                                                           \
+                    if ( !msg )																											\
+                        return NULL;                                                                                                    \
+					msg->client_system = m_pClient;																						\
+                    SetMessageType( msg, 1 );																							\
+                    return msg;																											\
+				}																														\
 

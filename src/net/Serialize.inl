@@ -5,11 +5,15 @@ namespace ari::net
 	template<typename Class,
 		typename Stream,
 		typename>
-	bool Serialize(Stream & stream, Class & obj)
+	bool Serialize(Stream & stream, Class & obj, const int& member_index)
 	{
+		int c = -1;
 		meta::doForAllMembers<Class>(
-			[&obj, &stream](auto& member)
+			[&obj, &stream, &c, &member_index](auto& member)
 			{
+				c++;
+				if (member_index != -1 && member_index != c)
+					return;
 				using MemberT = meta::get_member_type<decltype(member)>;
 				if (Stream::IsWriting)
 				{
@@ -43,7 +47,7 @@ namespace ari::net
 		typename Stream,
 		typename,
 		typename>
-	bool Serialize(Stream & stream, Class & obj)
+	bool Serialize(Stream & stream, Class & obj, const int& member_index)
 	{
 		return SerializeBasic<Class, Stream>(stream, obj);
 	}
