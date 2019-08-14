@@ -75,7 +75,7 @@ namespace ari::net
 								msg->CmpId = cmp.ComponentId;
 								msg->MemberIndex = cmp.Index;
 								msg->Component = cmp.Component.Component;
-								m_pServer->SendMessage(i, int(GameChannel::RELIABLE), msg);
+								m_pServer->SendMessage(i, int(GameChannel::UNRELIABLE), msg);
 							}
 						}
 					}
