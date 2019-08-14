@@ -18,6 +18,7 @@ namespace ari::net
 			int Index;
 			en::ComponentHandle<void> Component;
 			void* PropertyClone;
+			uint32_t ComponentId;
 
 			~PropertyIndex()
 			{
@@ -38,7 +39,7 @@ namespace ari::net
 				{
 					if (c == -1)
 						return;
-					if (strcmp(property_name, member.getName()) != 0)
+					if (strcmp(property_name, member.getName()) == 0)
 					{
 						property_index = c;
 						using MemberT = meta::get_member_type<decltype(member)>;
@@ -59,7 +60,7 @@ namespace ari::net
 			{
 				// We found the property add it to the list
 				en::ComponentHandle<void> cmpVoid = { cmp.Handle, cmp.Index, (void*)cmp.Component };
-				Properties.Add({ property_index, cmpVoid, clone });
+				Properties.Add({ property_index, cmpVoid, clone, T::Id });
 			}
 		}
     };

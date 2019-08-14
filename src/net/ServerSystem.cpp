@@ -21,6 +21,8 @@ namespace ari::net
 		m_pWorld = _world;
 		_world->Subscribe<en::events::OnEntityCreated>(this);
 		_world->Subscribe<en::events::OnEntityDestroyed>(this);
+		_world->Subscribe<en::events::OnComponentAssigned<PropertyReplicator>>(this);
+		_world->Subscribe<en::events::OnComponentRemoved<PropertyReplicator>>(this);
 	}
 
 	//------------------------------------------------------------------------------
@@ -57,7 +59,31 @@ namespace ari::net
 			}
 		}
 		else if (_state == en::UpdateState::SceneState)
+		{
+			// Send replicator messages
+			if (m_iClientCount > 0)
+			{
+				for (auto pr : m_aPropertyReplicators)
+				{
+					for (auto& cmp : pr->Properties)
+					{
+						for (int i = 0; i < MAX_PLAYERS; i++) {
+							if (m_pServer->IsClientConnected(i)) {
+								auto msg = (UpdateEntityMessage*)m_pServer->CreateMessage
+								(i, int(GameMessageType::UPDATE_ENTITY));
+								msg->CmpHandle = cmp.Component.Handle;
+								msg->CmpId = cmp.ComponentId;
+								msg->MemberIndex = cmp.Index;
+								msg->Component = cmp.Component.Component;
+								m_pServer->SendMessage(i, int(GameChannel::RELIABLE), msg);
+							}
+						}
+					}
+				}
+			}
+
 			m_pServer->SendPackets();
+		}
 	}
 
 	//------------------------------------------------------------------------------
@@ -135,10 +161,14 @@ namespace ari::net
 				return;
 
 			// Send the entity to the clients
-			auto msg = (CreateEntityMessage*)m_pServer->CreateMessage(0, int(GameMessageType::CREATE_ENTITY));
-			msg->Entity = event.entity;
-			msg->World = m_pWorld;
-			SendToAll(int(GameChannel::RELIABLE), msg);
+			for (int i = 0; i < MAX_PLAYERS; i++) {
+				if (m_pServer->IsClientConnected(i)) {
+					auto msg = (CreateEntityMessage*)m_pServer->CreateMessage(i, int(GameMessageType::CREATE_ENTITY));
+					msg->Entity = event.entity;
+					msg->World = m_pWorld;
+					m_pServer->SendMessage(i, int(GameChannel::RELIABLE), msg);
+				}
+			}
 		}
 	}
 
@@ -155,11 +185,19 @@ namespace ari::net
 				}
 	}
 
-	void ServerSystem::SendToAll(int channel_id, yojimbo::Message* msg)
+	void ServerSystem::Receive(en::World* world, const en::events::OnComponentAssigned<PropertyReplicator>& event)
 	{
-		for (int i = 0; i < MAX_PLAYERS; i++) {
-			if (m_pServer->IsClientConnected(i)) {
-				m_pServer->SendMessage(i, channel_id, msg);
+		m_aPropertyReplicators.Add(event.component);
+	}
+
+	void ServerSystem::Receive(en::World* world, const en::events::OnComponentRemoved<PropertyReplicator>& event)
+	{
+		for (int i = 0; i < m_aPropertyReplicators.Size(); ++i)
+		{
+			if (m_aPropertyReplicators[i] == event.component)
+			{
+				m_aPropertyReplicators.EraseSwap(i);
+				return;
 			}
 		}
 	}

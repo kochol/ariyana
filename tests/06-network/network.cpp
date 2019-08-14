@@ -78,6 +78,7 @@ public:
 		// Create PropertyReplicator component to sync the rotation
 		auto replicator = m_world.CreateComponent<ari::net::PropertyReplicator>();
 		replicator.Component->AddProperty(box, "Rotation");
+		m_world.AddComponent(entity, replicator);
 
 		// Add entity to the worlld
 		auto en = m_world.GetEntity(entity);

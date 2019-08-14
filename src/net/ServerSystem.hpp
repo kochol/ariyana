@@ -12,7 +12,9 @@ namespace ari::net
 
     class ServerSystem: public en::System,
 		public en::EventSubscriber<en::events::OnEntityCreated>,
-		public en::EventSubscriber<en::events::OnEntityDestroyed>
+		public en::EventSubscriber<en::events::OnEntityDestroyed>,
+		public en::EventSubscriber<en::events::OnComponentAssigned<PropertyReplicator>>,
+		public en::EventSubscriber<en::events::OnComponentRemoved<PropertyReplicator>>
     {
     public:
 		virtual ~ServerSystem();
@@ -39,8 +41,10 @@ namespace ari::net
 
 		void Receive(en::World* world, const en::events::OnEntityDestroyed& event) override;
 
-		void SendToAll(int channel_id, yojimbo::Message*);
+		void Receive(en::World* world, const en::events::OnComponentAssigned<PropertyReplicator>& event) override;
 
+		void Receive(en::World* world, const en::events::OnComponentRemoved<PropertyReplicator>& event) override;
+		
     protected:
 
 		en::World			*	m_pWorld	= nullptr;
@@ -48,6 +52,8 @@ namespace ari::net
 		yojimbo::Adapter	*	m_pAdapter	= nullptr;
 		double					m_time		= 0.0;
 		core::Array<en::EntityHandle>	m_aEntities;
+		core::Array<PropertyReplicator*>
+			m_aPropertyReplicators;
 		int						m_iClientCount = 0;
 		yojimbo::ClientServerConfig m_connectionConfig;
     };
