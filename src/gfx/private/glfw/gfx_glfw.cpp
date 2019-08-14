@@ -17,7 +17,7 @@ namespace ari
     {
 		bool ari::gfx::SetupGfx(GfxSetup& setup)
 		{
-			const io::WindowHandle window = io::CreateAriWindow(setup.window, "Ari 0.1");
+			const io::WindowHandle window = io::CreateAriWindow(setup.window, "Ari 0.2");
 			if (!window.IsValid())
 				return false;
 

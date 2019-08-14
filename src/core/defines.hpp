@@ -47,7 +47,7 @@ inline static bool Serialize(Stream& stream, void* obj, const int& member_index 
 
 #define ARI_COMPONENT_IMP(_name) \
 const uint32_t _name::Id = COMPILE_TIME_CRC32_STR(#_name); \
-bool _name::IsRegisteredWithComponentManager = ComponentManager::RegisterComponent<_name>(#_name);
+bool _name::IsRegisteredWithComponentManager = ari::en::ComponentManager::RegisterComponent<_name>(#_name);
 
 #define ARI_COMPONENT_CHILD(_name, _base) \
 static const uint32_t Id; \

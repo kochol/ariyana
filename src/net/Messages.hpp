@@ -5,6 +5,7 @@
 #include "en/ComponentManager.hpp"
 #include "core/defines.hpp"
 #include "core/log.h"
+#include "PropertyReplicator.hpp"
 
 namespace ari::net
 {
@@ -23,6 +24,9 @@ namespace ari::net
 			{
 				World->GetEntityComponents(Entity, [&stream, &Measure](uint32_t& CmpId, uint32_t& CmpHandle, void* Cmp)
 					{
+						if (CmpId == PropertyReplicator::Id)
+							return true; // Don't send the PropertyReplicator component
+
 						serialize_uint32(stream, CmpId);
 						serialize_uint32(stream, CmpHandle);
 						if (Measure)

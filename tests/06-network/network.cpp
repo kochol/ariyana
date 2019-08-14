@@ -75,6 +75,10 @@ public:
 		m_pBox = box.Component;
 		m_world.AddDerivedComponent<ari::en::BoxShape, ari::en::Node3D>(entity, box);
 
+		// Create PropertyReplicator component to sync the rotation
+		auto replicator = m_world.CreateComponent<ari::net::PropertyReplicator>();
+		replicator.Component->AddProperty(box, "Rotation");
+
 		// Add entity to the worlld
 		auto en = m_world.GetEntity(entity);
 		en->bReplicates = true;

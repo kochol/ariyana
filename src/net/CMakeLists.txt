@@ -6,7 +6,7 @@ fips_begin_module(ari_net)
         GameAdapter.hpp             GameAdapter.cpp
         Messages.hpp                Messages.cpp
         net.hpp                     net.cpp
-        PropertyReplicator.hpp
+        PropertyReplicator.hpp      PropertyReplicator.cpp
         Serialize.hpp               Serialize.inl
         ServerSystem.hpp            ServerSystem.cpp
     )

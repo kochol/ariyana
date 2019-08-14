@@ -2,12 +2,17 @@
 #include "en/ComponentHandle.hpp"
 #include "Meta.h"
 #include "core/containers/Array.hpp"
+#include "core/defines.hpp"
+#include "en/World.hpp"
 
 namespace ari::net
 {
     class PropertyReplicator
     {
     public:
+
+		ARI_COMPONENT(PropertyReplicator);
+
 		struct PropertyIndex
 		{
 			int Index;
@@ -39,10 +44,10 @@ namespace ari::net
 						using MemberT = meta::get_member_type<decltype(member)>;
 						clone = core::Memory::Alloc(sizeof(MemberT));
 						if (member.canGetConstRef()) {
-							*((MemberT*)clone) = member.get(cmp.Component);
+							*((MemberT*)clone) = member.get(*cmp.Component);
 						}
 						else if (member.hasGetter()) {
-							*((MemberT*)clone) = member.getCopy(cmp.Component);
+							*((MemberT*)clone) = member.getCopy(*cmp.Component);
 						}
 						c = -1;
 						return;
