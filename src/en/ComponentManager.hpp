@@ -71,6 +71,39 @@ namespace ari::en
 			return (*m_mComponentsData)[Id].serializeMeasureFn(*((yojimbo::MeasureStream*)stream), obj, member_index);
 		}
 
+		template <typename T>
+		static bool IsDiff(void* clone, void* obj, int index)
+		{
+			int c = 0;
+			bool is_same = false;
+			meta::doForAllMembers<T>(
+				[&obj, &index, &c, &clone, &is_same](auto& member)
+				{
+					if (c == -1)
+						return;
+					if (c == index)
+					{
+						c = -1;
+						using MemberT = meta::get_member_type<decltype(member)>;
+						if (member.canGetConstRef()) {
+							is_same = *((MemberT*)clone) == member.get(*((T*)obj));
+							if (!is_same)
+								* ((MemberT*)clone) = member.get(*((T*)obj));
+						}
+						else if (member.hasGetter()) {
+							is_same = *((MemberT*)clone) == member.getCopy(*((T*)obj));
+							if (!is_same)
+								* ((MemberT*)clone) = member.getCopy(*((T*)obj));
+						}
+						return;
+					}
+					c++;
+				}
+			);
+
+			return !is_same;
+		}
+
 	private:
 
 		static core::Map<uint32_t, ComponentData>*	m_mComponentsData;

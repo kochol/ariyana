@@ -19,6 +19,7 @@ namespace ari::net
 			en::ComponentHandle<void> Component;
 			void* PropertyClone;
 			uint32_t ComponentId;
+			bool(*isDiffFn)(void*, void*, int);
 
 			~PropertyIndex()
 			{
@@ -60,7 +61,7 @@ namespace ari::net
 			{
 				// We found the property add it to the list
 				en::ComponentHandle<void> cmpVoid = { cmp.Handle, cmp.Index, (void*)cmp.Component };
-				Properties.Add({ property_index, cmpVoid, clone, T::Id });
+				Properties.Add({ property_index, cmpVoid, clone, T::Id, T::IsDiff });
 			}
 		}
     };

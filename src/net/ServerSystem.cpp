@@ -67,15 +67,18 @@ namespace ari::net
 				{
 					for (auto& cmp : pr->Properties)
 					{
-						for (int i = 0; i < MAX_PLAYERS; i++) {
-							if (m_pServer->IsClientConnected(i)) {
-								auto msg = (UpdateEntityMessage*)m_pServer->CreateMessage
-								(i, int(GameMessageType::UPDATE_ENTITY));
-								msg->CmpHandle = cmp.Component.Handle;
-								msg->CmpId = cmp.ComponentId;
-								msg->MemberIndex = cmp.Index;
-								msg->Component = cmp.Component.Component;
-								m_pServer->SendMessage(i, int(GameChannel::UNRELIABLE), msg);
+						if (cmp.isDiffFn(cmp.PropertyClone, cmp.Component.Component, cmp.Index))
+						{
+							for (int i = 0; i < MAX_PLAYERS; i++) {
+								if (m_pServer->IsClientConnected(i)) {
+									auto msg = (UpdateEntityMessage*)m_pServer->CreateMessage
+									(i, int(GameMessageType::UPDATE_ENTITY));
+									msg->CmpHandle = cmp.Component.Handle;
+									msg->CmpId = cmp.ComponentId;
+									msg->MemberIndex = cmp.Index;
+									msg->Component = cmp.Component.Component;
+									m_pServer->SendMessage(i, int(GameChannel::UNRELIABLE), msg);
+								}
 							}
 						}
 					}

@@ -88,8 +88,11 @@ public:
 
 	void OnFrame(float _elapsedTime) override
 	{
-		m_pBox->Rotation.x += 0.3f * _elapsedTime;
-		m_pBox->Rotation.y += 0.3f * _elapsedTime;
+		if (m_bRotate)
+		{
+			m_pBox->Rotation.x += 0.3f * _elapsedTime;
+			m_pBox->Rotation.y += 0.3f * _elapsedTime;
+		}
 
 		m_world.Update(_elapsedTime);
 		for (auto c: m_aClients)
@@ -109,10 +112,20 @@ public:
 
 	void OnEvent(ari::io::ari_event* event, ari::io::WindowHandle _window) override
 	{
-		if (event->type == ari::io::ARI_EVENTTYPE_KEY_UP && event->key_code == ari::io::ARI_KEYCODE_C)
+		if (event->type == ari::io::ARI_EVENTTYPE_KEY_UP)
 		{
-			Client* client = ari::core::Memory::New<Client>();
-			m_aClients.Add(client)->Init();
+			switch (event->key_code)
+			{
+			case ari::io::ARI_KEYCODE_C:
+				{
+					Client* client = ari::core::Memory::New<Client>();
+					m_aClients.Add(client)->Init();
+				}
+				break;
+			case ari::io::ARI_KEYCODE_S:
+				m_bRotate = !m_bRotate;
+				break;
+			}
 		}
 	}
 
@@ -125,6 +138,7 @@ private:
 	ari::en::BoxShape		*	m_pBox = nullptr;
 	ari::net::ServerSystem		m_server_system;
 	ari::core::Array<Client*>	m_aClients;
+	bool						m_bRotate = true;
 };
 
 ARI_MAIN(NetworkApp)

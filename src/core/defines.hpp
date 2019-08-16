@@ -20,6 +20,7 @@ struct _name \
 
 #include "net/Serialize.hpp"
 
+//------------------------------------------------------------------------------
 #define ARI_COMPONENT(_name) \
 static const uint32_t Id; \
 static bool IsRegisteredWithComponentManager; \
@@ -43,12 +44,19 @@ template <typename Stream> \
 inline static bool Serialize(Stream& stream, void* obj, const int& member_index = -1) \
 { \
 	return ari::net::Serialize<_name, Stream>(stream, *((_name*)obj), member_index); \
-}
+} \
+static bool IsDiff(void* clone, void* obj, int index);
 
+//------------------------------------------------------------------------------
 #define ARI_COMPONENT_IMP(_name) \
 const uint32_t _name::Id = COMPILE_TIME_CRC32_STR(#_name); \
-bool _name::IsRegisteredWithComponentManager = ari::en::ComponentManager::RegisterComponent<_name>(#_name);
+bool _name::IsRegisteredWithComponentManager = ari::en::ComponentManager::RegisterComponent<_name>(#_name); \
+bool _name::IsDiff(void* clone, void* obj, int index) \
+{ \
+	return ari::en::ComponentManager::IsDiff<_name>(clone, obj, index); \
+}
 
+//------------------------------------------------------------------------------
 #define ARI_COMPONENT_CHILD(_name, _base) \
 static const uint32_t Id; \
 static bool IsRegisteredWithComponentManager; \
@@ -72,8 +80,11 @@ template <typename Stream> \
 inline static bool Serialize(Stream& stream, void* obj, const int& member_index = -1) \
 { \
 	return ari::net::Serialize<_name, Stream>(stream, *((_name*)obj), member_index); \
-}
+} \
+static bool IsDiff(void* clone, void* obj, int index);
 
+// ARI_MESSAGE_FACTORY_START
+//------------------------------------------------------------------------------
 #define ARI_MESSAGE_FACTORY_START( factory_class, num_message_types )																	\
                                                                                                                                         \
     class factory_class : public yojimbo::MessageFactory                                                                                \
