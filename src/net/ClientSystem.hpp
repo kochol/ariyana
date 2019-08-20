@@ -2,12 +2,15 @@
 #include "en/System.hpp"
 #include <yojimbo.h>
 #include "GameAdapter.hpp"
+#include "NetworkSystem.hpp"
 
 namespace ari::net
 {
-	class ClientSystem: public en::System
+	class ClientSystem: public en::System, public NetworkSystem
 	{
 	public:
+
+		ClientSystem();
 
 		~ClientSystem() override;
 
@@ -37,11 +40,9 @@ namespace ari::net
 
 	protected:
 
+		void SendRPC(RPC* rpc) override;
+
 		yojimbo::Client		*	m_pClient	= nullptr;
-		yojimbo::Adapter	*	m_pAdapter	= nullptr;
-		double					m_time		= 0.0;
-		en::World			*	m_pWorld	= nullptr;
-		yojimbo::ClientServerConfig m_connectionConfig;
 		core::Map<uint32_t // Server entity handle
 			, uint32_t/* Client entity handle*/> m_mEntities;
 		core::Map<uint32_t // Component ID

@@ -5,6 +5,10 @@
 
 namespace ari::net
 {
+	ClientSystem::ClientSystem()
+	{
+		m_network_type = SystemNetworkType::Client;
+	}
 
 	//------------------------------------------------------------------------------
 	ClientSystem::~ClientSystem()
@@ -119,6 +123,10 @@ namespace ari::net
 	{
 		uint32_t cmp_handle = m_mComponents[component_id][component_server_handle];
 		return m_pWorld->GetComponent(component_id, cmp_handle);
+	}
+
+	void ClientSystem::SendRPC(RPC* rpc)
+	{
 	}
 
 } // namespace ari::net

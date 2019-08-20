@@ -6,6 +6,10 @@
 
 namespace ari::net
 {
+	ServerSystem::ServerSystem()
+	{
+		m_network_type = SystemNetworkType::Server;
+	}
 
 	//------------------------------------------------------------------------------
 	ServerSystem::~ServerSystem()
@@ -203,6 +207,10 @@ namespace ari::net
 				return;
 			}
 		}
+	}
+
+	void ServerSystem::SendRPC(RPC* rpc)
+	{
 	}
 
 } // namespace ari::net
