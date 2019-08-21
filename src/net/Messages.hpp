@@ -6,6 +6,8 @@
 #include "core/defines.hpp"
 #include "core/log.h"
 #include "PropertyReplicator.hpp"
+#include "RPC.hpp"
+#include "NetworkSystem.hpp"
 
 namespace ari::net
 {
@@ -154,9 +156,52 @@ namespace ari::net
 		YOJIMBO_VIRTUAL_SERIALIZE_FUNCTIONS();
 	};
 
+	class RpcCallMessage: public yojimbo::Message
+	{
+	public:
+
+		RPC* rpc = nullptr;
+
+		template <typename Stream>
+		bool Serialize(Stream& stream, bool Measure = false) {
+			if (Stream::IsWriting)
+			{
+				a_assert(rpc);
+				serialize_uint32(stream, rpc->function_hash);
+				if (!Measure)
+				{
+					if (!rpc->Serialize((void*)& stream))
+						return false;
+				}
+				else
+				{
+					if (!rpc->SerializeMeasure((void*)& stream))
+						return false;
+				}
+			}
+			else
+			{
+				uint32_t function_hash;
+				serialize_uint32(stream, function_hash);
+
+				// Get RPC
+				rpc = GetRPC(function_hash);
+				if (!rpc->Deserialize((void*)& stream))
+					return false;
+			}
+			return true;
+		}
+
+		bool SerializeInternal(class yojimbo::ReadStream& stream) override { return Serialize(stream); };
+		bool SerializeInternal(class yojimbo::WriteStream& stream) override { return Serialize(stream); };
+		bool SerializeInternal(class yojimbo::MeasureStream& stream) override { return Serialize(stream, true); };
+
+	};
+
 	// the message factory
 	ARI_MESSAGE_FACTORY_START(GameMessageFactory, (int)GameMessageType::COUNT)
 	YOJIMBO_DECLARE_MESSAGE_TYPE((int)GameMessageType::DESTROY_ENTITY, DestroyEntityMessage)
+	YOJIMBO_DECLARE_MESSAGE_TYPE((int)GameMessageType::RPC_CALL, RpcCallMessage)
 	YOJIMBO_MESSAGE_FACTORY_FINISH()
 
 } // namespace ari::net

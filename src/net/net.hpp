@@ -1,5 +1,7 @@
 #pragma once
 #include "yojimbo.h"
+#include "RPC.hpp"
+#include "sx/hash.h"
 
 namespace ari::net
 {
@@ -7,20 +9,12 @@ namespace ari::net
 
 	void ShutdownNetwork();
 
-    /*// Server functions
-    bool ServerSetup();
-    void ServerUpdate();
-
-    // Client
-    bool ClientConnect();
-    void ClientUpdate();
-    */   
-   
-	// a simple test message
+  	// a simple test message
 	enum class GameMessageType {
 		CREATE_ENTITY,
 		UPDATE_ENTITY,
 		DESTROY_ENTITY,
+		RPC_CALL,
 		COUNT
 	};
 
@@ -38,6 +32,27 @@ namespace ari::net
 			channel[(int)GameChannel::RELIABLE].type = yojimbo::CHANNEL_TYPE_RELIABLE_ORDERED;
 			channel[(int)GameChannel::UNRELIABLE].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
 		}
-	};	
+	};
+
+	/// For internal use only.
+	void AddRPC(RPC* rpc);
+
+	/// Returns the RPC pointer by its function hash
+	RPC* GetRPC(uint32_t rpc_function_hash);
+
+	// RPC functions
+	template<typename P1>
+	RPC* AddRPC(const core::String& function_name, RpcType rpc_type,
+		void(*_fn)(P1))
+	{
+		RPC1<P1>* rpc = core::Memory::New<RPC1<P1>>();
+		rpc->Fn = _fn;
+		rpc->function_name = function_name;
+		rpc->rpc_type = rpc_type;
+		rpc->function_hash = sx_hash_fnv32_str(function_name.AsCStr());
+		AddRPC(rpc);
+		return rpc;
+	}
+
 
 } // namespace ari::net

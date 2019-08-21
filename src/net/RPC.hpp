@@ -1,6 +1,7 @@
 #pragma once
 #include "Serialize.hpp"
 #include "core/memory/Memory.hpp"
+#include "core/string/String.hpp"
 
 namespace ari::net
 {
@@ -26,15 +27,9 @@ namespace ari::net
 
 		virtual void SetParam1(void* param1) {}
 
-		core::StringAtom function_name;
+		core::String function_name;
+		uint32_t function_hash = 0;
 		RpcType rpc_type;
-
-		/* TODO: Add this function to client and server system.
-		 *template <typename P1>
-		void Call(P1 p1)
-		{
-			SetParam1((void*)& p1);
-		}*/
 
     };
 
