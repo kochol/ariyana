@@ -47,7 +47,7 @@ namespace ari::net
 			for (int i = 0; i < m_connectionConfig.numChannels; i++) {
 				yojimbo::Message* message = m_pClient->ReceiveMessage(i);
 				while (message != NULL) {
-					//ProcessMessage(message);
+					ProcessMessage(message);
 					m_pClient->ReleaseMessage(message);
 					message = m_pClient->ReceiveMessage(i);
 				}
@@ -129,7 +129,7 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	void ClientSystem::SendRPC(RPC* rpc, int client_id)
 	{
-		a_assert(rpc->rpc_type == RpcType::Client);
+		a_assert(rpc->rpc_type == RpcType::Server);
 
 		if (!m_pClient->IsConnected())
 			return;
@@ -138,6 +138,16 @@ namespace ari::net
 		auto msg = (RpcCallMessage*)m_pClient->CreateMessage(int(GameMessageType::RPC_CALL));
 		msg->rpc = rpc;
 		m_pClient->SendMessage(int(channel), msg);
+	}
+
+	//------------------------------------------------------------------------------
+	void ClientSystem::ProcessMessage(yojimbo::Message* msg)
+	{
+		if (msg->GetType() == int(GameMessageType::RPC_CALL))
+		{
+			auto rpc_msg = (RpcCallMessage*)msg;
+			rpc_msg->rpc->Call();
+		}
 	}
 
 } // namespace ari::net

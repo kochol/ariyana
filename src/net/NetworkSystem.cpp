@@ -2,12 +2,17 @@
 
 namespace ari::net
 {
-	void NetworkSystem::CallRPC_internal(RPC* rpc)
+	void NetworkSystem::CallRPC_internal(RPC* rpc, int client_index)
 	{
-		a_assert(rpc->rpc_type != RpcType::Client);
-		a_assert((rpc->rpc_type == RpcType::Server
-			&& m_network_type == SystemNetworkType::Client)
-			|| rpc->rpc_type == RpcType::MultiCast);
+		if (client_index == -1)
+		{
+			a_assert(rpc->rpc_type != RpcType::Client);
+			a_assert((rpc->rpc_type == RpcType::Server
+				&& m_network_type == SystemNetworkType::Client)
+				|| rpc->rpc_type == RpcType::MultiCast);
+		}
+		else
+			a_assert(rpc->rpc_type == RpcType::Client);
 
 		if (rpc->rpc_type == RpcType::MultiCast)
 		{
@@ -16,7 +21,7 @@ namespace ari::net
 				return;
 		}
 
-		SendRPC(rpc);
+		SendRPC(rpc, client_index);
 
 	}
 

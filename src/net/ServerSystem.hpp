@@ -53,6 +53,8 @@ namespace ari::net
 
 		void SendRPC(RPC* rpc, int client_id) override;
 
+		void ProcessMessage(int client_index, yojimbo::Message* msg);
+
 		yojimbo::Server		*	m_pServer	= nullptr;
 		core::Array<en::EntityHandle>	m_aEntities;
 		core::Array<PropertyReplicator*>

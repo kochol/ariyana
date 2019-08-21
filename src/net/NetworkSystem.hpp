@@ -28,9 +28,9 @@ namespace ari::net
 
 		SystemNetworkType m_network_type;
 
-		virtual void SendRPC(RPC* rpc, int client_id = -1) = 0;
+		virtual void SendRPC(RPC* rpc, int client_index = -1) = 0;
 
-		void CallRPC_internal(RPC* rpc);
+		void CallRPC_internal(RPC* rpc, int client_index = -1);
 
     public:
 
@@ -40,6 +40,14 @@ namespace ari::net
 			rpc->SetParam1((void*)& p1);
 			CallRPC_internal(rpc);
 		}
+
+		template<typename P1>
+		void CallRPC(int client_index, RPC* rpc, P1 p1)
+		{
+			rpc->SetParam1((void*)& p1);
+			CallRPC_internal(rpc, client_index);
+		}
+
     };
 
 } // namespace ari::net

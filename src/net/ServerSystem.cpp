@@ -49,13 +49,13 @@ namespace ari::net
 			m_pServer->AdvanceTime(m_time);
 			m_pServer->ReceivePackets();
 
-			// TODO: process packets
+			// process packets
 			for (int i = 0; i < MAX_PLAYERS; i++) {
 				if (m_pServer->IsClientConnected(i)) {
 					for (int j = 0; j < m_connectionConfig.numChannels; j++) {
 						yojimbo::Message* message = m_pServer->ReceiveMessage(i, j);
 						while (message != NULL) {
-							//ProcessMessage(i, message);
+							ProcessMessage(i, message);
 							m_pServer->ReleaseMessage(i, message);
 							message = m_pServer->ReceiveMessage(i, j);
 						}
@@ -244,6 +244,17 @@ namespace ari::net
 				msg->rpc = rpc;
 				m_pServer->SendMessage(client_id, int(channel), msg);
 			}
+		}
+	}
+
+	//------------------------------------------------------------------------------
+	void ServerSystem::ProcessMessage(int client_index, yojimbo::Message* msg)
+	{
+		if (msg->GetType() == int(GameMessageType::RPC_CALL))
+		{
+			auto rpc_msg = (RpcCallMessage*)msg;
+			a_assert(rpc_msg->rpc->rpc_type == RpcType::Server);
+			rpc_msg->rpc->Call();
 		}
 	}
 

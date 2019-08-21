@@ -17,7 +17,7 @@ namespace ari::net
 		ShutdownYojimbo();
 	}
 
-	void AddRPC(RPC* rpc)
+	void _AddRPC(RPC* rpc)
 	{
 		g_mRpcs.Add(rpc->function_hash, rpc);
 	}

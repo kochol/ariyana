@@ -10,6 +10,26 @@
 #include "core/log.h"
 #include "en/ComponentManager.hpp"
 
+void RpcServerTest(int i)
+{
+	log_debug("RpcServerTest %d", i);
+}
+
+void RpcClientTest(float i)
+{
+	log_debug("RpcClientTest %f", i);
+}
+
+void RpcMultiCastTest(float i)
+{
+	log_debug("RpcMultiCastTest %f", i);
+}
+
+ari::net::RPC	*	g_rpc_server = nullptr,
+				*	g_rpc_client = nullptr,
+				*	g_rpc_multicast = nullptr;
+
+
 struct Client
 {
 	ari::en::World				m_world;
@@ -84,6 +104,11 @@ public:
 		auto en = m_world.GetEntity(entity);
 		en->bReplicates = true;
 		m_world.AddEntity(entity);
+
+		// Add RPC functions
+		g_rpc_server = ari::net::AddRPC("RpcServerTest", ari::net::RpcType::Server, RpcServerTest);
+		g_rpc_client = ari::net::AddRPC("RpcClientTest", ari::net::RpcType::Client, RpcClientTest);
+		g_rpc_multicast = ari::net::AddRPC("RpcMultiCastTest", ari::net::RpcType::MultiCast, RpcMultiCastTest);
 	}
 
 	void OnFrame(float _elapsedTime) override
@@ -124,6 +149,22 @@ public:
 				break;
 			case ari::io::ARI_KEYCODE_S:
 				m_bRotate = !m_bRotate;
+				break;
+			case ari::io::ARI_KEYCODE_Q:
+				if (_window.Index > 0)
+				m_aClients[_window.Index - 1]->m_client_system.CallRPC(g_rpc_server, 7);
+				break;
+			case ari::io::ARI_KEYCODE_W:
+				if (_window.Index == 0) // On main window
+				{
+					m_server_system.CallRPC(0, g_rpc_client, 12.5f);
+				}
+				break;
+			case ari::io::ARI_KEYCODE_E:
+				if (_window.Index == 0) // On main window
+				{
+					m_server_system.CallRPC(g_rpc_multicast, 12.5f);
+				}
 				break;
 			}
 		}

@@ -42,6 +42,8 @@ namespace ari::net
 
 		void SendRPC(RPC* rpc, int client_id) override;
 
+		void ProcessMessage(yojimbo::Message* msg);
+
 		yojimbo::Client		*	m_pClient	= nullptr;
 		core::Map<uint32_t // Server entity handle
 			, uint32_t/* Client entity handle*/> m_mEntities;

@@ -40,7 +40,7 @@ namespace ari::net
 
 		RPC1()
 		{
-			p1 = core::Memory::Alloc(sizeof(P1));
+			p1 = (P1*)core::Memory::Alloc(sizeof(P1));
 		}
 
 		~RPC1() override
@@ -51,22 +51,22 @@ namespace ari::net
 		template<typename Stream>
 		bool SerializeRpc(Stream& stream)
 		{
-			return Serialize<P1, Stream>(stream, *p1);
+			return ari::net::Serialize<P1, Stream>(stream, *p1);
 		}
 
 		bool Serialize(void* stream) override
 		{
-			SerializeRpc(*((yojimbo::WriteStream*)stream));
+			return SerializeRpc(*((yojimbo::WriteStream*)stream));
 		}
 
 		bool Deserialize(void* stream) override
 		{
-			SerializeRpc(*((yojimbo::ReadStream*)stream));
+			return SerializeRpc(*((yojimbo::ReadStream*)stream));
 		}
 
 		bool SerializeMeasure(void* stream) override
 		{
-			SerializeRpc(*((yojimbo::MeasureStream*)stream));
+			return SerializeRpc(*((yojimbo::MeasureStream*)stream));
 		}
 
 		void Call() override

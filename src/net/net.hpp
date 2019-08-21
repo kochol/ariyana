@@ -35,7 +35,7 @@ namespace ari::net
 	};
 
 	/// For internal use only.
-	void AddRPC(RPC* rpc);
+	void _AddRPC(RPC* rpc);
 
 	/// Returns the RPC pointer by its function hash
 	RPC* GetRPC(uint32_t rpc_function_hash);
@@ -50,7 +50,7 @@ namespace ari::net
 		rpc->function_name = function_name;
 		rpc->rpc_type = rpc_type;
 		rpc->function_hash = sx_hash_fnv32_str(function_name.AsCStr());
-		AddRPC(rpc);
+		_AddRPC(rpc);
 		return rpc;
 	}
 
