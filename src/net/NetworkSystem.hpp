@@ -2,6 +2,7 @@
 #include "yojimbo.h"
 #include "core/string/StringAtom.hpp"
 #include "RPC.hpp"
+#include "core/containers/Map.hpp"
 
 namespace ari::en
 {
@@ -31,6 +32,8 @@ namespace ari::net
 
 		virtual void SendRPC(RPC* rpc) = 0;
 
+		void CallRPC_internal(RPC* rpc);
+
     public:
 
 		template<typename P1>
@@ -48,20 +51,8 @@ namespace ari::net
 		template<typename P1>
 		void CallRPC(RPC* rpc, P1 p1)
 		{
-			a_assert(rpc->rpc_type != RpcType::Client);
-			a_assert((rpc->rpc_type == RpcType::Server 
-				&& m_network_type == SystemNetworkType::Client)
-				|| rpc->rpc_type == RpcType::MultiCast);
-
 			rpc->SetParam1((void*)& p1);
-			if (rpc->rpc_type == RpcType::MultiCast)
-			{
-				rpc->Call(); // Also call on sender
-				if (m_network_type == SystemNetworkType::Client)
-					return;
-			}
-
-			SendRPC(rpc);
+			CallRPC_internal(rpc);
 		}
     };
 

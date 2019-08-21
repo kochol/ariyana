@@ -6,6 +6,7 @@
 
 namespace ari::net
 {
+	//------------------------------------------------------------------------------
 	ServerSystem::ServerSystem()
 	{
 		m_network_type = SystemNetworkType::Server;
@@ -192,11 +193,13 @@ namespace ari::net
 				}
 	}
 
+	//------------------------------------------------------------------------------
 	void ServerSystem::Receive(en::World* world, const en::events::OnComponentAssigned<PropertyReplicator>& event)
 	{
 		m_aPropertyReplicators.Add(event.component);
 	}
 
+	//------------------------------------------------------------------------------
 	void ServerSystem::Receive(en::World* world, const en::events::OnComponentRemoved<PropertyReplicator>& event)
 	{
 		for (int i = 0; i < m_aPropertyReplicators.Size(); ++i)
@@ -209,6 +212,7 @@ namespace ari::net
 		}
 	}
 
+	//------------------------------------------------------------------------------
 	void ServerSystem::SendRPC(RPC* rpc)
 	{
 	}
