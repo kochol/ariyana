@@ -40,7 +40,7 @@ namespace ari::net
 
 	protected:
 
-		void SendRPC(RPC* rpc) override;
+		void SendRPC(RPC* rpc, int client_id) override;
 
 		yojimbo::Client		*	m_pClient	= nullptr;
 		core::Map<uint32_t // Server entity handle

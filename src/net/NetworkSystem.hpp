@@ -28,7 +28,7 @@ namespace ari::net
 
 		SystemNetworkType m_network_type;
 
-		virtual void SendRPC(RPC* rpc) = 0;
+		virtual void SendRPC(RPC* rpc, int client_id = -1) = 0;
 
 		void CallRPC_internal(RPC* rpc);
 

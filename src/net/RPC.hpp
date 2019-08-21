@@ -30,7 +30,7 @@ namespace ari::net
 		core::String function_name;
 		uint32_t function_hash = 0;
 		RpcType rpc_type;
-
+		bool Reliable = false;
     };
 
 	template<typename P1>

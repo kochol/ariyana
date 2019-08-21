@@ -127,8 +127,17 @@ namespace ari::net
 	}
 
 	//------------------------------------------------------------------------------
-	void ClientSystem::SendRPC(RPC* rpc)
+	void ClientSystem::SendRPC(RPC* rpc, int client_id)
 	{
+		a_assert(rpc->rpc_type == RpcType::Client);
+
+		if (!m_pClient->IsConnected())
+			return;
+
+		GameChannel channel = rpc->Reliable ? GameChannel::RELIABLE : GameChannel::UNRELIABLE;
+		auto msg = (RpcCallMessage*)m_pClient->CreateMessage(int(GameMessageType::RPC_CALL));
+		msg->rpc = rpc;
+		m_pClient->SendMessage(int(channel), msg);
 	}
 
 } // namespace ari::net

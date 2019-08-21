@@ -213,8 +213,38 @@ namespace ari::net
 	}
 
 	//------------------------------------------------------------------------------
-	void ServerSystem::SendRPC(RPC* rpc)
+	void ServerSystem::SendRPC(RPC* rpc, int client_id)
 	{
+		if (m_iClientCount == 0)
+			return;
+
+		GameChannel channel = rpc->Reliable ? GameChannel::RELIABLE : GameChannel::UNRELIABLE;
+
+		if (rpc->rpc_type == RpcType::MultiCast)
+		{
+			// Send to all clients
+			for (int i = 0; i < MAX_PLAYERS; i++) 
+			{
+				if (m_pServer->IsClientConnected(i)) 
+				{
+					auto msg = (RpcCallMessage*)m_pServer->CreateMessage
+						(i, int(GameMessageType::RPC_CALL));
+					msg->rpc = rpc;
+					m_pServer->SendMessage(i, int(channel), msg);
+				}
+			}
+		}
+		else
+		{
+			a_assert(rpc->rpc_type == RpcType::Client);
+			if (m_pServer->IsClientConnected(client_id)) 
+			{
+				auto msg = (RpcCallMessage*)m_pServer->CreateMessage
+					(client_id, int(GameMessageType::RPC_CALL));
+				msg->rpc = rpc;
+				m_pServer->SendMessage(client_id, int(channel), msg);
+			}
+		}
 	}
 
 } // namespace ari::net
