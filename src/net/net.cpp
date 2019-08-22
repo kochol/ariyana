@@ -4,6 +4,7 @@
 namespace ari::net
 {
 	core::Map<uint32_t, RPC*> g_mRpcs;
+	int g_iLastRpcClientIndex = -1;
 
 	//------------------------------------------------------------------------------
 	bool InitNetwork()
@@ -20,14 +21,21 @@ namespace ari::net
 		ShutdownYojimbo();
 	}
 
+	//------------------------------------------------------------------------------
 	void _AddRPC(RPC* rpc)
 	{
 		g_mRpcs.Add(rpc->function_hash, rpc);
 	}
 
+	//------------------------------------------------------------------------------
 	RPC* GetRPC(uint32_t rpc_function_hash)
 	{
 		return g_mRpcs[rpc_function_hash];
+	}
+
+	int GetLastRpcClientIndex()
+	{
+		return g_iLastRpcClientIndex;
 	}
 
 }

@@ -6,6 +6,8 @@
 
 namespace ari::net
 {
+	extern int g_iLastRpcClientIndex;
+
 	//------------------------------------------------------------------------------
 	ServerSystem::ServerSystem()
 	{
@@ -254,6 +256,7 @@ namespace ari::net
 		{
 			auto rpc_msg = (RpcCallMessage*)msg;
 			a_assert(rpc_msg->rpc->rpc_type == RpcType::Server);
+			g_iLastRpcClientIndex = client_index;
 			rpc_msg->rpc->Call();
 		}
 	}

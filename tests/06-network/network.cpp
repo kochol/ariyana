@@ -11,7 +11,7 @@
 
 void RpcServerTest(int i)
 {
-	log_debug("RpcServerTest %d", i);
+	log_debug("RpcServerTest %d client_index %d", i, ari::net::GetLastRpcClientIndex());
 }
 
 void RpcClientTest(float i)

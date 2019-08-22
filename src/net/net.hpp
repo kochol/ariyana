@@ -40,6 +40,9 @@ namespace ari::net
 	/// Returns the RPC pointer by its function hash
 	RPC* GetRPC(uint32_t rpc_function_hash);
 
+	/// Returns the client index of called RPC function.
+	int GetLastRpcClientIndex();
+
 	// RPC functions
 	template<typename P1>
 	RPC* AddRPC(const core::String& function_name, RpcType rpc_type,
@@ -158,7 +161,5 @@ namespace ari::net
 		_AddRPC(rpc);
 		return rpc;
 	}
-
-
 
 } // namespace ari::net
