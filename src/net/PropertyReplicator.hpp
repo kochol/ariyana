@@ -4,6 +4,7 @@
 #include "core/containers/Array.hpp"
 #include "core/defines.hpp"
 #include "en/World.hpp"
+#include "core/log.h"
 
 namespace ari::net
 {
@@ -20,6 +21,28 @@ namespace ari::net
 			void* PropertyClone;
 			uint32_t ComponentId;
 			bool(*isDiffFn)(void*, void*, int);
+
+			PropertyIndex() = default;
+
+			PropertyIndex(PropertyIndex& other)
+			{
+				Index = other.Index;
+				Component = other.Component;
+				PropertyClone = other.PropertyClone;
+				ComponentId = other.ComponentId;
+				isDiffFn = other.isDiffFn;
+				other.PropertyClone = nullptr;
+			}
+
+			PropertyIndex(PropertyIndex&& other)
+			{
+				Index = other.Index;
+				Component = other.Component;
+				PropertyClone = other.PropertyClone;
+				ComponentId = other.ComponentId;
+				isDiffFn = other.isDiffFn;
+				other.PropertyClone = nullptr;
+			}
 
 			~PropertyIndex()
 			{
@@ -47,6 +70,8 @@ namespace ari::net
 						clone = core::Memory::Alloc(sizeof(MemberT));
 						if (member.canGetConstRef()) {
 							*((MemberT*)clone) = member.get(*cmp.Component);
+							MemberT* temp = (MemberT*)clone;
+							int hj = 0;
 						}
 						else if (member.hasGetter()) {
 							*((MemberT*)clone) = member.getCopy(*cmp.Component);
@@ -61,7 +86,13 @@ namespace ari::net
 			{
 				// We found the property add it to the list
 				en::ComponentHandle<void> cmpVoid = { cmp.Handle, cmp.Index, (void*)cmp.Component };
-				Properties.Add({ property_index, cmpVoid, clone, T::Id, T::IsDiff });
+				PropertyIndex property;
+				property.Component = cmpVoid;
+				property.ComponentId = T::Id;
+				property.Index = property_index;
+				property.PropertyClone = clone;
+				property.isDiffFn = T::IsDiff;
+				Properties.Add(property);
 			}
 		}
     };
