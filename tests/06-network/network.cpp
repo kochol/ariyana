@@ -152,7 +152,7 @@ public:
 				break;
 			case ari::io::ARI_KEYCODE_Q:
 				if (_window.Index > 0)
-				m_aClients[_window.Index - 1]->m_client_system.CallRPC(g_rpc_server, 7);
+					m_aClients[_window.Index - 1]->m_client_system.CallRPC(g_rpc_server, 7);
 				break;
 			case ari::io::ARI_KEYCODE_W:
 				if (_window.Index == 0) // On main window
