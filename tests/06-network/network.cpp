@@ -25,9 +25,15 @@ void RpcMultiCastTest(float i)
 	log_debug("RpcMultiCastTest %f", i);
 }
 
+void RpcMultiCastTest2(uint32_t i, float x, float y)
+{
+	log_debug("RpcMultiCastTest2 %u, %f, %f", i, x, y);
+}
+
 ari::net::RPC	*	g_rpc_server = nullptr,
 				*	g_rpc_client = nullptr,
-				*	g_rpc_multicast = nullptr;
+				*	g_rpc_multicast = nullptr,
+				*	g_rpc_multicast2 = nullptr;
 
 
 struct Client
@@ -109,6 +115,7 @@ public:
 		g_rpc_server = ari::net::AddRPC("RpcServerTest", ari::net::RpcType::Server, RpcServerTest);
 		g_rpc_client = ari::net::AddRPC("RpcClientTest", ari::net::RpcType::Client, RpcClientTest);
 		g_rpc_multicast = ari::net::AddRPC("RpcMultiCastTest", ari::net::RpcType::MultiCast, RpcMultiCastTest);
+		g_rpc_multicast2 = ari::net::AddRPC("RpcMultiCastTest2", ari::net::RpcType::MultiCast, RpcMultiCastTest2);
 	}
 
 	void OnFrame(float _elapsedTime) override
@@ -164,6 +171,7 @@ public:
 				if (_window.Index == 0) // On main window
 				{
 					m_server_system.CallRPC(g_rpc_multicast, 12.5f);
+					m_server_system.CallRPC(g_rpc_multicast2, 785, 12.0005f, 12.00001f);
 				}
 				break;
 			}
