@@ -8,7 +8,6 @@
 #include "net/ServerSystem.hpp"
 #include "net/ClientSystem.hpp"
 #include "core/log.h"
-#include "en/ComponentManager.hpp"
 
 void RpcServerTest(int i)
 {
@@ -106,7 +105,7 @@ public:
 		replicator.Component->AddProperty(box, "Rotation");
 		m_world.AddComponent(entity, replicator);
 
-		// Add entity to the worlld
+		// Add entity to the world
 		auto en = m_world.GetEntity(entity);
 		en->bReplicates = true;
 		m_world.AddEntity(entity);
