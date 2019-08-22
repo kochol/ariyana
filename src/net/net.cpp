@@ -14,6 +14,9 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	void ShutdownNetwork()
 	{
+		for (auto rpc : g_mRpcs)
+			core::Memory::Delete(rpc.value);
+		g_mRpcs.Clear();
 		ShutdownYojimbo();
 	}
 
