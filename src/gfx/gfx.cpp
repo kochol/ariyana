@@ -265,11 +265,11 @@ namespace ari
 			switch (format)
 			{
 			case TKTX_BC1_RGBA_UNORM_BLOCK:
-				return SG_PIXELFORMAT_DXT1;
+				return SG_PIXELFORMAT_BC1_RGBA;
 			case TKTX_BC2_UNORM_BLOCK:
-				return SG_PIXELFORMAT_DXT3;
+				return SG_PIXELFORMAT_BC2_RGBA;
 			case TKTX_BC3_UNORM_BLOCK:
-				return SG_PIXELFORMAT_DXT5;
+				return SG_PIXELFORMAT_BC3_RGBA;
 			case TKTX_ETC2_R8G8B8_UNORM_BLOCK:
 				return SG_PIXELFORMAT_ETC2_RGB8;
 			default :
