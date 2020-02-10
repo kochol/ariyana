@@ -4,30 +4,53 @@
 
 namespace ari::en
 {
+	// resource creation helper params, these are stored until the
+	// async-loaded resources (buffers and images) have been loaded
+	struct buffer_creation_params_t {
+		bool is_vertex_buffer;
+		int offset;
+		int size;
+		int gltf_buffer_index;
+	};
+
+	// Store the needed data for creating the mesh
+	struct MeshData
+	{
+		int NumBuffers;
+		core::Array<buffer_creation_params_t> BufferParams;
+	};
+
+	//------------------------------------------------------------------------------
+	// compute indices from cgltf element pointers
+	//------------------------------------------------------------------------------
+	static int gltf_buffer_index(const cgltf_data* gltf, const cgltf_buffer* buf) {
+		assert(buf);
+		return (int)(buf - gltf->buffers);
+	}
+
 	//------------------------------------------------------------------------------
 	// parse the GLTF buffer definitions and start loading buffer blobs
-	static void gltf_parse_buffers(const cgltf_data* gltf) {
-		if (gltf->buffer_views_count > SCENE_MAX_BUFFERS) {
-			state.failed = true;
-			return;
-		}
-
+	//------------------------------------------------------------------------------
+	static void gltf_parse_buffers(const cgltf_data* gltf, MeshData* p_mesh_data)
+	{
 		// parse the buffer-view attributes
-		state.scene.num_buffers = (int)gltf->buffer_views_count;
-		for (int i = 0; i < state.scene.num_buffers; i++) {
+		p_mesh_data->NumBuffers = (int)gltf->buffer_views_count;
+		for (int i = 0; i < p_mesh_data->NumBuffers; i++) 
+		{
 			const cgltf_buffer_view* gltf_buf_view = &gltf->buffer_views[i];
-			buffer_creation_params_t* p = &state.creation_params.buffers[i];
-			p->gltf_buffer_index = gltf_buffer_index(gltf, gltf_buf_view->buffer);
-			p->offset = (int)gltf_buf_view->offset;
-			p->size = (int)gltf_buf_view->size;
+			buffer_creation_params_t p;
+			p.gltf_buffer_index = gltf_buffer_index(gltf, gltf_buf_view->buffer);
+			p.offset = (int)gltf_buf_view->offset;
+			p.size = (int)gltf_buf_view->size;
 			if (gltf_buf_view->type == cgltf_buffer_view_type_indices) {
-				p->type = SG_BUFFERTYPE_INDEXBUFFER;
+				p.is_vertex_buffer = false;
 			}
 			else {
-				p->type = SG_BUFFERTYPE_VERTEXBUFFER;
+				p.is_vertex_buffer = true;
 			}
+			p_mesh_data->BufferParams.Add(p);
 			// allocate a sokol-gfx buffer handle
-			state.scene.buffers[i] = sg_alloc_buffer();
+			//state.scene.buffers[i] = sg_alloc_buffer();
 		}
 
 		// start loading all buffers
@@ -47,13 +70,15 @@ namespace ari::en
 
 	//------------------------------------------------------------------------------
 	// load GLTF data from memory, build scene and issue resource fetch requests
-	static void gltf_parse(const void* ptr, uint64_t num_bytes) {
+	//------------------------------------------------------------------------------
+	static void gltf_parse(const void* ptr, uint64_t num_bytes, MeshData* p_mesh_data)
+	{
 		cgltf_options options;
 		core::Memory::Fill(&options, sizeof(cgltf_options), 0);
 		cgltf_data* data = nullptr;
 		const cgltf_result result = cgltf_parse(&options, ptr, num_bytes, &data);
 		if (result == cgltf_result_success) {
-			gltf_parse_buffers(data);
+			gltf_parse_buffers(data, p_mesh_data);
 			gltf_parse_images(data);
 			gltf_parse_materials(data);
 			gltf_parse_meshes(data);
@@ -67,7 +92,8 @@ namespace ari::en
 	{
 		io::LoadFile(_path, [](core::Buffer* buffer)
 			{
-				gltf_parse((void*)buffer->Data(), buffer->Size());
+				MeshData mesh_data;
+				gltf_parse((void*)buffer->Data(), buffer->Size(), &mesh_data);
 			});
 	} // Load3dModel
 
