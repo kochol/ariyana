@@ -1,6 +1,8 @@
 #include "3dModel.hpp"
 #include "io/FileSystem.hpp"
 #include "private/cgltf/cgltf.h"
+#include <sokol_gfx.h>
+#include "gfx/gfx.hpp"
 
 namespace ari::en
 {
@@ -18,6 +20,8 @@ namespace ari::en
 	{
 		int NumBuffers;
 		core::Array<buffer_creation_params_t> BufferParams;
+		core::Array<gfx::BufferHandle> VertexBuffers;
+		core::Array<gfx::BufferHandle> IndexBuffers;
 	};
 
 	//------------------------------------------------------------------------------
@@ -25,7 +29,7 @@ namespace ari::en
 	//------------------------------------------------------------------------------
 	static int gltf_buffer_index(const cgltf_data* gltf, const cgltf_buffer* buf) {
 		assert(buf);
-		return (int)(buf - gltf->buffers);
+		return int(buf - gltf->buffers);
 	}
 
 	//------------------------------------------------------------------------------
@@ -40,8 +44,8 @@ namespace ari::en
 			const cgltf_buffer_view* gltf_buf_view = &gltf->buffer_views[i];
 			buffer_creation_params_t p;
 			p.gltf_buffer_index = gltf_buffer_index(gltf, gltf_buf_view->buffer);
-			p.offset = (int)gltf_buf_view->offset;
-			p.size = (int)gltf_buf_view->size;
+			p.offset = int(gltf_buf_view->offset);
+			p.size = int(gltf_buf_view->size);
 			if (gltf_buf_view->type == cgltf_buffer_view_type_indices) {
 				p.is_vertex_buffer = false;
 			}
@@ -49,22 +53,27 @@ namespace ari::en
 				p.is_vertex_buffer = true;
 			}
 			p_mesh_data->BufferParams.Add(p);
-			// allocate a sokol-gfx buffer handle
-			//state.scene.buffers[i] = sg_alloc_buffer();
 		}
 
 		// start loading all buffers
-		for (cgltf_size i = 0; i < gltf->buffers_count; i++) {
+		for (cgltf_size i = 0; i < gltf->buffers_count; i++) 
+		{
 			const cgltf_buffer* gltf_buf = &gltf->buffers[i];
-			gltf_buffer_fetch_userdata_t user_data = {
-				.buffer_index = i
-			};
-			sfetch_send(&(sfetch_request_t) {
-				.path = gltf_buf->uri,
-					.callback = gltf_buffer_fetch_callback,
-					.user_data_ptr = &user_data,
-					.user_data_size = sizeof(user_data)
-			});
+			io::LoadFile(gltf_buf->uri, [i, p_mesh_data](core::Buffer* buffer)
+				{
+					for (int c = 0; c < p_mesh_data->NumBuffers; c++) 
+					{
+						const buffer_creation_params_t* p = &p_mesh_data->BufferParams[c];
+						if (p->gltf_buffer_index == int(i)) 
+						{
+							a_assert((p->offset + p->size) <= buffer->Size());
+							if (p->is_vertex_buffer)
+								p_mesh_data->VertexBuffers.Add(gfx::CreateVertexBuffer(p->size, buffer->Data() + p->offset));
+							else
+								p_mesh_data->IndexBuffers.Add(gfx::CreateIndexBuffer(p->size, buffer->Data() + p->offset));
+						}
+					}
+				});
 		}
 	}
 
