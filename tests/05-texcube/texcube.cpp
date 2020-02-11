@@ -35,7 +35,7 @@ public:
 		camera.Component->Target.z = 0.0f;
 		m_world.AddDerivedComponent<ari::en::Camera, ari::en::Node3D>(entity, camera);
 		auto box = m_world.CreateComponent<ari::en::BoxShape, ari::en::Node3D>();
-		box.Component->Texture = ari::gfx::CreateTexture("res:baboon.png");
+		box.Component->Texture = ari::gfx::LoadTexture("res:baboon.png");
 		m_pBox = box.Component;
 		m_world.AddDerivedComponent<ari::en::BoxShape, ari::en::Node3D>(entity, box);
 	}

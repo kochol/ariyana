@@ -279,7 +279,7 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
-		TextureHandle CreateTexture(core::String _path)
+		TextureHandle LoadTexture(core::String _path)
 		{
 			sg_image img = sg_alloc_image();
 

@@ -106,6 +106,85 @@ namespace ari
 			FragmentShader
 		};
 
+		/*
+			TextureFilter
+
+			The filtering mode when sampling a texture image. This is
+			used in the sg_image_desc.min_filter and sg_image_desc.mag_filter
+			members when creating an image object.
+
+			The default filter mode is SG_FILTER_NEAREST.
+		*/
+		enum class TextureFilter 
+    	{
+			_Default, /* value 0 reserved for default-init */
+			Nearest,
+			Linear,
+			NearestMipmapNearest,
+			NearestMipmapLinear,
+			LinearMipmapNearest,
+			LinearMipmapLinear,
+			_Num,
+			_FilterForceU32 = 0x7FFFFFFF
+		};
+
+		/*
+			sg_wrap
+
+			The texture coordinates wrapping mode when sampling a texture
+			image. This is used in the sg_image_desc.wrap_u, .wrap_v
+			and .wrap_w members when creating an image.
+
+			The default wrap mode is SG_WRAP_REPEAT.
+
+			NOTE: SG_WRAP_CLAMP_TO_BORDER is not supported on all backends
+			and platforms. To check for support, call sg_query_features()
+			and check the "clamp_to_border" boolean in the returned
+			sg_features struct.
+
+			Platforms which don't support SG_WRAP_CLAMP_TO_BORDER will silently fall back
+			to SG_WRAP_CLAMP_TO_EDGE without a validation error.
+
+			Platforms which support clamp-to-border are:
+
+				- all desktop GL platforms
+				- Metal on macOS
+				- D3D11
+
+			Platforms which do not support clamp-to-border:
+
+				- GLES2/3 and WebGL/WebGL2
+				- Metal on iOS
+		*/
+		enum class TextureWrap 
+    	{
+			_Default,   /* value 0 reserved for default-init */
+			Repeat,
+			ClampToEdge,
+			ClampToBorder,
+			MirroredRepeat,
+			_NUM,
+			_FORCEU32 = 0x7FFFFFFF
+		};
+
+		/*
+			TextureBorderColor
+
+			The border color to use when sampling a texture, and the UV wrap
+			mode is ClampToBorder.
+
+			The default border color is OpaqueBlack
+		*/
+		enum class TextureBorderColor 
+    	{
+			Default,    /* value 0 reserved for default-init */
+			TransparentBlack,
+			OpaqueBlack,
+			OpaqueWhite,
+			Num,
+			ForceU32 = 0x7FFFFFFF
+		};
+
 		bool SetupGfx(GfxSetup& setup);
 
 		void RenderToWindow(const io::WindowHandle& handle);
@@ -162,7 +241,7 @@ namespace ari
 
 		sx_mat4 GetViewProjMatrix();
 
-		TextureHandle CreateTexture(core::String _path);
+		TextureHandle LoadTexture(core::String _path);
         
     } // namespace gfx
     
