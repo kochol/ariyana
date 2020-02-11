@@ -101,8 +101,8 @@ namespace ari::en
 	{
 		io::LoadFile(_path, [](core::Buffer* buffer)
 			{
-				MeshData mesh_data;
-				gltf_parse((void*)buffer->Data(), buffer->Size(), &mesh_data);
+				MeshData* p_mesh_data = core::Memory::New<MeshData>();
+				gltf_parse((void*)buffer->Data(), buffer->Size(), p_mesh_data);
 			});
 	} // Load3dModel
 
