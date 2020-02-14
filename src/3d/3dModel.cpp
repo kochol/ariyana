@@ -28,8 +28,10 @@ namespace ari::en
 	// Store the needed data for creating the mesh
 	struct MeshData
 	{
-		int										NumBuffers, 
-												NumImages;
+		int										NumBuffers,
+												NumImages,
+												NumMaterials,
+												NumMeshes;
 		core::Array<buffer_creation_params_t>	BufferParams;
 		core::Array<gfx::BufferHandle>			VertexBuffers,
 												IndexBuffers;
@@ -160,6 +162,122 @@ namespace ari::en
 	}
 
 	//------------------------------------------------------------------------------
+	// parse GLTF materials into our own material definition
+	//------------------------------------------------------------------------------
+	static void gltf_parse_materials(const cgltf_data* gltf, MeshData* p_mesh_data)
+	{
+		p_mesh_data->NumMaterials = int(gltf->materials_count);
+		// TODO: Convert gltf material to our material system.
+		/*for (int i = 0; i < p_mesh_data->NumMaterials; i++) 
+		{
+			const cgltf_material* gltf_mat = &gltf->materials[i];
+			material_t* scene_mat = &state.scene.materials[i];
+			scene_mat->is_metallic = gltf_mat->has_pbr_metallic_roughness;
+			if (scene_mat->is_metallic) {
+				const cgltf_pbr_metallic_roughness* src = &gltf_mat->pbr_metallic_roughness;
+				metallic_material_t* dst = &scene_mat->metallic;
+				for (int d = 0; d < 4; d++) {
+					dst->fs_params.base_color_factor.Elements[d] = src->base_color_factor[d];
+				}
+				for (int d = 0; d < 3; d++) {
+					dst->fs_params.emissive_factor.Elements[d] = gltf_mat->emissive_factor[d];
+				}
+				dst->fs_params.metallic_factor = src->metallic_factor;
+				dst->fs_params.roughness_factor = src->roughness_factor;
+				dst->images = (metallic_images_t){
+					.base_color = gltf_texture_index(gltf, src->base_color_texture.texture),
+					.metallic_roughness = gltf_texture_index(gltf, src->metallic_roughness_texture.texture),
+					.normal = gltf_texture_index(gltf, gltf_mat->normal_texture.texture),
+					.occlusion = gltf_texture_index(gltf, gltf_mat->occlusion_texture.texture),
+					.emissive = gltf_texture_index(gltf, gltf_mat->emissive_texture.texture)
+				};
+			}
+			else {
+				*//*
+				const cgltf_pbr_specular_glossiness* src = &gltf_mat->pbr_specular_glossiness;
+				specular_material_t* dst = &scene_mat->specular;
+				for (int d = 0; d < 4; d++) {
+					dst->fs_params.diffuse_factor.Elements[d] = src->diffuse_factor[d];
+				}
+				for (int d = 0; d < 3; d++) {
+					dst->fs_params.specular_factor.Elements[d] = src->specular_factor[d];
+				}
+				for (int d = 0; d < 3; d++) {
+					dst->fs_params.emissive_factor.Elements[d] = gltf_mat->emissive_factor[d];
+				}
+				dst->fs_params.glossiness_factor = src->glossiness_factor;
+				dst->images = (specular_images_t) {
+					.diffuse = gltf_texture_index(gltf, src->diffuse_texture.texture),
+					.specular_glossiness = gltf_texture_index(gltf, src->specular_glossiness_texture.texture),
+					.normal = gltf_texture_index(gltf, gltf_mat->normal_texture.texture),
+					.occlusion = gltf_texture_index(gltf, gltf_mat->occlusion_texture.texture),
+					.emissive = gltf_texture_index(gltf, gltf_mat->emissive_texture.texture)
+				};
+				
+			}
+		}*/
+	}
+
+	//------------------------------------------------------------------------------
+	// parse GLTF meshes into our own mesh and submesh definition
+	//------------------------------------------------------------------------------
+	static void gltf_parse_meshes(const cgltf_data* gltf, MeshData* p_mesh_data)
+	{
+		p_mesh_data->NumMeshes = int(gltf->meshes_count);
+		for (cgltf_size mesh_index = 0; mesh_index < gltf->meshes_count; mesh_index++) 
+		{
+			const cgltf_mesh* gltf_mesh = &gltf->meshes[mesh_index];
+			mesh_t* mesh = &state.scene.meshes[mesh_index];
+			mesh->first_primitive = state.scene.num_primitives;
+			mesh->num_primitives = (int)gltf_mesh->primitives_count;
+			for (cgltf_size prim_index = 0; prim_index < gltf_mesh->primitives_count; prim_index++) {
+				const cgltf_primitive* gltf_prim = &gltf_mesh->primitives[prim_index];
+				primitive_t* prim = &state.scene.primitives[state.scene.num_primitives++];
+
+				// a mapping from sokol-gfx vertex buffer bind slots into the scene.buffers array
+				prim->vertex_buffers = create_vertex_buffer_mapping_for_gltf_primitive(gltf, gltf_prim);
+				// create or reuse a matching pipeline state object
+				prim->pipeline = create_sg_pipeline_for_gltf_primitive(gltf, gltf_prim, &prim->vertex_buffers);
+				// the material parameters
+				prim->material = gltf_material_index(gltf, gltf_prim->material);
+				// index buffer, base element, num elements
+				if (gltf_prim->indices) {
+					prim->index_buffer = gltf_bufferview_index(gltf, gltf_prim->indices->buffer_view);
+					assert(state.creation_params.buffers[prim->index_buffer].type == SG_BUFFERTYPE_INDEXBUFFER);
+					assert(gltf_prim->indices->stride != 0);
+					prim->base_element = 0;
+					prim->num_elements = (int)gltf_prim->indices->count;
+				}
+				else {
+					// hmm... looking up the number of elements to render from
+					// a random vertex component accessor looks a bit shady
+					prim->index_buffer = SCENE_INVALID_INDEX;
+					prim->base_element = 0;
+					prim->num_elements = (int)gltf_prim->attributes->data->count;
+				}
+			}
+		}
+	}
+
+	// parse GLTF nodes into our own node definition
+	static void gltf_parse_nodes(const cgltf_data* gltf) {
+		if (gltf->nodes_count > SCENE_MAX_NODES) {
+			state.failed = true;
+			return;
+		}
+		for (cgltf_size node_index = 0; node_index < gltf->nodes_count; node_index++) {
+			const cgltf_node* gltf_node = &gltf->nodes[node_index];
+			// ignore nodes without mesh, those are not relevant since we
+			// bake the transform hierarchy into per-node world space transforms
+			if (gltf_node->mesh) {
+				node_t* node = &state.scene.nodes[state.scene.num_nodes++];
+				node->mesh = gltf_mesh_index(gltf, gltf_node->mesh);
+				node->transform = build_transform_for_gltf_node(gltf, gltf_node);
+			}
+		}
+	}
+
+	//------------------------------------------------------------------------------
 	// load GLTF data from memory, build scene and issue resource fetch requests
 	//------------------------------------------------------------------------------
 	static void gltf_parse(const void* ptr, uint64_t num_bytes, MeshData* p_mesh_data)
@@ -171,7 +289,7 @@ namespace ari::en
 		if (result == cgltf_result_success) {
 			gltf_parse_buffers(data, p_mesh_data);
 			gltf_parse_images(data, p_mesh_data);
-			//gltf_parse_materials(data);
+			gltf_parse_materials(data);
 			//gltf_parse_meshes(data);
 			//gltf_parse_nodes(data);
 			cgltf_free(data);
