@@ -3,6 +3,7 @@
 #include "private/cgltf/cgltf.h"
 #include <sokol_gfx.h>
 #include "gfx/gfx.hpp"
+#include "gfx/Mesh.hpp"
 
 namespace ari::en
 {
@@ -223,18 +224,27 @@ namespace ari::en
 	//------------------------------------------------------------------------------
 	static void gltf_parse_meshes(const cgltf_data* gltf, MeshData* p_mesh_data)
 	{
+		core::ObjectPool<gfx::Mesh>::Setup(64);
+		core::ObjectPool<gfx::SubMesh>::Setup(128);
+
 		p_mesh_data->NumMeshes = int(gltf->meshes_count);
 		for (cgltf_size mesh_index = 0; mesh_index < gltf->meshes_count; mesh_index++) 
 		{
 			const cgltf_mesh* gltf_mesh = &gltf->meshes[mesh_index];
-			mesh_t* mesh = &state.scene.meshes[mesh_index];
-			mesh->first_primitive = state.scene.num_primitives;
-			mesh->num_primitives = (int)gltf_mesh->primitives_count;
-			for (cgltf_size prim_index = 0; prim_index < gltf_mesh->primitives_count; prim_index++) {
-				const cgltf_primitive* gltf_prim = &gltf_mesh->primitives[prim_index];
-				primitive_t* prim = &state.scene.primitives[state.scene.num_primitives++];
 
-				// a mapping from sokol-gfx vertex buffer bind slots into the scene.buffers array
+			gfx::MeshHandle mesh_handle;
+			mesh_handle.Handle = core::HandleManager<gfx::Mesh>::GetNewHandle(mesh_handle.Index);
+			auto mesh = core::ObjectPool<gfx::Mesh>::New(mesh_handle.Index);
+			mesh->SubMeshes.Reserve(int(gltf_mesh->primitives_count));
+
+			for (cgltf_size prim_index = 0; prim_index < gltf_mesh->primitives_count; prim_index++) 
+			{
+				const cgltf_primitive* gltf_prim = &gltf_mesh->primitives[prim_index];
+				gfx::SubMeshHandle sub_mesh_handle;
+				sub_mesh_handle.Handle = core::HandleManager<gfx::SubMesh>::GetNewHandle(sub_mesh_handle.Index);
+				auto sub_mesh = core::ObjectPool<gfx::SubMesh>::New(sub_mesh_handle.Index);
+
+				/*// a mapping from sokol-gfx vertex buffer bind slots into the scene.buffers array
 				prim->vertex_buffers = create_vertex_buffer_mapping_for_gltf_primitive(gltf, gltf_prim);
 				// create or reuse a matching pipeline state object
 				prim->pipeline = create_sg_pipeline_for_gltf_primitive(gltf, gltf_prim, &prim->vertex_buffers);
@@ -254,13 +264,15 @@ namespace ari::en
 					prim->index_buffer = SCENE_INVALID_INDEX;
 					prim->base_element = 0;
 					prim->num_elements = (int)gltf_prim->attributes->data->count;
-				}
+				}*/
 			}
 		}
 	}
 
 	// parse GLTF nodes into our own node definition
-	static void gltf_parse_nodes(const cgltf_data* gltf) {
+	static void gltf_parse_nodes(const cgltf_data* gltf) 
+	{
+		/*
 		if (gltf->nodes_count > SCENE_MAX_NODES) {
 			state.failed = true;
 			return;
@@ -274,7 +286,7 @@ namespace ari::en
 				node->mesh = gltf_mesh_index(gltf, gltf_node->mesh);
 				node->transform = build_transform_for_gltf_node(gltf, gltf_node);
 			}
-		}
+		}*/
 	}
 
 	//------------------------------------------------------------------------------
@@ -289,9 +301,9 @@ namespace ari::en
 		if (result == cgltf_result_success) {
 			gltf_parse_buffers(data, p_mesh_data);
 			gltf_parse_images(data, p_mesh_data);
-			gltf_parse_materials(data);
-			//gltf_parse_meshes(data);
-			//gltf_parse_nodes(data);
+			gltf_parse_materials(data, p_mesh_data);
+			gltf_parse_meshes(data, p_mesh_data);
+			gltf_parse_nodes(data);
 			cgltf_free(data);
 		}
 	}

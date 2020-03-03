@@ -3,7 +3,9 @@ fips_begin_module(ari_gfx)
     fips_deps(ari_io sx)
     fips_files(
         Application.hpp
-        gfx.hpp                     gfx.cpp
+		gfx.hpp                     gfx.cpp
+		Mesh.hpp
+		SubMesh.hpp
         Vertices.hpp
         Viewport.hpp
     )
