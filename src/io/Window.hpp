@@ -12,6 +12,8 @@ namespace ari
 		static const int MaxWindow = 16;
 
 		ARI_HANDLE(WindowHandle);
+
+		static const WindowHandle MainWindow = { 0, 0 };
 		
 		struct Window
 		{

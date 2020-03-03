@@ -97,12 +97,9 @@ namespace ari
 			a_assert(handle.Handle == 0); // Only use this with glfw backend.
 		}
 
-		void Present()
-		{
-		}
-
 		void Present(const io::WindowHandle& handle)
 		{
+			a_assert(handle.Handle == 0); // Only use this with glfw backend.
 		}
 
         uint32_t GetFrameNumber()
