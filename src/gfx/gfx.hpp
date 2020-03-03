@@ -16,7 +16,7 @@ namespace ari
 		ARI_HANDLE(ShaderHanlde);
 		ARI_HANDLE(PipelineHandle);
 		ARI_HANDLE(TextureHandle);
-		ARI_HANDLE(BindingHandle);
+		ARI_HANDLE(BindingHandle);		
 
         struct GfxSetup
         {
@@ -189,9 +189,7 @@ namespace ari
 
 		void RenderToWindow(const io::WindowHandle& handle);
 
-		void Present();
-
-		void Present(const io::WindowHandle& handle);
+		void Present(const io::WindowHandle& handle = io::MainWindow);
 
 		uint32_t GetFrameNumber();
 
@@ -221,7 +219,7 @@ namespace ari
 
 		void ApplyUniforms(ShaderStage _stage, int _ub_index, const void* _data, int _size);
 
-		void BeginDefaultPass(const io::WindowHandle& _handle);
+		void BeginDefaultPass(const io::WindowHandle& _handle = io::MainWindow);
 
 		void EndPass();
 

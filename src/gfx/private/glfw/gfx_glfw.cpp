@@ -37,12 +37,6 @@ namespace ari
 			sg_activate_context(g_sg_contexts[handle.Index]);
 		}
 
-		void Present()
-		{
-			const io::WindowHandle window{ 0 , 0 };
-			Present(window);
-		}
-
 		void Present(const io::WindowHandle& handle)
 		{
 			glfwSwapBuffers(io::GetGlfwWindow(handle));

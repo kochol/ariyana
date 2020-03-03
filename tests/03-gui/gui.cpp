@@ -34,10 +34,11 @@ public:
 
 	void OnFrame(float _elapsedTime) override
 	{
-		ari::gfx::BeginDefaultPass({0, 0});
+		ari::gfx::BeginDefaultPass();
 		m_gui_system.Update(&m_world, _elapsedTime, UpdateState::MainThreadState);
 		ari::gfx::EndPass();
 		ari::gfx::Commit();
+		ari::gfx::Present();
 	}
 
 	void OnCleanup() override

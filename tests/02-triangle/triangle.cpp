@@ -41,12 +41,13 @@ public:
 
 	void OnFrame(float _elapsedTime) override
 	{
-		ari::gfx::BeginDefaultPass({0, 0});
+		ari::gfx::BeginDefaultPass();
 		ApplyPipeline(pipeline);
 		ApplyBindings(binding);
 		ari::gfx::Draw(0, 3, 1);
 		ari::gfx::EndPass();
 		ari::gfx::Commit();
+		ari::gfx::Present();
 	}
 
 	void OnCleanup() override
