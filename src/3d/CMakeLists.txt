@@ -11,6 +11,11 @@ fips_begin_module(ari_3d)
         SceneSystem.hpp         SceneSystem.cpp
     )
 
+    fips_dir(private)
+    fips_files(
+        gltf.hpp                gltf.cpp
+    )
+
     fips_dir(private/cgltf)
     fips_files(
         cgltf.h                 cgltf.cpp

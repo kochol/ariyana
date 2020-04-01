@@ -5,6 +5,6 @@
 
 namespace ari::en
 {
-	void Load3dModel(core::String _path, std::function<void(ComponentHandle<Node3D>)> OnModel);
+	void Load3dScene(const core::String& _path, std::function<void(core::Array<ComponentHandle<Node3D>>)> OnModel);
 
 } // namespace ari::en

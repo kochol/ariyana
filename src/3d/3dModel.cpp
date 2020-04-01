@@ -4,6 +4,7 @@
 #include <sokol_gfx.h>
 #include "gfx/gfx.hpp"
 #include "gfx/Mesh.hpp"
+#include "private/gltf.hpp"
 
 namespace ari::en
 {
@@ -308,8 +309,7 @@ namespace ari::en
 		}
 	}
 
-	//------------------------------------------------------------------------------
-	void Load3dModel(core::String _path, std::function<void(ComponentHandle<Node3D>)> OnModel)
+	void Load3dModel(const core::String& _path, const std::function<void(ComponentHandle<Node3D>)>& OnModel)
 	{
 		io::LoadFile(_path, [](core::Buffer* buffer)
 			{
@@ -317,5 +317,11 @@ namespace ari::en
 				gltf_parse((void*)buffer->Data(), buffer->Size(), p_mesh_data);
 			});
 	} // Load3dModel
+
+	//------------------------------------------------------------------------------
+	void Load3dScene(const core::String& _path, std::function<void(core::Array<ComponentHandle<Node3D>>)> OnModel)
+	{
+		LoadGltfScene(_path, std::move(OnModel));
+	}
 
 } // namespace ari::en
