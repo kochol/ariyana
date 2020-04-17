@@ -6,11 +6,19 @@
 namespace ari::gfx
 {
 	ARI_HANDLE(SubMeshHandle)
-	
+
 	struct SubMesh
 	{
-		core::Array<gfx::BufferHandle>	VertexBuffers;
 		gfx::BufferHandle				IndexBuffer;
+		gfx::PrimitiveType				Type;
+		gfx::BufferHandle				Position,
+										Normal,
+										Tangent,
+										Texcoord,
+										Color,
+										Joints,
+										Weights;
+		int								ElementsCount;
 	};
 	
 } // namespace ari::gfx

@@ -3,6 +3,7 @@
 #include "cgltf/cgltf.h"
 #include "core/containers/Array.hpp"
 #include "gfx/gfx.hpp"
+#include "gfx/Mesh.hpp"
 
 namespace ari::en
 {
@@ -50,10 +51,12 @@ namespace ari::en
 												NumBufferViews,
 												NumImages,
 												NumMaterials,
-												NumMeshes;
+												NumMeshes,
+												NumNodes;
 		core::Buffer*							Buffers;
 		core::Array<gfx::BufferHandle>			GfxBuffers;
 		core::Array<Accessor>					Accessors;
+		core::Array<gfx::MeshHandle>			Meshes;
 	};
 
 	void gltf_parse(cgltf_data* gltf, SceneData* p_scene_data)
@@ -86,7 +89,7 @@ namespace ari::en
 			const int index = int(gltf_accessor->buffer_view - gltf->buffer_views);
 			Accessor accessor;
 			accessor.ComponentType = ComponentTypeEnum(int(gltf_accessor->component_type));
-			accessor.Count = gltf_accessor->count;
+			accessor.Count = int(gltf_accessor->count);
 			accessor.DataType = ComponentDataType(int(gltf_accessor->type));
 			accessor.GfxBuffer = p_scene_data->GfxBuffers[index];
 			accessor.HasMax = gltf_accessor->has_max;
@@ -94,9 +97,81 @@ namespace ari::en
 			accessor.HasMin = gltf_accessor->has_min;
 			core::Memory::Copy(gltf_accessor->min, accessor.Min, sizeof(float) * 16);
 			accessor.Normalized = gltf_accessor->normalized;
-			accessor.Offset = gltf_accessor->offset;
+			accessor.Offset = int(gltf_accessor->offset);
 			p_scene_data->Accessors.Add(accessor);
 		}
+
+		// parse the meshes
+		core::ObjectPool<gfx::Mesh>::Setup(64);
+		core::ObjectPool<gfx::SubMesh>::Setup(128);
+		p_scene_data->NumMeshes = int(gltf->meshes_count);
+		p_scene_data->Meshes.Reserve(p_scene_data->NumMeshes);
+		for (int i = 0; i < p_scene_data->NumMeshes; i++)
+		{
+			const cgltf_mesh* gltf_mesh = &gltf->meshes[i];
+
+			gfx::MeshHandle mesh_handle;
+			mesh_handle.Handle = core::HandleManager<gfx::Mesh>::GetNewHandle(mesh_handle.Index);
+			auto mesh = core::ObjectPool<gfx::Mesh>::New(mesh_handle.Index);
+			mesh->SubMeshes.Reserve(int(gltf_mesh->primitives_count));
+			p_scene_data->Meshes.Add(mesh_handle);
+
+			for (cgltf_size prim_index = 0; prim_index < gltf_mesh->primitives_count; prim_index++)
+			{
+				const cgltf_primitive* gltf_prim = &gltf_mesh->primitives[prim_index];
+				gfx::SubMeshHandle sub_mesh_handle;
+				sub_mesh_handle.Handle = core::HandleManager<gfx::SubMesh>::GetNewHandle(sub_mesh_handle.Index);
+				auto sub_mesh = core::ObjectPool<gfx::SubMesh>::New(sub_mesh_handle.Index);
+				mesh->SubMeshes.Add(sub_mesh_handle);
+
+				sub_mesh->Type = gfx::PrimitiveType(int(gltf_prim->type));
+				if (gltf_prim->indices)
+				{
+					// Add indices
+					const int accessor_index = int(gltf_prim->indices - gltf->accessors);
+					sub_mesh->IndexBuffer = p_scene_data->Accessors[accessor_index].GfxBuffer;
+					sub_mesh->ElementsCount = int(gltf_prim->indices->count);
+				}
+				else
+					sub_mesh->ElementsCount = int(gltf_prim->attributes[0].data->count);
+
+				// Set the buffers
+				for (int a_i = 0; a_i < int(gltf_prim->attributes_count); ++a_i)
+				{
+					const int accessor_index = int(gltf_prim->attributes[a_i].data - gltf->accessors);
+					switch (gltf_prim->attributes[a_i].type)
+					{
+					case cgltf_attribute_type_position:
+						sub_mesh->Position = p_scene_data->Accessors[accessor_index].GfxBuffer;
+						// TODO: add bounding box
+						break;
+					case cgltf_attribute_type_normal:
+						sub_mesh->Normal = p_scene_data->Accessors[accessor_index].GfxBuffer;
+						break;
+					case cgltf_attribute_type_tangent:
+						sub_mesh->Tangent = p_scene_data->Accessors[accessor_index].GfxBuffer;
+						break;
+					case cgltf_attribute_type_texcoord:
+						sub_mesh->Texcoord = p_scene_data->Accessors[accessor_index].GfxBuffer;
+						break;
+					case cgltf_attribute_type_color:
+						sub_mesh->Color = p_scene_data->Accessors[accessor_index].GfxBuffer;
+						break;
+					case cgltf_attribute_type_joints:
+						sub_mesh->Joints = p_scene_data->Accessors[accessor_index].GfxBuffer;
+						break;
+					case cgltf_attribute_type_weights:
+						sub_mesh->Weights = p_scene_data->Accessors[accessor_index].GfxBuffer;
+						break;
+					case cgltf_attribute_type_invalid:
+						break;
+					}
+				}
+			}
+		}
+
+		// parse nodes
+
 
 		// free the gltf pointer
 		cgltf_free(gltf);
@@ -105,7 +180,7 @@ namespace ari::en
 	void LoadGltfScene(const core::String& _path, std::function<void(core::Array<ComponentHandle<Node3D>>)> OnModel)
 	{
 		// Load gltf file
-		io::LoadFile(_path, [_path](core::Buffer* buffer)
+		io::LoadFile(_path, [_path, OnModel](core::Buffer* buffer)
 			{
 				cgltf_options options;
 				core::Memory::Fill(&options, sizeof(cgltf_options), 0);
@@ -121,7 +196,7 @@ namespace ari::en
 					for (cgltf_size i = 0; i < gltf->buffers_count; i++)
 					{
 						const cgltf_buffer* gltf_buf = &gltf->buffers[i];
-						io::LoadFile(gltf_buf->uri, [i, gltf, p_scene_data](core::Buffer* buffer)
+						io::LoadFile(gltf_buf->uri, [i, gltf, p_scene_data, OnModel](core::Buffer* buffer)
 							{
 								p_scene_data->Buffers[i] = std::move(*buffer);
 								p_scene_data->NumLoadedBuffers++;

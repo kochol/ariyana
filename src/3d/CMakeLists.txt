@@ -6,6 +6,7 @@ fips_begin_module(ari_3d)
         BoxShape.hpp            BoxShape.cpp
         Camera.hpp              Camera.cpp
         FrameData.hpp
+        MeshNode.hpp            MeshNode.cpp
         Node3D.hpp
         RenderSystem.hpp        RenderSystem.cpp
         SceneSystem.hpp         SceneSystem.cpp

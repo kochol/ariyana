@@ -185,6 +185,17 @@ namespace ari
 			ForceU32 = 0x7FFFFFFF
 		};
 
+		enum class PrimitiveType
+		{
+			Points,
+			Lines,
+			LineLoop,
+			LineStrip,
+			Triangles,
+			TrianglesStrip,
+			TrianglesFan,
+		};
+
 		bool SetupGfx(GfxSetup& setup);
 
 		void RenderToWindow(const io::WindowHandle& handle);
