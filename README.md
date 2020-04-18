@@ -1,5 +1,27 @@
 # Ariyana
 Ariana Game Engine
+# How To Build
+We are using [fips](https://github.com/floooh/fips) as a highlevel build system for Ariana.
+### Requirements
+- **Python** (2.7.x or 3.x )
+- **CMake** (3.x)
+- **A working C/C++ development environment**:
+    - on **OSX**: Xcode + command line tools
+    - on **Linux**: make/gcc (or clang)
+    - on **Windows**: Visual Studio 2013 or better
+### Cloning the repository
+As fips clone all the dependensies during building, it's better to create a Workspace directory (e.g. "ari-workspace") and clone the reposetory in it. 
+```bash
+    > cd ~/your-workspace
+    > git clone https://github.com/kochol/ariyana.git
+```
+### Build the engine
+Here is the easiest part, run './fips build' in ariyana directory ('fips build' in windows). 
+```bash
+    > cd your-workspace/ariyana   
+    > ./fips build
+```
+done! it's ready to rock.
 
 # Changes
 
