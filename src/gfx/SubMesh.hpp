@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/defines.hpp"
 #include "core/containers/Array.hpp"
 #include "gfx.hpp"
+#include "core/defines.hpp"
 
 namespace ari::gfx
 {
