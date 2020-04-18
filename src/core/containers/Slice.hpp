@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Assertion.hpp"
+
 namespace ari
 {
 namespace core

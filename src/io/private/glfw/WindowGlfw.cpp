@@ -2,7 +2,7 @@
 #include "io/private/flextgl/flextGL.h"
 #include "GLFW/glfw3.h"
 #include "core/containers/StaticArray.hpp"
-#include <io\IOEvents.hpp>
+#include "io/IOEvents.hpp"
 #include "gfx/Application.hpp"
 #include <sokol_gfx.h>
 
