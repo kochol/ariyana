@@ -3,6 +3,10 @@ Ariana Game Engine
 
 # Changes
 
+## Ariyana Game Engine 0.2.3
+
+- Compile fix for android
+
 ## Ariyana Game Engine 0.2.2
 
 - Updated to work with the latest sokol gfx.
