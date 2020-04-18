@@ -9,6 +9,7 @@
     string data. Internally a StringBuilder object has a dynamic
     buffer which grows as needed, but never shrinks.
 */
+#include <stdarg.h>
 #include "../Types.hpp"
 #include "String.hpp"
 #include "../containers/Array.hpp"

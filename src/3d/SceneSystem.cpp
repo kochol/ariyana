@@ -34,7 +34,7 @@ namespace ari::en
 				m_FameDataTurnIndex = 0;
 			m_pFrameDataTransforms = &m_aFrameData[m_FameDataTurnIndex];
 			m_pFrameDataTransforms->FrameNumber = gfx::GetFrameNumber();
-			m_pFrameDataTransforms->Camera = m_pActiveCamera;
+			m_pFrameDataTransforms->CameraObj = m_pActiveCamera;
 			m_pFrameDataTransforms->Nodes.Clear();
 
 			// Get all entities and calc transforms
