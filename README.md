@@ -3,6 +3,10 @@ Ariana Game Engine
 
 # Changes
 
+## Ariyana Game Engine 0.2.4
+
+- Compile fix for linux
+
 ## Ariyana Game Engine 0.2.3
 
 - Compile fix for android
