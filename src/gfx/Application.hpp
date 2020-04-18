@@ -1,5 +1,6 @@
 #pragma once
 #include "io/IOEvents.hpp"
+#include "io/Window.hpp"
 
 namespace ari
 {
