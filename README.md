@@ -5,7 +5,11 @@ Ariana Game Engine
 
 ## Ariyana Game Engine 0.3
 
-Adding gltf mesh loader
+- Adding gltf mesh loader
+
+## Ariyana Game Engine 0.2.3
+
+- Compile fix for android
 
 ## Ariyana Game Engine 0.2.2
 

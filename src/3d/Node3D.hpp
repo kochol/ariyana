@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/defines.hpp"
 #include "en/Node.hpp"
 #include "sx/macros.h"
 #include "sx/math.h"
+#include "core/defines.hpp"
 
 namespace ari::en
 {

@@ -1,4 +1,5 @@
 #include "yojimbo.h"
+#include "Serialize.hpp"
 
 namespace ari::net
 {
@@ -17,11 +18,14 @@ namespace ari::net
 				using MemberT = meta::get_member_type<decltype(member)>;
 				if (Stream::IsWriting)
 				{
-					if (member.canGetConstRef()) {
+					if (member.canGetConstRef()) 
+					{
 						Serialize(stream, member.get(obj));
 					}
-					else if (member.hasGetter()) {
-						Serialize(stream, member.getCopy(obj)); // passing copy as const ref, it's okay
+					else if (member.hasGetter()) 
+					{
+						auto copy = member.getCopy(obj);
+						Serialize(stream, copy); // passing copy as const ref, it's okay
 					}
 				}
 				else
