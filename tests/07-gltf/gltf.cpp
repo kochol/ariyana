@@ -7,6 +7,7 @@
 #include "3d/BoxShape.hpp"
 #include <io\FileSystem.hpp>
 #include <fs_local\FileSystemLocal.hpp>
+#include <3d\3dModel.hpp>
 
 class GltfApp : public ari::Application
 {
@@ -34,8 +35,12 @@ public:
 		camera.Component->Position.z = 3.f;
 		camera.Component->Target.z = 0.0f;
 		m_world.AddDerivedComponent<ari::en::Camera, ari::en::Node3D>(entity, camera);
-		auto box = m_world.CreateComponent<ari::en::BoxShape, ari::en::Node3D>();
-		m_world.AddDerivedComponent<ari::en::BoxShape, ari::en::Node3D>(entity, box);
+
+		// Load gltf model
+		ari::en::Load3dScene("res:minimal.gltf", [](ari::core::Array<ari::en::ComponentHandle<ari::en::Node3D>> nodes)
+			{
+				printf("Loaded\n");
+			});
 	}
 
 	void OnFrame(float _elapsedTime) override

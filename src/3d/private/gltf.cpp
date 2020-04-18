@@ -4,6 +4,7 @@
 #include "core/containers/Array.hpp"
 #include "gfx/gfx.hpp"
 #include "gfx/Mesh.hpp"
+#include "core/string/StringBuilder.hpp"
 
 namespace ari::en
 {
@@ -193,23 +194,48 @@ namespace ari::en
 				if (result == cgltf_result_success) 
 				{
 					SceneData* p_scene_data = core::Memory::New<SceneData>();
-					p_scene_data->Buffers = reinterpret_cast<core::Buffer*>(core::Memory::Alloc(int(sizeof(core::Buffer) * gltf->buffers_count)));
+					p_scene_data->Buffers = core::Memory::NewClassArray<core::Buffer>(int(gltf->buffers_count));
 					p_scene_data->NumBuffers = int(gltf->buffers_count);
 
 					// start loading all buffers
 					for (cgltf_size i = 0; i < gltf->buffers_count; i++)
 					{
 						const cgltf_buffer* gltf_buf = &gltf->buffers[i];
-						io::LoadFile(gltf_buf->uri, [i, gltf, p_scene_data, OnModel](core::Buffer* buffer)
+						if (core::StringBuilder::Contains(gltf_buf->uri, "data:application/octet-stream;base64,"))
+						{
+							// the data is embedded in base64 encoding
+							core::Buffer bufferData;
+							bufferData.Reserve(int(gltf_buf->size));
+							void* data;
+							cgltf_result res = cgltf_load_buffer_base64(&options, gltf_buf->size, &gltf_buf->uri[37], &data);
+
+							if (res != cgltf_result_success)
 							{
-								p_scene_data->Buffers[i] = std::move(*buffer);
-								p_scene_data->NumLoadedBuffers++;
-								if (p_scene_data->NumLoadedBuffers == p_scene_data->NumBuffers)
+								// TODO: Log error
+							}
+
+							bufferData.Add( reinterpret_cast<uint8_t*>(data), int(gltf_buf->size));
+							p_scene_data->Buffers[i] = std::move(bufferData);
+							p_scene_data->NumLoadedBuffers++;
+							if (p_scene_data->NumLoadedBuffers == p_scene_data->NumBuffers)
+							{
+								// Buffer loading finished do the reset
+								gltf_parse(gltf, p_scene_data);
+							}
+						}
+						else
+						{
+							io::LoadFile(gltf_buf->uri, [i, gltf, p_scene_data, OnModel](core::Buffer* buffer)
 								{
-									// Buffer loading finished do the reset
-									gltf_parse(gltf, p_scene_data);
-								}
-							});
+									p_scene_data->Buffers[i] = std::move(*buffer);
+									p_scene_data->NumLoadedBuffers++;
+									if (p_scene_data->NumLoadedBuffers == p_scene_data->NumBuffers)
+									{
+										// Buffer loading finished do the reset
+										gltf_parse(gltf, p_scene_data);
+									}
+								});
+						}
 					}
 				}
 
