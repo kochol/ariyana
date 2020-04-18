@@ -171,7 +171,11 @@ namespace ari::en
 		}
 
 		// parse nodes
-
+		p_scene_data->NumNodes = int(gltf->scene->nodes_count);
+		for (int i = 0; i < p_scene_data->NumNodes; ++i)
+		{
+			
+		}
 
 		// free the gltf pointer
 		cgltf_free(gltf);

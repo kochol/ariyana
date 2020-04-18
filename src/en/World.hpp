@@ -27,7 +27,7 @@ namespace ari::en
 		World();
 
 		//! Creates a new entity
-		EntityHandle CreateEntity();
+		static EntityHandle CreateEntity();
 
 		Entity* GetEntity(const EntityHandle& _handle);
 
@@ -35,14 +35,14 @@ namespace ari::en
 
 		//! Creates a component from object pool
 		template<class T>
-		ComponentHandle<T> CreateComponent();
+		static ComponentHandle<T> CreateComponent();
 
 		//! Creates a component from memory pool
 		template<class T, class BASE>
-		ComponentHandle<T> CreateComponent();
+		static ComponentHandle<T> CreateComponent();
 
 		template<class T>
-		void DestroyComponent(const ComponentHandle<T>& _cmp);
+		static void DestroyComponent(const ComponentHandle<T>& _cmp);
 
 		//! Add a component to an entity
 		template<class T>

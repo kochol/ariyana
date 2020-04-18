@@ -1,14 +1,18 @@
 #pragma once
 
 #include "Node3D.hpp"
+#include "gfx/Mesh.hpp"
 
 namespace ari::en
 {
     class MeshNode : public Node3D
     {
-    private:
-        /* data */
     public:
+
+        ARI_COMPONENT_CHILD(MeshNode, Node3D)
+
+        core::Array<gfx::MeshHandle> Meshes;
+
         MeshNode(/* args */);
         ~MeshNode();
     };
