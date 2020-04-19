@@ -5,6 +5,7 @@
 #include "gfx/gfx.hpp"
 #include "gfx/Mesh.hpp"
 #include "core/string/StringBuilder.hpp"
+#include "3d/MeshNode.hpp"
 
 namespace ari::en
 {
@@ -60,8 +61,12 @@ namespace ari::en
 		core::Array<gfx::MeshHandle>			Meshes;
 	};
 
-	void gltf_parse(cgltf_data* gltf, SceneData* p_scene_data)
+	void gltf_parse(cgltf_data* gltf, SceneData* p_scene_data, 
+		const std::function<void(core::Array<ComponentHandle<Node3D>>)>& OnModel)
 	{
+		if (p_scene_data->NumLoadedBuffers < p_scene_data->NumBuffers)
+			return;
+
 		// parse the buffer views
 		p_scene_data->NumBufferViews = int(gltf->buffer_views_count);
 		for (int i = 0; i < p_scene_data->NumBufferViews; i++)
@@ -171,15 +176,37 @@ namespace ari::en
 			}
 		}
 
-		// parse nodes
-		p_scene_data->NumNodes = int(gltf->scene->nodes_count);
+		core::Array<ComponentHandle<Node3D>> result;
+
+		// parse nodes & scenes
+		p_scene_data->NumNodes = int(gltf->scenes_count);
 		for (int i = 0; i < p_scene_data->NumNodes; ++i)
 		{
-			
+			auto scene = &gltf->scenes[i];
+
+			for (int n = 0; n < int(scene->nodes_count); ++n)
+			{
+				auto node = scene->nodes[n];
+				if (node->mesh)
+				{
+					// create a mesh node
+					int mesh_index = int(node->mesh - gltf->meshes);
+					auto m = World::CreateComponent<MeshNode, Node3D>();
+					m.Component->Mesh = p_scene_data->Meshes[mesh_index];
+					ComponentHandle<Node3D> n;
+					n.Handle = m.Handle;
+					n.Index = m.Index;
+					n.Component = reinterpret_cast<Node3D*>(m.Component);
+					result.Add(n);
+				}
+			}			 
 		}
 
 		// free the gltf pointer
 		cgltf_free(gltf);
+
+		// callback the user
+		OnModel(result);
 	}
 
 	void LoadGltfScene(const core::String& _path, std::function<void(core::Array<ComponentHandle<Node3D>>)> OnModel)
@@ -215,13 +242,10 @@ namespace ari::en
 							}
 
 							bufferData.Add( reinterpret_cast<uint8_t*>(data), int(gltf_buf->size));
+							core::Memory::Free(data);
 							p_scene_data->Buffers[i] = std::move(bufferData);
 							p_scene_data->NumLoadedBuffers++;
-							if (p_scene_data->NumLoadedBuffers == p_scene_data->NumBuffers)
-							{
-								// Buffer loading finished do the reset
-								gltf_parse(gltf, p_scene_data);
-							}
+							gltf_parse(gltf, p_scene_data, OnModel);
 						}
 						else
 						{
@@ -229,11 +253,7 @@ namespace ari::en
 								{
 									p_scene_data->Buffers[i] = std::move(*buffer);
 									p_scene_data->NumLoadedBuffers++;
-									if (p_scene_data->NumLoadedBuffers == p_scene_data->NumBuffers)
-									{
-										// Buffer loading finished do the reset
-										gltf_parse(gltf, p_scene_data);
-									}
+									gltf_parse(gltf, p_scene_data, OnModel);
 								});
 						}
 					}

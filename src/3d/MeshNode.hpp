@@ -11,18 +11,8 @@ namespace ari::en
 
         ARI_COMPONENT_CHILD(MeshNode, Node3D)
 
-        core::Array<gfx::MeshHandle> Meshes;
+        gfx::MeshHandle Mesh;
 
-        MeshNode(/* args */);
-        ~MeshNode();
     };
-    
-    MeshNode::MeshNode(/* args */)
-    {
-    }
-    
-    MeshNode::~MeshNode()
-    {
-    }
     
 } // namespace ari::en
