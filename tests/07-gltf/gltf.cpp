@@ -5,9 +5,9 @@
 #include "3d/SceneSystem.hpp"
 #include "3d/Camera.hpp"
 #include "3d/BoxShape.hpp"
-#include <io\FileSystem.hpp>
-#include <fs_local\FileSystemLocal.hpp>
-#include <3d\3dModel.hpp>
+#include "io/FileSystem.hpp"
+#include "fs_local/FileSystemLocal.hpp"
+#include "3d/3dModel.hpp"
 
 class GltfApp : public ari::Application
 {
