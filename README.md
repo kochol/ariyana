@@ -1,9 +1,9 @@
 # Ariyana
-Ariana Game Engine
+Ariyana Game Engine
 # How To Build
-We are using [fips](https://github.com/floooh/fips) as a highlevel build system for Ariana.
+We are using [fips](https://github.com/floooh/fips) as a highlevel build system for Ariyana.
 ### Requirements
-- **Python** (2.7.x or 3.x )
+- **Python** (2.7.x or 3.x)
 - **CMake** (3.x)
 - **A working C/C++ development environment**:
     - on **OSX**: Xcode + command line tools
