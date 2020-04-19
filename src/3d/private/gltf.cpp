@@ -193,11 +193,7 @@ namespace ari::en
 					int mesh_index = int(node->mesh - gltf->meshes);
 					auto m = World::CreateComponent<MeshNode, Node3D>();
 					m.Component->Mesh = p_scene_data->Meshes[mesh_index];
-					ComponentHandle<Node3D> n;
-					n.Handle = m.Handle;
-					n.Index = m.Index;
-					n.Component = reinterpret_cast<Node3D*>(m.Component);
-					result.Add(n);
+					result.Add(CastComponentHandle<MeshNode, Node3D>(m));
 				}
 			}			 
 		}
