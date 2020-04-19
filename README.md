@@ -10,16 +10,20 @@ We are using [fips](https://github.com/floooh/fips) as a highlevel build system 
     - on **Linux**: make/gcc (or clang)
     - on **Windows**: Visual Studio 2013 or better
 ### Cloning the repository
-As fips clone all the dependensies during building, it's better to create a Workspace directory (e.g. "ari-workspace") and clone the reposetory in it. 
+As [fips](https://github.com/floooh/fips) clone all the dependencies during building, it's better to create a Workspace directory (e.g. "ari-workspace") and clone the repository in it:
 ```bash
-    > cd ~/your-workspace
-    > git clone https://github.com/kochol/ariyana.git
+> cd ~/your-workspace
+> git clone https://github.com/kochol/ariyana.git
 ```
 ### Build the engine
-Here is the easiest part, run './fips build' in ariyana directory ('fips build' in windows). 
+Here is the easiest part, run ```./fips build``` in ariyana directory (```fips build``` in windows):
 ```bash
-    > cd your-workspace/ariyana   
-    > ./fips build
+> cd your-workspace/ariyana   
+> ./fips build
+```
+now ```./fips open``` will open it up in your C/C++ development environment:
+```bash   
+> ./fips open
 ```
 done! it's ready to rock.
 
