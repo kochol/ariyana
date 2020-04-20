@@ -20,6 +20,9 @@ namespace ari::gfx
 										Joints,
 										Weights;
 		int								ElementsCount;
+		gfx::PipelineHandle				Pipeline;
+		gfx::BindingHandle				Binding;
+
 	};
 	
 } // namespace ari::gfx

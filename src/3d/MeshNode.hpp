@@ -10,8 +10,10 @@ namespace ari::en
     public:
 
         ARI_COMPONENT_CHILD(MeshNode, Node3D)
-
+        
         gfx::MeshHandle Mesh;
+
+        void Render(const int& _frameTurnIndex) override;
 
     };
     

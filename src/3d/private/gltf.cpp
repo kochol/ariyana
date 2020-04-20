@@ -61,6 +61,75 @@ namespace ari::en
 		core::Array<gfx::MeshHandle>			Meshes;
 	};
 
+	void SetPipelineAttribute(gfx::VertexAttrSetup& attr, cgltf_attribute* gltf_attr)
+	{
+		switch (gltf_attr->data->component_type)
+		{
+		case cgltf_component_type_invalid: break;
+
+		case cgltf_component_type_r_8:
+			if (gltf_attr->data->normalized)
+				attr.format = gfx::VertexFormat::Byte4N;
+			else
+				attr.format = gfx::VertexFormat::Byte4;
+			break;
+
+		case cgltf_component_type_r_8u:
+			if (gltf_attr->data->normalized)
+				attr.format = gfx::VertexFormat::UByte4N;
+			else
+				attr.format = gfx::VertexFormat::UByte4;
+			break;
+
+		case cgltf_component_type_r_16:
+			if (gltf_attr->data->type == cgltf_type_vec2)
+			{
+				if (gltf_attr->data->normalized)
+					attr.format = gfx::VertexFormat::Short2;
+				else
+					attr.format = gfx::VertexFormat::Short2N;
+			}
+			else //if (gltf_attr->data->type == cgltf_type_vec4)
+			{
+				if (gltf_attr->data->normalized)
+					attr.format = gfx::VertexFormat::Short4;
+				else
+					attr.format = gfx::VertexFormat::Short4N;
+			}
+			break;
+			
+		case cgltf_component_type_r_16u: 
+			if (gltf_attr->data->type == cgltf_type_vec2)
+			{
+				if (gltf_attr->data->normalized)
+					attr.format = gfx::VertexFormat::Short2;
+				else
+					attr.format = gfx::VertexFormat::Short2N;
+			}
+			else //if (gltf_attr->data->type == cgltf_type_vec4)
+			{
+				if (gltf_attr->data->normalized)
+					attr.format = gfx::VertexFormat::Short4;
+				else
+					attr.format = gfx::VertexFormat::Short4N;
+			}
+			break;
+
+		case cgltf_component_type_r_32u: 
+		case cgltf_component_type_r_32f:
+			{
+				switch (gltf_attr->data->type) 
+				{ 
+				case cgltf_type_scalar: attr.format = gfx::VertexFormat::Float; break;
+				case cgltf_type_vec2: attr.format = gfx::VertexFormat::Float2; break;
+				case cgltf_type_vec3: attr.format = gfx::VertexFormat::Float3; break;
+				case cgltf_type_vec4: attr.format = gfx::VertexFormat::Float4; break;
+				}
+			}
+			break;
+		}
+	}
+
 	bool gltf_parse(cgltf_data* gltf, SceneData* p_scene_data, 
 		const std::function<void(core::Array<ComponentHandle<Node3D>>)>& OnModel)
 	{
@@ -129,6 +198,8 @@ namespace ari::en
 				sub_mesh_handle.Handle = core::HandleManager<gfx::SubMesh>::GetNewHandle(sub_mesh_handle.Index);
 				auto sub_mesh = core::ObjectPool<gfx::SubMesh>::New(sub_mesh_handle.Index);
 				mesh->SubMeshes.Add(sub_mesh_handle);
+				gfx::PipelineSetup pipeline_setup;
+				gfx::Bindings bindings;
 
 				sub_mesh->Type = gfx::PrimitiveType(int(gltf_prim->type));
 				if (gltf_prim->indices)
@@ -137,6 +208,8 @@ namespace ari::en
 					const int accessor_index = int(gltf_prim->indices - gltf->accessors);
 					sub_mesh->IndexBuffer = p_scene_data->Accessors[accessor_index].GfxBuffer;
 					sub_mesh->ElementsCount = int(gltf_prim->indices->count);
+					pipeline_setup.index_type = gfx::IndexType::Uint16;
+					bindings.indexBuffer = sub_mesh->IndexBuffer;
 				}
 				else
 					sub_mesh->ElementsCount = int(gltf_prim->attributes[0].data->count);
@@ -145,6 +218,12 @@ namespace ari::en
 				for (int a_i = 0; a_i < int(gltf_prim->attributes_count); ++a_i)
 				{
 					const int accessor_index = int(gltf_prim->attributes[a_i].data - gltf->accessors);
+
+					// setup pipeline and bindings
+					SetPipelineAttribute(pipeline_setup.layout.attrs[a_i], &gltf_prim->attributes[a_i]);
+					pipeline_setup.layout.attrs[1].bufferIndex = a_i;
+					bindings.vertexBuffers[a_i] = p_scene_data->Accessors[accessor_index].GfxBuffer;
+
 					switch (gltf_prim->attributes[a_i].type)
 					{
 					case cgltf_attribute_type_position:
@@ -173,6 +252,9 @@ namespace ari::en
 						break;
 					}
 				}
+
+				sub_mesh->Pipeline = gfx::CreatePipeline(pipeline_setup);
+				sub_mesh->Binding = gfx::CreateBinding(bindings);
 			}
 		}
 

@@ -77,14 +77,7 @@ namespace ari::en
 
 	bool SceneSystem::NeedUpdateOn(UpdateState::Enum state)
 	{
-		switch (state)
-		{
-		case UpdateState::GamePlayState:
-		case UpdateState::SceneState:
-			return true;
-		default:
-			return false;
-		}
+		return state == UpdateState::SceneState;
 	}
 
 	void SceneSystem::Receive(World * world, const events::OnComponentAssigned<Camera>& event)
@@ -126,7 +119,7 @@ namespace ari::en
 		{
 			for (auto child : node->GetChildren(Node3D::Id))
 			{
-				CalcTransform(static_cast<Node3D*>(child), parentMat);
+				CalcTransform(reinterpret_cast<Node3D*>(child), parentMat);
 			}
 		}
 	} // CalcTransform
