@@ -61,11 +61,11 @@ namespace ari::en
 		core::Array<gfx::MeshHandle>			Meshes;
 	};
 
-	void gltf_parse(cgltf_data* gltf, SceneData* p_scene_data, 
+	bool gltf_parse(cgltf_data* gltf, SceneData* p_scene_data, 
 		const std::function<void(core::Array<ComponentHandle<Node3D>>)>& OnModel)
 	{
 		if (p_scene_data->NumLoadedBuffers < p_scene_data->NumBuffers)
-			return;
+			return false;
 
 		// parse the buffer views
 		p_scene_data->NumBufferViews = int(gltf->buffer_views_count);
@@ -203,6 +203,8 @@ namespace ari::en
 
 		// callback the user
 		OnModel(result);
+
+		return true;
 	}
 
 	void LoadGltfScene(const core::String& _path, std::function<void(core::Array<ComponentHandle<Node3D>>)> OnModel)
@@ -241,7 +243,8 @@ namespace ari::en
 							core::Memory::Free(data);
 							p_scene_data->Buffers[i] = std::move(bufferData);
 							p_scene_data->NumLoadedBuffers++;
-							gltf_parse(gltf, p_scene_data, OnModel);
+							if (gltf_parse(gltf, p_scene_data, OnModel))
+								return;
 						}
 						else
 						{
