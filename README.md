@@ -1,5 +1,46 @@
 # Ariyana
-Ariana Game Engine
+
+Ariyana Game Engine
+
+# How To Build
+
+We are using [fips](https://github.com/floooh/fips) as a highlevel build system for Ariyana.
+
+### Requirements
+
+- **Python** (2.7.x or 3.x)
+- **CMake** (3.x)
+- **A working C/C++ development environment**:
+    - on **OSX**: Xcode + command line tools
+    - on **Linux**: make/gcc (or clang)
+    - on **Windows**: Visual Studio 2013 or better
+
+### Cloning the repository
+
+As [fips](https://github.com/floooh/fips) clone all the dependencies during building, 
+it's better to create a Workspace directory (e.g. "ari-workspace") and clone the repository in it:
+
+```bash
+> cd ~/your-workspace
+> git clone https://github.com/kochol/ariyana.git
+```
+
+### Build the engine
+
+Here is the easiest part, run ```./fips build``` in ariyana directory (```fips build``` in windows):
+
+```bash
+> cd your-workspace/ariyana   
+> ./fips build
+```
+
+now ```./fips open``` will open it up in your C/C++ development environment:
+
+```bash   
+> ./fips open
+```
+
+done! it's ready to rock.
 
 # Changes
 
@@ -7,15 +48,23 @@ Ariana Game Engine
 
 - Adding gltf mesh loader
 
-## Ariyana Game Engine 0.2.3
+### Ariyana Game Engine 0.2.5
+
+- Fix a bug in android file path
+
+### Ariyana Game Engine 0.2.4
+
+- Compile fix for linux
+
+### Ariyana Game Engine 0.2.3
 
 - Compile fix for android
 
-## Ariyana Game Engine 0.2.2
+### Ariyana Game Engine 0.2.2
 
 - Updated to work with the latest sokol gfx.
 
-## Ariyana Game Engine 0.2.1
+### Ariyana Game Engine 0.2.1
 
 - Fix an important memory corruption bug.
 - Add GetLastRpcClientIndex to find out which client called the function.

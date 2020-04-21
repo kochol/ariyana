@@ -26,7 +26,6 @@ namespace ari
 		//------------------------------------------------------------------------------
 		void*
 			Memory::ReAlloc(void* ptr, int s) {
-			/// @todo: HMM need to fix fill with debug pattern...
 			return std::realloc(ptr, s);
 		}
 

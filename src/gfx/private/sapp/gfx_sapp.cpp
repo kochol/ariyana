@@ -29,6 +29,10 @@ void ari_init_cb()
 	sg_setup(&desc);
 	sx_tm_init();
 	last_time = sx_tm_now();
+
+	// Setup shaders
+	SetupShaders();
+
 	g_application->OnInit();
 }
 

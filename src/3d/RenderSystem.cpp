@@ -35,11 +35,11 @@ namespace ari::en
 		if (m_pFrameDataCurrent)
 		{
 			// Set the camera
-			if (m_pFrameDataCurrent->Camera)
+			if (m_pFrameDataCurrent->CameraObj)
 			{
 				// TODO: Set viewport
-				gfx::Viewport* pViewport = m_pFrameDataCurrent->Camera->GetViewport();
-				gfx::SetViewProjMatrix(m_pFrameDataCurrent->Camera->_view, m_pFrameDataCurrent->Camera->_proj);
+				gfx::Viewport* pViewport = m_pFrameDataCurrent->CameraObj->GetViewport();
+				gfx::SetViewProjMatrix(m_pFrameDataCurrent->CameraObj->_view, m_pFrameDataCurrent->CameraObj->_proj);
 			}
 			for (auto node : m_pFrameDataCurrent->Nodes)
 			{

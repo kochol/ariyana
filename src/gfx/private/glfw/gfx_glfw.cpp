@@ -15,7 +15,7 @@ namespace ari
 {
     namespace gfx
     {
-		bool ari::gfx::SetupGfx(GfxSetup& setup)
+		bool SetupGfx(GfxSetup& setup)
 		{
 			const io::WindowHandle window = io::CreateAriWindow(setup.window, "Ari 0.3");
 			if (!window.IsValid())
@@ -28,6 +28,10 @@ namespace ari
 			core::Memory::Fill(&desc, sizeof(sg_desc), 0);
 			sg_setup(&desc);
 			g_sg_contexts[0] = sg_setup_context();
+
+			// Setup shaders
+			SetupShaders();
+
 			return true;
 		}
 

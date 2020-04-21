@@ -6,6 +6,9 @@
 #include "core/log.h"
 #include "core/string/StringBuilder.hpp"
 
+// Include shaders
+#include "basic.glsl.h"
+
 namespace ari
 {
     namespace gfx
@@ -13,6 +16,18 @@ namespace ari
 		core::Array<sg_bindings> g_binds_array;
 
 		static sx_mat4 g_mView, g_mProj, g_mViewProj;
+
+		ShaderHanlde g_shaders[int(ShaderType::Count)];
+
+		void SetupShaders()
+		{
+			g_shaders[int(ShaderType::Basic)] = CreateShader(ari_box_shader_desc());
+		}
+
+		ShaderHanlde GetShader(ShaderType shader)
+		{
+			return g_shaders[int(shader)];
+		}
 
 		//------------------------------------------------------------------------------
 		BufferHandle CreateVertexBuffer(int size, void* content, BufferUsage usage)

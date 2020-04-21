@@ -195,8 +195,19 @@ namespace ari
 			TrianglesStrip,
 			TrianglesFan,
 		};
+		
+		enum class ShaderType
+		{
+			Basic = 0,
+
+			Count
+		};
 
 		bool SetupGfx(GfxSetup& setup);
+		
+		void SetupShaders();
+
+		ShaderHanlde GetShader(ShaderType shader);
 
 		void RenderToWindow(const io::WindowHandle& handle);
 
