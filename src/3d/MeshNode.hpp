@@ -13,6 +13,14 @@ namespace ari::en
         
         gfx::MeshHandle Mesh;
 
+        //! Constructor
+        MeshNode() 
+    	{
+            _isRenderable = true;
+        }
+
+        ~MeshNode() = default;
+
         void Render(const int& _frameTurnIndex) override;
 
     };

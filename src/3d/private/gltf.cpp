@@ -186,7 +186,7 @@ namespace ari::en
 			const cgltf_mesh* gltf_mesh = &gltf->meshes[i];
 
 			gfx::MeshHandle mesh_handle;
-			mesh_handle.Handle = core::HandleManager<gfx::Mesh>::GetNewHandle(mesh_handle.Index);
+			mesh_handle.Handle = core::HandleManager<gfx::MeshHandle>::GetNewHandle(mesh_handle.Index);
 			auto mesh = core::ObjectPool<gfx::Mesh>::New(mesh_handle.Index);
 			mesh->SubMeshes.Reserve(int(gltf_mesh->primitives_count));
 			p_scene_data->Meshes.Add(mesh_handle);
@@ -195,11 +195,13 @@ namespace ari::en
 			{
 				const cgltf_primitive* gltf_prim = &gltf_mesh->primitives[prim_index];
 				gfx::SubMeshHandle sub_mesh_handle;
-				sub_mesh_handle.Handle = core::HandleManager<gfx::SubMesh>::GetNewHandle(sub_mesh_handle.Index);
+				sub_mesh_handle.Handle = core::HandleManager<gfx::SubMeshHandle>::GetNewHandle(sub_mesh_handle.Index);
 				auto sub_mesh = core::ObjectPool<gfx::SubMesh>::New(sub_mesh_handle.Index);
 				mesh->SubMeshes.Add(sub_mesh_handle);
 				gfx::PipelineSetup pipeline_setup;
 				gfx::Bindings bindings;
+
+				pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::Basic);
 
 				sub_mesh->Type = gfx::PrimitiveType(int(gltf_prim->type));
 				if (gltf_prim->indices)
