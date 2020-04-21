@@ -29,4 +29,7 @@ fips_begin_module(ari_gfx)
         fips_libs(GLESv3 EGL android log)
     endif()
 
+    fips_dir(shaders/basic)
+    sokol_shader(basic.glsl ${slang})
+
 fips_end_module()

@@ -28,6 +28,10 @@ namespace ari
 			core::Memory::Fill(&desc, sizeof(sg_desc), 0);
 			sg_setup(&desc);
 			g_sg_contexts[0] = sg_setup_context();
+
+			// Setup shaders
+			SetupShaders();
+
 			return true;
 		}
 
