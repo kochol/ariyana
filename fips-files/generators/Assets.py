@@ -1,7 +1,7 @@
 '''
 A generic file-copy asset job.
 '''
-Version = 1
+Version = 2
 
 import subprocess
 import shutil
@@ -89,6 +89,8 @@ def generate(input, out_src, out_hdr, args):
     if s == 'fips-build' :
         # making for android
         deploy_dir = args['deploy_dir'] + args['cur_dir'].split(p)[1] + '/android/' + args['app_name'] + '/assets/'
+        if not os.path.exists(args['deploy_dir'] + args['cur_dir'].split(p)[1] + '/assets') :
+            os.mkdir(args['deploy_dir'] + args['cur_dir'].split(p)[1] + '/assets')
     else :
         # for other platforms
         deploy_dir = args['deploy_dir'] + args['cur_dir'].split(p)[1] + '/assets/'
