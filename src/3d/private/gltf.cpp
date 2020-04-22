@@ -151,9 +151,13 @@ namespace ari::en
 			{
 				p_scene_data->GfxBuffers.Add(gfx::CreateIndexBuffer(size, buffer->Data() + offset));
 			}
-			else
+			else if (gltf_buf_view->type == cgltf_buffer_view_type_vertices)
 			{
 				p_scene_data->GfxBuffers.Add(gfx::CreateVertexBuffer(size, buffer->Data() + offset));
+			}
+			else
+			{
+				p_scene_data->GfxBuffers.Add(gfx::BufferHandle());
 			}
 		}
 
@@ -166,7 +170,48 @@ namespace ari::en
 			accessor.ComponentType = ComponentTypeEnum(int(gltf_accessor->component_type));
 			accessor.Count = int(gltf_accessor->count);
 			accessor.DataType = ComponentDataType(int(gltf_accessor->type));
-			accessor.GfxBuffer = p_scene_data->GfxBuffers[index];
+			// Check for sparse buffers
+			if (gltf_accessor->sparse.count)
+			{
+				// create new buffer				
+				// get indices buffer
+				const cgltf_buffer_view* gltf_buf_view_indices = gltf_accessor->sparse.indices_buffer_view;
+				const int buffer_index_indices = int(gltf_buf_view_indices->buffer - gltf->buffers);
+				core::Buffer* buffer_indices = &p_scene_data->Buffers[buffer_index_indices];
+
+				// get vertices buffer
+				const cgltf_buffer_view* gltf_buf_view_values = gltf_accessor->sparse.values_buffer_view;
+				const int buffer_index_values = int(gltf_buf_view_values->buffer - gltf->buffers);
+				core::Buffer* buffer_values = &p_scene_data->Buffers[buffer_index_values];
+
+				// copy original buffer
+				const cgltf_buffer_view* gltf_buf_view_orig = gltf_accessor->buffer_view;
+				const int buffer_index_orig = int(gltf_buf_view_orig->buffer - gltf->buffers);
+				core::Buffer* buffer_orig = &p_scene_data->Buffers[buffer_index_orig];
+				core::Buffer new_buffer;
+				new_buffer.Add(buffer_orig->Data() + gltf_buf_view_orig->offset, int(gltf_buf_view_orig->size));
+
+				// change the requested data
+				int values_size = int(gltf_buf_view_values->size / gltf_accessor->sparse.count);
+				for (int i = 0; i < int(gltf_accessor->sparse.count); ++i)
+				{
+					uint16_t* idx = reinterpret_cast<uint16_t*>(buffer_indices->Data() 
+						+ gltf_accessor->sparse.indices_byte_offset 
+						+ gltf_buf_view_indices->offset 
+						+ i * 2);
+					uint8_t* data = buffer_values->Data()
+						+ gltf_accessor->sparse.values_byte_offset
+						+ gltf_buf_view_values->offset
+						+ i * values_size;
+					core::Memory::Copy(data, new_buffer.Data() + (*idx * values_size), values_size);
+				}
+				// create new gfx buffer
+				auto gfx_buffer = gfx::CreateVertexBuffer(new_buffer.Size(), new_buffer.Data());
+				p_scene_data->GfxBuffers.Add(gfx_buffer);
+				accessor.GfxBuffer = gfx_buffer;
+			}
+			else
+				accessor.GfxBuffer = p_scene_data->GfxBuffers[index];
 			accessor.HasMax = gltf_accessor->has_max;
 			core::Memory::Copy(gltf_accessor->max, accessor.Max, sizeof(float) * 16);
 			accessor.HasMin = gltf_accessor->has_min;
