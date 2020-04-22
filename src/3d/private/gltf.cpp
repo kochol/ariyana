@@ -310,25 +310,39 @@ namespace ari::en
 					for (cgltf_size i = 0; i < gltf->buffers_count; i++)
 					{
 						const cgltf_buffer* gltf_buf = &gltf->buffers[i];
-						if (core::StringBuilder::Contains(gltf_buf->uri, "data:application/octet-stream;base64,"))
+						if (strncmp(gltf_buf->uri, "data:", 5) == 0)
 						{
-							// the data is embedded in base64 encoding
-							core::Buffer bufferData;
-							bufferData.Reserve(int(gltf_buf->size));
-							void* data;
-							cgltf_result res = cgltf_load_buffer_base64(&options, gltf_buf->size, &gltf_buf->uri[37], &data);
+							const char* comma = strchr(gltf_buf->uri, ',');
 
-							if (res != cgltf_result_success)
+							if (comma && comma - gltf_buf->uri >= 7 && strncmp(comma - 7, ";base64", 7) == 0)
 							{
+								// the data is embedded in base64 encoding
+								core::Buffer bufferData;
+								bufferData.Reserve(int(gltf_buf->size));
+								void* data;
+								cgltf_result res = cgltf_load_buffer_base64(&options, gltf_buf->size, comma + 1, &data);
+
+								if (res != cgltf_result_success)
+								{
+									// TODO: Log error
+								}
+
+								bufferData.Add(reinterpret_cast<uint8_t*>(data), int(gltf_buf->size));
+								core::Memory::Free(data);
+								p_scene_data->Buffers[i] = std::move(bufferData);
+								p_scene_data->NumLoadedBuffers++;
+								if (gltf_parse(gltf, p_scene_data, OnModel))
+									return;
+							}
+							else
+							{
+								// return cgltf_result_unknown_format;
 								// TODO: Log error
 							}
+						}
 
-							bufferData.Add( reinterpret_cast<uint8_t*>(data), int(gltf_buf->size));
-							core::Memory::Free(data);
-							p_scene_data->Buffers[i] = std::move(bufferData);
-							p_scene_data->NumLoadedBuffers++;
-							if (gltf_parse(gltf, p_scene_data, OnModel))
-								return;
+						if (core::StringBuilder::Contains(gltf_buf->uri, "data:application/octet-stream;base64,"))
+						{
 						}
 						else
 						{
