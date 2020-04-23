@@ -6,6 +6,8 @@
 #include "gfx/Mesh.hpp"
 #include "core/string/StringBuilder.hpp"
 #include "3d/MeshNode.hpp"
+#include "3d/Camera.hpp"
+#include "core/log.h"
 
 namespace ari::en
 {
@@ -128,6 +130,80 @@ namespace ari::en
 			}
 			break;
 		}
+	}
+
+	void SetNodeTransform(cgltf_node* node, Node3D* n)
+	{
+		n->Position.f[0] = node->translation[0];
+		n->Position.f[1] = node->translation[1];
+		n->Position.f[2] = node->translation[2];
+		n->Rotation.f[0] = node->rotation[0];
+		n->Rotation.f[1] = node->rotation[1];
+		n->Rotation.f[2] = node->rotation[2];
+		n->Rotation.f[3] = node->rotation[3];
+		n->Scale.f[0] = node->scale[0];
+		n->Scale.f[1] = node->scale[1];
+		n->Scale.f[2] = node->scale[2];
+	}
+
+	ComponentHandle<Node3D> CreateNode(cgltf_data* gltf, SceneData* p_scene_data, cgltf_node* node)
+	{
+		ComponentHandle<Node3D> n;
+		n.Component = nullptr;
+		if (node->mesh)
+		{
+			// create a mesh node
+			const int mesh_index = int(node->mesh - gltf->meshes);
+			auto m = World::CreateComponent<MeshNode, Node3D>();
+			m.Component->Mesh = p_scene_data->Meshes[mesh_index];
+			SetNodeTransform(node, m.Component);
+			n = CastComponentHandle<MeshNode, Node3D>(m);
+		}
+		else if (node->camera)
+		{
+			// create a camera node
+			auto c = World::CreateComponent<Camera, Node3D>();
+			SetNodeTransform(node, c.Component);
+			if (node->camera->type == cgltf_camera_type_perspective)
+			{
+				c.Component->Type = CameraType::Perspective;
+				c.Component->AspectRatio = node->camera->perspective.aspect_ratio;
+				c.Component->Fov = node->camera->perspective.yfov;
+				c.Component->zNear = node->camera->perspective.znear;
+				c.Component->zFar = node->camera->perspective.zfar;
+			}
+			else if (node->camera->type == cgltf_camera_type_orthographic)
+			{
+				c.Component->Type = CameraType::Orthographic;
+				c.Component->xMag = node->camera->orthographic.xmag;
+				c.Component->yMag = node->camera->orthographic.ymag;
+				c.Component->zNear = node->camera->orthographic.znear;
+				c.Component->zFar = node->camera->orthographic.zfar;
+			}
+			else
+			{
+				log_error("Invalid camera node in gltf file");
+			}
+			n = CastComponentHandle<Camera, Node3D>(c);
+		}
+		else if (node->children_count > 0)
+		{
+			// create an empty node
+			n = World::CreateComponent<Node3D, Node3D>();
+			SetNodeTransform(node, n.Component);
+		}
+
+		// Add children
+		if (n.Component)
+		{
+			for (cgltf_size i = 0; i < node->children_count; ++i)
+			{
+				const auto c = CreateNode(gltf, p_scene_data, node->children[i]);
+				n.Component->AddChild(c.Component);
+			}
+		}
+
+		return n;
 	}
 
 	bool gltf_parse(cgltf_data* gltf, SceneData* p_scene_data, 
@@ -316,24 +392,9 @@ namespace ari::en
 			for (int n = 0; n < int(scene->nodes_count); ++n)
 			{
 				auto node = scene->nodes[n];
-				if (node->mesh)
-				{
-					// create a mesh node
-					int mesh_index = int(node->mesh - gltf->meshes);
-					auto m = World::CreateComponent<MeshNode, Node3D>();
-					m.Component->Mesh = p_scene_data->Meshes[mesh_index];
-					m.Component->Position.f[0] = node->translation[0];
-					m.Component->Position.f[1] = node->translation[1];
-					m.Component->Position.f[2] = node->translation[2];
-					m.Component->Rotation.f[0] = node->rotation[0];
-					m.Component->Rotation.f[1] = node->rotation[1];
-					m.Component->Rotation.f[2] = node->rotation[2];
-					m.Component->Rotation.f[3] = node->rotation[3];
-					m.Component->Scale.f[0] = node->scale[0];
-					m.Component->Scale.f[1] = node->scale[1];
-					m.Component->Scale.f[2] = node->scale[2];
-					result.Add(CastComponentHandle<MeshNode, Node3D>(m));
-				}
+				auto n3d = CreateNode(gltf, p_scene_data, node);
+				if (n3d.Component)
+					result.Add(n3d);
 			}			 
 		}
 
