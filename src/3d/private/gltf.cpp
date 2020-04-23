@@ -322,6 +322,16 @@ namespace ari::en
 					int mesh_index = int(node->mesh - gltf->meshes);
 					auto m = World::CreateComponent<MeshNode, Node3D>();
 					m.Component->Mesh = p_scene_data->Meshes[mesh_index];
+					m.Component->Position.f[0] = node->translation[0];
+					m.Component->Position.f[1] = node->translation[1];
+					m.Component->Position.f[2] = node->translation[2];
+					m.Component->Rotation.f[0] = node->rotation[0];
+					m.Component->Rotation.f[1] = node->rotation[1];
+					m.Component->Rotation.f[2] = node->rotation[2];
+					m.Component->Rotation.f[3] = node->rotation[3];
+					m.Component->Scale.f[0] = node->scale[0];
+					m.Component->Scale.f[1] = node->scale[1];
+					m.Component->Scale.f[2] = node->scale[2];
 					result.Add(CastComponentHandle<MeshNode, Node3D>(m));
 				}
 			}			 

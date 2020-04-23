@@ -39,7 +39,7 @@ public:
 		m_world.AddDerivedComponent<ari::en::Camera, ari::en::Node3D>(entity, camera);
 
 		// Load gltf model
-		ari::en::Load3dScene("res:simple_sparse.gltf", [this, entity](ari::core::Array<ari::en::ComponentHandle<ari::en::Node3D>> nodes)
+		ari::en::Load3dScene("res:simple_meshes.gltf", [this, entity](ari::core::Array<ari::en::ComponentHandle<ari::en::Node3D>> nodes)
 			{
 				ari::en::Add3dScene(&this->m_world, entity, nodes);
 			});
