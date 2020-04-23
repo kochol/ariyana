@@ -8,6 +8,7 @@
 #include "en/World.hpp"
 #include "MeshNode.hpp"
 #include "core/log.h"
+#include "Camera.hpp"
 
 namespace ari::en
 {
@@ -25,6 +26,10 @@ namespace ari::en
 			if (node.Component->GetId() == MeshNode::Id)
 			{
 				p_world->AddDerivedComponent<MeshNode, Node3D>(entity, CastComponentHandle<Node3D, MeshNode>(node));
+			}
+			else if (node.Component->GetId() == Camera::Id)
+			{
+				p_world->AddDerivedComponent<Camera, Node3D>(entity, CastComponentHandle<Node3D, Camera>(node));
 			}
 			else
 			{
