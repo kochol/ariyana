@@ -21,7 +21,8 @@ namespace ari
 
 		void SetupShaders()
 		{
-			g_shaders[int(ShaderType::Basic)] = CreateShader(ari_box_shader_desc());
+			g_shaders[int(ShaderType::Basic)] = CreateShader(ari_basic_shader_desc());
+			g_shaders[int(ShaderType::BasicTexture)] = CreateShader(ari_basic_tex_shader_desc());
 		}
 
 		ShaderHanlde GetShader(ShaderType shader)

@@ -109,6 +109,7 @@ namespace ari
 		enum class ShaderType
 		{
 			Basic = 0,
+			BasicTexture,
 
 			Count
 		};
