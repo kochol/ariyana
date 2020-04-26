@@ -1,8 +1,5 @@
 #include "3dModel.hpp"
 #include "io/FileSystem.hpp"
-#include "private/cgltf/cgltf.h"
-#include <sokol_gfx.h>
-#include "gfx/gfx.hpp"
 #include "gfx/Mesh.hpp"
 #include "private/gltf.hpp"
 #include "en/World.hpp"
