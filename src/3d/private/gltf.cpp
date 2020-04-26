@@ -62,6 +62,7 @@ namespace ari::en
 		core::Array<Accessor>					Accessors;
 		core::Array<gfx::MeshHandle>			Meshes;
 		core::Array<gfx::TextureHandle>			Textures;
+		core::String							BasePath;
 	};
 
 	void SetPipelineAttribute(gfx::VertexAttrSetup& attr, cgltf_attribute* gltf_attr)
@@ -248,7 +249,7 @@ namespace ari::en
 			accessor.Count = int(gltf_accessor->count);
 			accessor.DataType = ComponentDataType(int(gltf_accessor->type));
 			// Check for sparse buffers
-			if (gltf_accessor->sparse.count)
+			if (gltf_accessor->is_sparse)
 			{
 				// create new buffer				
 				// get indices buffer
@@ -288,7 +289,9 @@ namespace ari::en
 				accessor.GfxBuffer = gfx_buffer;
 			}
 			else
+			{
 				accessor.GfxBuffer = p_scene_data->GfxBuffers[index];
+			}
 			accessor.HasMax = gltf_accessor->has_max;
 			core::Memory::Copy(gltf_accessor->max, accessor.Max, sizeof(float) * 16);
 			accessor.HasMin = gltf_accessor->has_min;
@@ -302,7 +305,9 @@ namespace ari::en
 		for (size_t i = 0; i < gltf->textures_count; i++)
 		{
 			auto tex = &gltf->textures[i];
-			p_scene_data->Textures.Add(gfx::LoadTexture(tex->image->uri));
+			core::StringBuilder string_builder(p_scene_data->BasePath);
+			string_builder.Append(tex->image->uri);
+			p_scene_data->Textures.Add(gfx::LoadTexture(string_builder.AsCStr()));
 			
 		}
 		
@@ -372,25 +377,27 @@ namespace ari::en
 				{
 					const int accessor_index = int(gltf_prim->attributes[a_i].data - gltf->accessors);
 
-					// setup pipeline and bindings
-					SetPipelineAttribute(pipeline_setup.layout.attrs[a_i], &gltf_prim->attributes[a_i]);
-					pipeline_setup.layout.attrs[a_i].bufferIndex = a_i;
-					bindings.vertexBuffers[a_i] = p_scene_data->Accessors[accessor_index].GfxBuffer;
+					int buffer_index = -1;
+					Accessor* accessor = &p_scene_data->Accessors[accessor_index];
 
 					switch (gltf_prim->attributes[a_i].type)
 					{
 					case cgltf_attribute_type_position:
-						sub_mesh->Position = p_scene_data->Accessors[accessor_index].GfxBuffer;
+						sub_mesh->Position = accessor->GfxBuffer;
+						buffer_index = 0;
 						// TODO: add bounding box
 						break;
+					case cgltf_attribute_type_texcoord:
+						sub_mesh->Texcoord = accessor->GfxBuffer;
+						buffer_index = 1;
+						break;
 					case cgltf_attribute_type_normal:
-						sub_mesh->Normal = p_scene_data->Accessors[accessor_index].GfxBuffer;
+						sub_mesh->Normal = accessor->GfxBuffer;
+						buffer_index = 2;
 						break;
 					case cgltf_attribute_type_tangent:
-						sub_mesh->Tangent = p_scene_data->Accessors[accessor_index].GfxBuffer;
-						break;
-					case cgltf_attribute_type_texcoord:
-						sub_mesh->Texcoord = p_scene_data->Accessors[accessor_index].GfxBuffer;
+						sub_mesh->Tangent = accessor->GfxBuffer;
+						buffer_index = 3;
 						break;
 					case cgltf_attribute_type_color:
 						sub_mesh->Color = p_scene_data->Accessors[accessor_index].GfxBuffer;
@@ -403,6 +410,15 @@ namespace ari::en
 						break;
 					case cgltf_attribute_type_invalid:
 						break;
+					}
+
+					if (buffer_index >= 0)
+					{
+						// setup pipeline and bindings
+						SetPipelineAttribute(pipeline_setup.layout.attrs[buffer_index], &gltf_prim->attributes[a_i]);
+						pipeline_setup.layout.attrs[buffer_index].bufferIndex = buffer_index;
+						bindings.vertexBuffers[buffer_index] = accessor->GfxBuffer;
+						bindings.vertexBufferOffsets[buffer_index] = accessor->Offset;
 					}
 				}
 
@@ -449,6 +465,15 @@ namespace ari::en
 				if (result == cgltf_result_success) 
 				{
 					SceneData* p_scene_data = core::Memory::New<SceneData>();
+
+					// get the root path
+					core::StringBuilder strPath(_path);
+					int slash_index = strPath.FindLastOf(0, core::EndOfString, "/");
+					if (slash_index < 0)
+						slash_index = strPath.FindLastOf(0, core::EndOfString, ":");
+					strPath.Set(strPath.GetSubString(0, slash_index + 1));
+					p_scene_data->BasePath = strPath.AsCStr();
+
 					p_scene_data->Buffers = core::Memory::NewClassArray<core::Buffer>(int(gltf->buffers_count));
 					p_scene_data->NumBuffers = int(gltf->buffers_count);
 
@@ -488,13 +513,9 @@ namespace ari::en
 						}
 						else
 						{
-							core::StringBuilder strPath(_path);
-							int slash_index = strPath.FindLastOf(0, core::EndOfString, "/");
-							if (slash_index < 0)
-								slash_index = strPath.FindLastOf(0, core::EndOfString, ":");
-							strPath.Set(strPath.GetSubString(0,	slash_index + 1));
-							strPath.Append(gltf_buf->uri);
-							io::LoadFile(strPath.AsCStr(), [i, gltf, p_scene_data, OnModel](core::Buffer* buffer)
+							core::StringBuilder string_builder(strPath.AsCStr());
+							string_builder.Append(gltf_buf->uri);
+							io::LoadFile(string_builder.AsCStr(), [i, gltf, p_scene_data, OnModel](core::Buffer* buffer)
 								{
 									p_scene_data->Buffers[i] = std::move(*buffer);
 									p_scene_data->NumLoadedBuffers++;

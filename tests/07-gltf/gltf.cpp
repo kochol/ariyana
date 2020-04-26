@@ -32,9 +32,9 @@ public:
 		auto camera = m_world.CreateComponent<ari::en::Camera, ari::en::Node3D>();
 		camera.Component->Position.x = 1.f;
 		camera.Component->Position.y = 1.f;
-		camera.Component->Position.z = 3.f;
-		camera.Component->Target.x = 1.f;
-		camera.Component->Target.y = 1.f;
+		camera.Component->Position.z = 2.f;
+		camera.Component->Target.x = 0.f;
+		camera.Component->Target.y = 0.f;
 		camera.Component->Target.z = 0.0f;
 		m_world.AddDerivedComponent<ari::en::Camera, ari::en::Node3D>(entity, camera);
 
