@@ -30,7 +30,7 @@ namespace ari::en
 		template<typename T>
 		static bool RegisterComponent(char* cmpName)
 		{
-			log_debug("Component %s Id is %u and its base id is %u", cmpName, T::Id, T::GetBaseId());
+			log_debug("Component %s Id is %u", cmpName, T::Id);
 			if (!m_mComponentsData)
 			{
 				m_mComponentsData = core::Memory::New<core::Map<uint32_t, ComponentData>>();

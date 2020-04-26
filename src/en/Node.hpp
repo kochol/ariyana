@@ -26,6 +26,18 @@ namespace ari
 
 			const core::Array<Node*>& GetChildren(uint32_t _id);
 
+			template<typename FUNC>
+			void GetChildren(FUNC _func)
+			{
+				for(auto l: m_mChilds)
+				{
+					for(auto n: l.value)
+					{
+						_func(n);
+					}
+				}
+			}
+
 			Node* GetChild(uint32_t _id);
 
 		private:

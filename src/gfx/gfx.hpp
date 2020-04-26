@@ -5,7 +5,7 @@
 
 struct sg_shader_desc;
 #define ARI_MAX_SHADERSTAGE_TEXTURES 12
-#define ARI_MAX_SHADERSTAGE_BUFFERS 4
+#define ARI_MAX_SHADERSTAGE_BUFFERS 8
 #define ARI_MAX_VERTEX_ATTRIBUTES 16
 
 namespace ari
@@ -93,7 +93,7 @@ namespace ari
 		struct Bindings
 		{
 			BufferHandle vertexBuffers[ARI_MAX_SHADERSTAGE_BUFFERS];
-			int vertexBufferOffsets[ARI_MAX_SHADERSTAGE_BUFFERS] = { 0,0,0,0 };
+			int vertexBufferOffsets[ARI_MAX_SHADERSTAGE_BUFFERS] = { 0,0,0,0,0,0,0,0 };
 			BufferHandle indexBuffer;
 			int indexBufferOffset = 0;
 			TextureHandle vsTextures[ARI_MAX_SHADERSTAGE_TEXTURES];
@@ -199,6 +199,7 @@ namespace ari
 		enum class ShaderType
 		{
 			Basic = 0,
+			BasicTexture,
 
 			Count
 		};
