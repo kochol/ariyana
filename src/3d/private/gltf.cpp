@@ -61,6 +61,7 @@ namespace ari::en
 		core::Array<gfx::BufferHandle>			GfxBuffers;
 		core::Array<Accessor>					Accessors;
 		core::Array<gfx::MeshHandle>			Meshes;
+		core::Array<gfx::TextureHandle>			Textures;
 	};
 
 	void SetPipelineAttribute(gfx::VertexAttrSetup& attr, cgltf_attribute* gltf_attr)
@@ -297,6 +298,23 @@ namespace ari::en
 			p_scene_data->Accessors.Add(accessor);
 		}
 
+		// parse the textures
+		for (size_t i = 0; i < gltf->textures_count; i++)
+		{
+			auto tex = &gltf->textures[i];
+			p_scene_data->Textures.Add(gfx::LoadTexture(tex->image->uri));
+			
+		}
+		
+
+		// parse the materials
+		/*for (size_t i = 0; i < gltf->materials_count; i++)
+		{
+			auto mat = &gltf->materials[i];
+			mat->
+		}*/
+		
+
 		// parse the meshes
 		core::ObjectPool<gfx::Mesh>::Setup(64);
 		core::ObjectPool<gfx::SubMesh>::Setup(128);
@@ -322,8 +340,20 @@ namespace ari::en
 				gfx::PipelineSetup pipeline_setup;
 				gfx::Bindings bindings;
 
-				pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::Basic);
-
+				// Set the textures
+				if (gltf_prim->material 
+					&& gltf_prim->material->has_pbr_metallic_roughness
+					&& gltf_prim->material->pbr_metallic_roughness.base_color_texture.texture)
+				{
+					int tex_index = gltf_prim->material->pbr_metallic_roughness.base_color_texture.texture - gltf->textures;
+					bindings.fsTextures[0] = p_scene_data->Textures[tex_index];						
+					pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicTexture);
+				}
+				else
+				{
+					pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::Basic);
+				}
+				
 				sub_mesh->Type = gfx::PrimitiveType(int(gltf_prim->type));
 				if (gltf_prim->indices)
 				{
@@ -344,7 +374,7 @@ namespace ari::en
 
 					// setup pipeline and bindings
 					SetPipelineAttribute(pipeline_setup.layout.attrs[a_i], &gltf_prim->attributes[a_i]);
-					pipeline_setup.layout.attrs[1].bufferIndex = a_i;
+					pipeline_setup.layout.attrs[a_i].bufferIndex = a_i;
 					bindings.vertexBuffers[a_i] = p_scene_data->Accessors[accessor_index].GfxBuffer;
 
 					switch (gltf_prim->attributes[a_i].type)
@@ -456,13 +486,15 @@ namespace ari::en
 								// TODO: Log error
 							}
 						}
-
-						if (core::StringBuilder::Contains(gltf_buf->uri, "data:application/octet-stream;base64,"))
-						{
-						}
 						else
 						{
-							io::LoadFile(gltf_buf->uri, [i, gltf, p_scene_data, OnModel](core::Buffer* buffer)
+							core::StringBuilder strPath(_path);
+							int slash_index = strPath.FindLastOf(0, core::EndOfString, "/");
+							if (slash_index < 0)
+								slash_index = strPath.FindLastOf(0, core::EndOfString, ":");
+							strPath.Set(strPath.GetSubString(0,	slash_index + 1));
+							strPath.Append(gltf_buf->uri);
+							io::LoadFile(strPath.AsCStr(), [i, gltf, p_scene_data, OnModel](core::Buffer* buffer)
 								{
 									p_scene_data->Buffers[i] = std::move(*buffer);
 									p_scene_data->NumLoadedBuffers++;

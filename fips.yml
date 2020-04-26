@@ -32,3 +32,9 @@ exports:
         ari_gfx  :          src/gfx
         ari_gui  :          src/gui
         ari_io   :          src/io
+
+run:
+    t05texcube:
+        cwd: tests/05-texcube
+    t07gltf: 
+        cwd: tests/07-gltf

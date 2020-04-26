@@ -115,13 +115,13 @@ namespace ari::en
 			// Add it to frame data
 			m_pFrameDataTransforms->Nodes.Add(node);
 		}
-		if (node->HasChildWithId(Node3D::Id))
+		node->GetChildren([parentMat, this](Node* n)
 		{
-			for (auto child : node->GetChildren(Node3D::Id))
+			if (n->GetBaseId() == Node3D::Id)
 			{
-				CalcTransform(reinterpret_cast<Node3D*>(child), parentMat);
+				CalcTransform(reinterpret_cast<Node3D*>(n), parentMat);
 			}
-		}
+		});
 	} // CalcTransform
 	
 } // ari

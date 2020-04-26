@@ -31,6 +31,10 @@ namespace ari::en
 			{
 				p_world->AddDerivedComponent<Camera, Node3D>(entity, CastComponentHandle<Node3D, Camera>(node));
 			}
+			else if (node.Component->GetId() == Node3D::Id)
+			{
+				p_world->AddComponent<Node3D>(entity, node);
+			}	
 			else
 			{
 				log_error("Unknown component Id %d", node.Component->GetId());

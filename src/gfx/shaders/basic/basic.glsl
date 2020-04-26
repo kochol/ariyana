@@ -31,6 +31,7 @@ uniform vs_params
 };
 
 in vec4 pos;
+in vec3 normal;
 in vec2 texcoord0;
 out vec2 uv;
 void main() 
