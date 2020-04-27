@@ -47,6 +47,9 @@ done! it's ready to rock.
 ## Ariyana Game Engine 0.3
 
 - Adding gltf mesh loader
+  - Load meshes and nodes
+  - Supports sparse buffers
+  - Load textures
 
 ### Ariyana Game Engine 0.2.5
 
