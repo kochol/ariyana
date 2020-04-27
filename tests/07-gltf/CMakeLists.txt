@@ -5,6 +5,7 @@ fips_begin_app(t07gltf cmdline)
         gltf.cpp
 	)
 	ari_tex(assets/CesiumLogoFlat.png ${texfmt})
+	ari_tex(assets/DuckCM.png ${texfmt})
     ari_assets()    
 fips_end_app()
 

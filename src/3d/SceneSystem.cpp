@@ -57,7 +57,7 @@ namespace ari::en
 					rect = io::GetWindowSize(TargetWindow);
 				}
 				m_pActiveCamera->_proj = sx_mat4_perspectiveFOV(sx_torad(m_pActiveCamera->Fov),
-					float(rect.width) / float(rect.height), 1.0f, 1000.0f, true);
+					float(rect.width) / float(rect.height), m_pActiveCamera->zNear, m_pActiveCamera->zFar, true);
 			}
 
 			m_FameDataTurnIndex++;
@@ -101,9 +101,17 @@ namespace ari::en
 
 	void SceneSystem::CalcTransform(Node3D* node, sx_mat4* parentMat)
 	{
-		sx_mat4 m = sx_mat4_SRT(node->Scale.x, node->Scale.y, node->Scale.z,
-			node->Rotation.x, node->Rotation.y, node->Rotation.z,
-			node->Position.x, node->Position.y, node->Position.z);
+		sx_mat4 m;
+		if (node->has_mat)
+		{
+			m = node->Transform;
+		}
+		else
+		{
+			m = sx_mat4_SRT(node->Scale.x, node->Scale.y, node->Scale.z,
+				node->Rotation.x, node->Rotation.y, node->Rotation.z,
+				node->Position.x, node->Position.y, node->Position.z);
+		}
 		if (parentMat)
 			node->_finalMat[m_FameDataTurnIndex] = m * (*parentMat);
 		else

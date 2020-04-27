@@ -136,16 +136,24 @@ namespace ari::en
 
 	void SetNodeTransform(cgltf_node* node, Node3D* n)
 	{
-		n->Position.f[0] = node->translation[0];
-		n->Position.f[1] = node->translation[1];
-		n->Position.f[2] = node->translation[2];
-		n->Rotation.f[0] = node->rotation[0];
-		n->Rotation.f[1] = node->rotation[1];
-		n->Rotation.f[2] = node->rotation[2];
-		n->Rotation.f[3] = node->rotation[3];
-		n->Scale.f[0] = node->scale[0];
-		n->Scale.f[1] = node->scale[1];
-		n->Scale.f[2] = node->scale[2];
+		if (node->has_matrix)
+		{
+			core::Memory::Copy(node->matrix, n->Transform.f, 64);
+			n->has_mat = true;
+		}
+		else
+		{
+			n->Position.f[0] = node->translation[0];
+			n->Position.f[1] = node->translation[1];
+			n->Position.f[2] = node->translation[2];
+			n->Rotation.f[0] = node->rotation[0];
+			n->Rotation.f[1] = node->rotation[1];
+			n->Rotation.f[2] = node->rotation[2];
+			n->Rotation.f[3] = node->rotation[3];
+			n->Scale.f[0] = node->scale[0];
+			n->Scale.f[1] = node->scale[1];
+			n->Scale.f[2] = node->scale[2];
+		}
 	}
 
 	ComponentHandle<Node3D> CreateNode(cgltf_data* gltf, SceneData* p_scene_data, cgltf_node* node)
@@ -392,6 +400,7 @@ namespace ari::en
 						buffer_index = 1;
 						break;
 					case cgltf_attribute_type_normal:
+						continue;
 						sub_mesh->Normal = accessor->GfxBuffer;
 						buffer_index = 2;
 						break;

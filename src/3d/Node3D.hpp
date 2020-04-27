@@ -14,7 +14,7 @@ namespace ari::en
 		ARI_COMPONENT(Node3D)
 
 		//! Constructor
-		Node3D() : _isRenderable(false)
+		Node3D() : _isRenderable(false), has_mat(false)
 		{
 			Position = sx_vec3f(0.0f, 0.0f, 0.0f);
 			Scale = sx_vec3f(1.0f, 1.0f, 1.0f);
@@ -30,6 +30,8 @@ namespace ari::en
 		sx_vec3 Position;
 		sx_quat Rotation;
 		sx_vec3 Scale;
+		bool has_mat;
+		sx_mat4 Transform;
 
 		sx_mat4 _finalMat[3];
 		bool _isRenderable;

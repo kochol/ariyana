@@ -9,7 +9,7 @@ uniform vs_params {
 };
 
 in vec4 pos;
-void main() {
+void main() { 
     gl_Position = mvp * pos;
 }
 @end
@@ -30,10 +30,10 @@ uniform vs_params
     mat4 mvp;
 };
 
-in vec4 position;
-in vec2 texcoord0;
+layout(location=0) in vec4 position;
+layout(location=1) in vec2 texcoord0;
 //layout(location=1) in vec3 normal;
-
+ 
 out vec2 uv;
 
 void main() 

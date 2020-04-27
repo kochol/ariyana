@@ -99,6 +99,8 @@ namespace ari
 			desc.index_type = (sg_index_type)setup.index_type;
 			desc.rasterizer.cull_mode = SG_CULLMODE_BACK;
 			desc.rasterizer.face_winding = SG_FACEWINDING_CCW;
+			desc.depth_stencil.depth_write_enabled = true;
+			desc.depth_stencil.depth_compare_func = SG_COMPAREFUNC_LESS_EQUAL;
 			const sg_pipeline pipeline = sg_make_pipeline(&desc);
 			return { core::HandleManager<PipelineHandle>::CreateHandleByIndex(pipeline.id), pipeline.id };
 		}
