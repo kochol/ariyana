@@ -44,6 +44,14 @@ done! it's ready to rock.
 
 # Changes
 
+## Ariyana Game Engine 0.3
+
+- Adding gltf mesh loader
+  - Load meshes and nodes
+  - Supports sparse buffers
+  - Load textures
+- Add input handling in ImGUI
+
 ### Ariyana Game Engine 0.2.5
 
 - Fix a bug in android file path

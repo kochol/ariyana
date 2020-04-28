@@ -1,5 +1,4 @@
 #include "yojimbo.h"
-#include "Serialize.hpp"
 
 namespace ari::net
 {

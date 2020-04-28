@@ -25,7 +25,7 @@ struct _name \
 static const uint32_t Id; \
 static bool IsRegisteredWithComponentManager; \
 virtual uint32_t GetId() { return Id; } \
-static uint32_t GetBaseId() { return Id; } \
+virtual uint32_t GetBaseId() { return Id; } \
 inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _world) \
 { \
 	auto c = _world->CreateComponent<_name>(); \
@@ -61,7 +61,7 @@ bool _name::IsDiff(void* clone, void* obj, int index) \
 static const uint32_t Id; \
 static bool IsRegisteredWithComponentManager; \
 virtual uint32_t GetId() override { return Id; } \
-static uint32_t GetBaseId() { return _base::Id; } \
+virtual uint32_t GetBaseId() { return _base::Id; } \
 inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _world) \
 { \
 	auto c = _world->CreateComponent<_name, _base>(); \

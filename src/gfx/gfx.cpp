@@ -6,6 +6,9 @@
 #include "core/log.h"
 #include "core/string/StringBuilder.hpp"
 
+// Include shaders
+#include "basic.glsl.h"
+
 namespace ari
 {
     namespace gfx
@@ -13,6 +16,19 @@ namespace ari
 		core::Array<sg_bindings> g_binds_array;
 
 		static sx_mat4 g_mView, g_mProj, g_mViewProj;
+
+		ShaderHanlde g_shaders[int(ShaderType::Count)];
+
+		void SetupShaders()
+		{
+			g_shaders[int(ShaderType::Basic)] = CreateShader(ari_basic_shader_desc());
+			g_shaders[int(ShaderType::BasicTexture)] = CreateShader(ari_basic_tex_shader_desc());
+		}
+
+		ShaderHanlde GetShader(ShaderType shader)
+		{
+			return g_shaders[int(shader)];
+		}
 
 		//------------------------------------------------------------------------------
 		BufferHandle CreateVertexBuffer(int size, void* content, BufferUsage usage)
@@ -82,6 +98,9 @@ namespace ari
 			}
 			desc.index_type = (sg_index_type)setup.index_type;
 			desc.rasterizer.cull_mode = SG_CULLMODE_BACK;
+			desc.rasterizer.face_winding = SG_FACEWINDING_CCW;
+			desc.depth_stencil.depth_write_enabled = true;
+			desc.depth_stencil.depth_compare_func = SG_COMPAREFUNC_LESS_EQUAL;
 			const sg_pipeline pipeline = sg_make_pipeline(&desc);
 			return { core::HandleManager<PipelineHandle>::CreateHandleByIndex(pipeline.id), pipeline.id };
 		}
@@ -279,7 +298,7 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
-		TextureHandle CreateTexture(core::String _path)
+		TextureHandle LoadTexture(core::String _path)
 		{
 			sg_image img = sg_alloc_image();
 

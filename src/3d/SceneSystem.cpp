@@ -57,7 +57,7 @@ namespace ari::en
 					rect = io::GetWindowSize(TargetWindow);
 				}
 				m_pActiveCamera->_proj = sx_mat4_perspectiveFOV(sx_torad(m_pActiveCamera->Fov),
-					float(rect.width) / float(rect.height), 1.0f, 1000.0f, true);
+					float(rect.width) / float(rect.height), m_pActiveCamera->zNear, m_pActiveCamera->zFar, true);
 			}
 
 			m_FameDataTurnIndex++;
@@ -77,14 +77,7 @@ namespace ari::en
 
 	bool SceneSystem::NeedUpdateOn(UpdateState::Enum state)
 	{
-		switch (state)
-		{
-		case UpdateState::GamePlayState:
-		case UpdateState::SceneState:
-			return true;
-		default:
-			return false;
-		}
+		return state == UpdateState::SceneState;
 	}
 
 	void SceneSystem::Receive(World * world, const events::OnComponentAssigned<Camera>& event)
@@ -108,9 +101,17 @@ namespace ari::en
 
 	void SceneSystem::CalcTransform(Node3D* node, sx_mat4* parentMat)
 	{
-		sx_mat4 m = sx_mat4_SRT(node->Scale.x, node->Scale.y, node->Scale.z,
-			node->Rotation.x, node->Rotation.y, node->Rotation.z,
-			node->Position.x, node->Position.y, node->Position.z);
+		sx_mat4 m;
+		if (node->has_mat)
+		{
+			m = node->Transform;
+		}
+		else
+		{
+			m = sx_mat4_SRT(node->Scale.x, node->Scale.y, node->Scale.z,
+				node->Rotation.x, node->Rotation.y, node->Rotation.z,
+				node->Position.x, node->Position.y, node->Position.z);
+		}
 		if (parentMat)
 			node->_finalMat[m_FameDataTurnIndex] = m * (*parentMat);
 		else
@@ -122,13 +123,13 @@ namespace ari::en
 			// Add it to frame data
 			m_pFrameDataTransforms->Nodes.Add(node);
 		}
-		if (node->HasChildWithId(Node3D::Id))
+		node->GetChildren([parentMat, this](Node* n)
 		{
-			for (auto child : node->GetChildren(Node3D::Id))
+			if (n->GetBaseId() == Node3D::Id)
 			{
-				CalcTransform(static_cast<Node3D*>(child), parentMat);
+				CalcTransform(reinterpret_cast<Node3D*>(n), parentMat);
 			}
-		}
+		});
 	} // CalcTransform
 	
 } // ari

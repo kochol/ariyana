@@ -9,7 +9,8 @@ namespace ari
 
 	namespace gui
 	{
-		class GuiSystem: public en::System
+		class GuiSystem: public en::System,
+			public EventSubscriber<events::OnInputEvent>
 		{
 		private:
 
@@ -27,6 +28,8 @@ namespace ari
 				UpdateState::Enum _state) override;
 
 			bool NeedUpdateOn(UpdateState::Enum _state) override;
+
+			void Receive(World* p_world, const events::OnInputEvent& event) override;
 
 		private:
 

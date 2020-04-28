@@ -28,11 +28,19 @@ namespace ari
 			static void* Align(void* ptr, int byteSize);
 			/// round-up a value to the next multiple of byteSize
 			static int RoundUp(int val, int byteSize);
+			
 			/// replacement for new() going through Memory::Alloc without overriding new
 			template<class TYPE, typename... ARGS> static TYPE* New(ARGS&& ... args) {
 				TYPE* ptr = (TYPE*)Memory::Alloc(sizeof(TYPE));
 				return new(ptr) TYPE(std::forward<ARGS>(args)...);
 			};
+			
+			/// replacement for new() going through Memory::Alloc without overriding new
+			template<class TYPE> static TYPE* NewClassArray(int count) {
+				TYPE* ptr = (TYPE*)Memory::Alloc(sizeof(TYPE) * count + 4);
+				return new(ptr) TYPE[count];
+			};
+
 			/// replacement delete (see Memory::New())
 			template<class TYPE> static void Delete(TYPE* ptr) {
 				ptr->~TYPE();

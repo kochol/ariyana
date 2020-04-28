@@ -1,5 +1,5 @@
 #pragma once
-#include "sx/atomic.h"
+#include "sx/threads.h"
 
 namespace ari
 {

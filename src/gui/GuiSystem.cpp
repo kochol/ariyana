@@ -4,10 +4,11 @@
 #include "imgui.h"
 
 #ifdef ARI_GLFW
-#define SOKOL_IMGUI_NO_SOKOL_APP
-#else
-#include "sokol_app.h"
+#define SOKOL_IMPL
+#define SOKOL_NO_ENTRY
 #endif
+
+#include "sokol_app.h"
 
 #define SOKOL_IMGUI_IMPL
 #include "util/sokol_imgui.h"
@@ -30,16 +31,23 @@ namespace ari
 		{
 		}
 
-		void GuiSystem::Configure(World* _world)
+		void GuiSystem::Configure(World* p_world)
 		{
 			simgui_desc_t desc;
 			core::Memory::Fill(&desc, sizeof(simgui_desc_t), 0);
 			simgui_setup(&desc);
+			p_world->Subscribe<events::OnInputEvent>(this);
 		}
 
-		void GuiSystem::Unconfigure(World* _world)
+		void GuiSystem::Unconfigure(World* p_world)
 		{
 			simgui_shutdown();
+			p_world->unsubscribeAll(this);
+		}
+
+		void GuiSystem::Receive(World* p_world, const events::OnInputEvent& event)
+		{
+			simgui_handle_event(reinterpret_cast<sapp_event*>(event.event));
 		}
 
 		void GuiSystem::Update(World* _world, const float& _elapsed,

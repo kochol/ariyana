@@ -24,6 +24,16 @@ namespace ari
 			bool IsValid();
 
 		}; // ComponentHandle
+
+		template<class From, class To>
+		ComponentHandle<To> CastComponentHandle(ComponentHandle<From> cmp)
+		{
+			ComponentHandle<To> r;
+			r.Handle = cmp.Handle;
+			r.Index = cmp.Index;
+			r.Component = reinterpret_cast<To*>(cmp.Component);
+			return r;
+		}
 		
 	} // en
 	

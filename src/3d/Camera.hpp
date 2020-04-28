@@ -6,6 +6,12 @@
 
 namespace ari::en
 {
+	enum class CameraType
+	{
+		Perspective,
+		Orthographic
+	};
+
 	class Camera: public Node3D
 	{
 	public:
@@ -18,6 +24,8 @@ namespace ari::en
 			Target = sx_vec3f(0.0f, 0.0f, 100.0f);
 			Up = sx_vec3f(0.0f, 1.0f, 0.0f);
 			Right = sx_vec3f(1.0f, 0.0f, 0.0f);
+			zNear = 1.f;
+			zFar = 1000.f;
 		}
 
 		//! Destructor
@@ -26,7 +34,13 @@ namespace ari::en
 		sx_vec3		Target,
 					Up,
 					Right;
+		float		AspectRatio;
 		float		Fov = 60.0f;
+		float		xMag;
+		float		yMag;
+		float		zNear;
+		float		zFar;
+		CameraType	Type;
 		sx_mat4		_view,
 					_proj;
 		bool		_isActive = false;
