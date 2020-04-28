@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "io/IOEvents.hpp"
+#include "io/Window.hpp"
 
 namespace ari::en
 {
@@ -70,6 +72,12 @@ namespace ari::en
 		struct OnFrameData
 		{
 			FrameData* frame_data;
+		};
+
+		struct OnInputEvent
+		{
+			io::ari_event* event;
+			io::WindowHandle window;
 		};
 
 	} // events

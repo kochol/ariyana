@@ -50,6 +50,7 @@ done! it's ready to rock.
   - Load meshes and nodes
   - Supports sparse buffers
   - Load textures
+- Add input handling in ImGUI
 
 ### Ariyana Game Engine 0.2.5
 

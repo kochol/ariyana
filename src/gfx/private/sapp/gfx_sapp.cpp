@@ -52,9 +52,7 @@ void ari_cleanup_cb()
 
 void ari_event_cb(const sapp_event* event)
 {
-	ari::io::ari_event eve;
-	ari::core::Memory::Copy(event, &eve, sizeof(sapp_event));
-	g_application->OnEvent(&eve, {0, 0});
+	g_application->OnEvent(reinterpret_cast<ari::io::ari_event*>(event), {0, 0});
 }
 
 void ari_fail_cb(const char* msg)
