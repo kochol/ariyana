@@ -125,6 +125,20 @@ namespace ari::en
 		22, 20, 21,  23, 20, 22
 	};
 
+	BoxShape::BoxShape()
+	{
+		_isRenderable = true;
+		SubMesh.Handle = core::HandleManager<gfx::SubMeshHandle>::GetNewHandle(SubMesh.Index);
+		auto sub_mesh = core::ObjectPool<gfx::SubMesh>::New(SubMesh.Index);
+		sub_mesh->IndexBuffer = m_sIB;
+		sub_mesh->Type = gfx::PrimitiveType::Triangles;
+		sub_mesh->AABB = sx_aabbwhd(2.f, 2.f, 2.f);
+		sub_mesh->Position = m_sVBPos;
+		sub_mesh->Texcoord = m_sVBTexcoord;
+		sub_mesh->Color = m_sVBColor;
+		sub_mesh->ElementsCount = 36;
+	}
+
 	void BoxShape::Render(const int& _frameTurnIndex)
 	{		
 		auto mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
