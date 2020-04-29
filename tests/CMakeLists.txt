@@ -5,3 +5,6 @@ fips_add_subdirectory(04-3d)
 fips_add_subdirectory(05-texcube)
 fips_add_subdirectory(06-network)
 fips_add_subdirectory(07-gltf)
+fips_add_subdirectory(08-2d)
+
+
