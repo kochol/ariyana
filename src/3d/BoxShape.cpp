@@ -1,7 +1,6 @@
 #include "BoxShape.hpp"
 #include "gfx/Vertices.hpp"
 #include "sokol_gfx.h"
-#include "Box.glsl.h"
 #include "en/ComponentManager.hpp"
 
 namespace ari::en
@@ -128,8 +127,7 @@ namespace ari::en
 
 	void BoxShape::Render(const int& _frameTurnIndex)
 	{		
-		vs_params_t vs_params;
-		vs_params.mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
+		auto mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
 
 		if (Texture.IsValid())
 		{
@@ -142,7 +140,7 @@ namespace ari::en
 			ApplyPipeline(m_sPipeline);
 			ApplyBindings(m_sBinding);
 		}
-		ApplyUniforms(gfx::ShaderStage::VertexShader, SLOT_vs_params, &vs_params, sizeof(vs_params));
+		ApplyUniforms(gfx::ShaderStage::VertexShader, 0, mvp.f, sizeof(sx_mat4));
 		gfx::Draw(0, 36, 1);
 	}
 
