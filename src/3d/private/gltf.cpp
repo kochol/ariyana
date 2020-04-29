@@ -395,6 +395,15 @@ namespace ari::en
 						sub_mesh->Position = accessor->GfxBuffer;
 						buffer_index = 0;
 						// TODO: add bounding box
+						if (accessor->HasMax)
+						{
+							sub_mesh->AABB.xmax = accessor->Max[0];
+							sub_mesh->AABB.ymax = accessor->Max[1];
+							sub_mesh->AABB.zmax = accessor->Max[2];
+							sub_mesh->AABB.xmin = accessor->Min[0];
+							sub_mesh->AABB.ymin = accessor->Min[1];
+							sub_mesh->AABB.zmin = accessor->Min[2];
+						}
 						break;
 					case cgltf_attribute_type_texcoord:
 						sub_mesh->Texcoord = accessor->GfxBuffer;
