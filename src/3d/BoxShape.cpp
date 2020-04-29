@@ -12,8 +12,6 @@ namespace ari::en
 	gfx::BufferHandle BoxShape::m_sVBColor;
 	gfx::BufferHandle BoxShape::m_sVBTexcoord;
 	gfx::BufferHandle BoxShape::m_sIB;
-	gfx::ShaderHanlde BoxShape::m_sProgram;
-	gfx::ShaderHanlde BoxShape::m_sTexProgram;
 	gfx::PipelineHandle BoxShape::m_sPipeline;
 	gfx::PipelineHandle BoxShape::m_sTexPipeline;
 	gfx::BindingHandle BoxShape::m_sBinding;
@@ -167,28 +165,27 @@ namespace ari::en
 				(void*)s_cubeTriList);
 
 			// Create shader, pipeline and binding
-			m_sProgram = gfx::CreateShader(box_shader_desc());
-
 			gfx::PipelineSetup pipeline_setup;
-			pipeline_setup.shader = m_sProgram;
+			pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicVertexColor);
 			pipeline_setup.layout.attrs[0].format = gfx::VertexFormat::Float3;
 			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::UByte4N;
 			pipeline_setup.layout.attrs[1].bufferIndex = 1;
-			pipeline_setup.index_type = gfx::IndexType::Uint16;			
+			pipeline_setup.layout.attrs[2].format = gfx::VertexFormat::UByte4N;
+			pipeline_setup.layout.attrs[2].bufferIndex = 2;
+			pipeline_setup.index_type = gfx::IndexType::Uint16;
 
 			m_sPipeline = gfx::CreatePipeline(pipeline_setup);
 
 			gfx::Bindings bindings;
 			bindings.vertexBuffers[0] = m_sVBPos;
 			bindings.vertexBuffers[1] = m_sVBColor;
+			bindings.vertexBuffers[2] = m_sVBColor;
 			bindings.indexBuffer = m_sIB;
 
 			m_sBinding = gfx::CreateBinding(bindings);
 
 			// Create shader, pipeline and binding
-			m_sTexProgram = gfx::CreateShader(box_tex_shader_desc());
-
-			pipeline_setup.shader = m_sTexProgram;
+			pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicTexture);
 			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::Float2;
 
 			m_sTexPipeline = gfx::CreatePipeline(pipeline_setup);
@@ -207,8 +204,6 @@ namespace ari::en
 			DestroyBuffer(m_sVBColor);
 			DestroyBuffer(m_sVBTexcoord);
 			DestroyBuffer(m_sIB);
-			DestroyShader(m_sProgram);
-			DestroyShader(m_sTexProgram);
 			DestroyPipeline(m_sPipeline);
 			DestroyPipeline(m_sTexPipeline);
 			DestroyBinding(m_sBinding);

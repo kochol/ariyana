@@ -30,8 +30,6 @@ namespace ari::en
 		static gfx::BufferHandle m_sVBColor;
 		static gfx::BufferHandle m_sVBTexcoord;
 		static gfx::BufferHandle m_sIB;
-		static gfx::ShaderHanlde m_sProgram;
-		static gfx::ShaderHanlde m_sTexProgram;
 		static gfx::PipelineHandle m_sPipeline;
 		static gfx::PipelineHandle m_sTexPipeline;
 		static gfx::BindingHandle m_sBinding;
