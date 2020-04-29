@@ -209,7 +209,8 @@ namespace ari::en
 			for (cgltf_size i = 0; i < node->children_count; ++i)
 			{
 				const auto c = CreateNode(gltf, p_scene_data, node->children[i]);
-				n.Component->AddChild(c.Component);
+				if (c.Component)
+					n.Component->AddChild(c.Component);
 			}
 		}
 
@@ -410,6 +411,8 @@ namespace ari::en
 						break;
 					case cgltf_attribute_type_color:
 						sub_mesh->Color = p_scene_data->Accessors[accessor_index].GfxBuffer;
+						buffer_index = 2;
+						pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicVertexColor);
 						break;
 					case cgltf_attribute_type_joints:
 						sub_mesh->Joints = p_scene_data->Accessors[accessor_index].GfxBuffer;
