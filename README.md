@@ -50,7 +50,9 @@ done! it's ready to rock.
   - Load meshes and nodes
   - Supports sparse buffers
   - Load textures
+  - Support vertex colors
 - Add input handling in ImGUI
+- Add some basic default shaders
 
 ### Ariyana Game Engine 0.2.5
 
