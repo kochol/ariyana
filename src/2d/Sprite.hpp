@@ -12,8 +12,8 @@ namespace ari::en
 
 		ARI_COMPONENT_CHILD(Sprite, Node2D)
 
-		//! Constructor
-		Sprite() { _isRenderable = true; }
+			//! Constructor
+			Sprite();
 
 		//! Destructor
 		virtual ~Sprite() = default;
@@ -25,6 +25,15 @@ namespace ari::en
 
 		static void Init(RenderSystem2D* render_system_2D);
 		static void Shutdown();
+
+
+		static gfx::PipelineHandle m_sPipeline;
+		static gfx::PipelineHandle m_sTexPipeline;
+
+		static gfx::BindingHandle m_sBinding;
+		static gfx::BindingHandle m_sTexBinding;
+
+
 	};
 
 } // ari::en

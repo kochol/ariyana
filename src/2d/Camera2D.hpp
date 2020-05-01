@@ -20,15 +20,21 @@ namespace ari::en
 		//! Destructor
 		virtual ~Camera2D() = default;
 
-
+		sx_vec2		Target,
+					Up,
+					Right;
 		float		AspectRatio;
-		float		Fov = 60.0f;
+		float		xMag,
+					yMah;
 		sx_mat4		_view,
 					_proj;
 		bool		_isActive = false;
 
 		//! Rotate the Camera around Z axis
 		void Rotate(float _angle);
+
+		//! Rotate by mouse movement
+		void RotateByMouse(int _x, int _y, float _speed);
 
 		//! Move Camera left & right
 		void MoveLR(const float& _speed);

@@ -65,7 +65,7 @@ namespace ari::en
 		Sprite::Init(this);
 	}
 
-	void RenderSystem2D::Receive(World* world, const events::OnFrameData& event)
+	void RenderSystem2D::Receive(World* world, const events::OnFrameData2D& event)
 	{
 		sx_unused(world);
 		m_pFrameDataNext = event.frame_data_2d;

@@ -26,7 +26,7 @@ namespace ari::en
 		bool NeedUpdateOn(UpdateState::Enum _state) override;
 
 		void Receive(World* world, const events::OnComponentAssigned<Sprite>& event) override;
-		void Receive(World* world, const events::OnFrameData& event) override;
+		void Receive(World* world, const events::OnFrameData2D& event) override;
 
 		io::WindowHandle		TargetWindow;
 
