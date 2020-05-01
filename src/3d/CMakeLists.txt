@@ -22,7 +22,4 @@ fips_begin_module(ari_3d)
         cgltf.h                 cgltf.cpp
     )
     
-    fips_dir(shaders)
-    sokol_shader(Box.glsl ${slang})
-
 fips_end_module()

@@ -13,7 +13,7 @@ We are using [fips](https://github.com/floooh/fips) as a highlevel build system 
 - **A working C/C++ development environment**:
     - on **OSX**: Xcode + command line tools
     - on **Linux**: make/gcc (or clang)
-    - on **Windows**: Visual Studio 2013 or better
+    - on **Windows**: Visual Studio 2017 or better
 
 ### Cloning the repository
 
@@ -50,7 +50,9 @@ done! it's ready to rock.
   - Load meshes and nodes
   - Supports sparse buffers
   - Load textures
+  - Support vertex colors
 - Add input handling in ImGUI
+- Add some basic default shaders
 
 ### Ariyana Game Engine 0.2.5
 

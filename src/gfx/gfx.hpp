@@ -200,6 +200,7 @@ namespace ari
 		{
 			Basic = 0,
 			BasicTexture,
+			BasicVertexColor,
 
 			Count
 		};

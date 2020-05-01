@@ -22,7 +22,8 @@ namespace ari::gfx
 		int								ElementsCount;
 		gfx::PipelineHandle				Pipeline;
 		gfx::BindingHandle				Binding;
-
+		sx_aabb							AABB = {{SX_FLOAT_MAX, SX_FLOAT_MAX, SX_FLOAT_MAX,
+			-SX_FLOAT_MAX, -SX_FLOAT_MAX,	-SX_FLOAT_MAX}};
 	};
 	
 } // namespace ari::gfx
