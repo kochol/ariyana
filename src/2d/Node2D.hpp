@@ -16,8 +16,8 @@ namespace ari::en
 		Node2D() : _isRenderable(false)
 		{
 			Position = sx_vec2f(0.0f, 0.0f);
-			Scale = sx_vec2f(0.0f, 0.0f);
-			Rotation = sx_quat_ident();
+			Scale = sx_vec2f(1.0f, 1.0f);
+			Rotation = 0.0f;
 		}
 
 		//! Destructor
@@ -27,7 +27,7 @@ namespace ari::en
 		virtual void Render(const int& _frameTurnIndex) { sx_unused(_frameTurnIndex); }
 
 		sx_vec2 Position;
-		sx_quat Rotation;
+		float	Rotation; // rotation around z-axis
 		sx_vec2 Scale;
 
 		sx_mat4 Transform;
@@ -47,7 +47,7 @@ namespace meta
 	inline auto registerMembers<ari::en::Node2D>()
 	{
 		return members(
-			member("position", &ari::en::Node2D::Position),
+			member("Position", &ari::en::Node2D::Position),
 			member("Rotation", &ari::en::Node2D::Rotation),
 			member("Scale", &ari::en::Node2D::Scale)
 		);

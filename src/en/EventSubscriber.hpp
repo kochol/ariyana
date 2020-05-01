@@ -73,6 +73,10 @@ namespace ari::en
 		struct OnFrameData
 		{
 			FrameData* frame_data;
+		};
+
+		struct OnFrameData2D
+		{
 			FrameData2D* frame_data_2d;
 		};
 

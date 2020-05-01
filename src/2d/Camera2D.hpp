@@ -6,11 +6,6 @@
 
 namespace ari::en
 {
-	enum class CameraType
-	{
-		Perspective,
-		Orthographic
-	};
 
 	class Camera2D : public Node2D
 	{
@@ -25,11 +20,15 @@ namespace ari::en
 		//! Destructor
 		virtual ~Camera2D() = default;
 
-		CameraType type;
-		bool _isActive = false;
+
+		float		AspectRatio;
+		float		Fov = 60.0f;
+		sx_mat4		_view,
+					_proj;
+		bool		_isActive = false;
 
 		//! Rotate the Camera around Z axis
-		void Rotate(float _angle, const float& _zAxis);
+		void Rotate(float _angle);
 
 		//! Move Camera left & right
 		void MoveLR(const float& _speed);
