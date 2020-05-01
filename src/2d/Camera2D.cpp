@@ -13,12 +13,10 @@ namespace ari::en
 	void Camera2D::MoveLR(const float& _speed)
 	{
 		Position.x += _speed;
-		Target.y += _speed;
 	}
 	void Camera2D::MoveUD(const float& _speed)
 	{
 		Position.y += _speed;
-		Target.y += _speed;
 	}
 
 	gfx::Viewport* Camera2D::GetViewport()

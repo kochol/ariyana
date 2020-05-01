@@ -9,17 +9,29 @@ namespace ari::en
 
 	static gfx::PosVertex2D s_SpritePosVertices[] =
 	{
-		{-1.0f, -1.0f},
-		{1.0f, -1.0f},
-		{1.0f, 1.0f},
-		{-1.0f, 1.0f},
+		{ 0.0f, 0.0f, 0.0f, 0.0f },
+		{ 1.0f, 0.0f, 1.0f, 0.0f },
+		{ 1.0f, 1.0f, 1.0f, 1.0f },
+		{ 0.0f, 1.0f, 0.0f, 1.0f },
 	};
 
 	static const uint16_t s_spriteTriList[] =
 	{
 		0,2,1	3,0,2
 	};
+	void Sprite::Render(const int& _frameTurnIndex)
+	{
+		auto mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
 
+		if (Texture.IsValid())
+		{
+			//apply texture
+		}
+		else
+		{
+			// apply vertices
+		}
+	}
 	Sprite::Sprite()
 	{
 		_isRenderable = true;
