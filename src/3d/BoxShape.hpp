@@ -1,6 +1,7 @@
 #pragma once
 #include "Node3D.hpp"
 #include "gfx/gfx.hpp"
+#include "gfx/SubMesh.hpp"
 
 namespace ari::en
 {
@@ -13,7 +14,7 @@ namespace ari::en
 		ARI_COMPONENT_CHILD(BoxShape, Node3D)
 
 		//! Constructor
-		BoxShape() { _isRenderable = true; }
+		BoxShape();
 
 		//! Destructor
 		virtual ~BoxShape() = default;
@@ -22,6 +23,7 @@ namespace ari::en
 		void Render(const int& _frameTurnIndex) override;
 
 		gfx::TextureHandle Texture;
+		gfx::SubMeshHandle SubMesh;
 
 		static void Init(RenderSystem* render_system);
 		static void Shutdown();
@@ -30,8 +32,6 @@ namespace ari::en
 		static gfx::BufferHandle m_sVBColor;
 		static gfx::BufferHandle m_sVBTexcoord;
 		static gfx::BufferHandle m_sIB;
-		static gfx::ShaderHanlde m_sProgram;
-		static gfx::ShaderHanlde m_sTexProgram;
 		static gfx::PipelineHandle m_sPipeline;
 		static gfx::PipelineHandle m_sTexPipeline;
 		static gfx::BindingHandle m_sBinding;

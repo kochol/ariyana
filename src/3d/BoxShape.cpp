@@ -1,7 +1,6 @@
 #include "BoxShape.hpp"
 #include "gfx/Vertices.hpp"
 #include "sokol_gfx.h"
-#include "Box.glsl.h"
 #include "en/ComponentManager.hpp"
 
 namespace ari::en
@@ -12,8 +11,6 @@ namespace ari::en
 	gfx::BufferHandle BoxShape::m_sVBColor;
 	gfx::BufferHandle BoxShape::m_sVBTexcoord;
 	gfx::BufferHandle BoxShape::m_sIB;
-	gfx::ShaderHanlde BoxShape::m_sProgram;
-	gfx::ShaderHanlde BoxShape::m_sTexProgram;
 	gfx::PipelineHandle BoxShape::m_sPipeline;
 	gfx::PipelineHandle BoxShape::m_sTexPipeline;
 	gfx::BindingHandle BoxShape::m_sBinding;
@@ -128,10 +125,23 @@ namespace ari::en
 		22, 20, 21,  23, 20, 22
 	};
 
+	BoxShape::BoxShape()
+	{
+		_isRenderable = true;
+		SubMesh.Handle = core::HandleManager<gfx::SubMeshHandle>::GetNewHandle(SubMesh.Index);
+		auto sub_mesh = core::ObjectPool<gfx::SubMesh>::New(SubMesh.Index);
+		sub_mesh->IndexBuffer = m_sIB;
+		sub_mesh->Type = gfx::PrimitiveType::Triangles;
+		sub_mesh->AABB = sx_aabbwhd(2.f, 2.f, 2.f);
+		sub_mesh->Position = m_sVBPos;
+		sub_mesh->Texcoord = m_sVBTexcoord;
+		sub_mesh->Color = m_sVBColor;
+		sub_mesh->ElementsCount = 36;
+	}
+
 	void BoxShape::Render(const int& _frameTurnIndex)
 	{		
-		vs_params_t vs_params;
-		vs_params.mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
+		auto mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
 
 		if (Texture.IsValid())
 		{
@@ -144,7 +154,7 @@ namespace ari::en
 			ApplyPipeline(m_sPipeline);
 			ApplyBindings(m_sBinding);
 		}
-		ApplyUniforms(gfx::ShaderStage::VertexShader, SLOT_vs_params, &vs_params, sizeof(vs_params));
+		ApplyUniforms(gfx::ShaderStage::VertexShader, 0, mvp.f, sizeof(sx_mat4));
 		gfx::Draw(0, 36, 1);
 	}
 
@@ -167,28 +177,27 @@ namespace ari::en
 				(void*)s_cubeTriList);
 
 			// Create shader, pipeline and binding
-			m_sProgram = gfx::CreateShader(box_shader_desc());
-
 			gfx::PipelineSetup pipeline_setup;
-			pipeline_setup.shader = m_sProgram;
+			pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicVertexColor);
 			pipeline_setup.layout.attrs[0].format = gfx::VertexFormat::Float3;
 			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::UByte4N;
 			pipeline_setup.layout.attrs[1].bufferIndex = 1;
-			pipeline_setup.index_type = gfx::IndexType::Uint16;			
+			pipeline_setup.layout.attrs[2].format = gfx::VertexFormat::UByte4N;
+			pipeline_setup.layout.attrs[2].bufferIndex = 2;
+			pipeline_setup.index_type = gfx::IndexType::Uint16;
 
 			m_sPipeline = gfx::CreatePipeline(pipeline_setup);
 
 			gfx::Bindings bindings;
 			bindings.vertexBuffers[0] = m_sVBPos;
 			bindings.vertexBuffers[1] = m_sVBColor;
+			bindings.vertexBuffers[2] = m_sVBColor;
 			bindings.indexBuffer = m_sIB;
 
 			m_sBinding = gfx::CreateBinding(bindings);
 
 			// Create shader, pipeline and binding
-			m_sTexProgram = gfx::CreateShader(box_tex_shader_desc());
-
-			pipeline_setup.shader = m_sTexProgram;
+			pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicTexture);
 			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::Float2;
 
 			m_sTexPipeline = gfx::CreatePipeline(pipeline_setup);
@@ -207,8 +216,6 @@ namespace ari::en
 			DestroyBuffer(m_sVBColor);
 			DestroyBuffer(m_sVBTexcoord);
 			DestroyBuffer(m_sIB);
-			DestroyShader(m_sProgram);
-			DestroyShader(m_sTexProgram);
 			DestroyPipeline(m_sPipeline);
 			DestroyPipeline(m_sTexPipeline);
 			DestroyBinding(m_sBinding);

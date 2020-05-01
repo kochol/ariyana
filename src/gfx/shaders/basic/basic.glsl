@@ -2,6 +2,8 @@
 
 @include ../shared/ctypes.glsl
 
+// basic withe shader
+
 @vs vs
 
 uniform vs_params {
@@ -23,6 +25,7 @@ void main() {
 
 @program basic vs fs
 
+// basic textured shader
 @vs vs_tex
 
 uniform vs_params 
@@ -55,3 +58,36 @@ void main() {
 @end
 
 @program basic_tex vs_tex fs_tex
+
+// basic colored shader
+
+// basic vertex color shader
+
+@vs vs_vertex_color
+
+uniform vs_params {
+    mat4 mvp;
+};
+
+in vec4 pos;
+layout(location=2)in vec4 color0;
+out vec4 color;
+
+void main() 
+{ 
+    gl_Position = mvp * pos;
+    color = color0;
+}
+@end
+
+@fs fs_vertex_color
+in vec4 color;
+out vec4 frag_color;
+
+void main() 
+{
+    frag_color = color;
+}
+@end
+
+@program basic_vertex_color vs_vertex_color fs_vertex_color

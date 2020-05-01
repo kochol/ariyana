@@ -23,6 +23,7 @@ namespace ari
 		{
 			g_shaders[int(ShaderType::Basic)] = CreateShader(ari_basic_shader_desc());
 			g_shaders[int(ShaderType::BasicTexture)] = CreateShader(ari_basic_tex_shader_desc());
+			g_shaders[int(ShaderType::BasicVertexColor)] = CreateShader(ari_basic_vertex_color_shader_desc());
 		}
 
 		ShaderHanlde GetShader(ShaderType shader)
