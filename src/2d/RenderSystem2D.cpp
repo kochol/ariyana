@@ -33,6 +33,11 @@ namespace ari::en
 		if (m_pFrameDataCurrent)
 		{
 			//set the camera2D
+			if (m_pFrameDataCurrent->Camera2dObj)
+			{
+				
+
+			}
 		}
 		gfx::EndPass();
 		gfx::Commit();
