@@ -45,3 +45,24 @@ uniform vs_params_mesh_T
 
 // mesh_T
 @program mesh_T vs_mesh_T fs_mesh_T
+
+//================================================================================
+// vs_mesh_VC
+@vs vs_mesh_VC
+#define HAS_VERTEXCOLOR 1
+uniform vs_params_mesh_VC
+{
+@include_block vs_params
+};
+@include_block vs_main
+@end
+
+// fs_mesh_VC
+@fs fs_mesh_VC
+#define HAS_VERTEXCOLOR 1
+@include_block fs_params
+@include_block fs_main
+@end
+
+// mesh_VC
+@program mesh_VC vs_mesh_VC fs_mesh_VC

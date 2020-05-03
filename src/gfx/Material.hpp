@@ -6,6 +6,7 @@ namespace ari::gfx
     struct Material
     {
         bool HasTexcoord = false;
+        bool HasVertexColor = false;
         bool HasNormal = false;
     };
     
