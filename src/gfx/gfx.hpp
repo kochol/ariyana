@@ -13,7 +13,7 @@ namespace ari
     namespace gfx
     {
 		ARI_HANDLE(BufferHandle);
-		ARI_HANDLE(ShaderHanlde);
+		ARI_HANDLE(ShaderHandle);
 		ARI_HANDLE(PipelineHandle);
 		ARI_HANDLE(TextureHandle);
 		ARI_HANDLE(BindingHandle);		
@@ -86,7 +86,7 @@ namespace ari
 		struct PipelineSetup
 		{
 			LayoutSetup layout;
-			ShaderHanlde shader;
+			ShaderHandle shader;
 			IndexType index_type = IndexType::None;
 		};
 
@@ -209,7 +209,7 @@ namespace ari
 		
 		void SetupShaders();
 
-		ShaderHanlde GetShader(ShaderType shader);
+		ShaderHandle GetShader(ShaderType shader);
 
 		void RenderToWindow(const io::WindowHandle& handle);
 
@@ -223,9 +223,9 @@ namespace ari
 
 		void DestroyBuffer(BufferHandle& buffer);
 
-		ShaderHanlde CreateShader(const sg_shader_desc* desc);
+		ShaderHandle CreateShader(const sg_shader_desc* desc);
 
-		void DestroyShader(ShaderHanlde& shader);
+		void DestroyShader(ShaderHandle& shader);
 
 		PipelineHandle CreatePipeline(const PipelineSetup& setup);
 

@@ -17,7 +17,7 @@ namespace ari
 
 		static sx_mat4 g_mView, g_mProj, g_mViewProj;
 
-		ShaderHanlde g_shaders[int(ShaderType::Count)];
+		ShaderHandle g_shaders[int(ShaderType::Count)];
 
 		void SetupShaders()
 		{
@@ -26,7 +26,7 @@ namespace ari
 			g_shaders[int(ShaderType::BasicVertexColor)] = CreateShader(ari_basic_vertex_color_shader_desc());
 		}
 
-		ShaderHanlde GetShader(ShaderType shader)
+		ShaderHandle GetShader(ShaderType shader)
 		{
 			return g_shaders[int(shader)];
 		}
@@ -65,17 +65,17 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
-		ShaderHanlde CreateShader(const sg_shader_desc* desc)
+		ShaderHandle CreateShader(const sg_shader_desc* desc)
 		{
 			const sg_shader shader = sg_make_shader(desc);
-			return { core::HandleManager<ShaderHanlde>::CreateHandleByIndex(shader.id), shader.id };
+			return { core::HandleManager<ShaderHandle>::CreateHandleByIndex(shader.id), shader.id };
 		}
 
 		//------------------------------------------------------------------------------
-		void DestroyShader(ShaderHanlde& shader)
+		void DestroyShader(ShaderHandle& shader)
 		{
 			sg_destroy_shader({ shader.Index });
-			core::HandleManager<ShaderHanlde>::RemoveHandle(shader.Handle);
+			core::HandleManager<ShaderHandle>::RemoveHandle(shader.Handle);
 			shader.Handle = shader.Index = core::aInvalidHandle;
 		}
 
