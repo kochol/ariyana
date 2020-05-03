@@ -10,6 +10,8 @@ namespace ari::gfx
         bool HasTexcoord = false;
         bool HasVertexColor = false;
         bool HasNormal = false;
+        bool HasDirLight = false;
+        bool HasPointLight = false;
 
         sg_shader_desc* shader_desc = nullptr;
         ShaderHandle shader;

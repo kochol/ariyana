@@ -9,6 +9,11 @@ out vec2 uv;
 in vec4 color0;
 out vec4 color;
 #endif
+#if HAS_NORMAL
+in vec3 normal0;
+out vec3 FragPos;
+out vec3 Normal;
+#endif
 
 void main()
 {
@@ -18,6 +23,10 @@ void main()
 #endif
 #if HAS_VERTEXCOLOR
     color = color0;
+#endif
+#if HAS_NORMAL
+    FragPos = vec3(matWorld * pos);
+    Normal = mat3(matNormal) * normal0;
 #endif
 }
 @end

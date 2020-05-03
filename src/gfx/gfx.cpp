@@ -8,12 +8,22 @@
 
 // Include shaders
 #include "basic.glsl.h"
+#include "mesh.glsl.h"
+#include "sx/hash.h"
+#include "Material.hpp"
 
 namespace ari
 {
     namespace gfx
     {
+		struct ShaderDescShaderHandle
+		{
+			const sg_shader_desc* desc = nullptr;
+			ShaderHandle shader;
+		};
+
 		core::Array<sg_bindings> g_binds_array;
+		core::Map<uint32_t, ShaderDescShaderHandle> MaterialShaders;
 
 		static sx_mat4 g_mView, g_mProj, g_mViewProj;
 
@@ -24,6 +34,47 @@ namespace ari
 			g_shaders[int(ShaderType::Basic)] = CreateShader(ari_basic_shader_desc());
 			g_shaders[int(ShaderType::BasicTexture)] = CreateShader(ari_basic_tex_shader_desc());
 			g_shaders[int(ShaderType::BasicVertexColor)] = CreateShader(ari_basic_vertex_color_shader_desc());
+
+			// Init material shaders
+			ShaderDescShaderHandle sh;
+			sh.desc = ari_mesh__shader_desc();
+			MaterialShaders.Add(sx_hash_xxh32("mesh_", 5, 0), sh);
+			sh.desc = ari_mesh_T_shader_desc();
+			MaterialShaders.Add(sx_hash_xxh32("mesh_T", 6, 0), sh);
+			sh.desc = ari_mesh_VC_shader_desc();
+			MaterialShaders.Add(sx_hash_xxh32("mesh_VC", 7, 0), sh);
+			sh.desc = ari_mesh_TND_shader_desc();
+			MaterialShaders.Add(sx_hash_xxh32("mesh_TND", 8, 0), sh);
+			sh.desc = ari_mesh_TNP_shader_desc();
+			MaterialShaders.Add(sx_hash_xxh32("mesh_TNP", 8, 0), sh);
+		}
+
+		void SetMaterialShader(Material& material)
+		{
+			core::StringBuilder str("mesh_");
+			if (material.HasTexcoord)
+				str.Append("T");
+			if (material.HasVertexColor)
+				str.Append("VC");
+			if (material.HasNormal)
+				str.Append("N");
+			if (material.HasDirLight)
+				str.Append("D");
+			if (material.HasPointLight)
+				str.Append("P");
+
+			uint32_t hash = sx_hash_xxh32(str.AsCStr(), str.Length(), 0);
+			if (MaterialShaders.Contains(hash))
+			{
+				ShaderDescShaderHandle& mat = MaterialShaders[hash];
+				if (!mat.shader.IsValid())
+					mat.shader = CreateShader(mat.desc);
+				material.shader = mat.shader;
+			}
+			else
+			{
+				log_error("Shader for material %s not found.", str.AsCStr());
+			}
 		}
 
 		ShaderHandle GetShader(ShaderType shader)

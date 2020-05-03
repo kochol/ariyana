@@ -66,3 +66,59 @@ uniform vs_params_mesh_VC
 
 // mesh_VC
 @program mesh_VC vs_mesh_VC fs_mesh_VC
+
+//================================================================================
+// vs_mesh_TND
+@vs vs_mesh_TND
+#define HAS_TEXCOORD 1
+#define HAS_NORMAL 1
+#define HAS_DIR_LIGHT 1
+uniform vs_params_mesh_TND
+{
+@include_block vs_params
+};
+@include_block vs_main
+@end
+
+// fs_mesh_TND
+@fs fs_mesh_TND
+#define HAS_TEXCOORD 1
+#define HAS_NORMAL 1
+#define HAS_DIR_LIGHT 1
+uniform fs_params_mesh_TND
+{
+@include_block fs_params
+};
+@include_block fs_main
+@end
+ 
+// mesh_TND
+@program mesh_TND vs_mesh_TND fs_mesh_TND
+
+//================================================================================
+// vs_mesh_TNP
+@vs vs_mesh_TNP
+#define HAS_TEXCOORD 1
+#define HAS_NORMAL 1
+#define HAS_POINT_LIGHT 1
+uniform vs_params_mesh_TNP
+{
+@include_block vs_params
+};
+@include_block vs_main
+@end
+
+// fs_mesh_TNP
+@fs fs_mesh_TNP
+#define HAS_TEXCOORD 1
+#define HAS_NORMAL 1
+#define HAS_POINT_LIGHT 1
+uniform fs_params_mesh_TNP
+{
+@include_block fs_params
+};
+@include_block fs_main
+@end
+
+// mesh_TNP
+@program mesh_TNP vs_mesh_TNP fs_mesh_TNP
