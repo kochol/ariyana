@@ -122,3 +122,59 @@ uniform fs_params_mesh_TNP
 
 // mesh_TNP
 @program mesh_TNP vs_mesh_TNP fs_mesh_TNP
+
+//================================================================================
+// vs_mesh_VCND
+@vs vs_mesh_VCND
+#define HAS_VERTEXCOLOR 1
+#define HAS_NORMAL 1
+#define HAS_DIR_LIGHT 1
+uniform vs_params_mesh_VCND
+{
+@include_block vs_params
+};
+@include_block vs_main
+@end
+
+// fs_mesh_VCND
+@fs fs_mesh_VCND
+#define HAS_VERTEXCOLOR 1
+#define HAS_NORMAL 1
+#define HAS_DIR_LIGHT 1
+uniform fs_params_mesh_VCND
+{
+@include_block fs_params
+};
+@include_block fs_main
+@end
+ 
+// mesh_VCND
+@program mesh_VCND vs_mesh_VCND fs_mesh_VCND
+
+//================================================================================
+// vs_mesh_VCNP
+@vs vs_mesh_VCNP
+#define HAS_VERTEXCOLOR 1
+#define HAS_NORMAL 1
+#define HAS_POINT_LIGHT 1
+uniform vs_params_mesh_VCNP
+{
+@include_block vs_params
+};
+@include_block vs_main
+@end
+
+// fs_mesh_VCNP
+@fs fs_mesh_VCNP
+#define HAS_VERTEXCOLOR 1
+#define HAS_NORMAL 1
+#define HAS_POINT_LIGHT 1
+uniform fs_params_mesh_VCNP
+{
+@include_block fs_params
+};
+@include_block fs_main
+@end
+
+// mesh_VCNP
+@program mesh_VCNP vs_mesh_VCNP fs_mesh_VCNP

@@ -121,6 +121,12 @@ namespace ari
 			sh.desc = ari_mesh_TNP_shader_desc();
 			sh.Setup("mesh_TNP");
 			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_VCND_shader_desc();
+			sh.Setup("mesh_VCND");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_VCNP_shader_desc();
+			sh.Setup("mesh_VCNP");
+			MaterialShaders.Add(sh.hash, sh);
 		}
 
 		void SetMaterialShader(Material& material)
