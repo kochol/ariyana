@@ -140,9 +140,9 @@ namespace ari
 			if (material.HasNormal && (g_bHasDirLight || g_bHasOmniLight))
 			{
 				str.Append("N");
-				if (material.HasDirLight || g_bHasDirLight)
+				if (g_bHasDirLight)
 					str.Append("D");
-				if (material.HasPointLight || g_bHasOmniLight)
+				if (g_bHasOmniLight)
 					str.Append("P");
 			}
 			uint32_t hash = sx_hash_xxh32(str.AsCStr(), str.Length(), 0);
@@ -308,8 +308,7 @@ namespace ari
 				}
 				else if (ui.Name == str_uni_specularStrength)
 				{
-					float f = 1.0f;
-					SetUniformData(ui, material, &f);
+					SetUniformData(ui, material, &material->SpecularStrength);
 				}
 			}
 
