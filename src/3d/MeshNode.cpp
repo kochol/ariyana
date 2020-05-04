@@ -10,6 +10,7 @@ namespace ari::en
 	    if (Mesh.IsValid())
 	    {
 			gfx::SetWorldMatrix(_finalMat[_frameTurnIndex]);
+			gfx::SetNormalMatrix(_normalMat[_frameTurnIndex]);
 
 			auto mesh = core::ObjectPool<gfx::Mesh>::GetByIndex(Mesh.Index);
 			for (auto sub_mesh_hdl: mesh->SubMeshes)

@@ -33,7 +33,8 @@ namespace ari::en
 		bool has_mat;
 		sx_mat4 Transform;
 
-		sx_mat4 _finalMat[3];
+		sx_mat4 _finalMat[3],
+			_normalMat[3];
 		bool _isRenderable;
 
 	}; // Node3D

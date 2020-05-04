@@ -100,9 +100,9 @@ namespace ari::en
 		}
 	}
 
-	void SceneSystem::CalcTransform(Node3D* node, sx_mat4* parentMat)
+	void SceneSystem::CalcTransform(Node3D* node, Node3D* parent)
 	{
-		sx_mat4 m;
+		sx_mat4 m, n;
 		if (node->has_mat)
 		{
 			m = node->Transform;
@@ -113,22 +113,32 @@ namespace ari::en
 				node->Rotation.x, node->Rotation.y, node->Rotation.z,
 				node->Position.x, node->Position.y, node->Position.z);
 		}
-		if (parentMat)
-			node->_finalMat[m_FameDataTurnIndex] = m * (*parentMat);
+		n = sx_mat4_SRT(1.f, 1.f, 1.f,
+			node->Rotation.x, node->Rotation.y, node->Rotation.z,
+			0.f, 0.f, 0.f
+			);
+		if (parent)
+		{
+			node->_finalMat[m_FameDataTurnIndex] = m * parent->_finalMat[m_FameDataTurnIndex];
+			node->_normalMat[m_FameDataTurnIndex] = n * parent->_normalMat[m_FameDataTurnIndex];
+		}
 		else
+		{
 			node->_finalMat[m_FameDataTurnIndex] = m;
-		parentMat = &node->_finalMat[m_FameDataTurnIndex];
+			node->_normalMat[m_FameDataTurnIndex] = n;
+		}
+		parent = node;
 
 		if (node->_isRenderable)
 		{
 			// Add it to frame data
 			m_pFrameDataTransforms->Nodes.Add(node);
 		}
-		node->GetChildren([parentMat, this](Node* n)
+		node->GetChildren([parent, this](Node* n)
 		{
 			if (n->GetBaseId() == Node3D::Id)
 			{
-				CalcTransform(reinterpret_cast<Node3D*>(n), parentMat);
+				CalcTransform(reinterpret_cast<Node3D*>(n), parent);
 			}
 		});
 	} // CalcTransform
