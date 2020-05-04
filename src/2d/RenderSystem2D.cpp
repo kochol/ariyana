@@ -1,9 +1,10 @@
 #include "RenderSystem2D.hpp"
-#include "FrameData2D.hpp"
 #include "gfx/Viewport.hpp"
+#include "Sprite.hpp"
+#include "FrameData2D.hpp"
+#include "Camera2D.hpp"
 #include "en/World.hpp"
 #include "en/ComponentManager.hpp"
-#include "Sprite.hpp"
 
 namespace ari::en
 {
@@ -35,7 +36,13 @@ namespace ari::en
 			//set the camera2D
 			if (m_pFrameDataCurrent->Camera2dObj)
 			{
-				
+				gfx::Viewport* pViewport = m_pFrameDataCurrent->Camera2dObj->GetViewport();
+				gfx::SetViewProjMatrix(m_pFrameDataCurrent->Camera2dObj->_view,
+					m_pFrameDataCurrent->Camera2dObj->_proj);
+				for (auto node : m_pFrameDataCurrent->Nodes)
+				{
+					node->Render(m_pFrameDataCurrent->FrameDataTurnIndex);
+				}
 
 			}
 		}
@@ -70,7 +77,7 @@ namespace ari::en
 		Sprite::Init(this);
 	}
 
-	void RenderSystem2D::Receive(World* world, const events::OnFrameData2D& event)
+	void RenderSystem2D::Receive(World* world, const events::OnFrameData2D & event)
 	{
 		sx_unused(world);
 		m_pFrameDataNext = event.frame_data_2d;

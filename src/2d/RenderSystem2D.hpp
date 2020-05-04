@@ -21,7 +21,7 @@ namespace ari::en
 		~RenderSystem2D();
 
 		void Update(World* _world, const float& _elapsed, UpdateState::Enum _state) override;
-		void Configure(World* p_world);
+		void Configure(World* p_world)override;
 		void Unconfigure(World* _world) override;
 		bool NeedUpdateOn(UpdateState::Enum _state) override;
 

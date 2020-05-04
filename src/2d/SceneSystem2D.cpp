@@ -35,7 +35,35 @@ namespace ari::en
 				events::OnFrameData2D frame_data_2d = { m_pFrameDataTransforms };
 				p_world->emit(frame_data_2d);
 			}
+			if (m_FrameDataTurnIndex > 2)
+				m_FrameDataTurnIndex = 0;
+			m_pFrameDataTransforms = m_aFrameData2D[m_FrameDataTurnIndex];
+			m_pFrameDataTransforms->FrameNumber = gfx::GetFrameNumber();
+			m_pFrameDataTransforms->Camera2dObj = m_pActiveCamera2D;
+			m_pFrameDataTransforms->Nodes.Clear();
 
+			// Get all entities and calc transforms
+			p_world->GetDerivedComponents<Node2D>([this](uint32_t _entity_handle, const ComponentHandle<Node2D> & node)
+				{
+					this->CalcTransform(node.Component, nullptr);
+				});
+			if (m_pActiveCamera2D)
+			{
+				//m_pActiveCamera2D->_view = sx_vie;
+
+				core::RectI rect;
+				gfx::Viewport* p = m_pActiveCamera2D->GetViewport();
+				if (p)
+					rect = p->Rect;
+				else
+				{
+					rect = io::GetWindowSize(TargetWindow);
+				}
+
+				/*m_pActiveCamera2D->_proj = sx_mat4_ortho(m_pActiveCamera2D->width,)*/
+			}
+
+			m_FrameDataTurnIndex++;
 		}
 	}
 
@@ -56,7 +84,7 @@ namespace ari::en
 		
 	}
 
-	void SceneSystem2D::Receive(World * world, const events::OnComponentAssigned<Camera2D>& event)
+	void SceneSystem2D::Receive	(World * world, const events::OnComponentAssigned<Camera2D>& event)
 	{
 		sx_unused(world);
 		if (!m_pActiveCamera2D)
@@ -75,9 +103,9 @@ namespace ari::en
 		}
 	}
 
-	void SceneSystem2D::CalcTransform(Node2D* node, sx_mat3* parentMat)
+	void SceneSystem2D::CalcTransform(Node2D* node, sx_mat4* parentMat)
 	{
-		sx_mat3 m;
+		sx_mat4 m;
 		if (node->has_mat)
 		{
 			m = node->Transform;
@@ -85,10 +113,10 @@ namespace ari::en
 		else
 		{
 			
-			m = sx_mat3_SRT(
-				node->Scale.x, node->Scale.y, 
-				node->Rotation,
-				node->Position.x, node->Position.y
+			m = sx_mat4_SRT(
+				node->Scale.x, node->Scale.y, 0, 
+				0, 0, node->Rotation,
+				node->Position.x, node->Position.y, 0
 			);
 		}
 		if (parentMat)

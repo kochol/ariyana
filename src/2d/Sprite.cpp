@@ -14,10 +14,17 @@ namespace ari::en
 		{ 0.5f, 0.5f, 0.5f, 0.5f },
 		{ -0.5f, 0.5f, -0.5f, 0.5f },
 	};
+	static gfx::ColorVertex s_SpriteColorVertices[] =
+	{
+		{0xFF0000FF},
+		{0xFF0000FF},
+		{0xFF0000FF},
+		{0xFF0000FF},
+	};
 
 	static const uint16_t s_spriteTriList[] =
 	{
-		0,2,1	3,0,2
+		0,2,1,	3,0,2
 	};
 
 	Sprite::Sprite()
@@ -33,6 +40,7 @@ namespace ari::en
 		if (Texture.IsValid())
 		{
 			//apply texture
+			
 		}
 		else
 		{
@@ -41,6 +49,10 @@ namespace ari::en
 	}
 
 	
+	void Sprite::Init(RenderSystem2D* render_system_2D)
+	{
+	}
+
 	void Sprite::Shutdown()
 	{
 		// Destroy buffers, pipelines and bindings

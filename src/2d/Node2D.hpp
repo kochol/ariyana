@@ -30,9 +30,9 @@ namespace ari::en
 		float	Rotation; // rotation around z-axis
 		sx_vec2 Scale;
 		bool has_mat;
-		sx_mat3 Transform;
+		sx_mat4 Transform;
 
-		sx_mat3 _finalMat[3];
+		sx_mat4 _finalMat[3];
 		bool _isRenderable;
 
 	}; // Node2D
