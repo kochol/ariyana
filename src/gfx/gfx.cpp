@@ -25,6 +25,17 @@ namespace ari
 			int VS_UniformSize;
 			int FS_UniformSize;
 
+			// Shader uniform names string atoms
+			core::StringAtom str_uni_mvp = "mvp",
+				str_uni_matNormal = "matNormal",
+				str_uni_matWorld = "matWorld",
+				str_uni_camPos = "camPos",
+				str_uni_specularStrength = "specularStrength",
+				str_uni_lightDir = "lightDir",
+				str_uni_lightColor = "lightColor",
+				str_uni_lightPos = "lightPos";
+
+
 			void Setup(core::StringBuilder name)
 			{
 				hash = sx_hash_xxh32(name.AsCStr(), name.Length(), 0);
@@ -36,7 +47,7 @@ namespace ari
 				int fs_offset = 0;
 				if (name.Contains("mesh_"))
 				{
-					Uniforms.Add({ "mvp", 16, 0, ShaderStage::VertexShader });
+					Uniforms.Add({ str_uni_mvp, 16, 0, ShaderStage::VertexShader, true });
 					vs_offset += 16;
 					int index = 5;
 					while (name.Length() < index)
@@ -51,21 +62,21 @@ namespace ari
 								index++;
 							break;
 						case 'N': // Normal
-							Uniforms.Add({ "matWorld", 16, vs_offset, ShaderStage::VertexShader });
-							Uniforms.Add({ "matNormal", 16, vs_offset + 16, ShaderStage::VertexShader });
+							Uniforms.Add({ str_uni_matWorld, 16, vs_offset, ShaderStage::VertexShader, true });
+							Uniforms.Add({ str_uni_matNormal, 16, vs_offset + 16, ShaderStage::VertexShader, true });
 							vs_offset += 32;
-							Uniforms.Add({ "camPos", 3, fs_offset, ShaderStage::FragmentShader });
-							Uniforms.Add({ "specularStrength", 1, fs_offset + 3, ShaderStage::FragmentShader });
+							Uniforms.Add({ str_uni_camPos, 3, fs_offset, ShaderStage::FragmentShader, true });
+							Uniforms.Add({ str_uni_specularStrength, 1, fs_offset + 3, ShaderStage::FragmentShader, false });
 							fs_offset += 4;
 							break;
 						case 'D': // Dir light
-							Uniforms.Add({ "lightDir", 3, fs_offset, ShaderStage::FragmentShader });
-							Uniforms.Add({ "lightColor", 3, fs_offset + 4, ShaderStage::FragmentShader });
+							Uniforms.Add({ str_uni_lightDir, 3, fs_offset, ShaderStage::FragmentShader, true });
+							Uniforms.Add({ str_uni_lightColor, 3, fs_offset + 4, ShaderStage::FragmentShader, true });
 							fs_offset += 8;
 							break;
 						case 'P': // Point light
-							Uniforms.Add({ "lightPos", 3, fs_offset, ShaderStage::FragmentShader });
-							Uniforms.Add({ "lightColor", 3, fs_offset + 4, ShaderStage::FragmentShader });
+							Uniforms.Add({ str_uni_lightPos, 3, fs_offset, ShaderStage::FragmentShader, true });
+							Uniforms.Add({ str_uni_lightColor, 3, fs_offset + 4, ShaderStage::FragmentShader, true });
 							fs_offset += 8;
 							break;
 						default:
@@ -80,7 +91,7 @@ namespace ari
 		core::Array<sg_bindings> g_binds_array;
 		core::Map<uint32_t, ShaderDescShaderHandle> MaterialShaders;
 
-		static sx_mat4 g_mView, g_mProj, g_mViewProj;
+		static sx_mat4 g_mView, g_mProj, g_mViewProj, g_mWorld, g_mNormal, g_mWorldViewProj;
 
 		ShaderHandle g_shaders[int(ShaderType::Count)];
 
@@ -133,6 +144,8 @@ namespace ari
 				material.FS_UniformSize = mat.FS_UniformSize;
 				material.VS_UniformSize = mat.VS_UniformSize;
 				material.Uniforms = &mat.Uniforms;
+				material.Fs_UniformData.Reserve(material.FS_UniformSize);
+				material.Vs_UniformData.Reserve(material.VS_UniformSize);
 			}
 			else
 			{
@@ -232,6 +245,16 @@ namespace ari
 		void ApplyPipeline(const PipelineHandle& pipeline)
 		{
 			sg_apply_pipeline({ pipeline.Index });
+		}
+
+		//------------------------------------------------------------------------------
+		void ApplyPipelineAndMaterial(const PipelineHandle& pipeline, Material* material)
+		{
+			SetPipelineShader(pipeline, material->shader);
+			ApplyPipeline(pipeline);
+			ApplyUniforms(ShaderStage::VertexShader, 0, &material->Vs_UniformData.Front(), material->VS_UniformSize);
+			if (material->FS_UniformSize > 0)
+				ApplyUniforms(ShaderStage::FragmentShader, 0, &material->Fs_UniformData.Front(), material->FS_UniformSize);
 		}
 
 		//------------------------------------------------------------------------------
@@ -346,6 +369,27 @@ namespace ari
 			return g_mProj;
 		}
 
+		void SetWorldMatrix(const sx_mat4& _world)
+		{
+			g_mWorld = _world;
+			g_mWorldViewProj = g_mViewProj * g_mWorld;
+		}
+
+		sx_mat4 GetWorldMatrix()
+		{
+			return g_mWorld;
+		}
+
+		void SetNormalMatrix(const sx_mat4& _normal)
+		{
+			g_mNormal = _normal;
+		}
+
+		sx_mat4 GetNormalMatrix()
+		{
+			return g_mNormal;
+		}
+
 		//------------------------------------------------------------------------------
 		void SetViewProjMatrix(const sx_mat4& _view, const sx_mat4& _proj)
 		{
@@ -358,6 +402,17 @@ namespace ari
 		sx_mat4 GetViewProjMatrix()
 		{
 			return g_mViewProj;
+		}
+
+		void SetWorldViewProjMatrix(const sx_mat4& _world, const sx_mat4& _view, const sx_mat4& _proj)
+		{
+			SetViewProjMatrix(_view, _proj);
+			SetWorldMatrix(_world);
+		}
+
+		sx_mat4 GetWorldViewProjMatrix()
+		{
+			return g_mWorldViewProj;
 		}
 
 		//------------------------------------------------------------------------------

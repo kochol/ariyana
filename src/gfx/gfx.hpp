@@ -205,6 +205,8 @@ namespace ari
 			Count
 		};
 
+		struct Material;
+
 		bool SetupGfx(GfxSetup& setup);
 		
 		void SetupShaders();
@@ -233,6 +235,10 @@ namespace ari
 
 		void ApplyPipeline(const PipelineHandle& pipeline);
 
+		void ApplyPipelineAndMaterial(const PipelineHandle& pipeline, Material* material);
+
+		void SetPipelineShader(const PipelineHandle& pipeline, const ShaderHandle& shader);
+
 		BindingHandle CreateBinding(const Bindings& bindings);
 
 		void DestroyBinding(BindingHandle& binding);
@@ -259,11 +265,24 @@ namespace ari
 
 		sx_mat4 GetProjMatrix();
 
+		/// Set world after view and projection matrix
+		void SetWorldMatrix(const sx_mat4& _world);
+
+		sx_mat4 GetWorldMatrix();
+
+		void SetNormalMatrix(const sx_mat4& _normal);
+
+		sx_mat4 GetNormalMatrix();
+
 		void SetViewProjMatrix(const sx_mat4& _view, const sx_mat4& _proj);
 
 		sx_mat4 GetViewProjMatrix();
 
-		TextureHandle LoadTexture(core::String _path);
+		void SetWorldViewProjMatrix(const sx_mat4& _world, const sx_mat4& _view, const sx_mat4& _proj);
+
+		sx_mat4 GetWorldViewProjMatrix();
+
+    	TextureHandle LoadTexture(core::String _path);
         
     } // namespace gfx
     
