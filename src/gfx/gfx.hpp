@@ -285,6 +285,12 @@ namespace ari
 		sx_mat4 GetWorldViewProjMatrix();
 
     	TextureHandle LoadTexture(core::String _path);
+
+		void SetDirLight(const sx_vec3& dir, const sx_vec4& color);
+
+		void SetOmniLight(const sx_vec3& pos, const sx_vec4& color);
+
+		void SetCameraPosition(const sx_vec3& pos);
         
     } // namespace gfx
     

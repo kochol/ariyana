@@ -50,7 +50,7 @@ namespace ari
 					Uniforms.Add({ str_uni_mvp, 16, 0, ShaderStage::VertexShader, true });
 					vs_offset += 16;
 					int index = 5;
-					while (name.Length() < index)
+					while (name.Length() > index)
 					{
 						switch (name.At(index))
 						{
@@ -91,7 +91,10 @@ namespace ari
 		core::Array<sg_bindings> g_binds_array;
 		core::Map<uint32_t, ShaderDescShaderHandle> MaterialShaders;
 
-		static sx_mat4 g_mView, g_mProj, g_mViewProj, g_mWorld, g_mNormal, g_mWorldViewProj;
+		static sx_mat4 g_mView, g_mProj, g_mViewProj, g_mWorld, g_mNormal = sx_mat4_ident(), g_mWorldViewProj;
+		static sx_vec3 g_vLightDir, g_vLightPos, g_vCamPos;
+		static sx_vec4 g_cLightColor;
+		static bool g_bHasDirLight = false, g_bHasOmniLight = false;
 
 		ShaderHandle g_shaders[int(ShaderType::Count)];
 
@@ -122,18 +125,20 @@ namespace ari
 
 		void SetMaterialShader(Material& material)
 		{
-			core::StringBuilder str("mesh_");
+			static core::StringBuilder str;
+			str.Set("mesh_");
 			if (material.HasTexcoord)
 				str.Append("T");
 			if (material.HasVertexColor)
 				str.Append("VC");
-			if (material.HasNormal)
+			if (material.HasNormal && (g_bHasDirLight || g_bHasOmniLight))
+			{
 				str.Append("N");
-			if (material.HasDirLight)
-				str.Append("D");
-			if (material.HasPointLight)
-				str.Append("P");
-
+				if (material.HasDirLight || g_bHasDirLight)
+					str.Append("D");
+				if (material.HasPointLight || g_bHasOmniLight)
+					str.Append("P");
+			}
 			uint32_t hash = sx_hash_xxh32(str.AsCStr(), str.Length(), 0);
 			if (MaterialShaders.Contains(hash))
 			{
@@ -271,13 +276,34 @@ namespace ari
 				{
 					SetUniformData(ui, material, g_mWorldViewProj.f);
 				}
-				else if (ui.Name == str_uni_matNormal)
+				else if (ui.Name == str_uni_matWorld)
 				{
-					SetUniformData(ui, material, g_mNormal.f);
+					SetUniformData(ui, material, g_mWorld.f);
 				}
 				else if(ui.Name == str_uni_matNormal)
 				{
 					SetUniformData(ui, material, g_mNormal.f);
+				}
+				else if (ui.Name == str_uni_camPos)
+				{
+					SetUniformData(ui, material, g_vCamPos.f);
+				}
+				else if (ui.Name == str_uni_lightDir)
+				{
+					SetUniformData(ui, material, g_vLightDir.f);
+				}
+				else if (ui.Name == str_uni_lightPos)
+				{
+					SetUniformData(ui, material, g_vLightPos.f);
+				}
+				else if (ui.Name == str_uni_lightColor)
+				{
+					SetUniformData(ui, material, g_cLightColor.f);
+				}
+				else if (ui.Name == str_uni_specularStrength)
+				{
+					float f = 1.0f;
+					SetUniformData(ui, material, &f);
 				}
 			}
 
@@ -575,6 +601,27 @@ namespace ari
 			});
 
 			return { core::HandleManager<TextureHandle>::CreateHandleByIndex(img.id), img.id };
+		}
+
+		void SetDirLight(const sx_vec3& dir, const sx_vec4& color)
+		{
+			g_vLightDir = dir;
+			g_cLightColor = color;
+			g_bHasDirLight = true;
+			g_bHasOmniLight = false;
+		}
+
+		void SetOmniLight(const sx_vec3& pos, const sx_vec4& color)
+		{
+			g_vLightPos = pos;
+			g_cLightColor = color;
+			g_bHasDirLight = false;
+			g_bHasOmniLight = true;
+		}
+
+		void SetCameraPosition(const sx_vec3& pos)
+		{
+			g_vCamPos = pos;
 		}
 
     } // namespace gfx

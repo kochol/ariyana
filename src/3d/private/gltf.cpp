@@ -412,9 +412,9 @@ namespace ari::en
 						sub_mesh->Material.HasTexcoord = true;
 						break;
 					case cgltf_attribute_type_normal:
-						continue;
 						sub_mesh->Normal = accessor->GfxBuffer;
 						buffer_index = 2;
+						sub_mesh->Material.HasNormal = true;
 						break;
 					case cgltf_attribute_type_tangent:
 						sub_mesh->Tangent = accessor->GfxBuffer;

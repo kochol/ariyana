@@ -35,6 +35,7 @@ namespace ari::en
 			m_pFrameDataTransforms = &m_aFrameData[m_FameDataTurnIndex];
 			m_pFrameDataTransforms->FrameNumber = gfx::GetFrameNumber();
 			m_pFrameDataTransforms->CameraObj = m_pActiveCamera;
+			m_pFrameDataTransforms->CameraPos = m_pActiveCamera->Position;
 			m_pFrameDataTransforms->Nodes.Clear();
 
 			// Get all entities and calc transforms
@@ -57,7 +58,7 @@ namespace ari::en
 					rect = io::GetWindowSize(TargetWindow);
 				}
 				m_pActiveCamera->_proj = sx_mat4_perspectiveFOV(sx_torad(m_pActiveCamera->Fov),
-					float(rect.width) / float(rect.height), m_pActiveCamera->zNear, m_pActiveCamera->zFar, true);
+					float(rect.width) / float(rect.height), m_pActiveCamera->zNear, m_pActiveCamera->zFar, true);				
 			}
 
 			m_FameDataTurnIndex++;
