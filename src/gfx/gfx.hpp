@@ -213,6 +213,8 @@ namespace ari
 
 		ShaderHandle GetShader(ShaderType shader);
 
+		void SetMaterialShader(Material& material);
+
 		void RenderToWindow(const io::WindowHandle& handle);
 
 		void Present(const io::WindowHandle& handle = io::MainWindow);

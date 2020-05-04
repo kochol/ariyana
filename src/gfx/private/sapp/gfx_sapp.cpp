@@ -112,7 +112,10 @@ namespace ari
 		void SetPipelineShader(const PipelineHandle& pipeline, const ShaderHandle& shader)
 		{
 			_sg_pipeline_t* pip = _sg_lookup_pipeline(&_sg.pools, pipeline.Index);
+			if (pip->cmn.shader_id.id == shader.Index)
+				return;
 			pip->shader = _sg_lookup_shader(&_sg.pools, shader.Index);
+			pip->cmn.shader_id.id = shader.Index;
 		}
 
 	}

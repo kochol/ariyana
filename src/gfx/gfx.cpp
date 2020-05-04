@@ -16,6 +16,16 @@ namespace ari
 {
 	namespace gfx
 	{
+		// Shader uniform names string atoms
+		core::StringAtom str_uni_mvp = "mvp",
+			str_uni_matNormal = "matNormal",
+			str_uni_matWorld = "matWorld",
+			str_uni_camPos = "camPos",
+			str_uni_specularStrength = "specularStrength",
+			str_uni_lightDir = "lightDir",
+			str_uni_lightColor = "lightColor",
+			str_uni_lightPos = "lightPos";
+
 		struct ShaderDescShaderHandle
 		{
 			const sg_shader_desc* desc = nullptr;
@@ -25,20 +35,10 @@ namespace ari
 			int VS_UniformSize;
 			int FS_UniformSize;
 
-			// Shader uniform names string atoms
-			core::StringAtom str_uni_mvp = "mvp",
-				str_uni_matNormal = "matNormal",
-				str_uni_matWorld = "matWorld",
-				str_uni_camPos = "camPos",
-				str_uni_specularStrength = "specularStrength",
-				str_uni_lightDir = "lightDir",
-				str_uni_lightColor = "lightColor",
-				str_uni_lightPos = "lightPos";
-
-
 			void Setup(core::StringBuilder name)
 			{
 				hash = sx_hash_xxh32(name.AsCStr(), name.Length(), 0);
+				Uniforms.Clear();
 
 				// Prepare uniform data
 				VS_UniformSize = desc->vs.uniform_blocks[0].size;
@@ -145,7 +145,9 @@ namespace ari
 				material.VS_UniformSize = mat.VS_UniformSize;
 				material.Uniforms = &mat.Uniforms;
 				material.Fs_UniformData.Reserve(material.FS_UniformSize);
+				material.Fs_UniformData.FillDumyData();
 				material.Vs_UniformData.Reserve(material.VS_UniformSize);
+				material.Vs_UniformData.FillDumyData();
 			}
 			else
 			{
@@ -247,9 +249,46 @@ namespace ari
 			sg_apply_pipeline({ pipeline.Index });
 		}
 
+		void SetUniformData(const MaterialUniformInfo& ui, Material* material, float* data)
+		{
+			if (ui.Stage == ShaderStage::VertexShader)
+			{
+				core::Memory::Copy(data, &material->Vs_UniformData[ui.Offset], ui.Size * 4);
+			}
+			else
+			{
+				core::Memory::Copy(data, &material->Fs_UniformData[ui.Offset], ui.Size * 4);
+			}
+		}
+
+		//------------------------------------------------------------------------------
+		void SetMaterialUniforms(Material* material)
+		{
+			for(int i = 0; i < material->Uniforms->Size(); i++)
+			{
+				const auto& ui = material->Uniforms->operator[](i);
+				if (ui.Name == str_uni_mvp)
+				{
+					SetUniformData(ui, material, g_mWorldViewProj.f);
+				}
+				else if (ui.Name == str_uni_matNormal)
+				{
+					SetUniformData(ui, material, g_mNormal.f);
+				}
+				else if(ui.Name == str_uni_matNormal)
+				{
+					SetUniformData(ui, material, g_mNormal.f);
+				}
+			}
+
+		}
+
 		//------------------------------------------------------------------------------
 		void ApplyPipelineAndMaterial(const PipelineHandle& pipeline, Material* material)
 		{
+			// update engine uniforms data
+			SetMaterialUniforms(material);
+
 			SetPipelineShader(pipeline, material->shader);
 			ApplyPipeline(pipeline);
 			ApplyUniforms(ShaderStage::VertexShader, 0, &material->Vs_UniformData.Front(), material->VS_UniformSize);

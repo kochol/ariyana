@@ -394,7 +394,6 @@ namespace ari::en
 					case cgltf_attribute_type_position:
 						sub_mesh->Position = accessor->GfxBuffer;
 						buffer_index = 0;
-						// TODO: add bounding box
 						if (accessor->HasMax)
 						{
 							sub_mesh->AABB.xmax = accessor->Max[0];
@@ -407,7 +406,10 @@ namespace ari::en
 						break;
 					case cgltf_attribute_type_texcoord:
 						sub_mesh->Texcoord = accessor->GfxBuffer;
+						if (sub_mesh->Material.HasVertexColor)
+							continue;
 						buffer_index = 1;
+						sub_mesh->Material.HasTexcoord = true;
 						break;
 					case cgltf_attribute_type_normal:
 						continue;
@@ -420,8 +422,10 @@ namespace ari::en
 						break;
 					case cgltf_attribute_type_color:
 						sub_mesh->Color = p_scene_data->Accessors[accessor_index].GfxBuffer;
-						buffer_index = 2;
+						buffer_index = 1;
 						pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicVertexColor);
+						sub_mesh->Material.HasVertexColor = true;
+						sub_mesh->Material.HasTexcoord = false;
 						break;
 					case cgltf_attribute_type_joints:
 						sub_mesh->Joints = p_scene_data->Accessors[accessor_index].GfxBuffer;
