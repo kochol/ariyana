@@ -5,21 +5,76 @@
 #include "private/tinyktx.h"
 #include "core/log.h"
 #include "core/string/StringBuilder.hpp"
+#include "sx/hash.h"
+#include "Material.hpp"
 
 // Include shaders
 #include "basic.glsl.h"
 #include "mesh.glsl.h"
-#include "sx/hash.h"
-#include "Material.hpp"
 
 namespace ari
 {
-    namespace gfx
-    {
+	namespace gfx
+	{
 		struct ShaderDescShaderHandle
 		{
 			const sg_shader_desc* desc = nullptr;
 			ShaderHandle shader;
+			uint32_t hash;
+			core::Array<MaterialUniformInfo> Uniforms;
+			int VS_UniformSize;
+			int FS_UniformSize;
+
+			void Setup(core::StringBuilder name)
+			{
+				hash = sx_hash_xxh32(name.AsCStr(), name.Length(), 0);
+
+				// Prepare uniform data
+				VS_UniformSize = desc->vs.uniform_blocks[0].size;
+				FS_UniformSize = desc->fs.uniform_blocks[0].size;
+				int vs_offset = 0;
+				int fs_offset = 0;
+				if (name.Contains("mesh_"))
+				{
+					Uniforms.Add({ "mvp", 16, 0, ShaderStage::VertexShader });
+					vs_offset += 16;
+					int index = 5;
+					while (name.Length() < index)
+					{
+						switch (name.At(index))
+						{
+						case 'T':
+							// nothing to  do
+							break;
+						case 'V':
+							if (name.Length() > index && name.At(index + 1) == 'C')
+								index++;
+							break;
+						case 'N': // Normal
+							Uniforms.Add({ "matWorld", 16, vs_offset, ShaderStage::VertexShader });
+							Uniforms.Add({ "matNormal", 16, vs_offset + 16, ShaderStage::VertexShader });
+							vs_offset += 32;
+							Uniforms.Add({ "camPos", 3, fs_offset, ShaderStage::FragmentShader });
+							Uniforms.Add({ "specularStrength", 1, fs_offset + 3, ShaderStage::FragmentShader });
+							fs_offset += 4;
+							break;
+						case 'D': // Dir light
+							Uniforms.Add({ "lightDir", 3, fs_offset, ShaderStage::FragmentShader });
+							Uniforms.Add({ "lightColor", 3, fs_offset + 4, ShaderStage::FragmentShader });
+							fs_offset += 8;
+							break;
+						case 'P': // Point light
+							Uniforms.Add({ "lightPos", 3, fs_offset, ShaderStage::FragmentShader });
+							Uniforms.Add({ "lightColor", 3, fs_offset + 4, ShaderStage::FragmentShader });
+							fs_offset += 8;
+							break;
+						default:
+							log_warn("Unknown shader stage %s", name.At(index));
+						}
+						index++;
+					}
+				}
+			}
 		};
 
 		core::Array<sg_bindings> g_binds_array;
@@ -38,15 +93,20 @@ namespace ari
 			// Init material shaders
 			ShaderDescShaderHandle sh;
 			sh.desc = ari_mesh__shader_desc();
-			MaterialShaders.Add(sx_hash_xxh32("mesh_", 5, 0), sh);
+			sh.Setup("mesh_");
+			MaterialShaders.Add(sh.hash, sh);
 			sh.desc = ari_mesh_T_shader_desc();
-			MaterialShaders.Add(sx_hash_xxh32("mesh_T", 6, 0), sh);
+			sh.Setup("mesh_T");
+			MaterialShaders.Add(sh.hash, sh);
 			sh.desc = ari_mesh_VC_shader_desc();
-			MaterialShaders.Add(sx_hash_xxh32("mesh_VC", 7, 0), sh);
+			sh.Setup("mesh_VC");
+			MaterialShaders.Add(sh.hash, sh);
 			sh.desc = ari_mesh_TND_shader_desc();
-			MaterialShaders.Add(sx_hash_xxh32("mesh_TND", 8, 0), sh);
+			sh.Setup("mesh_TND");
+			MaterialShaders.Add(sh.hash, sh);
 			sh.desc = ari_mesh_TNP_shader_desc();
-			MaterialShaders.Add(sx_hash_xxh32("mesh_TNP", 8, 0), sh);
+			sh.Setup("mesh_TNP");
+			MaterialShaders.Add(sh.hash, sh);
 		}
 
 		void SetMaterialShader(Material& material)
@@ -70,6 +130,9 @@ namespace ari
 				if (!mat.shader.IsValid())
 					mat.shader = CreateShader(mat.desc);
 				material.shader = mat.shader;
+				material.FS_UniformSize = mat.FS_UniformSize;
+				material.VS_UniformSize = mat.VS_UniformSize;
+				material.Uniforms = &mat.Uniforms;
 			}
 			else
 			{
