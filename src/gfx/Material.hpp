@@ -23,6 +23,7 @@ namespace ari::gfx
 
         // User controlled values
         float SpecularStrength = 1.0f;
+        sx_vec4 BaseColor = sx_vec4f(1.f, 1.f, 1.f, 1.f);
 
         sg_shader_desc* shader_desc = nullptr;
         ShaderHandle shader;

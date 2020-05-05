@@ -26,7 +26,7 @@ void main()
 #endif
 #if HAS_NORMAL
     FragPos = vec3(matWorld * pos);
-    Normal = mat3(matNormal) * normal0;
+    Normal = mat3(matWorld) * normal0;
 #endif
 }
 @end

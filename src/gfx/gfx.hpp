@@ -272,10 +272,6 @@ namespace ari
 
 		sx_mat4 GetWorldMatrix();
 
-		void SetNormalMatrix(const sx_mat4& _normal);
-
-		sx_mat4 GetNormalMatrix();
-
 		void SetViewProjMatrix(const sx_mat4& _view, const sx_mat4& _proj);
 
 		sx_mat4 GetViewProjMatrix();

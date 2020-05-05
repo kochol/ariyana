@@ -355,18 +355,23 @@ namespace ari::en
 				gfx::Bindings bindings;
 
 				// Set the textures
-				if (gltf_prim->material 
-					&& gltf_prim->material->has_pbr_metallic_roughness
-					&& gltf_prim->material->pbr_metallic_roughness.base_color_texture.texture)
+				if (gltf_prim->material)
 				{
-					int tex_index = gltf_prim->material->pbr_metallic_roughness.base_color_texture.texture - gltf->textures;
-					bindings.fsTextures[0] = p_scene_data->Textures[tex_index];						
-					pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicTexture);
+					if (gltf_prim->material->has_pbr_metallic_roughness)
+					{
+						if (gltf_prim->material->pbr_metallic_roughness.base_color_texture.texture)
+						{
+							int tex_index = gltf_prim->material->pbr_metallic_roughness.base_color_texture.texture - gltf->textures;
+							bindings.fsTextures[0] = p_scene_data->Textures[tex_index];
+						}
+						core::Memory::Copy(gltf_prim->material->pbr_metallic_roughness.base_color_factor, sub_mesh->Material.BaseColor.f, 16);
+					}
+					else if(gltf_prim->material->has_pbr_specular_glossiness)
+					{
+						core::Memory::Copy(gltf_prim->material->pbr_specular_glossiness.diffuse_factor, sub_mesh->Material.BaseColor.f, 16);
+					}
 				}
-				else
-				{
-					pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::Basic);
-				}
+				pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::Basic);
 				
 				sub_mesh->Type = gfx::PrimitiveType(int(gltf_prim->type));
 				if (gltf_prim->indices)

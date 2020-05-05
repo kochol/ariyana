@@ -1,4 +1,5 @@
 @block fs_params
+    vec4 baseColor;
 #if HAS_NORMAL
     vec3 camPos;
     float specularStrength;

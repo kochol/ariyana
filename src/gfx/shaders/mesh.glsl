@@ -12,13 +12,16 @@
 uniform vs_params_mesh_
 {
 @include_block vs_params
-};
+}; 
 @include_block vs_main
-@end
+@end 
 
 // fs_mesh_
 @fs fs_mesh_
+uniform fs_params_mesh_
+{
 @include_block fs_params
+};
 @include_block fs_main
 @end
  
@@ -39,7 +42,10 @@ uniform vs_params_mesh_T
 // fs_mesh_T
 @fs fs_mesh_T
 #define HAS_TEXCOORD 1
+uniform fs_params_mesh_T
+{
 @include_block fs_params
+};
 @include_block fs_main
 @end
 
@@ -60,7 +66,10 @@ uniform vs_params_mesh_VC
 // fs_mesh_VC
 @fs fs_mesh_VC
 #define HAS_VERTEXCOLOR 1
+uniform fs_params_mesh_VC
+{
 @include_block fs_params
+};
 @include_block fs_main
 @end
 

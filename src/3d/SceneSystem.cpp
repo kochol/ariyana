@@ -102,7 +102,7 @@ namespace ari::en
 
 	void SceneSystem::CalcTransform(Node3D* node, Node3D* parent)
 	{
-		sx_mat4 m, n;
+		sx_mat4 m;
 		if (node->has_mat)
 		{
 			m = node->Transform;
@@ -113,19 +113,13 @@ namespace ari::en
 				node->Rotation.x, node->Rotation.y, node->Rotation.z,
 				node->Position.x, node->Position.y, node->Position.z);
 		}
-		n = sx_mat4_SRT(1.f, 1.f, 1.f,
-			node->Rotation.x, node->Rotation.y, node->Rotation.z,
-			0.f, 0.f, 0.f
-			);
 		if (parent)
 		{
 			node->_finalMat[m_FameDataTurnIndex] = parent->_finalMat[m_FameDataTurnIndex] * m;
-			node->_normalMat[m_FameDataTurnIndex] = parent->_normalMat[m_FameDataTurnIndex] * n;
 		}
 		else
 		{
 			node->_finalMat[m_FameDataTurnIndex] = m;
-			node->_normalMat[m_FameDataTurnIndex] = n;
 		}
 		parent = node;
 

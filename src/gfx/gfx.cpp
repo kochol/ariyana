@@ -18,14 +18,15 @@ namespace ari
 	{
 		// Shader uniform names string atoms
 		core::StringAtom str_uni_mvp = "mvp",
-			str_uni_matNormal = "matNormal",
 			str_uni_matWorld = "matWorld",
+			str_uni_baseColor = "baseColor",
 			str_uni_camPos = "camPos",
 			str_uni_specularStrength = "specularStrength",
 			str_uni_lightDir = "lightDir",
 			str_uni_lightColor = "lightColor",
 			str_uni_lightPos = "lightPos";
 
+		// struct
 		struct ShaderDescShaderHandle
 		{
 			const sg_shader_desc* desc = nullptr;
@@ -48,7 +49,9 @@ namespace ari
 				if (name.Contains("mesh_"))
 				{
 					Uniforms.Add({ str_uni_mvp, 16, 0, ShaderStage::VertexShader, true });
-					vs_offset += 16;
+					vs_offset = 16;
+					Uniforms.Add({ str_uni_baseColor, 4, 0, ShaderStage::FragmentShader, false });
+					fs_offset = 4;
 					int index = 5;
 					while (name.Length() > index)
 					{
@@ -63,8 +66,7 @@ namespace ari
 							break;
 						case 'N': // Normal
 							Uniforms.Add({ str_uni_matWorld, 16, vs_offset, ShaderStage::VertexShader, true });
-							Uniforms.Add({ str_uni_matNormal, 16, vs_offset + 16, ShaderStage::VertexShader, true });
-							vs_offset += 32;
+							vs_offset += 16;
 							Uniforms.Add({ str_uni_camPos, 3, fs_offset, ShaderStage::FragmentShader, true });
 							Uniforms.Add({ str_uni_specularStrength, 1, fs_offset + 3, ShaderStage::FragmentShader, false });
 							fs_offset += 4;
@@ -91,7 +93,7 @@ namespace ari
 		core::Array<sg_bindings> g_binds_array;
 		core::Map<uint32_t, ShaderDescShaderHandle> MaterialShaders;
 
-		static sx_mat4 g_mView, g_mProj, g_mViewProj, g_mWorld, g_mNormal = sx_mat4_ident(), g_mWorldViewProj;
+		static sx_mat4 g_mView, g_mProj, g_mViewProj, g_mWorld, g_mWorldViewProj;
 		static sx_vec3 g_vLightDir, g_vLightPos, g_vCamPos;
 		static sx_vec4 g_cLightColor;
 		static bool g_bHasDirLight = false, g_bHasOmniLight = false;
@@ -157,6 +159,8 @@ namespace ari
 				ShaderDescShaderHandle& mat = MaterialShaders[hash];
 				if (!mat.shader.IsValid())
 					mat.shader = CreateShader(mat.desc);
+				if (material.shader.Handle == mat.shader.Handle)
+					return;
 				material.shader = mat.shader;
 				material.FS_UniformSize = mat.FS_UniformSize;
 				material.VS_UniformSize = mat.VS_UniformSize;
@@ -292,9 +296,9 @@ namespace ari
 				{
 					SetUniformData(ui, material, g_mWorld.f);
 				}
-				else if(ui.Name == str_uni_matNormal)
+				else if (ui.Name == str_uni_baseColor)
 				{
-					SetUniformData(ui, material, g_mNormal.f);
+					SetUniformData(ui, material, material->BaseColor.f);
 				}
 				else if (ui.Name == str_uni_camPos)
 				{
@@ -454,16 +458,6 @@ namespace ari
 		sx_mat4 GetWorldMatrix()
 		{
 			return g_mWorld;
-		}
-
-		void SetNormalMatrix(const sx_mat4& _normal)
-		{
-			g_mNormal = _normal;
-		}
-
-		sx_mat4 GetNormalMatrix()
-		{
-			return g_mNormal;
 		}
 
 		//------------------------------------------------------------------------------

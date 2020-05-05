@@ -16,14 +16,13 @@ in vec3 Normal;
 
 void main() 
 {
+    frag_color = baseColor;
 #if HAS_TEXCOORD
-    frag_color = texture(tex, uv);
-#elif !HAS_VERTEXCOLOR
-    frag_color = vec4(1.0);
+    frag_color *= texture(tex, uv);
 #endif
 
 #if HAS_VERTEXCOLOR
-    frag_color += color;
+    frag_color *= color;
 #endif
 
 #if HAS_NORMAL
