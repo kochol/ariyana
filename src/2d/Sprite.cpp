@@ -3,6 +3,7 @@
 #include "sokol_gfx.h"
 #include "en/ComponentManager.hpp"
 
+
 namespace ari::en
 {
 	ARI_COMPONENT_IMP(Sprite)
@@ -10,9 +11,7 @@ namespace ari::en
 	gfx::BufferHandle Sprite::m_sVBPos;
 	gfx::BufferHandle Sprite::m_sIB;
 	gfx::PipelineHandle Sprite::m_sPipeline;
-	gfx::PipelineHandle Sprite::m_sTexPipeline;
 	gfx::BindingHandle Sprite::m_sBinding;
-	gfx::BindingHandle Sprite::m_sTexBinding;
 
 	static gfx::PosVertex2D s_SpritePosVertices[] =
 	{
@@ -35,22 +34,17 @@ namespace ari::en
 
 	void Sprite::Render(const int& _frameTurnIndex)
 	{
-		// TODO: create sx_mat3 proj and view 
 		auto mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
+
+		ApplyPipeline(m_sPipeline);
 
 		if (Texture.IsValid())
 		{
-			//apply texture
-			ApplyPipeline(m_sTexPipeline);
-			SetTexture(m_sTexBinding, 0, Texture);
-			ApplyBindings(m_sTexBinding);
+			SetTexture(m_sBinding, 0, Texture);
 		}
-		else
-		{
-			// apply vertices
-			ApplyPipeline(m_sPipeline);
-			ApplyBindings(m_sTexBinding);
-		}
+
+		ApplyBindings(m_sBinding);
+
 		ApplyUniforms(gfx::ShaderStage::VertexShader, 0, mvp.f, sizeof(sx_mat4));
 		gfx::Draw(0, 6, 1);
 	}
@@ -71,10 +65,13 @@ namespace ari::en
 
 			// Create shader, pipline and binding
 			gfx::PipelineSetup pipeline_setup;
-			pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicVertexColor);
+			pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicTexture);
 			// position
 			pipeline_setup.layout.attrs[0].format = gfx::VertexFormat::Float2;
-			
+			// texCoord
+			pipeline_setup.layout.attrs[1].bufferIndex = 1;
+			pipeline_setup.layout.attrs[1].offset = 2 * sizeof(float);
+			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::Float2;
 
 			m_sPipeline = gfx::CreatePipeline(pipeline_setup);
 
@@ -84,18 +81,6 @@ namespace ari::en
 
 			m_sBinding = gfx::CreateBinding(bindings);
 
-			// Create shader, pipeline and binding
-			pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicTexture);
-			// texCoord
-			pipeline_setup.layout.attrs[1].bufferIndex = 1;
-			pipeline_setup.layout.attrs[1].offset = 2 * sizeof(float);
-			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::Float2;
-
-			m_sTexPipeline = gfx::CreatePipeline(pipeline_setup);
-
-			bindings.vertexBuffers[0] = m_sVBPos;
-
-			m_sTexBinding = gfx::CreateBinding(bindings);
 		}
 	}
 
@@ -106,9 +91,7 @@ namespace ari::en
 			DestroyBuffer(m_sVBPos);
 			DestroyBuffer(m_sIB);
 			DestroyPipeline(m_sPipeline);
-			DestroyPipeline(m_sTexPipeline);
 			DestroyBinding(m_sBinding);
-			DestroyBinding(m_sTexBinding);
 		}
 	}
 } // ari::en

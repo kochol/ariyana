@@ -43,7 +43,7 @@ namespace ari::en
 			m_pFrameDataTransforms->Nodes.Clear();
 
 			// Get all entities and calc transforms
-			p_world->GetDerivedComponents<Node2D>([this](uint32_t _entity_handle, const ComponentHandle<Node2D> & node)
+			p_world->GetDerivedComponents<Node2D>([this](uint32_t _entity_handle, const ComponentHandle<Node2D>& node)
 				{
 					this->CalcTransform(node.Component, nullptr);
 				});
@@ -119,8 +119,7 @@ namespace ari::en
 			m = sx_mat4_SRT(
 				node->Scale.x, node->Scale.y, 0, 
 				0, 0, node->Rotation,
-				node->Position.x, node->Position.y, 0
-			);
+				node->Position.x, node->Position.y, 0);
 		}
 		if (parentMat)
 			node->_finalMat[m_FrameDataTurnIndex] = m * (*parentMat);
@@ -134,7 +133,7 @@ namespace ari::en
 			// Add it to frame data
 			m_pFrameDataTransforms->Nodes.Add(node);
 		}
-		node->GetChildren([parentMat, this](Node * n)
+		node->GetChildren([parentMat, this](Node* n)
 			{
 				if (n->GetBaseId() == Node2D::Id)
 				{

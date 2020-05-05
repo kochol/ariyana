@@ -27,12 +27,9 @@ namespace ari::en
 		static void Shutdown();
 
 		static gfx::BufferHandle m_sVBPos;
-		static gfx::BufferHandle m_sVBColor;
 		static gfx::BufferHandle m_sIB;
 		static gfx::PipelineHandle m_sPipeline;
-		static gfx::PipelineHandle m_sTexPipeline;
 		static gfx::BindingHandle m_sBinding;
-		static gfx::BindingHandle m_sTexBinding;
 
 
 	};

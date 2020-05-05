@@ -2,6 +2,7 @@
 
 #include "en/Node.hpp"
 #include "sx/math.h"
+#include "sx/macros.h"
 #include "core/defines.hpp"
 
 namespace ari::en
@@ -27,7 +28,7 @@ namespace ari::en
 		virtual void Render(const int& _frameTurnIndex) { sx_unused(_frameTurnIndex); }
 
 		sx_vec2 Position;
-		float	Rotation; // rotation around z-axis
+		float	Rotation; 
 		sx_vec2 Scale;
 		bool has_mat;
 		sx_mat4 Transform;
