@@ -1,7 +1,9 @@
 #pragma once
+
 #include <LinearAllocator.h>
 #include <cstdint>
 #include "core/containers/Array.hpp"
+
 namespace ari::en
 {
 	class Node2D;

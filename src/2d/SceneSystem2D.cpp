@@ -37,7 +37,7 @@ namespace ari::en
 			}
 			if (m_FrameDataTurnIndex > 2)
 				m_FrameDataTurnIndex = 0;
-			m_pFrameDataTransforms = m_aFrameData2D[m_FrameDataTurnIndex];
+			m_pFrameDataTransforms = &m_aFrameData2D[m_FrameDataTurnIndex];
 			m_pFrameDataTransforms->FrameNumber = gfx::GetFrameNumber();
 			m_pFrameDataTransforms->Camera2dObj = m_pActiveCamera2D;
 			m_pFrameDataTransforms->Nodes.Clear();
@@ -49,7 +49,7 @@ namespace ari::en
 				});
 			if (m_pActiveCamera2D)
 			{
-				//m_pActiveCamera2D->_view = sx_vie;
+				m_pActiveCamera2D->_view = sx_mat4_ident();
 
 				core::RectI rect;
 				gfx::Viewport* p = m_pActiveCamera2D->GetViewport();
@@ -60,7 +60,10 @@ namespace ari::en
 					rect = io::GetWindowSize(TargetWindow);
 				}
 
-				/*m_pActiveCamera2D->_proj = sx_mat4_ortho(m_pActiveCamera2D->width,)*/
+				m_pActiveCamera2D->_proj = sx_mat4_ortho(
+					m_pActiveCamera2D->width,
+					m_pActiveCamera2D->hieght,
+					0.1f, 100, 0,  false);
 			}
 
 			m_FrameDataTurnIndex++;

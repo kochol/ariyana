@@ -11,7 +11,7 @@ namespace ari::gfx
 	struct PosVertex2D
 	{
 		float x, y;
-		float tx, ty;
+		float u, v;
 	};
 
 	struct ColorVertex

@@ -55,7 +55,7 @@ namespace ari::en
 	void RenderSystem2D::Configure(World* p_world)
 	{
 		p_world->Subscribe<events::OnComponentAssigned<Sprite>>(this);
-		p_world->Subscribe<events::OnFrameData>(this);
+		p_world->Subscribe<events::OnFrameData2D>(this);
 
 	} // Configure
 

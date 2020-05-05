@@ -10,7 +10,7 @@ namespace ari::en
 
 	class RenderSystem2D : public System,
 		public EventSubscriber<events::OnComponentAssigned<Sprite>>,
-		public EventSubscriber<events::OnFrameData>
+		public EventSubscriber<events::OnFrameData2D>
 	{
 	public:
 
