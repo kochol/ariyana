@@ -63,6 +63,8 @@ public:
 
     /// increase capacity to hold at least numElements more elements
     void Reserve(int numElements);
+    /// fill the array with dummy data
+    void FillDumyData();
     /// trim capacity to size (this involves a re-alloc)
     void Trim();
     /// clear the array (deletes elements, keeps capacity)
@@ -320,6 +322,12 @@ void Array<TYPE>::Reserve(int numElements)
     {
         this->adjustCapacity(newCapacity);
     }
+}
+
+template<class TYPE>
+inline void Array<TYPE>::FillDumyData()
+{
+    this->buffer.end = this->buffer.cap;
 }
 
 //------------------------------------------------------------------------------

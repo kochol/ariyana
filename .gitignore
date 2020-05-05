@@ -39,3 +39,5 @@
 .fips-settings.yml
 *.pyc
 *.ktx
+tests/07-gltf/assets/Buggy.gltf
+tests/07-gltf/assets/Buggy0.bin

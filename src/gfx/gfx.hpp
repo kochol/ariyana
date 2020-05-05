@@ -13,7 +13,7 @@ namespace ari
     namespace gfx
     {
 		ARI_HANDLE(BufferHandle);
-		ARI_HANDLE(ShaderHanlde);
+		ARI_HANDLE(ShaderHandle);
 		ARI_HANDLE(PipelineHandle);
 		ARI_HANDLE(TextureHandle);
 		ARI_HANDLE(BindingHandle);		
@@ -86,8 +86,31 @@ namespace ari
 		struct PipelineSetup
 		{
 			LayoutSetup layout;
-			ShaderHanlde shader;
+			ShaderHandle shader;
 			IndexType index_type = IndexType::None;
+
+			/// equality operator
+			bool operator==(const PipelineSetup& rhs) const
+			{
+				if (shader.Handle != rhs.shader.Handle
+					|| index_type != rhs.index_type)
+					return false;
+				for (int i = 0; i < ARI_MAX_SHADERSTAGE_BUFFERS; ++i)
+				{
+					if (layout.buffers[i].step != rhs.layout.buffers[i].step
+						|| layout.buffers[i].stepRate != rhs.layout.buffers[i].stepRate
+						|| layout.buffers[i].stride != rhs.layout.buffers[i].stride)
+						return false;
+				}
+				for (int i = 0; i < ARI_MAX_VERTEX_ATTRIBUTES; ++i)
+				{
+					if (layout.attrs[i].bufferIndex != rhs.layout.attrs[i].bufferIndex
+						|| layout.attrs[i].offset != rhs.layout.attrs[i].offset
+						|| layout.attrs[i].format != rhs.layout.attrs[i].format)
+						return false;
+				}
+				return true;
+			}
 		};
 
 		struct Bindings
@@ -98,6 +121,27 @@ namespace ari
 			int indexBufferOffset = 0;
 			TextureHandle vsTextures[ARI_MAX_SHADERSTAGE_TEXTURES];
 			TextureHandle fsTextures[ARI_MAX_SHADERSTAGE_TEXTURES];
+
+			/// equality operator
+			bool operator==(const Bindings& rhs) const
+			{
+				if (indexBuffer.Handle != rhs.indexBuffer.Handle
+					|| indexBufferOffset != rhs.indexBufferOffset)
+					return false;
+				for (int i = 0; i < ARI_MAX_SHADERSTAGE_BUFFERS; ++i)
+				{
+					if (vertexBufferOffsets[i] != rhs.vertexBufferOffsets[i]
+						|| vertexBuffers[i].Handle != rhs.vertexBuffers[i].Handle)
+						return false;
+				}
+				for (int i = 0; i < ARI_MAX_SHADERSTAGE_TEXTURES; ++i)
+				{
+					if (fsTextures[i].Handle != rhs.fsTextures[i].Handle
+						|| vsTextures[i].Handle != rhs.vsTextures[i].Handle)
+						return false;
+				}
+				return true;
+			}
 		};
 
 		enum class ShaderStage
@@ -205,11 +249,15 @@ namespace ari
 			Count
 		};
 
+		struct Material;
+
 		bool SetupGfx(GfxSetup& setup);
 		
 		void SetupShaders();
 
-		ShaderHanlde GetShader(ShaderType shader);
+		ShaderHandle GetShader(ShaderType shader);
+
+		void SetMaterialShader(Material& material);
 
 		void RenderToWindow(const io::WindowHandle& handle);
 
@@ -223,15 +271,19 @@ namespace ari
 
 		void DestroyBuffer(BufferHandle& buffer);
 
-		ShaderHanlde CreateShader(const sg_shader_desc* desc);
+		ShaderHandle CreateShader(const sg_shader_desc* desc);
 
-		void DestroyShader(ShaderHanlde& shader);
+		void DestroyShader(ShaderHandle& shader);
 
 		PipelineHandle CreatePipeline(const PipelineSetup& setup);
 
 		void DestroyPipeline(PipelineHandle& pipeline);
 
 		void ApplyPipeline(const PipelineHandle& pipeline);
+
+		void ApplyPipelineAndMaterial(const PipelineHandle& pipeline, Material* material);
+
+		void SetPipelineShader(const PipelineHandle& pipeline, const ShaderHandle& shader);
 
 		BindingHandle CreateBinding(const Bindings& bindings);
 
@@ -259,11 +311,26 @@ namespace ari
 
 		sx_mat4 GetProjMatrix();
 
+		/// Set world after view and projection matrix
+		void SetWorldMatrix(const sx_mat4& _world);
+
+		sx_mat4 GetWorldMatrix();
+
 		void SetViewProjMatrix(const sx_mat4& _view, const sx_mat4& _proj);
 
 		sx_mat4 GetViewProjMatrix();
 
-		TextureHandle LoadTexture(core::String _path);
+		void SetWorldViewProjMatrix(const sx_mat4& _world, const sx_mat4& _view, const sx_mat4& _proj);
+
+		sx_mat4 GetWorldViewProjMatrix();
+
+    	TextureHandle LoadTexture(core::String _path);
+
+		void SetDirLight(const sx_vec3& dir, const sx_vec4& color);
+
+		void SetOmniLight(const sx_vec3& pos, const sx_vec4& color);
+
+		void SetCameraPosition(const sx_vec3& pos);
         
     } // namespace gfx
     
