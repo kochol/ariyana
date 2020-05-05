@@ -127,6 +127,12 @@ namespace ari
 			sh.desc = ari_mesh_VCNP_shader_desc();
 			sh.Setup("mesh_VCNP");
 			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_ND_shader_desc();
+			sh.Setup("mesh_ND");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_NP_shader_desc();
+			sh.Setup("mesh_NP");
+			MaterialShaders.Add(sh.hash, sh);
 		}
 
 		void SetMaterialShader(Material& material)
@@ -155,9 +161,9 @@ namespace ari
 				material.FS_UniformSize = mat.FS_UniformSize;
 				material.VS_UniformSize = mat.VS_UniformSize;
 				material.Uniforms = &mat.Uniforms;
-				material.Fs_UniformData.Reserve(material.FS_UniformSize);
+				material.Fs_UniformData.Reserve(material.FS_UniformSize - material.Fs_UniformData.Size());
 				material.Fs_UniformData.FillDumyData();
-				material.Vs_UniformData.Reserve(material.VS_UniformSize);
+				material.Vs_UniformData.Reserve(material.VS_UniformSize - material.Vs_UniformData.Size());
 				material.Vs_UniformData.FillDumyData();
 			}
 			else

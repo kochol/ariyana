@@ -178,3 +178,55 @@ uniform fs_params_mesh_VCNP
 
 // mesh_VCNP
 @program mesh_VCNP vs_mesh_VCNP fs_mesh_VCNP
+
+//================================================================================
+// vs_mesh_ND
+@vs vs_mesh_ND
+#define HAS_NORMAL 1
+#define HAS_DIR_LIGHT 1
+uniform vs_params_mesh_ND
+{
+@include_block vs_params
+};
+@include_block vs_main
+@end
+
+// fs_mesh_ND
+@fs fs_mesh_ND
+#define HAS_NORMAL 1
+#define HAS_DIR_LIGHT 1
+uniform fs_params_mesh_ND
+{
+@include_block fs_params
+};
+@include_block fs_main
+@end
+ 
+// mesh_ND
+@program mesh_ND vs_mesh_ND fs_mesh_ND
+
+//================================================================================
+// vs_mesh_NP
+@vs vs_mesh_NP
+#define HAS_NORMAL 1
+#define HAS_POINT_LIGHT 1
+uniform vs_params_mesh_NP
+{
+@include_block vs_params
+};
+@include_block vs_main
+@end
+
+// fs_mesh_NP
+@fs fs_mesh_NP
+#define HAS_NORMAL 1
+#define HAS_POINT_LIGHT 1
+uniform fs_params_mesh_NP
+{
+@include_block fs_params
+};
+@include_block fs_main
+@end
+
+// mesh_NP
+@program mesh_NP vs_mesh_NP fs_mesh_NP

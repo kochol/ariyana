@@ -330,8 +330,8 @@ namespace ari::en
 		
 
 		// parse the meshes
-		core::ObjectPool<gfx::Mesh>::Setup(64);
-		core::ObjectPool<gfx::SubMesh>::Setup(128);
+		core::ObjectPool<gfx::Mesh>::Setup(512);
+		core::ObjectPool<gfx::SubMesh>::Setup(512);
 		p_scene_data->NumMeshes = int(gltf->meshes_count);
 		p_scene_data->Meshes.Reserve(p_scene_data->NumMeshes);
 		for (int i = 0; i < p_scene_data->NumMeshes; i++)
@@ -374,6 +374,7 @@ namespace ari::en
 					// Add indices
 					const int accessor_index = int(gltf_prim->indices - gltf->accessors);
 					sub_mesh->IndexBuffer = p_scene_data->Accessors[accessor_index].GfxBuffer;
+					bindings.indexBufferOffset = p_scene_data->Accessors[accessor_index].Offset;
 					sub_mesh->ElementsCount = int(gltf_prim->indices->count);
 					pipeline_setup.index_type = gfx::IndexType::Uint16;
 					bindings.indexBuffer = sub_mesh->IndexBuffer;
@@ -446,7 +447,17 @@ namespace ari::en
 						bindings.vertexBufferOffsets[buffer_index] = accessor->Offset;
 					}
 				}
-
+				if (!sub_mesh->Material.HasTexcoord && !sub_mesh->Material.HasVertexColor && sub_mesh->Material.HasNormal)
+				{
+					// set the normal to stage 1
+					pipeline_setup.layout.attrs[1] = pipeline_setup.layout.attrs[2];
+					pipeline_setup.layout.attrs[1].bufferIndex = 1;
+					pipeline_setup.layout.attrs[2] = pipeline_setup.layout.attrs[7];
+					bindings.vertexBufferOffsets[1] = bindings.vertexBufferOffsets[2];
+					bindings.vertexBuffers[1] = bindings.vertexBuffers[2];
+					bindings.vertexBufferOffsets[2] = bindings.vertexBufferOffsets[7];
+					bindings.vertexBuffers[2] = bindings.vertexBuffers[7];
+				}
 				sub_mesh->Pipeline = gfx::CreatePipeline(pipeline_setup);
 				sub_mesh->Binding = gfx::CreateBinding(bindings);
 			}

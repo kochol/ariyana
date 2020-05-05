@@ -119,8 +119,8 @@ namespace ari::en
 			);
 		if (parent)
 		{
-			node->_finalMat[m_FameDataTurnIndex] = m * parent->_finalMat[m_FameDataTurnIndex];
-			node->_normalMat[m_FameDataTurnIndex] = n * parent->_normalMat[m_FameDataTurnIndex];
+			node->_finalMat[m_FameDataTurnIndex] = parent->_finalMat[m_FameDataTurnIndex] * m;
+			node->_normalMat[m_FameDataTurnIndex] = parent->_normalMat[m_FameDataTurnIndex] * n;
 		}
 		else
 		{
