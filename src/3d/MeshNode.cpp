@@ -9,7 +9,7 @@ namespace ari::en
     {
 	    if (Mesh.IsValid())
 	    {
-			sx_mat4 mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
+			gfx::SetWorldMatrix(_finalMat[_frameTurnIndex]);
 
 			auto mesh = core::ObjectPool<gfx::Mesh>::GetByIndex(Mesh.Index);
 			for (auto sub_mesh_hdl: mesh->SubMeshes)
@@ -17,9 +17,9 @@ namespace ari::en
 				if (sub_mesh_hdl.IsValid())
 				{
 					const auto sub_mesh = core::ObjectPool<gfx::SubMesh>::GetByIndex(sub_mesh_hdl.Index);
-					gfx::ApplyPipeline(sub_mesh->Pipeline);
+					gfx::SetMaterialShader(sub_mesh->Material);
+					gfx::ApplyPipelineAndMaterial(sub_mesh->Pipeline, &sub_mesh->Material);
 					gfx::ApplyBindings(sub_mesh->Binding);
-					ApplyUniforms(gfx::ShaderStage::VertexShader, 0, &mvp, sizeof(sx_mat4));
 					gfx::Draw(0, sub_mesh->ElementsCount, 1);
 				}
 			}

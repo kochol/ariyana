@@ -64,7 +64,7 @@ private:
 
 	ari::gfx::GfxSetup			m_setup;
 	ari::gfx::BufferHandle		vb;
-	ari::gfx::ShaderHanlde		shader;
+	ari::gfx::ShaderHandle		shader;
 	ari::gfx::PipelineSetup		pipeline_setup;
 	ari::gfx::PipelineHandle	pipeline;
 	ari::gfx::BindingHandle		binding;

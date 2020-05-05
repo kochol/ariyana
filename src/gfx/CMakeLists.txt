@@ -4,6 +4,9 @@ fips_begin_module(ari_gfx)
     fips_files(
         Application.hpp
 		gfx.hpp                     gfx.cpp
+        Material.hpp
+        MaterialInstance.hpp
+        MaterialParams.hpp
 		Mesh.hpp
 		SubMesh.hpp
         Vertices.hpp
@@ -31,6 +34,8 @@ fips_begin_module(ari_gfx)
         fips_libs(GLESv3 EGL android log)
     endif()
 
+    fips_dir(shaders)
+    sokol_shader(mesh.glsl ${slang})
     fips_dir(shaders/basic)
     sokol_shader(basic.glsl ${slang})
 

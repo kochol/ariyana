@@ -5,28 +5,178 @@
 #include "private/tinyktx.h"
 #include "core/log.h"
 #include "core/string/StringBuilder.hpp"
+#include "sx/hash.h"
+#include "Material.hpp"
 
 // Include shaders
 #include "basic.glsl.h"
+#include "mesh.glsl.h"
 
 namespace ari
 {
-    namespace gfx
-    {
+	namespace gfx
+	{
+		// Shader uniform names string atoms
+		core::StringAtom str_uni_mvp = "mvp",
+			str_uni_matWorld = "matWorld",
+			str_uni_baseColor = "baseColor",
+			str_uni_camPos = "camPos",
+			str_uni_specularStrength = "specularStrength",
+			str_uni_lightDir = "lightDir",
+			str_uni_lightColor = "lightColor",
+			str_uni_lightPos = "lightPos";
+
+		// struct
+		struct ShaderDescShaderHandle
+		{
+			const sg_shader_desc* desc = nullptr;
+			ShaderHandle shader;
+			uint32_t hash;
+			core::Array<MaterialUniformInfo> Uniforms;
+			int VS_UniformSize;
+			int FS_UniformSize;
+
+			void Setup(core::StringBuilder name)
+			{
+				hash = sx_hash_xxh32(name.AsCStr(), name.Length(), 0);
+				Uniforms.Clear();
+
+				// Prepare uniform data
+				VS_UniformSize = desc->vs.uniform_blocks[0].size;
+				FS_UniformSize = desc->fs.uniform_blocks[0].size;
+				int vs_offset = 0;
+				int fs_offset = 0;
+				if (name.Contains("mesh_"))
+				{
+					Uniforms.Add({ str_uni_mvp, 16, 0, ShaderStage::VertexShader, true });
+					vs_offset = 16;
+					Uniforms.Add({ str_uni_baseColor, 4, 0, ShaderStage::FragmentShader, false });
+					fs_offset = 4;
+					int index = 5;
+					while (name.Length() > index)
+					{
+						switch (name.At(index))
+						{
+						case 'T':
+							// nothing to  do
+							break;
+						case 'V':
+							if (name.Length() > index && name.At(index + 1) == 'C')
+								index++;
+							break;
+						case 'N': // Normal
+							Uniforms.Add({ str_uni_matWorld, 16, vs_offset, ShaderStage::VertexShader, true });
+							vs_offset += 16;
+							Uniforms.Add({ str_uni_camPos, 3, fs_offset, ShaderStage::FragmentShader, true });
+							Uniforms.Add({ str_uni_specularStrength, 1, fs_offset + 3, ShaderStage::FragmentShader, false });
+							fs_offset += 4;
+							break;
+						case 'D': // Dir light
+							Uniforms.Add({ str_uni_lightDir, 3, fs_offset, ShaderStage::FragmentShader, true });
+							Uniforms.Add({ str_uni_lightColor, 3, fs_offset + 4, ShaderStage::FragmentShader, true });
+							fs_offset += 8;
+							break;
+						case 'P': // Point light
+							Uniforms.Add({ str_uni_lightPos, 3, fs_offset, ShaderStage::FragmentShader, true });
+							Uniforms.Add({ str_uni_lightColor, 3, fs_offset + 4, ShaderStage::FragmentShader, true });
+							fs_offset += 8;
+							break;
+						default:
+							log_warn("Unknown shader stage %s", name.At(index));
+						}
+						index++;
+					}
+				}
+			}
+		};
+
 		core::Array<sg_bindings> g_binds_array;
+		core::Map<uint32_t, ShaderDescShaderHandle> MaterialShaders;
 
-		static sx_mat4 g_mView, g_mProj, g_mViewProj;
+		static sx_mat4 g_mView, g_mProj, g_mViewProj, g_mWorld, g_mWorldViewProj;
+		static sx_vec3 g_vLightDir, g_vLightPos, g_vCamPos;
+		static sx_vec4 g_cLightColor;
+		static bool g_bHasDirLight = false, g_bHasOmniLight = false;
 
-		ShaderHanlde g_shaders[int(ShaderType::Count)];
+		ShaderHandle g_shaders[int(ShaderType::Count)];
 
 		void SetupShaders()
 		{
 			g_shaders[int(ShaderType::Basic)] = CreateShader(ari_basic_shader_desc());
 			g_shaders[int(ShaderType::BasicTexture)] = CreateShader(ari_basic_tex_shader_desc());
 			g_shaders[int(ShaderType::BasicVertexColor)] = CreateShader(ari_basic_vertex_color_shader_desc());
+
+			// Init material shaders
+			ShaderDescShaderHandle sh;
+			sh.desc = ari_mesh__shader_desc();
+			sh.Setup("mesh_");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_T_shader_desc();
+			sh.Setup("mesh_T");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_VC_shader_desc();
+			sh.Setup("mesh_VC");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_TND_shader_desc();
+			sh.Setup("mesh_TND");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_TNP_shader_desc();
+			sh.Setup("mesh_TNP");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_VCND_shader_desc();
+			sh.Setup("mesh_VCND");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_VCNP_shader_desc();
+			sh.Setup("mesh_VCNP");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_ND_shader_desc();
+			sh.Setup("mesh_ND");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_NP_shader_desc();
+			sh.Setup("mesh_NP");
+			MaterialShaders.Add(sh.hash, sh);
 		}
 
-		ShaderHanlde GetShader(ShaderType shader)
+		void SetMaterialShader(Material& material)
+		{
+			static core::StringBuilder str;
+			str.Set("mesh_");
+			if (material.HasTexcoord)
+				str.Append("T");
+			if (material.HasVertexColor)
+				str.Append("VC");
+			if (material.HasNormal && (g_bHasDirLight || g_bHasOmniLight))
+			{
+				str.Append("N");
+				if (g_bHasDirLight)
+					str.Append("D");
+				if (g_bHasOmniLight)
+					str.Append("P");
+			}
+			uint32_t hash = sx_hash_xxh32(str.AsCStr(), str.Length(), 0);
+			if (MaterialShaders.Contains(hash))
+			{
+				ShaderDescShaderHandle& mat = MaterialShaders[hash];
+				if (!mat.shader.IsValid())
+					mat.shader = CreateShader(mat.desc);
+				if (material.shader.Handle == mat.shader.Handle)
+					return;
+				material.shader = mat.shader;
+				material.FS_UniformSize = mat.FS_UniformSize;
+				material.VS_UniformSize = mat.VS_UniformSize;
+				material.Uniforms = &mat.Uniforms;
+				material.Fs_UniformData.Reserve(material.FS_UniformSize - material.Fs_UniformData.Size());
+				material.Fs_UniformData.FillDumyData();
+				material.Vs_UniformData.Reserve(material.VS_UniformSize - material.Vs_UniformData.Size());
+				material.Vs_UniformData.FillDumyData();
+			}
+			else
+			{
+				log_error("Shader for material %s not found.", str.AsCStr());
+			}
+		}
+
+		ShaderHandle GetShader(ShaderType shader)
 		{
 			return g_shaders[int(shader)];
 		}
@@ -65,17 +215,17 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
-		ShaderHanlde CreateShader(const sg_shader_desc* desc)
+		ShaderHandle CreateShader(const sg_shader_desc* desc)
 		{
 			const sg_shader shader = sg_make_shader(desc);
-			return { core::HandleManager<ShaderHanlde>::CreateHandleByIndex(shader.id), shader.id };
+			return { core::HandleManager<ShaderHandle>::CreateHandleByIndex(shader.id), shader.id };
 		}
 
 		//------------------------------------------------------------------------------
-		void DestroyShader(ShaderHanlde& shader)
+		void DestroyShader(ShaderHandle& shader)
 		{
 			sg_destroy_shader({ shader.Index });
-			core::HandleManager<ShaderHanlde>::RemoveHandle(shader.Handle);
+			core::HandleManager<ShaderHandle>::RemoveHandle(shader.Handle);
 			shader.Handle = shader.Index = core::aInvalidHandle;
 		}
 
@@ -118,6 +268,73 @@ namespace ari
 		void ApplyPipeline(const PipelineHandle& pipeline)
 		{
 			sg_apply_pipeline({ pipeline.Index });
+		}
+
+		void SetUniformData(const MaterialUniformInfo& ui, Material* material, float* data)
+		{
+			if (ui.Stage == ShaderStage::VertexShader)
+			{
+				core::Memory::Copy(data, &material->Vs_UniformData[ui.Offset], ui.Size * 4);
+			}
+			else
+			{
+				core::Memory::Copy(data, &material->Fs_UniformData[ui.Offset], ui.Size * 4);
+			}
+		}
+
+		//------------------------------------------------------------------------------
+		void SetMaterialUniforms(Material* material)
+		{
+			for(int i = 0; i < material->Uniforms->Size(); i++)
+			{
+				const auto& ui = material->Uniforms->operator[](i);
+				if (ui.Name == str_uni_mvp)
+				{
+					SetUniformData(ui, material, g_mWorldViewProj.f);
+				}
+				else if (ui.Name == str_uni_matWorld)
+				{
+					SetUniformData(ui, material, g_mWorld.f);
+				}
+				else if (ui.Name == str_uni_baseColor)
+				{
+					SetUniformData(ui, material, material->BaseColor.f);
+				}
+				else if (ui.Name == str_uni_camPos)
+				{
+					SetUniformData(ui, material, g_vCamPos.f);
+				}
+				else if (ui.Name == str_uni_lightDir)
+				{
+					SetUniformData(ui, material, g_vLightDir.f);
+				}
+				else if (ui.Name == str_uni_lightPos)
+				{
+					SetUniformData(ui, material, g_vLightPos.f);
+				}
+				else if (ui.Name == str_uni_lightColor)
+				{
+					SetUniformData(ui, material, g_cLightColor.f);
+				}
+				else if (ui.Name == str_uni_specularStrength)
+				{
+					SetUniformData(ui, material, &material->SpecularStrength);
+				}
+			}
+
+		}
+
+		//------------------------------------------------------------------------------
+		void ApplyPipelineAndMaterial(const PipelineHandle& pipeline, Material* material)
+		{
+			// update engine uniforms data
+			SetMaterialUniforms(material);
+
+			SetPipelineShader(pipeline, material->shader);
+			ApplyPipeline(pipeline);
+			ApplyUniforms(ShaderStage::VertexShader, 0, &material->Vs_UniformData.Front(), material->VS_UniformSize);
+			if (material->FS_UniformSize > 0)
+				ApplyUniforms(ShaderStage::FragmentShader, 0, &material->Fs_UniformData.Front(), material->FS_UniformSize);
 		}
 
 		//------------------------------------------------------------------------------
@@ -232,6 +449,17 @@ namespace ari
 			return g_mProj;
 		}
 
+		void SetWorldMatrix(const sx_mat4& _world)
+		{
+			g_mWorld = _world;
+			g_mWorldViewProj = g_mViewProj * g_mWorld;
+		}
+
+		sx_mat4 GetWorldMatrix()
+		{
+			return g_mWorld;
+		}
+
 		//------------------------------------------------------------------------------
 		void SetViewProjMatrix(const sx_mat4& _view, const sx_mat4& _proj)
 		{
@@ -244,6 +472,17 @@ namespace ari
 		sx_mat4 GetViewProjMatrix()
 		{
 			return g_mViewProj;
+		}
+
+		void SetWorldViewProjMatrix(const sx_mat4& _world, const sx_mat4& _view, const sx_mat4& _proj)
+		{
+			SetViewProjMatrix(_view, _proj);
+			SetWorldMatrix(_world);
+		}
+
+		sx_mat4 GetWorldViewProjMatrix()
+		{
+			return g_mWorldViewProj;
 		}
 
 		//------------------------------------------------------------------------------
@@ -367,6 +606,27 @@ namespace ari
 			});
 
 			return { core::HandleManager<TextureHandle>::CreateHandleByIndex(img.id), img.id };
+		}
+
+		void SetDirLight(const sx_vec3& dir, const sx_vec4& color)
+		{
+			g_vLightDir = dir;
+			g_cLightColor = color;
+			g_bHasDirLight = true;
+			g_bHasOmniLight = false;
+		}
+
+		void SetOmniLight(const sx_vec3& pos, const sx_vec4& color)
+		{
+			g_vLightPos = pos;
+			g_cLightColor = color;
+			g_bHasDirLight = false;
+			g_bHasOmniLight = true;
+		}
+
+		void SetCameraPosition(const sx_vec3& pos)
+		{
+			g_vCamPos = pos;
 		}
 
     } // namespace gfx

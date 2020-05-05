@@ -44,6 +44,13 @@ done! it's ready to rock.
 
 # Changes
 
+## Ariyana Game Engine 0.4
+
+- Implement material system
+- Phong lighting
+- Directional light and omni light
+- Fix some bugs
+
 ## Ariyana Game Engine 0.3
 
 - Adding gltf mesh loader

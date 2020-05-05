@@ -52,6 +52,9 @@ public:
 		TotalTime += _elapsedTime;
 		m_camera.Component->Position.x = sx_sin(TotalTime) * 3;
 		m_camera.Component->Position.z = sx_cos(TotalTime) * 3;
+		ari::gfx::SetOmniLight(sx_vec3f(m_camera.Component->Position.x, m_camera.Component->Position.y + 1, m_camera.Component->Position.z),
+			sx_vec4f(1.f, 1.f, 1.f, 1.f));
+		ari::gfx::SetOmniLight(sx_vec3f(3.0, 3, 3), sx_vec4f(1, 1, 1, 1));
 		m_world.Update(_elapsedTime);
 	}
 

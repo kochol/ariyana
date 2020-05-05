@@ -35,6 +35,7 @@ namespace ari::en
 			m_pFrameDataTransforms = &m_aFrameData[m_FrameDataTurnIndex];
 			m_pFrameDataTransforms->FrameNumber = gfx::GetFrameNumber();
 			m_pFrameDataTransforms->CameraObj = m_pActiveCamera;
+			m_pFrameDataTransforms->CameraPos = m_pActiveCamera->Position;
 			m_pFrameDataTransforms->Nodes.Clear();
 
 			// Get all entities and calc transforms
@@ -57,7 +58,7 @@ namespace ari::en
 					rect = io::GetWindowSize(TargetWindow);
 				}
 				m_pActiveCamera->_proj = sx_mat4_perspectiveFOV(sx_torad(m_pActiveCamera->Fov),
-					float(rect.width) / float(rect.height), m_pActiveCamera->zNear, m_pActiveCamera->zFar, true);
+					float(rect.width) / float(rect.height), m_pActiveCamera->zNear, m_pActiveCamera->zFar, true);				
 			}
 
 			m_FrameDataTurnIndex++;
@@ -99,7 +100,7 @@ namespace ari::en
 		}
 	}
 
-	void SceneSystem::CalcTransform(Node3D* node, sx_mat4* parentMat)
+	void SceneSystem::CalcTransform(Node3D* node, Node3D* parent)
 	{
 		sx_mat4 m;
 		if (node->has_mat)
@@ -112,22 +113,26 @@ namespace ari::en
 				node->Rotation.x, node->Rotation.y, node->Rotation.z,
 				node->Position.x, node->Position.y, node->Position.z);
 		}
-		if (parentMat)
-			node->_finalMat[m_FrameDataTurnIndex] = m * (*parentMat);
+		if (parent)
+		{
+			node->_finalMat[m_FameDataTurnIndex] = parent->_finalMat[m_FameDataTurnIndex] * m;
+		}
 		else
-			node->_finalMat[m_FrameDataTurnIndex] = m;
-		parentMat = &node->_finalMat[m_FrameDataTurnIndex];
+		{
+			node->_finalMat[m_FameDataTurnIndex] = m;
+		}
+		parent = node;
 
 		if (node->_isRenderable)
 		{
 			// Add it to frame data
 			m_pFrameDataTransforms->Nodes.Add(node);
 		}
-		node->GetChildren([parentMat, this](Node* n)
+		node->GetChildren([parent, this](Node* n)
 		{
 			if (n->GetBaseId() == Node3D::Id)
 			{
-				CalcTransform(reinterpret_cast<Node3D*>(n), parentMat);
+				CalcTransform(reinterpret_cast<Node3D*>(n), parent);
 			}
 		});
 	} // CalcTransform
