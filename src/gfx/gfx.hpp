@@ -88,6 +88,29 @@ namespace ari
 			LayoutSetup layout;
 			ShaderHandle shader;
 			IndexType index_type = IndexType::None;
+
+			/// equality operator
+			bool operator==(const PipelineSetup& rhs) const
+			{
+				if (shader.Handle != rhs.shader.Handle
+					|| index_type != rhs.index_type)
+					return false;
+				for (int i = 0; i < ARI_MAX_SHADERSTAGE_BUFFERS; ++i)
+				{
+					if (layout.buffers[i].step != rhs.layout.buffers[i].step
+						|| layout.buffers[i].stepRate != rhs.layout.buffers[i].stepRate
+						|| layout.buffers[i].stride != rhs.layout.buffers[i].stride)
+						return false;
+				}
+				for (int i = 0; i < ARI_MAX_VERTEX_ATTRIBUTES; ++i)
+				{
+					if (layout.attrs[i].bufferIndex != rhs.layout.attrs[i].bufferIndex
+						|| layout.attrs[i].offset != rhs.layout.attrs[i].offset
+						|| layout.attrs[i].format != rhs.layout.attrs[i].format)
+						return false;
+				}
+				return true;
+			}
 		};
 
 		struct Bindings
@@ -98,6 +121,27 @@ namespace ari
 			int indexBufferOffset = 0;
 			TextureHandle vsTextures[ARI_MAX_SHADERSTAGE_TEXTURES];
 			TextureHandle fsTextures[ARI_MAX_SHADERSTAGE_TEXTURES];
+
+			/// equality operator
+			bool operator==(const Bindings& rhs) const
+			{
+				if (indexBuffer.Handle != rhs.indexBuffer.Handle
+					|| indexBufferOffset != rhs.indexBufferOffset)
+					return false;
+				for (int i = 0; i < ARI_MAX_SHADERSTAGE_BUFFERS; ++i)
+				{
+					if (vertexBufferOffsets[i] != rhs.vertexBufferOffsets[i]
+						|| vertexBuffers[i].Handle != rhs.vertexBuffers[i].Handle)
+						return false;
+				}
+				for (int i = 0; i < ARI_MAX_SHADERSTAGE_TEXTURES; ++i)
+				{
+					if (fsTextures[i].Handle != rhs.fsTextures[i].Handle
+						|| vsTextures[i].Handle != rhs.vsTextures[i].Handle)
+						return false;
+				}
+				return true;
+			}
 		};
 
 		enum class ShaderStage
