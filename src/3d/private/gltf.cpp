@@ -65,6 +65,21 @@ namespace ari::en
 		core::String							BasePath;
 	};
 
+	core::Array<core::KeyValuePair<gfx::PipelineSetup, gfx::PipelineHandle>> g_aGltfPipelines;
+
+	gfx::PipelineHandle GetPipelineHandle(const gfx::PipelineSetup& setup)
+	{
+		for (auto& pair: g_aGltfPipelines)
+		{
+			const auto& p = pair.Key();
+			if (p == setup)
+				return pair.Value();
+		}
+		const auto pipe = gfx::CreatePipeline(setup);
+		g_aGltfPipelines.Add({ setup, pipe });
+		return pipe;
+	}
+
 	void SetPipelineAttribute(gfx::VertexAttrSetup& attr, cgltf_attribute* gltf_attr)
 	{
 		switch (gltf_attr->data->component_type)
@@ -330,8 +345,8 @@ namespace ari::en
 		
 
 		// parse the meshes
-		core::ObjectPool<gfx::Mesh>::Setup(64);
-		core::ObjectPool<gfx::SubMesh>::Setup(128);
+		core::ObjectPool<gfx::Mesh>::Setup(512);
+		core::ObjectPool<gfx::SubMesh>::Setup(512);
 		p_scene_data->NumMeshes = int(gltf->meshes_count);
 		p_scene_data->Meshes.Reserve(p_scene_data->NumMeshes);
 		for (int i = 0; i < p_scene_data->NumMeshes; i++)
@@ -355,18 +370,23 @@ namespace ari::en
 				gfx::Bindings bindings;
 
 				// Set the textures
-				if (gltf_prim->material 
-					&& gltf_prim->material->has_pbr_metallic_roughness
-					&& gltf_prim->material->pbr_metallic_roughness.base_color_texture.texture)
+				if (gltf_prim->material)
 				{
-					int tex_index = gltf_prim->material->pbr_metallic_roughness.base_color_texture.texture - gltf->textures;
-					bindings.fsTextures[0] = p_scene_data->Textures[tex_index];						
-					pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicTexture);
+					if (gltf_prim->material->has_pbr_metallic_roughness)
+					{
+						if (gltf_prim->material->pbr_metallic_roughness.base_color_texture.texture)
+						{
+							int tex_index = gltf_prim->material->pbr_metallic_roughness.base_color_texture.texture - gltf->textures;
+							bindings.fsTextures[0] = p_scene_data->Textures[tex_index];
+						}
+						core::Memory::Copy(gltf_prim->material->pbr_metallic_roughness.base_color_factor, sub_mesh->Material.BaseColor.f, 16);
+					}
+					else if(gltf_prim->material->has_pbr_specular_glossiness)
+					{
+						core::Memory::Copy(gltf_prim->material->pbr_specular_glossiness.diffuse_factor, sub_mesh->Material.BaseColor.f, 16);
+					}
 				}
-				else
-				{
-					pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::Basic);
-				}
+				pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::Basic);
 				
 				sub_mesh->Type = gfx::PrimitiveType(int(gltf_prim->type));
 				if (gltf_prim->indices)
@@ -374,6 +394,7 @@ namespace ari::en
 					// Add indices
 					const int accessor_index = int(gltf_prim->indices - gltf->accessors);
 					sub_mesh->IndexBuffer = p_scene_data->Accessors[accessor_index].GfxBuffer;
+					bindings.indexBufferOffset = p_scene_data->Accessors[accessor_index].Offset;
 					sub_mesh->ElementsCount = int(gltf_prim->indices->count);
 					pipeline_setup.index_type = gfx::IndexType::Uint16;
 					bindings.indexBuffer = sub_mesh->IndexBuffer;
@@ -394,7 +415,6 @@ namespace ari::en
 					case cgltf_attribute_type_position:
 						sub_mesh->Position = accessor->GfxBuffer;
 						buffer_index = 0;
-						// TODO: add bounding box
 						if (accessor->HasMax)
 						{
 							sub_mesh->AABB.xmax = accessor->Max[0];
@@ -407,12 +427,15 @@ namespace ari::en
 						break;
 					case cgltf_attribute_type_texcoord:
 						sub_mesh->Texcoord = accessor->GfxBuffer;
+						if (sub_mesh->Material.HasVertexColor)
+							continue;
 						buffer_index = 1;
+						sub_mesh->Material.HasTexcoord = true;
 						break;
 					case cgltf_attribute_type_normal:
-						continue;
 						sub_mesh->Normal = accessor->GfxBuffer;
 						buffer_index = 2;
+						sub_mesh->Material.HasNormal = true;
 						break;
 					case cgltf_attribute_type_tangent:
 						sub_mesh->Tangent = accessor->GfxBuffer;
@@ -420,8 +443,10 @@ namespace ari::en
 						break;
 					case cgltf_attribute_type_color:
 						sub_mesh->Color = p_scene_data->Accessors[accessor_index].GfxBuffer;
-						buffer_index = 2;
+						buffer_index = 1;
 						pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicVertexColor);
+						sub_mesh->Material.HasVertexColor = true;
+						sub_mesh->Material.HasTexcoord = false;
 						break;
 					case cgltf_attribute_type_joints:
 						sub_mesh->Joints = p_scene_data->Accessors[accessor_index].GfxBuffer;
@@ -442,8 +467,18 @@ namespace ari::en
 						bindings.vertexBufferOffsets[buffer_index] = accessor->Offset;
 					}
 				}
-
-				sub_mesh->Pipeline = gfx::CreatePipeline(pipeline_setup);
+				if (!sub_mesh->Material.HasTexcoord && !sub_mesh->Material.HasVertexColor && sub_mesh->Material.HasNormal)
+				{
+					// set the normal to stage 1
+					pipeline_setup.layout.attrs[1] = pipeline_setup.layout.attrs[2];
+					pipeline_setup.layout.attrs[1].bufferIndex = 1;
+					pipeline_setup.layout.attrs[2] = pipeline_setup.layout.attrs[7];
+					bindings.vertexBufferOffsets[1] = bindings.vertexBufferOffsets[2];
+					bindings.vertexBuffers[1] = bindings.vertexBuffers[2];
+					bindings.vertexBufferOffsets[2] = bindings.vertexBufferOffsets[7];
+					bindings.vertexBuffers[2] = bindings.vertexBuffers[7];
+				}
+				sub_mesh->Pipeline = GetPipelineHandle(pipeline_setup);
 				sub_mesh->Binding = gfx::CreateBinding(bindings);
 			}
 		}

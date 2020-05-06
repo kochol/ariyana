@@ -17,7 +17,7 @@ namespace ari
     {
 		bool SetupGfx(GfxSetup& setup)
 		{
-			const io::WindowHandle window = io::CreateAriWindow(setup.window, "Ari 0.3");
+			const io::WindowHandle window = io::CreateAriWindow(setup.window, "Ari 0.4");
 			if (!window.IsValid())
 				return false;
 
@@ -50,6 +50,15 @@ namespace ari
         {
             return g_FrameNumber;
         }
+
+		void SetPipelineShader(const PipelineHandle& pipeline, const ShaderHandle& shader)
+		{
+			_sg_pipeline_t* pip = _sg_lookup_pipeline(&_sg.pools, pipeline.Index);
+			if (pip->cmn.shader_id.id == shader.Index)
+				return;
+			pip->shader = _sg_lookup_shader(&_sg.pools, shader.Index);
+			pip->cmn.shader_id.id = shader.Index;
+		}
 
     } // namespace gfx
     

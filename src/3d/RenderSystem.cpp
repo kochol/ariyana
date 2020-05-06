@@ -40,6 +40,7 @@ namespace ari::en
 				// TODO: Set viewport
 				gfx::Viewport* pViewport = m_pFrameDataCurrent->CameraObj->GetViewport();
 				gfx::SetViewProjMatrix(m_pFrameDataCurrent->CameraObj->_view, m_pFrameDataCurrent->CameraObj->_proj);
+				gfx::SetCameraPosition(m_pFrameDataCurrent->CameraPos);
 			}
 			for (auto node : m_pFrameDataCurrent->Nodes)
 			{
