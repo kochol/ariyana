@@ -115,11 +115,11 @@ namespace ari::en
 		}
 		if (parent)
 		{
-			node->_finalMat[m_FameDataTurnIndex] = parent->_finalMat[m_FameDataTurnIndex] * m;
+			node->_finalMat[m_FrameDataTurnIndex] = parent->_finalMat[m_FrameDataTurnIndex] * m;
 		}
 		else
 		{
-			node->_finalMat[m_FameDataTurnIndex] = m;
+			node->_finalMat[m_FrameDataTurnIndex] = m;
 		}
 		parent = node;
 

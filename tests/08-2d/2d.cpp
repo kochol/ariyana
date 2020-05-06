@@ -31,7 +31,7 @@ public:
 
 		m_world.AddDerivedComponent<ari::en::Camera2D, ari::en::Node2D>(entity, camera);
 		auto sprite = m_world.CreateComponent<ari::en::Sprite, ari::en::Node2D>();
-		sprite.Component->Texture = ari::gfx::LoadTexture("res:DuckCM.png")
+		sprite.Component->Texture = ari::gfx::LoadTexture("res:DuckCM.png");
 		m_world.AddDerivedComponent<ari::en::Sprite, ari::en::Node2D>(entity, sprite);
 
 	}

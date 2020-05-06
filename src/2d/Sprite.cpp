@@ -2,7 +2,7 @@
 #include "gfx/Vertices.hpp"
 #include "sokol_gfx.h"
 #include "en/ComponentManager.hpp"
-
+#include "Shaders/sprite.glsl"
 
 namespace ari::en
 {
@@ -65,7 +65,7 @@ namespace ari::en
 
 			// Create shader, pipline and binding
 			gfx::PipelineSetup pipeline_setup;
-			pipeline_setup.shader = gfx::GetShader(gfx::ShaderType::BasicTexture);
+			pipeline_setup.shader = gfx::CreateShader(sprite_shader_desc());
 			// position
 			pipeline_setup.layout.attrs[0].format = gfx::VertexFormat::Float2;
 			// texCoord
