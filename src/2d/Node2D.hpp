@@ -2,7 +2,6 @@
 
 #include "en/Node.hpp"
 #include "sx/math.h"
-#include "sx/macros.h"
 #include "core/defines.hpp"
 
 namespace ari::en

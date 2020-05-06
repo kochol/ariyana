@@ -69,8 +69,6 @@ namespace ari::en
 			// position
 			pipeline_setup.layout.attrs[0].format = gfx::VertexFormat::Float2;
 			// texCoord
-			pipeline_setup.layout.attrs[1].bufferIndex = 1;
-			pipeline_setup.layout.attrs[1].offset = 2 * sizeof(float);
 			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::Float2;
 
 			m_sPipeline = gfx::CreatePipeline(pipeline_setup);
