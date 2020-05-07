@@ -5,6 +5,8 @@
 #include "2d/SceneSystem2D.hpp"
 #include "2d/Camera2D.hpp"
 #include "2d/Sprite.hpp"
+#include "fs_local/FileSystemLocal.hpp"
+#include "io/FileSystem.hpp"
 
 class _2dApp : public ari::Application
 {
@@ -22,6 +24,8 @@ public:
 		// Add systems
 		m_world.AddSystem(&m_renderer);
 		m_world.AddSystem(&m_scene_mgr);
+		ari::io::RegisterFileSystem("file", &m_file_system_local);
+
 
 		// Create entity and add sprite and camera
 		ari::en::EntityHandle entity = m_world.CreateEntity();
@@ -31,7 +35,9 @@ public:
 
 		m_world.AddDerivedComponent<ari::en::Camera2D, ari::en::Node2D>(entity, camera);
 		auto sprite = m_world.CreateComponent<ari::en::Sprite, ari::en::Node2D>();
-		//sprite.Component->Texture = ari::gfx::LoadTexture("res:baboon.png");
+		sprite.Component->Texture = ari::gfx::LoadTexture("res:baboon.png");
+		m_pSprite = sprite.Component;
+
 		m_world.AddDerivedComponent<ari::en::Sprite, ari::en::Node2D>(entity, sprite);
 
 	}
@@ -56,6 +62,10 @@ private:
 	ari::en::World				m_world;
 	ari::en::RenderSystem2D		m_renderer;
 	ari::en::SceneSystem2D		m_scene_mgr;
+	ari::io::FileSystemLocal	m_file_system_local;
+	ari::en::Sprite			*	m_pSprite = nullptr;
+
+
 };
 
 ARI_MAIN(_2dApp)
