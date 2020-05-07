@@ -47,7 +47,7 @@ namespace ari::en
 
 		ApplyBindings(m_sBinding);
 
-		ApplyUniforms(gfx::ShaderStage::VertexShader, SLOT_ari_vs_params, &vs_params, sizeof(sx_mat4));
+		ApplyUniforms(gfx::ShaderStage::VertexShader, SLOT_ari_vs_params, &vs_params, sizeof(ari_vs_params_t));
 
 		gfx::Draw(0, 6, 1);
 	}

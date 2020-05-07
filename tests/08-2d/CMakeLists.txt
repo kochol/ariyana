@@ -9,3 +9,5 @@ fips_begin_app(t082d cmdline)
 	ari_assets()
 
 fips_end_app()
+
+ari_proj(t082d)
