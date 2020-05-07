@@ -9,6 +9,7 @@ fips_begin_module(ari_2d)
 		RenderSystem2D.hpp        RenderSystem2D.cpp
         SceneSystem2D.hpp         SceneSystem2D.cpp
     )
-
+	fips_dir(shaders)
+    sokol_shader(sprite.glsl ${slang})
     
 fips_end_module()

@@ -2,7 +2,7 @@
 #include "gfx/Vertices.hpp"
 #include "sokol_gfx.h"
 #include "en/ComponentManager.hpp"
-#include "Shaders/sprite.glsl"
+#include "sprite.glsl.h"
 
 namespace ari::en
 {
@@ -35,6 +35,8 @@ namespace ari::en
 	void Sprite::Render(const int& _frameTurnIndex)
 	{
 		auto mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
+		ari_vs_params_t vs_params;
+		vs_params.mvp = mvp;
 
 		ApplyPipeline(m_sPipeline);
 
@@ -45,7 +47,8 @@ namespace ari::en
 
 		ApplyBindings(m_sBinding);
 
-		ApplyUniforms(gfx::ShaderStage::VertexShader, 0, mvp.f, sizeof(sx_mat4));
+		ApplyUniforms(gfx::ShaderStage::VertexShader, SLOT_ari_vs_params, &vs_params, sizeof(sx_mat4));
+
 		gfx::Draw(0, 6, 1);
 	}
 
@@ -65,11 +68,12 @@ namespace ari::en
 
 			// Create shader, pipline and binding
 			gfx::PipelineSetup pipeline_setup;
-			pipeline_setup.shader = gfx::CreateShader(sprite_shader_desc());
+			pipeline_setup.shader = gfx::CreateShader(ari_sprite_shader_desc());
 			// position
 			pipeline_setup.layout.attrs[0].format = gfx::VertexFormat::Float2;
 			// texCoord
 			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::Float2;
+			pipeline_setup.index_type = gfx::IndexType::Uint16;
 
 			m_sPipeline = gfx::CreatePipeline(pipeline_setup);
 

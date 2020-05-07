@@ -2,7 +2,7 @@
 
 @include ../shared/ctypes.glsl
 
-// basic withe shader
+// basic white shader
 
 @vs vs
 

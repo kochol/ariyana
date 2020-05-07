@@ -4,4 +4,8 @@ fips_begin_app(t082d cmdline)
     fips_files(
         2d.cpp
     )
+
+	ari_tex(assets/baboon.png ${texfmt})
+	ari_assets()
+
 fips_end_app()
