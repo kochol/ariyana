@@ -1,4 +1,5 @@
 fips_begin_module(ari_3d)
+    set(CMAKE_CXX_STANDARD 17)
 	fips_vs_warning_level(3)
 	fips_deps(ari_en ari_gfx)
     fips_files(
