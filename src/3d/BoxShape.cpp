@@ -129,6 +129,7 @@ namespace ari::en
 	{
 		_isRenderable = true;
 		SubMesh.Handle = core::HandleManager<gfx::SubMeshHandle>::GetNewHandle(SubMesh.Index);
+		core::ObjectPool<gfx::SubMesh>::Setup(512);
 		auto sub_mesh = core::ObjectPool<gfx::SubMesh>::New(SubMesh.Index);
 		sub_mesh->IndexBuffer = m_sIB;
 		sub_mesh->Type = gfx::PrimitiveType::Triangles;
