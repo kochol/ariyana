@@ -20,13 +20,10 @@ def file_is_dirty(src, dst) :
 
 #-------------------------------------------------------------------------------
 def copy_files(src_dir, dst_dir):
-    log.info("src dir = " + src_dir)
-    log.info("dst dir = " + dst_dir)
     if not os.path.exists(dst_dir):
         os.makedirs(dst_dir)
     for o in os.listdir(src_dir) :
         f = os.path.join(src_dir, o)
-        log.info("f dir = " + f)
         if os.path.isdir(f) :
             copy_files(f, dst_dir + f.split('/')[-1])
             continue
