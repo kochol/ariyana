@@ -232,6 +232,34 @@ namespace ari::en
 		return n;
 	}
 
+	void fix_buffer(cgltf_data* gltf, SceneData* p_scene_data, 
+		int accessor_index, cgltf_buffer_view_type buffer_type)
+	{
+		const cgltf_accessor* gltf_accessor = &gltf->accessors[accessor_index];
+		const int buffer_view_index = int(gltf_accessor->buffer_view - gltf->buffer_views);
+		const cgltf_buffer_view* gltf_buf_view = &gltf->buffer_views[buffer_view_index];
+		const int buffer_index = int(gltf_buf_view->buffer - gltf->buffers);
+		core::Buffer* buffer = &p_scene_data->Buffers[buffer_index];
+		const int offset = int(gltf_buf_view->offset);
+		const int size = int(gltf_buf_view->size);
+		a_assert((offset + size) <= buffer->Size());
+
+		if (buffer_type == cgltf_buffer_view_type_indices)
+		{
+			p_scene_data->GfxBuffers[buffer_view_index] = gfx::CreateIndexBuffer(size, buffer->Data() + offset);
+		}
+		else if (buffer_type == cgltf_buffer_view_type_vertices)
+		{
+			p_scene_data->GfxBuffers[buffer_view_index] = gfx::CreateVertexBuffer(size, buffer->Data() + offset);
+		}
+		else
+		{
+			a_assert(false);
+		}
+
+		p_scene_data->Accessors[accessor_index].GfxBuffer = p_scene_data->GfxBuffers[buffer_view_index];
+	}
+
 	bool gltf_parse(cgltf_data* gltf, SceneData* p_scene_data, 
 		const std::function<void(core::Array<ComponentHandle<Node3D>>)>& OnModel)
 	{
@@ -393,6 +421,9 @@ namespace ari::en
 				{
 					// Add indices
 					const int accessor_index = int(gltf_prim->indices - gltf->accessors);
+					// fix the buffer
+					if (!p_scene_data->Accessors[accessor_index].GfxBuffer.IsValid())
+						fix_buffer(gltf, p_scene_data, accessor_index, cgltf_buffer_view_type_indices);
 					sub_mesh->IndexBuffer = p_scene_data->Accessors[accessor_index].GfxBuffer;
 					bindings.indexBufferOffset = p_scene_data->Accessors[accessor_index].Offset;
 					sub_mesh->ElementsCount = int(gltf_prim->indices->count);
@@ -406,6 +437,10 @@ namespace ari::en
 				for (int a_i = 0; a_i < int(gltf_prim->attributes_count); ++a_i)
 				{
 					const int accessor_index = int(gltf_prim->attributes[a_i].data - gltf->accessors);
+
+					// fix buffer
+					if (!p_scene_data->Accessors[accessor_index].GfxBuffer.IsValid())
+						fix_buffer(gltf, p_scene_data, accessor_index, cgltf_buffer_view_type_vertices);
 
 					int buffer_index = -1;
 					Accessor* accessor = &p_scene_data->Accessors[accessor_index];
