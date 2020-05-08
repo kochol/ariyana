@@ -151,6 +151,7 @@ namespace ari::en
 
 	void SetNodeTransform(cgltf_node* node, Node3D* n)
 	{
+		n->Name = node->name;
 		if (node->has_matrix)
 		{
 			core::Memory::Copy(node->matrix, n->Transform.f, 64);
