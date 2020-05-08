@@ -28,7 +28,10 @@ namespace ari::en
 		static void Init(RenderSystem* render_system);
 		static void Shutdown();
 
+	private:
+
 		static gfx::BufferHandle m_sVBPos;
+		static gfx::BufferHandle m_sVBNormal;
 		static gfx::BufferHandle m_sVBColor;
 		static gfx::BufferHandle m_sVBTexcoord;
 		static gfx::BufferHandle m_sIB;
@@ -36,6 +39,8 @@ namespace ari::en
 		static gfx::PipelineHandle m_sTexPipeline;
 		static gfx::BindingHandle m_sBinding;
 		static gfx::BindingHandle m_sTexBinding;
+
+		gfx::SubMesh* m_pSubMesh = nullptr;
 
 	}; // BoxShape
 }

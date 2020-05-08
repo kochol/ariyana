@@ -610,7 +610,7 @@ namespace ari
 
 		void SetDirLight(const sx_vec3& dir, const sx_vec4& color)
 		{
-			g_vLightDir = dir;
+			g_vLightDir = sx_vec3_norm(dir * -1);
 			g_cLightColor = color;
 			g_bHasDirLight = true;
 			g_bHasOmniLight = false;
