@@ -13,7 +13,7 @@ namespace ari::en
 		ARI_COMPONENT(Node2D)
 
 		//! Constructor
-		Node2D() : _isRenderable(false)
+		Node2D() : _isRenderable(false), has_mat(false)
 		{
 			Position = sx_vec2f(0.0f, 0.0f);
 			Scale = sx_vec2f(1.0f, 1.0f);

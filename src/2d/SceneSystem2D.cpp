@@ -60,7 +60,8 @@ namespace ari::en
 					rect = io::GetWindowSize(TargetWindow);
 				}
 
-				m_pActiveCamera2D->_proj = sx_mat4_ortho_offcenter(0,0,rect.width/2, rect.height/2, 0.1f, 100, 0, false);
+				//m_pActiveCamera2D->_proj = sx_mat4_ortho_offcenter(0,0,rect.width/2, rect.height/2, 0.1f, 100, 0, true);
+				m_pActiveCamera2D->_proj = sx_mat4_ortho(rect.width, rect.height, 0.1f, 100, 0, false);
 			}
 
 			m_FrameDataTurnIndex++;
@@ -114,9 +115,9 @@ namespace ari::en
 		{
 			
 			m = sx_mat4_SRT(
-				node->Scale.x, node->Scale.y, 0, 
+				node->Scale.x, node->Scale.y, 1.0f, 
 				0, 0, node->Rotation,
-				node->Position.x, node->Position.y, 0);
+				node->Position.x, node->Position.y, 0.0f);
 		}
 		if (parent)
 		{

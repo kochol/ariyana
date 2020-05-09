@@ -15,10 +15,10 @@ namespace ari::en
 
 	static gfx::PosVertex2D s_SpritePosVertices[] =
 	{
-		{ -0.5f, -0.5f, 0.0f, 0.0f },	
-		{ 0.5f, -0.5f, 1.0f, 0.0f },
-		{ 0.5f, 0.5f, 1.0f, 1.0f },
-		{ -0.5f, 0.5f, 0.0f, 1.0f },
+		{ -0.5f, -0.5f, 0.0f, 1.0f },	
+		{ 0.5f, -0.5f, 1.0f, 1.0f },
+		{ 0.5f, 0.5f, 1.0f, 0.0f },
+		{ -0.5f, 0.5f, 0.0f, 0.0f },
 	};
 
 
@@ -35,10 +35,8 @@ namespace ari::en
 
 	void Sprite::Render(const int& _frameTurnIndex)
 	{
-		//auto mvp = sx_mat4_ident();
-		auto mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex] ;
 		ari_vs_params_t vs_params;
-		vs_params.mvp = mvp;
+		vs_params.mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
 
 		ApplyPipeline(m_sPipeline);
 
