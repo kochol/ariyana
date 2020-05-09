@@ -462,6 +462,8 @@ namespace ari::en
 						}
 						break;
 					case cgltf_attribute_type_texcoord:
+						if (sub_mesh->Material.HasTexcoord == true)
+							continue;
 						sub_mesh->Texcoord = accessor->GfxBuffer;
 						if (sub_mesh->Material.HasVertexColor)
 							continue;

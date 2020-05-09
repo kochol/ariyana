@@ -11,6 +11,8 @@
 // Include shaders
 #include "basic.glsl.h"
 #include "mesh.glsl.h"
+#include "Mesh.hpp"
+#include "core/memory/ObjectPool.hpp"
 
 namespace ari
 {
@@ -58,6 +60,7 @@ namespace ari
 						switch (name.At(index))
 						{
 						case 'T':
+						case 'M':
 							// nothing to  do
 							break;
 						case 'V':
@@ -82,7 +85,7 @@ namespace ari
 							fs_offset += 8;
 							break;
 						default:
-							log_warn("Unknown shader stage %s", name.At(index));
+							log_warn("Unknown shader stage %c", name.At(index));
 						}
 						index++;
 					}
@@ -114,6 +117,7 @@ namespace ari
 			sh.desc = ari_mesh_T_shader_desc();
 			sh.Setup("mesh_T");
 			MaterialShaders.Add(sh.hash, sh);
+
 			sh.desc = ari_mesh_VC_shader_desc();
 			sh.Setup("mesh_VC");
 			MaterialShaders.Add(sh.hash, sh);
@@ -123,6 +127,14 @@ namespace ari
 			sh.desc = ari_mesh_TNP_shader_desc();
 			sh.Setup("mesh_TNP");
 			MaterialShaders.Add(sh.hash, sh);
+
+			sh.desc = ari_mesh_TNMD_shader_desc();
+			sh.Setup("mesh_TNMD");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_TNMP_shader_desc();
+			sh.Setup("mesh_TNMP");
+			MaterialShaders.Add(sh.hash, sh);
+
 			sh.desc = ari_mesh_VCND_shader_desc();
 			sh.Setup("mesh_VCND");
 			MaterialShaders.Add(sh.hash, sh);
@@ -142,17 +154,17 @@ namespace ari
 			static core::StringBuilder str;
 			str.Set("mesh_");
 			if (material.HasTexcoord)
-				str.Append("T");
+				str.Append("T"); // Add texture
 			if (material.HasVertexColor)
-				str.Append("VC");
+				str.Append("VC"); // Add vertex color
 			if (material.HasNormal && (g_bHasDirLight || g_bHasOmniLight))
-			{
-				str.Append("N");
-				if (g_bHasDirLight)
-					str.Append("D");
-				if (g_bHasOmniLight)
-					str.Append("P");
-			}
+				str.Append("N"); // Add Normal
+			if (material.HasShadowAoSpecularMap)
+				str.Append("M"); // Add Shadow, AO and specular map
+			if (material.HasNormal && g_bHasDirLight)
+				str.Append("D"); // Add directional light
+			if (material.HasNormal && g_bHasOmniLight)
+				str.Append("P"); // Add Point light
 			uint32_t hash = sx_hash_xxh32(str.AsCStr(), str.Length(), 0);
 			if (MaterialShaders.Contains(hash))
 			{
@@ -627,6 +639,20 @@ namespace ari
 		void SetCameraPosition(const sx_vec3& pos)
 		{
 			g_vCamPos = pos;
+		}
+
+		Mesh* GetMesh(const MeshHandle& mesh_handle)
+		{
+			if (mesh_handle.IsValid())
+				return core::ObjectPool<gfx::Mesh>::GetByIndex(mesh_handle.Handle);
+			return nullptr;
+		}
+
+		SubMesh* GetSubMesh(const SubMeshHandle& sub_mesh_handle)
+		{
+			if (sub_mesh_handle.IsValid())
+				return core::ObjectPool<gfx::SubMesh>::GetByIndex(sub_mesh_handle.Handle);
+			return nullptr;
 		}
 
     } // namespace gfx

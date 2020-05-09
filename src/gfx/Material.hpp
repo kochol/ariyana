@@ -20,6 +20,7 @@ namespace ari::gfx
         bool HasTexcoord = false;
         bool HasVertexColor = false;
         bool HasNormal = false;
+        bool HasShadowAoSpecularMap = false;
 
         // User controlled values
         float SpecularStrength = 1.0f;
