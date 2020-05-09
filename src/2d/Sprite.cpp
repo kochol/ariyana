@@ -15,7 +15,7 @@ namespace ari::en
 
 	static gfx::PosVertex2D s_SpritePosVertices[] =
 	{
-		{ -0.5f, -0.5f, 0.0f, 0.0f },
+		{ -0.5f, -0.5f, 0.0f, 0.0f },	
 		{ 0.5f, -0.5f, 1.0f, 0.0f },
 		{ 0.5f, 0.5f, 1.0f, 1.0f },
 		{ -0.5f, 0.5f, 0.0f, 1.0f },
@@ -24,17 +24,19 @@ namespace ari::en
 
 	static const uint16_t s_spriteTriList[] =
 	{
-		0,2,1,	3,0,2
+		1,2,0, 3,0,2
 	};
 
 	Sprite::Sprite()
 	{
 		_isRenderable = true;
+
 	}
 
 	void Sprite::Render(const int& _frameTurnIndex)
 	{
-		auto mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
+		//auto mvp = sx_mat4_ident();
+		auto mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex] ;
 		ari_vs_params_t vs_params;
 		vs_params.mvp = mvp;
 
@@ -66,7 +68,7 @@ namespace ari::en
 			m_sIB = gfx::CreateIndexBuffer(sizeof(s_spriteTriList),
 				(void*)s_spriteTriList);
 
-			// Create shader, pipline and binding
+			// Create shader, pipeline and binding
 			gfx::PipelineSetup pipeline_setup;
 			pipeline_setup.shader = gfx::CreateShader(ari_sprite_shader_desc());
 			// position

@@ -60,10 +60,7 @@ namespace ari::en
 					rect = io::GetWindowSize(TargetWindow);
 				}
 
-				m_pActiveCamera2D->_proj = sx_mat4_ortho(
-					m_pActiveCamera2D->width,
-					m_pActiveCamera2D->hieght,
-					0.1f, 100, 0,  false);
+				m_pActiveCamera2D->_proj = sx_mat4_ortho_offcenter(0,0,rect.width/2, rect.height/2, 0.1f, 100, 0, false);
 			}
 
 			m_FrameDataTurnIndex++;
@@ -106,7 +103,7 @@ namespace ari::en
 		}
 	}
 
-	void SceneSystem2D::CalcTransform(Node2D* node, sx_mat4* parentMat)
+	void SceneSystem2D::CalcTransform(Node2D* node, Node2D* parent)
 	{
 		sx_mat4 m;
 		if (node->has_mat)
@@ -121,23 +118,26 @@ namespace ari::en
 				0, 0, node->Rotation,
 				node->Position.x, node->Position.y, 0);
 		}
-		if (parentMat)
-			node->_finalMat[m_FrameDataTurnIndex] = m * (*parentMat);
+		if (parent)
+		{
+			node->_finalMat[m_FrameDataTurnIndex] = parent->_finalMat[m_FrameDataTurnIndex] * m;
+		}
 		else
+		{
 			node->_finalMat[m_FrameDataTurnIndex] = m;
-
-		parentMat = &node->_finalMat[m_FrameDataTurnIndex];
+		}
+		parent = node;
 
 		if (node->_isRenderable)
 		{
 			// Add it to frame data
 			m_pFrameDataTransforms->Nodes.Add(node);
 		}
-		node->GetChildren([parentMat, this](Node* n)
+		node->GetChildren([parent, this](Node* n)
 			{
 				if (n->GetBaseId() == Node2D::Id)
 				{
-					CalcTransform(reinterpret_cast<Node2D*>(n), parentMat);
+					CalcTransform(reinterpret_cast<Node2D*>(n), parent);
 				}
 			});
 

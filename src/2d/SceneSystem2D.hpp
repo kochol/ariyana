@@ -46,7 +46,7 @@ namespace ari::en
 						*	m_pFrameDataTransforms,	// This is the transform calculated nodes
 						*	m_pFrameDataVisible;	// This is the visible nodes that must be rendered.
 
-		void CalcTransform(Node2D* node, sx_mat4* parentMat);
+		void CalcTransform(Node2D* node, Node2D* parent);
 
 	}; // SceneSystem2D
 

@@ -40,6 +40,9 @@ public:
 
 		m_world.AddDerivedComponent<ari::en::Sprite, ari::en::Node2D>(entity, sprite);
 
+		m_pSprite->Scale.x = 100;
+		m_pSprite->Scale.y = 100;
+
 	}
 
 	void OnFrame(float _elapsedTime) override

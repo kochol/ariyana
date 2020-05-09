@@ -21,7 +21,7 @@ namespace ari::en
 		virtual ~Camera2D() = default;
 
 		float		width,
-					hieght;
+					height;
 		sx_mat4		_view,
 					_proj;
 		bool		_isActive = false;
