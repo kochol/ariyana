@@ -281,9 +281,9 @@ namespace ari
 
 		void ApplyPipeline(const PipelineHandle& pipeline);
 
-		void ApplyPipelineAndMaterial(const PipelineHandle& pipeline, Material* material);
+		void ApplyPipelineAndMaterial(PipelineHandle& pipeline, Material* material);
 
-		void SetPipelineShader(const PipelineHandle& pipeline, const ShaderHandle& shader);
+		void SetPipelineShader(PipelineHandle& pipeline, const ShaderHandle& shader);
 
 		BindingHandle CreateBinding(const Bindings& bindings);
 

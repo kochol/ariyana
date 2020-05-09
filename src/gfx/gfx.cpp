@@ -242,7 +242,7 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
-		PipelineHandle CreatePipeline(const PipelineSetup& setup)
+		PipelineHandle CreatePipelineInternal(const PipelineSetup& setup)
 		{
 			sg_pipeline_desc desc;
 			core::Memory::Fill(&desc, sizeof(sg_pipeline_desc), 0);
@@ -269,12 +269,57 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
+		core::Array<core::KeyValuePair<gfx::PipelineSetup, gfx::PipelineHandle>> g_aPipelines;
+
+		//------------------------------------------------------------------------------
+		PipelineHandle CreatePipeline(const PipelineSetup& setup)
+		{
+			for (auto& pair : g_aPipelines)
+			{
+				const auto& p = pair.Key();
+				if (p == setup)
+					return pair.Value();
+			}
+			const auto pipe = gfx::CreatePipelineInternal(setup);
+			g_aPipelines.Add({ setup, pipe });
+			return pipe;
+		}
+
+		//------------------------------------------------------------------------------
 		void DestroyPipeline(PipelineHandle& pipeline)
 		{
 			sg_destroy_pipeline({ pipeline.Index });
+			for (int i = 0; i < g_aPipelines.Size(); i++)
+			{
+				if (g_aPipelines[i].Value().Handle == pipeline.Handle)
+				{
+					g_aPipelines.Erase(i);
+					break;
+				}
+			}
 			core::HandleManager<PipelineHandle>::RemoveHandle(pipeline.Handle);
 			pipeline.Handle = pipeline.Index = core::aInvalidHandle;
 		}
+
+		//------------------------------------------------------------------------------
+		void SetPipelineShader(PipelineHandle& pipeline, const ShaderHandle& shader)
+		{
+			for (int i = 0; i < g_aPipelines.Size(); i++)
+			{
+				if (g_aPipelines[i].Value().Handle == pipeline.Handle)
+				{
+					if (g_aPipelines[i].key.shader.Handle != shader.Handle)
+					{
+						// create a new pipeline
+						PipelineSetup setup = g_aPipelines[i].Key();
+						setup.shader = shader;
+						pipeline = CreatePipeline(setup);
+					}
+					return;
+				}
+			}
+		}
+
 
 		//------------------------------------------------------------------------------
 		void ApplyPipeline(const PipelineHandle& pipeline)
@@ -337,7 +382,7 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
-		void ApplyPipelineAndMaterial(const PipelineHandle& pipeline, Material* material)
+		void ApplyPipelineAndMaterial(PipelineHandle& pipeline, Material* material)
 		{
 			// update engine uniforms data
 			SetMaterialUniforms(material);

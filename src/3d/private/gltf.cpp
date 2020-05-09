@@ -65,21 +65,6 @@ namespace ari::en
 		core::String							BasePath;
 	};
 
-	core::Array<core::KeyValuePair<gfx::PipelineSetup, gfx::PipelineHandle>> g_aGltfPipelines;
-
-	gfx::PipelineHandle GetPipelineHandle(const gfx::PipelineSetup& setup)
-	{
-		for (auto& pair: g_aGltfPipelines)
-		{
-			const auto& p = pair.Key();
-			if (p == setup)
-				return pair.Value();
-		}
-		const auto pipe = gfx::CreatePipeline(setup);
-		g_aGltfPipelines.Add({ setup, pipe });
-		return pipe;
-	}
-
 	void SetPipelineAttribute(gfx::VertexAttrSetup& attr, cgltf_attribute* gltf_attr)
 	{
 		switch (gltf_attr->data->component_type)
@@ -462,7 +447,7 @@ namespace ari::en
 						}
 						break;
 					case cgltf_attribute_type_texcoord:
-						if (sub_mesh->Material.HasTexcoord == true)
+						if (sub_mesh->Material.HasTexcoord)
 							continue;
 						sub_mesh->Texcoord = accessor->GfxBuffer;
 						if (sub_mesh->Material.HasVertexColor)
@@ -516,7 +501,7 @@ namespace ari::en
 					bindings.vertexBufferOffsets[2] = bindings.vertexBufferOffsets[7];
 					bindings.vertexBuffers[2] = bindings.vertexBuffers[7];
 				}
-				sub_mesh->Pipeline = GetPipelineHandle(pipeline_setup);
+				sub_mesh->Pipeline = gfx::CreatePipeline(pipeline_setup);
 				sub_mesh->Binding = gfx::CreateBinding(bindings);
 			}
 		}
