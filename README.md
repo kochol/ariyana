@@ -53,7 +53,7 @@ done! it's ready to rock.
 
 ### Ariyana Game Engine 0.4.1
 
-- Add baked shadow, AO and specular map to material system
+- Add baked shadow, AO and specular map to the material system
 - Add normal vectors to BoxShape
 - Add alpha map support
 - Add blending to pipelines
