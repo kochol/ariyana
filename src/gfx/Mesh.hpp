@@ -10,5 +10,7 @@ namespace ari::gfx
 	{
 		core::Array<SubMeshHandle> SubMeshes;
 	};
+
+	Mesh* GetMesh(const MeshHandle& mesh_handle);
 	
 } // namespace ari::gfx

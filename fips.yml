@@ -32,6 +32,7 @@ exports:
         ari_gfx  :          src/gfx
         ari_gui  :          src/gui
         ari_io   :          src/io
+        ari_net  :          src/net
 
 run:
     t05texcube:

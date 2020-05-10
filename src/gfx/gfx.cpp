@@ -11,6 +11,8 @@
 // Include shaders
 #include "basic.glsl.h"
 #include "mesh.glsl.h"
+#include "Mesh.hpp"
+#include "core/memory/ObjectPool.hpp"
 
 namespace ari
 {
@@ -57,7 +59,9 @@ namespace ari
 					{
 						switch (name.At(index))
 						{
+						case 'A':
 						case 'T':
+						case 'M':
 							// nothing to  do
 							break;
 						case 'V':
@@ -82,7 +86,7 @@ namespace ari
 							fs_offset += 8;
 							break;
 						default:
-							log_warn("Unknown shader stage %s", name.At(index));
+							log_warn("Unknown shader stage %c", name.At(index));
 						}
 						index++;
 					}
@@ -114,15 +118,32 @@ namespace ari
 			sh.desc = ari_mesh_T_shader_desc();
 			sh.Setup("mesh_T");
 			MaterialShaders.Add(sh.hash, sh);
+
 			sh.desc = ari_mesh_VC_shader_desc();
 			sh.Setup("mesh_VC");
 			MaterialShaders.Add(sh.hash, sh);
+
 			sh.desc = ari_mesh_TND_shader_desc();
 			sh.Setup("mesh_TND");
 			MaterialShaders.Add(sh.hash, sh);
 			sh.desc = ari_mesh_TNP_shader_desc();
 			sh.Setup("mesh_TNP");
 			MaterialShaders.Add(sh.hash, sh);
+
+			sh.desc = ari_mesh_TNAD_shader_desc();
+			sh.Setup("mesh_TNAD");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_TNAP_shader_desc();
+			sh.Setup("mesh_TNAP");
+			MaterialShaders.Add(sh.hash, sh);
+
+			sh.desc = ari_mesh_TNMD_shader_desc();
+			sh.Setup("mesh_TNMD");
+			MaterialShaders.Add(sh.hash, sh);
+			sh.desc = ari_mesh_TNMP_shader_desc();
+			sh.Setup("mesh_TNMP");
+			MaterialShaders.Add(sh.hash, sh);
+
 			sh.desc = ari_mesh_VCND_shader_desc();
 			sh.Setup("mesh_VCND");
 			MaterialShaders.Add(sh.hash, sh);
@@ -142,18 +163,22 @@ namespace ari
 			static core::StringBuilder str;
 			str.Set("mesh_");
 			if (material.HasTexcoord)
-				str.Append("T");
+				str.Append("T"); // Add texture
 			if (material.HasVertexColor)
-				str.Append("VC");
+				str.Append("VC"); // Add vertex color
 			if (material.HasNormal && (g_bHasDirLight || g_bHasOmniLight))
-			{
-				str.Append("N");
-				if (g_bHasDirLight)
-					str.Append("D");
-				if (g_bHasOmniLight)
-					str.Append("P");
-			}
+				str.Append("N"); // Add Normal
+			if (material.HasTexcoord && material.HasAlphaMap)
+				str.Append("A");
+			if (material.HasTexcoord && material.HasShadowAoSpecularMap)
+				str.Append("M"); // Add Shadow, AO and specular map
+			if (material.HasNormal && g_bHasDirLight)
+				str.Append("D"); // Add directional light
+			if (material.HasNormal && g_bHasOmniLight)
+				str.Append("P"); // Add Point light
+
 			uint32_t hash = sx_hash_xxh32(str.AsCStr(), str.Length(), 0);
+
 			if (MaterialShaders.Contains(hash))
 			{
 				ShaderDescShaderHandle& mat = MaterialShaders[hash];
@@ -230,39 +255,118 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
-		PipelineHandle CreatePipeline(const PipelineSetup& setup)
+		PipelineHandle CreatePipelineInternal(const PipelineSetup& setup)
 		{
 			sg_pipeline_desc desc;
 			core::Memory::Fill(&desc, sizeof(sg_pipeline_desc), 0);
 			desc.shader.id = setup.shader.Index;
 			for (int i = 0; i < ARI_MAX_SHADERSTAGE_BUFFERS; ++i)
 			{
-				desc.layout.buffers[i].step_func = (sg_vertex_step)setup.layout.buffers[i].step;
+				desc.layout.buffers[i].step_func = sg_vertex_step(setup.layout.buffers[i].step);
 				desc.layout.buffers[i].step_rate = setup.layout.buffers[i].stepRate;
 				desc.layout.buffers[i].stride = setup.layout.buffers[i].stride;
 			}
 			for (int i = 0; i < ARI_MAX_VERTEX_ATTRIBUTES; ++i)
 			{
-				desc.layout.attrs[i].format = (sg_vertex_format)setup.layout.attrs[i].format;
+				desc.layout.attrs[i].format = sg_vertex_format(setup.layout.attrs[i].format);
 				desc.layout.attrs[i].buffer_index = setup.layout.attrs[i].bufferIndex;
 				desc.layout.attrs[i].offset = setup.layout.attrs[i].offset;
 			}
-			desc.index_type = (sg_index_type)setup.index_type;
+			desc.index_type = sg_index_type(setup.index_type);
 			desc.rasterizer.cull_mode = SG_CULLMODE_BACK;
 			desc.rasterizer.face_winding = SG_FACEWINDING_CCW;
 			desc.depth_stencil.depth_write_enabled = true;
 			desc.depth_stencil.depth_compare_func = SG_COMPAREFUNC_LESS_EQUAL;
+
+			// set blending
+			desc.blend.enabled = setup.blend.enabled;
+			desc.blend.src_factor_rgb = sg_blend_factor(setup.blend.src_factor_rgb);
+			desc.blend.dst_factor_rgb = sg_blend_factor(setup.blend.dst_factor_rgb);
+			desc.blend.op_rgb = sg_blend_op(setup.blend.op_rgb);
+			desc.blend.src_factor_alpha = sg_blend_factor(setup.blend.src_factor_alpha);
+			desc.blend.dst_factor_alpha = sg_blend_factor(setup.blend.dst_factor_alpha);
+			desc.blend.op_alpha = sg_blend_op(setup.blend.op_alpha);
+			desc.blend.color_write_mask = setup.blend.color_write_mask;
+			desc.blend.color_attachment_count = setup.blend.color_attachment_count;
+			desc.blend.color_format = sg_pixel_format(setup.blend.color_format);
+			desc.blend.depth_format = sg_pixel_format(setup.blend.depth_format);
+			core::Memory::Copy(setup.blend.blend_color, desc.blend.blend_color, 4 * sizeof(float));
+
 			const sg_pipeline pipeline = sg_make_pipeline(&desc);
 			return { core::HandleManager<PipelineHandle>::CreateHandleByIndex(pipeline.id), pipeline.id };
+		}
+
+		//------------------------------------------------------------------------------
+		core::Array<core::KeyValuePair<gfx::PipelineSetup, gfx::PipelineHandle>> g_aPipelines;
+
+		//------------------------------------------------------------------------------
+		PipelineHandle CreatePipeline(const PipelineSetup& setup)
+		{
+			for (auto& pair : g_aPipelines)
+			{
+				const auto& p = pair.Key();
+				if (p == setup)
+					return pair.Value();
+			}
+			const auto pipe = gfx::CreatePipelineInternal(setup);
+			g_aPipelines.Add({ setup, pipe });
+			return pipe;
 		}
 
 		//------------------------------------------------------------------------------
 		void DestroyPipeline(PipelineHandle& pipeline)
 		{
 			sg_destroy_pipeline({ pipeline.Index });
+			for (int i = 0; i < g_aPipelines.Size(); i++)
+			{
+				if (g_aPipelines[i].Value().Handle == pipeline.Handle)
+				{
+					g_aPipelines.Erase(i);
+					break;
+				}
+			}
 			core::HandleManager<PipelineHandle>::RemoveHandle(pipeline.Handle);
 			pipeline.Handle = pipeline.Index = core::aInvalidHandle;
 		}
+
+		//------------------------------------------------------------------------------
+		void SetPipelineBlendState(PipelineHandle& pipeline, const BlendState& blend)
+		{
+			for (int i = 0; i < g_aPipelines.Size(); i++)
+			{
+				if (g_aPipelines[i].Value().Handle == pipeline.Handle)
+				{
+					if (!(g_aPipelines[i].key.blend == blend))
+					{
+						// create a new pipeline
+						PipelineSetup setup = g_aPipelines[i].Key();
+						setup.blend = blend;
+						pipeline = CreatePipeline(setup);
+					}
+					return;
+				}
+			}
+		}
+
+		//------------------------------------------------------------------------------
+		void SetPipelineShader(PipelineHandle& pipeline, const ShaderHandle& shader)
+		{
+			for (int i = 0; i < g_aPipelines.Size(); i++)
+			{
+				if (g_aPipelines[i].Value().Handle == pipeline.Handle)
+				{
+					if (g_aPipelines[i].key.shader.Handle != shader.Handle)
+					{
+						// create a new pipeline
+						PipelineSetup setup = g_aPipelines[i].Key();
+						setup.shader = shader;
+						pipeline = CreatePipeline(setup);
+					}
+					return;
+				}
+			}
+		}
+
 
 		//------------------------------------------------------------------------------
 		void ApplyPipeline(const PipelineHandle& pipeline)
@@ -325,7 +429,7 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
-		void ApplyPipelineAndMaterial(const PipelineHandle& pipeline, Material* material)
+		void ApplyPipelineAndMaterial(PipelineHandle& pipeline, Material* material)
 		{
 			// update engine uniforms data
 			SetMaterialUniforms(material);
@@ -586,7 +690,7 @@ namespace ari
 				desc.depth = d;
 				desc.num_mipmaps = int(TinyKtx_NumberOfMipmaps(ctx));
 				desc.pixel_format = fmt;
-				desc.min_filter = SG_FILTER_LINEAR;
+				desc.min_filter = SG_FILTER_LINEAR_MIPMAP_LINEAR;
 				desc.mag_filter = SG_FILTER_LINEAR;
 
 				for (auto i = 0u; i < TinyKtx_NumberOfMipmaps(ctx); ++i) {
@@ -610,7 +714,7 @@ namespace ari
 
 		void SetDirLight(const sx_vec3& dir, const sx_vec4& color)
 		{
-			g_vLightDir = dir;
+			g_vLightDir = sx_vec3_norm(dir * -1);
 			g_cLightColor = color;
 			g_bHasDirLight = true;
 			g_bHasOmniLight = false;
@@ -627,6 +731,20 @@ namespace ari
 		void SetCameraPosition(const sx_vec3& pos)
 		{
 			g_vCamPos = pos;
+		}
+
+		Mesh* GetMesh(const MeshHandle& mesh_handle)
+		{
+			if (mesh_handle.IsValid())
+				return core::ObjectPool<gfx::Mesh>::GetByIndex(mesh_handle.Handle);
+			return nullptr;
+		}
+
+		SubMesh* GetSubMesh(const SubMeshHandle& sub_mesh_handle)
+		{
+			if (sub_mesh_handle.IsValid())
+				return core::ObjectPool<gfx::SubMesh>::GetByIndex(sub_mesh_handle.Handle);
+			return nullptr;
 		}
 
     } // namespace gfx

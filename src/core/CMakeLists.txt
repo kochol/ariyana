@@ -1,5 +1,6 @@
 fips_begin_module(ari_core)
-
+    ari_setup()
+    set(CMAKE_CXX_STANDARD 17)
     fips_vs_warning_level(3)
     if (FIPS_MSVC)
         add_definitions(-D_CRT_SECURE_NO_WARNINGS)

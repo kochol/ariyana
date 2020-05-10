@@ -5,6 +5,7 @@
 #include "World.hpp"
 #include "ComponentHandle.hpp"
 #include "core/defines.hpp"
+#include "core/string/String.hpp"
 
 namespace ari
 {
@@ -13,6 +14,8 @@ namespace ari
 		class Node
 		{			
 		public:
+
+			core::String Name;
 
 			ARI_COMPONENT(Node)
 
@@ -26,10 +29,12 @@ namespace ari
 
 			const core::Array<Node*>& GetChildren(uint32_t _id);
 
+			core::Array<Node*> GetChildrenContains(const core::String& _name);
+
 			template<typename FUNC>
 			void GetChildren(FUNC _func)
 			{
-				for(auto l: m_mChilds)
+				for(const auto& l: m_mChilds)
 				{
 					for(auto n: l.value)
 					{
@@ -37,6 +42,8 @@ namespace ari
 					}
 				}
 			}
+
+			Node* GetNodeWithName(const core::String& _name);
 
 			Node* GetChild(uint32_t _id);
 

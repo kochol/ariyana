@@ -8,6 +8,7 @@ namespace ari::en
 	ARI_COMPONENT_IMP(BoxShape)
 
 	gfx::BufferHandle BoxShape::m_sVBPos;
+	gfx::BufferHandle BoxShape::m_sVBNormal;
 	gfx::BufferHandle BoxShape::m_sVBColor;
 	gfx::BufferHandle BoxShape::m_sVBTexcoord;
 	gfx::BufferHandle BoxShape::m_sIB;
@@ -16,7 +17,7 @@ namespace ari::en
 	gfx::BindingHandle BoxShape::m_sBinding;
 	gfx::BindingHandle BoxShape::m_sTexBinding;
 
-	static gfx::PosVertex s_cubePosVertices[] =
+	static sx_vec3 s_cubePosVertices[] =
 	{
 		{ -1.0f, -1.0f, -1.0f},
 		{  1.0f, -1.0f, -1.0f},
@@ -47,6 +48,39 @@ namespace ari::en
 		{ -1.0f,  1.0f,  1.0f},
 		{  1.0f,  1.0f,  1.0f},
 		{  1.0f,  1.0f, -1.0f},
+	};
+
+	static sx_vec3 s_cubeNormalVertices[] =
+	{
+		{ 0.0f, 0.0f, -1.0f},
+		{ 0.0f, 0.0f, -1.0f},
+		{ 0.0f, 0.0f, -1.0f},
+		{ 0.0f, 0.0f, -1.0f},
+
+		{ 0.0f, 0.0f, 1.0f},
+		{ 0.0f, 0.0f, 1.0f},
+		{ 0.0f, 0.0f, 1.0f},
+		{ 0.0f, 0.0f, 1.0f},
+
+		{ -1.0f, 0.0f, 0.0f},
+		{ -1.0f, 0.0f, 0.0f},
+		{ -1.0f, 0.0f, 0.0f},
+		{ -1.0f, 0.0f, 0.0f},
+
+		{ 1.0f, 0.0f, 0.0f},
+		{ 1.0f, 0.0f, 0.0f},
+		{ 1.0f, 0.0f, 0.0f},
+		{ 1.0f, 0.0f, 0.0f},
+
+		{ 0.0f, -1.0f, 0.0f},
+		{ 0.0f, -1.0f, 0.0f},
+		{ 0.0f, -1.0f, 0.0f},
+		{ 0.0f, -1.0f, 0.0f},
+
+		{ 0.0f, 1.0f, 0.0f},
+		{ 0.0f, 1.0f, 0.0f},
+		{ 0.0f, 1.0f, 0.0f},
+		{ 0.0f, 1.0f, 0.0f},
 	};
 
 	static sx_vec2 s_cubeCoords[] =
@@ -130,33 +164,40 @@ namespace ari::en
 		_isRenderable = true;
 		SubMesh.Handle = core::HandleManager<gfx::SubMeshHandle>::GetNewHandle(SubMesh.Index);
 		core::ObjectPool<gfx::SubMesh>::Setup(512);
-		auto sub_mesh = core::ObjectPool<gfx::SubMesh>::New(SubMesh.Index);
-		sub_mesh->IndexBuffer = m_sIB;
-		sub_mesh->Type = gfx::PrimitiveType::Triangles;
-		sub_mesh->AABB = sx_aabbwhd(2.f, 2.f, 2.f);
-		sub_mesh->Position = m_sVBPos;
-		sub_mesh->Texcoord = m_sVBTexcoord;
-		sub_mesh->Color = m_sVBColor;
-		sub_mesh->ElementsCount = 36;
+		m_pSubMesh = core::ObjectPool<gfx::SubMesh>::New(SubMesh.Index);
+		m_pSubMesh->IndexBuffer = m_sIB;
+		m_pSubMesh->Type = gfx::PrimitiveType::Triangles;
+		m_pSubMesh->AABB = sx_aabbwhd(2.f, 2.f, 2.f);
+		m_pSubMesh->Position = m_sVBPos;
+		m_pSubMesh->Normal = m_sVBNormal;
+		m_pSubMesh->Texcoord = m_sVBTexcoord;
+		m_pSubMesh->Color = m_sVBColor;
+		m_pSubMesh->ElementsCount = 36;
+		m_pSubMesh->Material.HasNormal = true;
 	}
 
 	void BoxShape::Render(const int& _frameTurnIndex)
 	{		
-		auto mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
+		gfx::SetWorldMatrix(_finalMat[_frameTurnIndex]);
 
 		if (Texture.IsValid())
-		{
-			ApplyPipeline(m_sTexPipeline);
+		{			
+			m_pSubMesh->Material.HasTexcoord = true;
+			m_pSubMesh->Material.HasVertexColor = false;
+			gfx::SetMaterialShader(m_pSubMesh->Material);
+			gfx::ApplyPipelineAndMaterial(m_sTexPipeline, &m_pSubMesh->Material);
 			SetTexture(m_sTexBinding, 0, Texture);
 			ApplyBindings(m_sTexBinding);
 		}
 		else
 		{
-			ApplyPipeline(m_sPipeline);
+			m_pSubMesh->Material.HasTexcoord = false;
+			m_pSubMesh->Material.HasVertexColor = true;
+			gfx::SetMaterialShader(m_pSubMesh->Material);
+			gfx::ApplyPipelineAndMaterial(m_sPipeline, &m_pSubMesh->Material);
 			ApplyBindings(m_sBinding);
 		}
-		ApplyUniforms(gfx::ShaderStage::VertexShader, 0, mvp.f, sizeof(sx_mat4));
-		gfx::Draw(0, 36, 1);
+		gfx::Draw(0, m_pSubMesh->ElementsCount, 1);
 	}
 
 	void BoxShape::Init(RenderSystem * render_system)
@@ -166,6 +207,9 @@ namespace ari::en
 			// Create static vertex buffers.
 			m_sVBPos = gfx::CreateVertexBuffer(sizeof(s_cubePosVertices),
 				(void*)s_cubePosVertices);
+
+			m_sVBNormal = gfx::CreateVertexBuffer(sizeof(s_cubeNormalVertices),
+				(void*)s_cubeNormalVertices);
 
 			m_sVBColor = gfx::CreateVertexBuffer(sizeof(s_cubeColorVertices),
 				(void*)s_cubeColorVertices);
@@ -183,7 +227,7 @@ namespace ari::en
 			pipeline_setup.layout.attrs[0].format = gfx::VertexFormat::Float3;
 			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::UByte4N;
 			pipeline_setup.layout.attrs[1].bufferIndex = 1;
-			pipeline_setup.layout.attrs[2].format = gfx::VertexFormat::UByte4N;
+			pipeline_setup.layout.attrs[2].format = gfx::VertexFormat::Float3;
 			pipeline_setup.layout.attrs[2].bufferIndex = 2;
 			pipeline_setup.index_type = gfx::IndexType::Uint16;
 
@@ -192,7 +236,7 @@ namespace ari::en
 			gfx::Bindings bindings;
 			bindings.vertexBuffers[0] = m_sVBPos;
 			bindings.vertexBuffers[1] = m_sVBColor;
-			bindings.vertexBuffers[2] = m_sVBColor;
+			bindings.vertexBuffers[2] = m_sVBNormal;
 			bindings.indexBuffer = m_sIB;
 
 			m_sBinding = gfx::CreateBinding(bindings);
@@ -214,6 +258,7 @@ namespace ari::en
 		if (m_sVBPos.Handle != core::aInvalidHandle)
 		{
 			DestroyBuffer(m_sVBPos);
+			DestroyBuffer(m_sVBNormal);
 			DestroyBuffer(m_sVBColor);
 			DestroyBuffer(m_sVBTexcoord);
 			DestroyBuffer(m_sIB);

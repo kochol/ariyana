@@ -30,7 +30,10 @@ def copy_files(src_dir, dst_dir):
         ext = f.split('.')[-1].lower()        
         if ext == 'png' or ext == 'tga' or ext == 'h':
             continue
-        dst = dst_dir + f.split('/')[-1]
+        if "\\" in f:
+            dst = dst_dir + '/' + f.split('\\')[-1]
+        else:
+            dst = dst_dir + '/' + f.split('/')[-1]
         if file_is_dirty(f, dst) :
             shutil.copyfile(f, dst)
             log.info('copy from: ' + f)

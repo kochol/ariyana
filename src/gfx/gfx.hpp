@@ -83,11 +83,230 @@ namespace ari
 			Uint32
 		};
 
+		/*
+			BlendFactor
+
+			The source and destination factors in blending operations.
+			This is used in the following members when creating a pipeline object:
+
+			PipelineSetup
+				.blend
+					.src_factor_rgb
+					.dst_factor_rgb
+					.src_factor_alpha
+					.dst_factor_alpha
+
+			The default value is One for source
+			factors, and Zero for destination factors.
+		*/
+		enum class BlendFactor 
+    	{
+			Default,    /* value 0 reserved for default-init */
+			Zero,
+			One,
+			Src_Color,
+			One_Minus_Src_Color,
+			Src_Alpha,
+			One_Minus_Src_Alpha,
+			Dst_Color,
+			One_Minus_Dst_Color,
+			Dst_Alpha,
+			One_Minus_Dst_Alpha,
+			Src_Alpha_Saturated,
+			Blend_Color,
+			One_Minus_Blend_Color,
+			Blend_Alpha,
+			One_Minus_Blend_Alpha,
+		};
+
+		/*
+			BlendOp
+
+			Describes how the source and destination values are combined in the
+			fragment blending operation. It is used in the following members when
+			creating a pipeline object:
+
+			sg_pipeline_desc
+				.blend
+					.op_rgb
+					.op_alpha
+
+			The default value is Add.
+		*/
+		enum class BlendOp
+		{
+			Default,    /* value 0 reserved for default-init */
+			Add,
+			Subtract,
+			Reverse_Subtract,
+		};
+
+		/*
+			PixelFormat
+
+			sokol_gfx.h basically uses the same pixel formats as WebGPU, since these
+			are supported on most newer GPUs. GLES2 and WebGL has a much smaller
+			subset of available pixel formats. Call sg_query_pixelformat() to check
+			at runtime if a pixel format supports the desired features.
+
+			A pixelformat name consist of three parts:
+
+				- components (R, RG, RGB or RGBA)
+				- bit width per component (8, 16 or 32)
+				- component data type:
+					- unsigned normalized (no postfix)
+					- signed normalized (SN postfix)
+					- unsigned integer (UI postfix)
+					- signed integer (SI postfix)
+					- float (F postfix)
+
+			Not all pixel formats can be used for everything, call sg_query_pixelformat()
+			to inspect the capabilities of a given pixelformat. The function returns
+			an sg_pixelformat_info struct with the following bool members:
+
+				- sample: the pixelformat can be sampled as texture at least with
+						  nearest filtering
+				- filter: the pixelformat can be samples as texture with linear
+						  filtering
+				- render: the pixelformat can be used for render targets
+				- blend:  blending is supported when using the pixelformat for
+						  render targets
+				- msaa:   multisample-antialiasing is supported when using the
+						  pixelformat for render targets
+				- depth:  the pixelformat can be used for depth-stencil attachments
+
+			When targeting GLES2/WebGL, the only safe formats to use
+			as texture are SG_PIXELFORMAT_R8 and SG_PIXELFORMAT_RGBA8. For rendering
+			in GLES2/WebGL, only SG_PIXELFORMAT_RGBA8 is safe. All other formats
+			must be checked via sg_query_pixelformats().
+
+			The default pixel format for texture images is SG_PIXELFORMAT_RGBA8.
+
+			The default pixel format for render target images is platform-dependent:
+				- for Metal and D3D11 it is SG_PIXELFORMAT_BGRA8
+				- for GL backends it is SG_PIXELFORMAT_RGBA8
+
+			This is mainly because of the default framebuffer which is setup outside
+			of sokol_gfx.h. On some backends, using BGRA for the default frame buffer
+			allows more efficient frame flips. For your own offscreen-render-targets,
+			use whatever renderable pixel format is convenient for you.
+		*/
+		enum class PixelFormat 
+    	{
+			Default,    /* value 0 reserved for default-init */
+			None,
+
+			R8,
+			R8SN,
+			R8UI,
+			R8SI,
+
+			R16,
+			R16SN,
+			R16UI,
+			R16SI,
+			R16F,
+			RG8,
+			RG8SN,
+			RG8UI,
+			RG8SI,
+
+			R32UI,
+			R32SI,
+			R32F,
+			RG16,
+			RG16SN,
+			RG16UI,
+			RG16SI,
+			RG16F,
+			RGBA8,
+			RGBA8SN,
+			RGBA8UI,
+			RGBA8SI,
+			BGRA8,
+			RGB10A2,
+			RG11B10F,
+
+			RG32UI,
+			RG32SI,
+			RG32F,
+			RGBA16,
+			RGBA16SN,
+			RGBA16UI,
+			RGBA16SI,
+			RGBA16F,
+
+			RGBA32UI,
+			RGBA32SI,
+			RGBA32F,
+
+			DEPTH,
+			DEPTH_STENCIL,
+
+			BC1_RGBA,
+			BC2_RGBA,
+			BC3_RGBA,
+			BC4_R,
+			BC4_RSN,
+			BC5_RG,
+			BC5_RGSN,
+			BC6H_RGBF,
+			BC6H_RGBUF,
+			BC7_RGBA,
+			PVRTC_RGB_2BPP,
+			PVRTC_RGB_4BPP,
+			PVRTC_RGBA_2BPP,
+			PVRTC_RGBA_4BPP,
+			ETC2_RGB8,
+			ETC2_RGB8A1,
+			ETC2_RGBA8,
+			ETC2_RG11,
+			ETC2_RG11SN,
+		};
+
+		struct BlendState {
+			bool enabled = false;
+			BlendFactor src_factor_rgb = BlendFactor::Default;
+			BlendFactor dst_factor_rgb = BlendFactor::Default;
+			BlendOp op_rgb = BlendOp::Default;
+			BlendFactor src_factor_alpha = BlendFactor::Default;
+			BlendFactor dst_factor_alpha = BlendFactor::Default;
+			BlendOp op_alpha = BlendOp::Default;
+			uint8_t color_write_mask = 0;
+			int color_attachment_count = 0;
+			PixelFormat color_format = PixelFormat::Default;
+			PixelFormat depth_format = PixelFormat::Default;
+			float blend_color[4];
+
+			/// equality operator
+			bool operator==(const BlendState& rhs) const
+			{
+				// quick check
+				if (!enabled && !rhs.enabled)
+					return true;
+
+				if (enabled != rhs.enabled
+					|| src_factor_rgb != rhs.src_factor_rgb
+					|| dst_factor_rgb != rhs.dst_factor_rgb
+					|| op_rgb != rhs.op_rgb
+					|| src_factor_alpha != rhs.src_factor_alpha
+					|| dst_factor_alpha != rhs.dst_factor_alpha
+					|| op_alpha != rhs.op_alpha
+					|| color_write_mask != rhs.color_write_mask
+					|| color_attachment_count != rhs.color_attachment_count
+					|| color_format != rhs.color_format
+					|| depth_format != rhs.depth_format)
+					return false;
+				return sx_equal_arr(blend_color, rhs.blend_color, 4, 0.0001f);
+			}
+		};
+
 		struct PipelineSetup
 		{
 			LayoutSetup layout;
 			ShaderHandle shader;
 			IndexType index_type = IndexType::None;
+			BlendState blend;
 
 			/// equality operator
 			bool operator==(const PipelineSetup& rhs) const
@@ -109,7 +328,7 @@ namespace ari
 						|| layout.attrs[i].format != rhs.layout.attrs[i].format)
 						return false;
 				}
-				return true;
+				return blend == rhs.blend;
 			}
 		};
 
@@ -281,9 +500,11 @@ namespace ari
 
 		void ApplyPipeline(const PipelineHandle& pipeline);
 
-		void ApplyPipelineAndMaterial(const PipelineHandle& pipeline, Material* material);
+		void ApplyPipelineAndMaterial(PipelineHandle& pipeline, Material* material);
 
-		void SetPipelineShader(const PipelineHandle& pipeline, const ShaderHandle& shader);
+		void SetPipelineBlendState(PipelineHandle& pipeline, const BlendState& blend);
+    	
+    	void SetPipelineShader(PipelineHandle& pipeline, const ShaderHandle& shader);
 
 		BindingHandle CreateBinding(const Bindings& bindings);
 

@@ -65,21 +65,6 @@ namespace ari::en
 		core::String							BasePath;
 	};
 
-	core::Array<core::KeyValuePair<gfx::PipelineSetup, gfx::PipelineHandle>> g_aGltfPipelines;
-
-	gfx::PipelineHandle GetPipelineHandle(const gfx::PipelineSetup& setup)
-	{
-		for (auto& pair: g_aGltfPipelines)
-		{
-			const auto& p = pair.Key();
-			if (p == setup)
-				return pair.Value();
-		}
-		const auto pipe = gfx::CreatePipeline(setup);
-		g_aGltfPipelines.Add({ setup, pipe });
-		return pipe;
-	}
-
 	void SetPipelineAttribute(gfx::VertexAttrSetup& attr, cgltf_attribute* gltf_attr)
 	{
 		switch (gltf_attr->data->component_type)
@@ -151,6 +136,7 @@ namespace ari::en
 
 	void SetNodeTransform(cgltf_node* node, Node3D* n)
 	{
+		n->Name = node->name;
 		if (node->has_matrix)
 		{
 			core::Memory::Copy(node->matrix, n->Transform.f, 64);
@@ -230,6 +216,34 @@ namespace ari::en
 		}
 
 		return n;
+	}
+
+	void fix_buffer(cgltf_data* gltf, SceneData* p_scene_data, 
+		int accessor_index, cgltf_buffer_view_type buffer_type)
+	{
+		const cgltf_accessor* gltf_accessor = &gltf->accessors[accessor_index];
+		const int buffer_view_index = int(gltf_accessor->buffer_view - gltf->buffer_views);
+		const cgltf_buffer_view* gltf_buf_view = &gltf->buffer_views[buffer_view_index];
+		const int buffer_index = int(gltf_buf_view->buffer - gltf->buffers);
+		core::Buffer* buffer = &p_scene_data->Buffers[buffer_index];
+		const int offset = int(gltf_buf_view->offset);
+		const int size = int(gltf_buf_view->size);
+		a_assert((offset + size) <= buffer->Size());
+
+		if (buffer_type == cgltf_buffer_view_type_indices)
+		{
+			p_scene_data->GfxBuffers[buffer_view_index] = gfx::CreateIndexBuffer(size, buffer->Data() + offset);
+		}
+		else if (buffer_type == cgltf_buffer_view_type_vertices)
+		{
+			p_scene_data->GfxBuffers[buffer_view_index] = gfx::CreateVertexBuffer(size, buffer->Data() + offset);
+		}
+		else
+		{
+			a_assert(false);
+		}
+
+		p_scene_data->Accessors[accessor_index].GfxBuffer = p_scene_data->GfxBuffers[buffer_view_index];
 	}
 
 	bool gltf_parse(cgltf_data* gltf, SceneData* p_scene_data, 
@@ -393,6 +407,9 @@ namespace ari::en
 				{
 					// Add indices
 					const int accessor_index = int(gltf_prim->indices - gltf->accessors);
+					// fix the buffer
+					if (!p_scene_data->Accessors[accessor_index].GfxBuffer.IsValid())
+						fix_buffer(gltf, p_scene_data, accessor_index, cgltf_buffer_view_type_indices);
 					sub_mesh->IndexBuffer = p_scene_data->Accessors[accessor_index].GfxBuffer;
 					bindings.indexBufferOffset = p_scene_data->Accessors[accessor_index].Offset;
 					sub_mesh->ElementsCount = int(gltf_prim->indices->count);
@@ -406,6 +423,10 @@ namespace ari::en
 				for (int a_i = 0; a_i < int(gltf_prim->attributes_count); ++a_i)
 				{
 					const int accessor_index = int(gltf_prim->attributes[a_i].data - gltf->accessors);
+
+					// fix buffer
+					if (!p_scene_data->Accessors[accessor_index].GfxBuffer.IsValid())
+						fix_buffer(gltf, p_scene_data, accessor_index, cgltf_buffer_view_type_vertices);
 
 					int buffer_index = -1;
 					Accessor* accessor = &p_scene_data->Accessors[accessor_index];
@@ -426,6 +447,8 @@ namespace ari::en
 						}
 						break;
 					case cgltf_attribute_type_texcoord:
+						if (sub_mesh->Material.HasTexcoord)
+							continue;
 						sub_mesh->Texcoord = accessor->GfxBuffer;
 						if (sub_mesh->Material.HasVertexColor)
 							continue;
@@ -478,7 +501,7 @@ namespace ari::en
 					bindings.vertexBufferOffsets[2] = bindings.vertexBufferOffsets[7];
 					bindings.vertexBuffers[2] = bindings.vertexBuffers[7];
 				}
-				sub_mesh->Pipeline = GetPipelineHandle(pipeline_setup);
+				sub_mesh->Pipeline = gfx::CreatePipeline(pipeline_setup);
 				sub_mesh->Binding = gfx::CreateBinding(bindings);
 			}
 		}

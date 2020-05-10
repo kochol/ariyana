@@ -1,5 +1,6 @@
 #include "Node.hpp"
 #include "ComponentManager.hpp"
+#include "core/string/StringBuilder.hpp"
 
 namespace ari
 {
@@ -29,6 +30,44 @@ namespace ari
 		const core::Array<Node*>& Node::GetChildren(uint32_t _id)
 		{
 			return m_mChilds[_id];
+		}
+
+		core::Array<Node*> Node::GetChildrenContains(const core::String& _name)
+		{
+			core::Array<Node*> result;
+			if (core::StringBuilder::Contains(Name.AsCStr(), _name.AsCStr()))
+				result.Add(this);
+
+			for (const auto& l : m_mChilds)
+			{
+				for (auto n : l.value)
+				{
+					core::Array<Node*> r = n->GetChildrenContains(_name);
+					result.Reserve(r.Size());
+					for (auto nr : r)
+						result.Add(nr);
+				}
+			}
+
+			return result;
+		}
+
+		Node* Node::GetNodeWithName(const core::String& _name)
+		{
+			if (Name == _name)
+				return this;
+
+			for (const auto& l : m_mChilds)
+			{
+				for (auto n : l.value)
+				{
+					Node* r = n->GetNodeWithName(_name);
+					if (r != nullptr)
+						return r;
+				}
+			}
+
+			return nullptr;
 		}
 
 		Node* Node::GetChild(uint32_t _id)

@@ -27,5 +27,7 @@ namespace ari::gfx
 		sx_aabb							AABB = {{SX_FLOAT_MAX, SX_FLOAT_MAX, SX_FLOAT_MAX,
 			-SX_FLOAT_MAX, -SX_FLOAT_MAX,	-SX_FLOAT_MAX}};
 	};
+
+	SubMesh* GetSubMesh(const SubMeshHandle& sub_mesh_handle);
 	
 } // namespace ari::gfx

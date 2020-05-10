@@ -126,11 +126,129 @@ uniform fs_params_mesh_TNP
 {
 @include_block fs_params
 };
-@include_block fs_main
-@end
+@include_block fs_main 
+@end 
 
 // mesh_TNP
 @program mesh_TNP vs_mesh_TNP fs_mesh_TNP
+
+//================================================================================
+// vs_mesh_TNAD
+@vs vs_mesh_TNAD
+#define HAS_TEXCOORD 1
+#define HAS_NORMAL 1
+#define HAS_DIR_LIGHT 1
+uniform vs_params_mesh_TNAD
+{
+@include_block vs_params
+};
+@include_block vs_main
+@end
+
+// fs_mesh_TNAD
+@fs fs_mesh_TNAD
+#define HAS_TEXCOORD 1
+#define HAS_NORMAL 1
+#define HAS_DIR_LIGHT 1
+#define HAS_ALPHA_MAP 1
+uniform fs_params_mesh_TNAD
+{
+@include_block fs_params
+};
+@include_block fs_main
+@end
+ 
+// mesh_TNAD
+@program mesh_TNAD vs_mesh_TNAD fs_mesh_TNAD
+
+//================================================================================
+// vs_mesh_TNAP
+@vs vs_mesh_TNAP
+#define HAS_TEXCOORD 1
+#define HAS_NORMAL 1
+#define HAS_POINT_LIGHT 1
+uniform vs_params_mesh_TNAP
+{
+@include_block vs_params
+};
+@include_block vs_main
+@end
+
+// fs_mesh_TNAP
+@fs fs_mesh_TNAP
+#define HAS_TEXCOORD 1
+#define HAS_NORMAL 1
+#define HAS_POINT_LIGHT 1
+#define HAS_ALPHA_MAP 1
+uniform fs_params_mesh_TNAP
+{
+@include_block fs_params
+};
+@include_block fs_main 
+@end 
+
+// mesh_TNAP
+@program mesh_TNAP vs_mesh_TNAP fs_mesh_TNAP
+
+//================================================================================
+// vs_mesh_TNMD
+@vs vs_mesh_TNMD
+#define HAS_TEXCOORD 1
+#define HAS_NORMAL 1
+#define HAS_DIR_LIGHT 1
+#define HAS_SHADOW_AO_S_MAP 1
+uniform vs_params_mesh_TNMD
+{
+@include_block vs_params
+};
+@include_block vs_main
+@end
+
+// fs_mesh_TNMD
+@fs fs_mesh_TNMD
+#define HAS_TEXCOORD 1
+#define HAS_NORMAL 1
+#define HAS_DIR_LIGHT 1
+#define HAS_SHADOW_AO_S_MAP 1
+uniform fs_params_mesh_TNMD
+{
+@include_block fs_params
+};
+@include_block fs_main
+@end
+ 
+// mesh_TNMD
+@program mesh_TNMD vs_mesh_TNMD fs_mesh_TNMD
+
+//================================================================================
+// vs_mesh_TNMP
+@vs vs_mesh_TNMP
+#define HAS_TEXCOORD 1
+#define HAS_NORMAL 1
+#define HAS_POINT_LIGHT 1
+#define HAS_SHADOW_AO_S_MAP 1
+uniform vs_params_mesh_TNMP
+{
+@include_block vs_params
+};
+@include_block vs_main
+@end
+
+// fs_mesh_TNMP
+@fs fs_mesh_TNMP
+#define HAS_TEXCOORD 1
+#define HAS_NORMAL 1
+#define HAS_POINT_LIGHT 1
+#define HAS_SHADOW_AO_S_MAP 1
+uniform fs_params_mesh_TNMP 
+{
+@include_block fs_params
+};
+@include_block fs_main
+@end
+
+// mesh_TNMP
+@program mesh_TNMP vs_mesh_TNMP fs_mesh_TNMP
 
 //================================================================================
 // vs_mesh_VCND

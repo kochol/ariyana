@@ -4,7 +4,7 @@ Ariyana Game Engine
 
 # How To Build
 
-We are using [fips](https://github.com/floooh/fips) as a highlevel build system for Ariyana.
+We are using [fips](https://github.com/floooh/fips) as a high level build system for Ariyana.
 
 ### Requirements
 
@@ -48,8 +48,21 @@ done! it's ready to rock.
 
 - Implement material system
 - Phong lighting
-- Directional light and omni light
+- Directional light and point light
 - Fix some bugs
+
+### Ariyana Game Engine 0.4.1
+
+- Add baked shadow, AO and specular map to the material system
+- Add normal vectors to BoxShape
+- Add alpha map support
+- Add blending to pipelines
+- Add name for Nodes
+- Update fips import stuff
+- Detecting buffer in gltf loader
+- Manging pipelines
+- Fix a crash in BoxShape creation
+- Fix Texture mipmapping
 
 ## Ariyana Game Engine 0.3
 
@@ -61,27 +74,6 @@ done! it's ready to rock.
 - Add input handling in ImGUI
 - Add some basic default shaders
 
-### Ariyana Game Engine 0.2.5
-
-- Fix a bug in android file path
-
-### Ariyana Game Engine 0.2.4
-
-- Compile fix for linux
-
-### Ariyana Game Engine 0.2.3
-
-- Compile fix for android
-
-### Ariyana Game Engine 0.2.2
-
-- Updated to work with the latest sokol gfx.
-
-### Ariyana Game Engine 0.2.1
-
-- Fix an important memory corruption bug.
-- Add GetLastRpcClientIndex to find out which client called the function.
-
 ## Ariyana Game Engine 0.2
 
 The main changes for this version are adding networking.
@@ -91,6 +83,27 @@ The main changes for this version are adding networking.
 - Automatic property replication
 - RPC support with auto parameter serializing and deserializing.
 - Add multi-window rendering support.
+
+### Ariyana Game Engine 0.2.1
+
+- Fix an important memory corruption bug.
+- Add GetLastRpcClientIndex to find out which client called the function.
+
+### Ariyana Game Engine 0.2.2
+
+- Updated to work with the latest sokol gfx.
+
+### Ariyana Game Engine 0.2.3
+
+- Compile fix for android
+
+### Ariyana Game Engine 0.2.4
+
+- Compile fix for Linux
+
+### Ariyana Game Engine 0.2.5
+
+- Fix a bug in android file path
 
 ## Ariyana Game Engine 0.1
 
