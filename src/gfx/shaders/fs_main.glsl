@@ -22,6 +22,10 @@ void main()
     frag_color = baseColor;
 #if HAS_TEXCOORD
     frag_color *= texture(tex, uv);
+#   if HAS_ALPHA_MAP
+    if (frag_color.a < 0.1)
+        discard;
+#   endif    
 #   if HAS_SHADOW_AO_S_MAP
     vec3 sh_ao_s = texture(sh_ao_s_map, uv).rgb;        
 #   endif
