@@ -28,4 +28,19 @@
 #define CARI_API EXTERN API
 #define CONST const
 
+#define CARI_HANDLE(_name) \
+struct _name \
+{ \
+    uint32_t Handle; \
+	uint32_t Index; \
+};
+
+#define CARI_COMPONENT_HANDLE(_name) \
+struct _name \
+{ \
+    uint32_t Handle; \
+	uint32_t Index; \
+    void* Component; \
+};
+
 #endif // ARI_MACROS_H
