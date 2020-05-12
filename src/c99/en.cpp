@@ -44,3 +44,15 @@ void* CreateSceneSystem()
 {
     return ari::core::Memory::New<ari::en::SceneSystem>();
 }
+
+// Entity
+EntityHandle CreateEntityWorld()
+{
+	const auto e = ari::en::World::CreateEntity();
+    return { e.Handle, e.Index };
+}
+
+bool IsValidEntity(uint32_t& _entityHandle)
+{
+    return ari::core::HandleManager<ari::en::EntityHandle>::IsHandleValid(_entityHandle);
+}
