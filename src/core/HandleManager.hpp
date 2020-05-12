@@ -40,9 +40,12 @@ namespace ari
 				return m_mHandleIndexMap[handle];
 			}
 
-			static bool IsHandleValid(const uint32_t& handle)
+			static bool IsHandleValid(uint32_t& handle)
 			{
-				return m_mHandleIndexMap.Contains(handle);
+				bool r = m_mHandleIndexMap.Contains(handle);
+				if (!r)
+					handle = ari::core::aInvalidHandle;
+				return r;
 			}
 
 			static void RemoveHandle(const uint32_t& handle)
