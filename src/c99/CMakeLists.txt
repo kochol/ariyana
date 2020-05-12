@@ -4,5 +4,6 @@ fips_begin_sharedlib(cari)
     fips_deps(ari_gfx)
     fips_files(
         gfx.h                   gfx.cpp
+        io.h                    io.cpp
     )
 fips_end_sharedlib()
