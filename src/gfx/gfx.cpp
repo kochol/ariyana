@@ -733,14 +733,14 @@ namespace ari
 			g_vCamPos = pos;
 		}
 
-		Mesh* GetMesh(const MeshHandle& mesh_handle)
+		Mesh* GetMesh(MeshHandle& mesh_handle)
 		{
 			if (mesh_handle.IsValid())
 				return core::ObjectPool<gfx::Mesh>::GetByIndex(mesh_handle.Handle);
 			return nullptr;
 		}
 
-		SubMesh* GetSubMesh(const SubMeshHandle& sub_mesh_handle)
+		SubMesh* GetSubMesh(SubMeshHandle& sub_mesh_handle)
 		{
 			if (sub_mesh_handle.IsValid())
 				return core::ObjectPool<gfx::SubMesh>::GetByIndex(sub_mesh_handle.Handle);
