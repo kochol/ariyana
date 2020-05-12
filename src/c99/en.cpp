@@ -22,6 +22,13 @@ void UpdateWorld(void* _obj, float _elapsedTime)
     reinterpret_cast<ari::en::World*>(_obj)->Update(_elapsedTime);
 }
 
+void AddSystemToWorld(void* _world, void* _system)
+{
+    reinterpret_cast<ari::en::World*>(_world)->AddSystem(
+        reinterpret_cast<ari::en::System*>(_system)
+        );
+}
+
 // System
 void* CreateRenderSystem()
 {

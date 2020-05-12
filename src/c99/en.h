@@ -7,6 +7,7 @@
 CARI_API void* CreateWorld();
 CARI_API void DeleteWorld(void* _obj);
 CARI_API void UpdateWorld(void* _obj, float _elapsedTime);
+CARI_API void AddSystemToWorld(void* _world, void* _system);
 
 // System functions
 CARI_API void* CreateRenderSystem();
