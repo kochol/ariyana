@@ -4,9 +4,12 @@
 #include "3d/RenderSystem.hpp"
 #include "3d/SceneSystem.hpp"
 
+// World
 void* CreateWorld()
 {    
-    return ari::core::Memory::New<ari::en::World>();
+    ari::en::World* w = ari::core::Memory::New<ari::en::World>();
+    w->UpdateType = ari::en::World::UpdateType::Sync;
+    return w;
 }
 
 void DeleteWorld(void* _obj)
@@ -19,6 +22,7 @@ void UpdateWorld(void* _obj, float _elapsedTime)
     reinterpret_cast<ari::en::World*>(_obj)->Update(_elapsedTime);
 }
 
+// System
 void* CreateRenderSystem()
 {
     return ari::core::Memory::New<ari::en::RenderSystem>();
