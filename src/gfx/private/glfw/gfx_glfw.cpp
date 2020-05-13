@@ -57,6 +57,7 @@ namespace ari
 
 ari::Application* g_application = nullptr;
 
+#ifndef ARI_NO_MAIN
 int main(int argc, char* argv[]) 
 {
     // call ari main
@@ -81,3 +82,4 @@ int main(int argc, char* argv[])
 	ari::core::Memory::Delete(g_application);
     sg_shutdown();
 }
+#endif // ARI_NO_MAIN
