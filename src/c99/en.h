@@ -20,6 +20,10 @@ CARI_HANDLE(EntityHandle)
 CARI_API EntityHandle CreateEntityWorld();
 CARI_API bool IsValidEntity(uint32_t& _entityHandle);
 
+// Node
+CARI_API const char* GetNodeName(void* _node);
+CARI_API void SetNodeName(void* _node, char* _name);
+
 // Node3D
 CARI_COMPONENT_HANDLE(Node3dHandle)
 struct Node3dMembers

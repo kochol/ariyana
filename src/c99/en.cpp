@@ -59,6 +59,17 @@ bool IsValidEntity(uint32_t& _entityHandle)
     return ari::core::HandleManager<ari::en::EntityHandle>::IsHandleValid(_entityHandle);
 }
 
+// Node
+const char* GetNodeName(void* _node)
+{
+    return reinterpret_cast<ari::en::Node*>(_node)->Name.AsCStr();
+}
+
+void SetNodeName(void* _node, char* _name)
+{
+    return reinterpret_cast<ari::en::Node*>(_node)->Name = _name;
+}
+
 // Node3D
 bool IsValidNode3D(uint32_t& _cameraHandle)
 {
