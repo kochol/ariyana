@@ -10,7 +10,7 @@
 void* CreateWorld()
 {    
     ari::en::World* w = ari::core::Memory::New<ari::en::World>();
-    w->UpdateType = ari::en::World::UpdateType::Sync;
+    //w->UpdateType = ari::en::World::UpdateType::Sync;
     return w;
 }
 
