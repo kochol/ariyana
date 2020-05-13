@@ -65,9 +65,12 @@ bool IsValidNode3D(uint32_t& _cameraHandle)
     return ari::core::HandleManager<ari::en::Node3D>::IsHandleValid(_cameraHandle);
 }
 
-Vector3* GetNode3dPosition(void* _node)
+Node3dMembers GetNode3dMembers(void* _node)
 {
-    return reinterpret_cast<Vector3*>(&reinterpret_cast<ari::en::Node3D*>(_node)->Position);
+    auto node = reinterpret_cast<ari::en::Node3D*>(_node);
+    return { reinterpret_cast<Vector3*>(&node->Position),
+        reinterpret_cast<Quat*>(&node->Rotation),
+        reinterpret_cast<Vector3*>(&node->Scale) };
 }
 
 // Camera

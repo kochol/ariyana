@@ -22,8 +22,14 @@ CARI_API bool IsValidEntity(uint32_t& _entityHandle);
 
 // Node3D
 CARI_COMPONENT_HANDLE(Node3dHandle)
+struct Node3dMembers
+{
+	Vector3* Position;
+	Quat* Rotation;
+	Vector3* Scale;
+};
 CARI_API bool IsValidNode3D(uint32_t& _cameraHandle);
-CARI_API Vector3* GetNode3dPosition(void* _node);
+CARI_API Node3dMembers GetNode3dMembers(void* _node);
 
 // Camera
 CARI_API Node3dHandle CreateCameraComponent();

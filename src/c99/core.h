@@ -10,4 +10,12 @@ struct Vector3
             z;
 };
 
+struct Quat
+{
+    float x,
+        y,
+        z,
+        w;
+};
+
 #endif // ARI_CORE_H
