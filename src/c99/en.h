@@ -32,9 +32,22 @@ CARI_API bool IsValidNode3D(uint32_t& _cameraHandle);
 CARI_API Node3dMembers GetNode3dMembers(void* _node);
 
 // Camera
+struct CameraMembers
+{
+	Vector3	*	Target,
+			*	Up,
+			*	Right;
+	float	*	AspectRatio;
+	float	*	Fov;
+	float	*	xMag;
+	float	*	yMag;
+	float	*	zNear;
+	float	*	zFar;
+	//CameraType*	Type;
+};
 CARI_API Node3dHandle CreateCameraComponent();
 CARI_API void AddCameraToWorld(void* _world, EntityHandle* _entity, const Node3dHandle& _camera);
-CARI_API Vector3* GetCameraTarget(void* _node);
+CARI_API CameraMembers GetCameraMembers(void* _node);
 
 // BoxShape
 CARI_API Node3dHandle CreateBoxShapeComponent();

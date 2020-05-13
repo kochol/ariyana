@@ -87,9 +87,20 @@ void AddCameraToWorld(void* _world, EntityHandle* _entity, const Node3dHandle& _
     reinterpret_cast<ari::en::World*>(_world)->AddDerivedComponent<ari::en::Camera, ari::en::Node3D>(en.cpp, cam.cpp);
 }
 
-Vector3* GetCameraTarget(void* _node)
+CameraMembers GetCameraMembers(void* _node)
 {
-    return reinterpret_cast<Vector3*>(&reinterpret_cast<ari::en::Camera*>(_node)->Target);
+    auto node = reinterpret_cast<ari::en::Camera*>(_node);
+    return {
+        reinterpret_cast<Vector3*>(&node->Target),
+        reinterpret_cast<Vector3*>(&node->Up),
+        reinterpret_cast<Vector3*>(&node->Right),
+        &node->AspectRatio,
+        &node->Fov,
+        &node->xMag,
+        &node->yMag,
+        &node->zNear,
+        &node->zFar,
+    };
 }
 
 // BoxShape
