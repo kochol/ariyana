@@ -16,7 +16,7 @@ namespace ari
 
         private:
 
-			sx_lock_t m_lock;
+			sx_lock_t m_lock = 0;
 
         };
         
