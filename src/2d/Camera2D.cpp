@@ -7,7 +7,7 @@ namespace ari::en
 
 	void Camera2D::Rotate(float _angle)
 	{
-
+		Rotation = _angle;		
 	} // Rotate
 
 	void Camera2D::MoveLR(const float& _speed)

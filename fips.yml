@@ -39,3 +39,5 @@ run:
         cwd: tests/05-texcube
     t07gltf: 
         cwd: tests/07-gltf
+    t082d:
+        cwd: tests/08-2d
