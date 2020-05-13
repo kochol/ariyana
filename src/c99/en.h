@@ -3,6 +3,7 @@
 
 #include "macros.h"
 #include "core.h"
+#include "gfx.h"
 
 // World functions
 CARI_API void* CreateWorld();
@@ -54,7 +55,13 @@ CARI_API void AddCameraToWorld(void* _world, EntityHandle* _entity, const Node3d
 CARI_API CameraMembers GetCameraMembers(void* _node);
 
 // BoxShape
+struct BoxShapeMembers
+{
+	TextureHandle* Texture;
+	SubMeshHandle* SubMesh;
+};
 CARI_API Node3dHandle CreateBoxShapeComponent();
 CARI_API void AddBoxShapeToWorld(void* _world, EntityHandle* _entity, const Node3dHandle& _camera);
+CARI_API BoxShapeMembers GetBoxShapeMembers(void* _node);
 
 #endif // ARI_EN_H

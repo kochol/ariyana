@@ -127,3 +127,12 @@ void AddBoxShapeToWorld(void* _world, EntityHandle* _entity, const Node3dHandle&
     const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
     reinterpret_cast<ari::en::World*>(_world)->AddDerivedComponent<ari::en::BoxShape, ari::en::Node3D>(en.cpp, cam.cpp);
 }
+
+BoxShapeMembers GetBoxShapeMembers(void* _node)
+{
+    auto node = reinterpret_cast<ari::en::BoxShape*>(_node);
+    return {
+        reinterpret_cast<TextureHandle*>(&node->Texture),
+        reinterpret_cast<SubMeshHandle*>(&node->SubMesh)
+    };
+}
