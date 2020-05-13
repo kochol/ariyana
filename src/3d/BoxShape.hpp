@@ -13,7 +13,7 @@ namespace ari::en
 
 		ARI_COMPONENT_CHILD(BoxShape, Node3D)
 
-		// Constructor
+		//! Constructor
 		BoxShape();
 
 		//! Destructor

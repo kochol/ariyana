@@ -24,7 +24,7 @@ namespace ari::en
 			Target = sx_vec3f(0.0f, 0.0f, 100.0f);
 			Up = sx_vec3f(0.0f, 1.0f, 0.0f);
 			Right = sx_vec3f(1.0f, 0.0f, 0.0f);
-			zNear = 1.f;
+			zNear = 0.f;
 			zFar = 1000.f;
 		}
 

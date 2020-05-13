@@ -8,6 +8,12 @@ namespace ari::gfx
 		float x, y, z;		
 	};
 
+	struct PosVertex2D
+	{
+		float x, y;
+		float u, v;
+	};
+
 	struct ColorVertex
 	{
 		uint32_t argb;

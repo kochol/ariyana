@@ -30,9 +30,9 @@ namespace ari::en
 				events::OnFrameData frame_data = { m_pFrameDataTransforms };
 				p_world->emit(frame_data);
 			}
-			if (m_FameDataTurnIndex > 2)
-				m_FameDataTurnIndex = 0;
-			m_pFrameDataTransforms = &m_aFrameData[m_FameDataTurnIndex];
+			if (m_FrameDataTurnIndex > 2)
+				m_FrameDataTurnIndex = 0;
+			m_pFrameDataTransforms = &m_aFrameData[m_FrameDataTurnIndex];
 			m_pFrameDataTransforms->FrameNumber = gfx::GetFrameNumber();
 			m_pFrameDataTransforms->CameraObj = m_pActiveCamera;
 			if (m_pActiveCamera)
@@ -62,7 +62,7 @@ namespace ari::en
 					float(rect.width) / float(rect.height), m_pActiveCamera->zNear, m_pActiveCamera->zFar, true);				
 			}
 
-			m_FameDataTurnIndex++;
+			m_FrameDataTurnIndex++;
 		}
 	}
 
@@ -116,11 +116,11 @@ namespace ari::en
 		}
 		if (parent)
 		{
-			node->_finalMat[m_FameDataTurnIndex] = parent->_finalMat[m_FameDataTurnIndex] * m;
+			node->_finalMat[m_FrameDataTurnIndex] = parent->_finalMat[m_FrameDataTurnIndex] * m;
 		}
 		else
 		{
-			node->_finalMat[m_FameDataTurnIndex] = m;
+			node->_finalMat[m_FrameDataTurnIndex] = m;
 		}
 		parent = node;
 

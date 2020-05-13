@@ -8,6 +8,7 @@ namespace ari::en
 {
 	struct World;
 	struct FrameData;
+	struct FrameData2D;
 
 	namespace Internal
 	{
@@ -72,6 +73,11 @@ namespace ari::en
 		struct OnFrameData
 		{
 			FrameData* frame_data;
+		};
+
+		struct OnFrameData2D
+		{
+			FrameData2D* frame_data_2d;
 		};
 
 		struct OnInputEvent

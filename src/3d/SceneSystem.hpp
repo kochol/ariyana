@@ -40,7 +40,7 @@ namespace ari::en
 		Camera		*	m_pActiveCamera;
 		core::StaticArray<FrameData, 3>	
 						m_aFrameData;
-		int				m_FameDataTurnIndex = 0;
+		int				m_FrameDataTurnIndex = 0;
 		FrameData	*	m_pFrameDataUnused,			// This is the unused frame data pointers
 					*	m_pFrameDataTransforms,		// This is the transform calculated nodes
 					*	m_pFrameDataVisible;		// This is the visible nodes that must be rendered.
