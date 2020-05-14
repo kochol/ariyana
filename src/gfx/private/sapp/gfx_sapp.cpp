@@ -10,7 +10,7 @@
 #include "sx/timer.h"
 
 ari::Application* g_application = nullptr;
-static uint32_t g_FrameNumber = 0;
+static uint64_t g_FrameNumber = 0;
 static uint64_t last_time = 0;
 
 void ari_init_cb()
@@ -97,12 +97,12 @@ namespace ari
 			a_assert(handle.Handle == 0); // Only use this with glfw backend.
 		}
 
-        uint32_t GetFrameNumber()
+        uint64_t GetFrameNumber()
         {
             return g_FrameNumber;
         }
 
-		uint32_t* GetFrameNumberPointer()
+		uint64_t* GetFrameNumberPointer()
 		{
 			return &g_FrameNumber;
 		}

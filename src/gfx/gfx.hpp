@@ -482,9 +482,9 @@ namespace ari
 
 		void Present(const io::WindowHandle& handle = io::MainWindow);
 
-		uint32_t GetFrameNumber();
+		uint64_t GetFrameNumber();
 
-		uint32_t* GetFrameNumberPointer();
+		uint64_t* GetFrameNumberPointer();
 
 		BufferHandle CreateVertexBuffer(int size, void* content, BufferUsage usage = BufferUsage::Immutable);
 

@@ -15,7 +15,7 @@ bool SetupGfx(GfxSetup& _setup)
     return ari::gfx::SetupGfx(setup.cpp);
 }
 
-uint32_t* GetFrameNumberPointer()
+uint64_t* GetFrameNumberPointer()
 {
     return ari::gfx::GetFrameNumberPointer();
 }

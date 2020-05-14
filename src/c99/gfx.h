@@ -21,7 +21,7 @@ struct GfxSetup
 
 // Globals
 CARI_API bool SetupGfx(GfxSetup& setup);
-CARI_API uint32_t* GetFrameNumberPointer();
+CARI_API uint64_t* GetFrameNumberPointer();
 
 // Texture
 CARI_HANDLE(TextureHandle)

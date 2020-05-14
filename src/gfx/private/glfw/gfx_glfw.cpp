@@ -8,7 +8,7 @@
 #include "sx/timer.h"
 #include "core/containers/StaticArray.hpp"
 
-static uint32_t g_FrameNumber = 0;
+static uint64_t g_FrameNumber = 0;
 extern ari::core::StaticArray<sg_context, ari::io::MaxWindow> g_sg_contexts;
 
 namespace ari
@@ -46,12 +46,12 @@ namespace ari
 			glfwSwapBuffers(io::GetGlfwWindow(handle));
 		}
 
-        uint32_t GetFrameNumber()
+        uint64_t GetFrameNumber()
         {
             return g_FrameNumber;
         }
 
-		uint32_t* GetFrameNumberPointer()
+		uint64_t* GetFrameNumberPointer()
 		{
 			return &g_FrameNumber;
 		}
