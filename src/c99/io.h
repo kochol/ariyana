@@ -5,12 +5,14 @@
 #include "io/IOEvents.hpp"
 
 CARI_HANDLE(WindowHandle)
+struct WindowSetup;
 
 // Global
 CARI_API void UpdateIo();
 CARI_API bool Run();
 typedef void(on_event_cb)(ari_event* event, WindowHandle* _window);
 CARI_API void SetOnEventCallBack(on_event_cb* _onEvent);
+CARI_API WindowHandle CreateAriWindow(WindowSetup* _setup, char* _title);
 
 // FileSystem
 CARI_API void RegisterFileSystemLink(void* _obj, char* _scheme);

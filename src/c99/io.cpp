@@ -60,6 +60,13 @@ void SetOnEventCallBack(on_event_cb* OnEvent)
     g_OnEvent = OnEvent;
 }
 
+WindowHandle CreateAriWindow(WindowSetup* _setup, char* _title)
+{
+    union { ari::io::WindowHandle cpp; WindowHandle c; } w = 
+        { ari::io::CreateAriWindow(*(reinterpret_cast<ari::io::Window*>(_setup)), _title) };
+    return w.c;
+}
+
 // FileSystem
 void RegisterFileSystemLink(void* _obj, char* _scheme)
 {
