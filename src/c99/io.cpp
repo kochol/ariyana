@@ -3,6 +3,42 @@
 #include "io/FileSystem.hpp"
 #include "io/Window.hpp"
 #include "fs_local/FileSystemLocal.hpp"
+#include "gfx/Application.hpp"
+
+extern ari::Application* g_application;
+on_event_cb* g_OnEvent = nullptr;
+
+// C Application
+class CApp: public ari::Application
+{
+public:
+
+	ari::gfx::GfxSetup* GetGfxSetup() override
+	{
+		return nullptr;
+	}
+
+	void OnInit() override
+	{
+		
+	}
+
+	void OnFrame(float _elapsedTime) override
+	{
+		
+	}
+
+	void OnCleanup() override
+	{
+		
+	}
+
+	void OnEvent(ari_event* event, ari::io::WindowHandle _window) override
+	{
+		if (g_OnEvent)
+            g_OnEvent(event, reinterpret_cast<WindowHandle*>(&_window));
+	}
+};
 
 // Global
 void UpdateIo()
@@ -13,6 +49,15 @@ void UpdateIo()
 bool Run()
 {
     return ari::io::Run();
+}
+
+void SetOnEventCallBack(on_event_cb* OnEvent)
+{
+    if (g_application == nullptr)
+    {
+        g_application = ari::core::Memory::New<CApp>();
+    }
+    g_OnEvent = OnEvent;
 }
 
 // FileSystem
