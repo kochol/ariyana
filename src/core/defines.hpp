@@ -24,8 +24,8 @@ struct _name \
 #define ARI_COMPONENT(_name) \
 static const uint32_t Id; \
 static bool IsRegisteredWithComponentManager; \
-virtual uint32_t GetId() { return Id; } \
-virtual uint32_t GetBaseId() { return Id; } \
+virtual uint32_t GetId() { return _name::Id; } \
+virtual uint32_t GetBaseId() { return _name::Id; } \
 inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _world) \
 { \
 	auto c = _world->CreateComponent<_name>(); \
@@ -60,7 +60,7 @@ bool _name::IsDiff(void* clone, void* obj, int index) \
 #define ARI_COMPONENT_CHILD(_name, _base) \
 static const uint32_t Id; \
 static bool IsRegisteredWithComponentManager; \
-virtual uint32_t GetId() override { return Id; } \
+virtual uint32_t GetId() override { return _name::Id; } \
 virtual uint32_t GetBaseId() { return _base::Id; } \
 inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _world) \
 { \

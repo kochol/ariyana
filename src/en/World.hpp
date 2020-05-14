@@ -201,7 +201,7 @@ namespace ari::en
 	template <class T>
 	void World::AddComponent(const EntityHandle& _entity, const ComponentHandle<T>& _cmp)
 	{
-		const uint32_t cmpId = _cmp.Component->GetId();
+		const uint32_t cmpId = T::Id;
 		if (!m_mEntityComponents.Contains(cmpId))
 		{
 			m_mEntityComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());

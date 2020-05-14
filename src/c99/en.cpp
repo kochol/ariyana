@@ -31,6 +31,12 @@ void AddSystemToWorld(void* _world, void* _system)
         );
 }
 
+void AddEntityToWorld(void* _world, EntityHandle* _entity)
+{
+    reinterpret_cast<ari::en::World*>(_world)->AddEntity(
+        *(reinterpret_cast<ari::en::EntityHandle*>(_entity)));
+}
+
 // System
 void* CreateRenderSystem()
 {
