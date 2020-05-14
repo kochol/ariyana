@@ -59,6 +59,12 @@ bool IsValidEntity(uint32_t& _entityHandle)
     return ari::core::HandleManager<ari::en::EntityHandle>::IsHandleValid(_entityHandle);
 }
 
+bool* GetEntityMembers(EntityHandle* _entity)
+{
+    union { EntityHandle c; ari::en::EntityHandle cpp; } h = { *_entity };    
+    return &ari::en::World::GetEntity(h.cpp)->bReplicates;
+}
+
 // Node
 const char* GetNodeName(void* _node)
 {

@@ -29,7 +29,7 @@ namespace ari::en
 		//! Creates a new entity
 		static EntityHandle CreateEntity();
 
-		Entity* GetEntity(const EntityHandle& _handle);
+		static Entity* GetEntity(const EntityHandle& _handle);
 
 		void AddEntity(const EntityHandle& _handle);
 

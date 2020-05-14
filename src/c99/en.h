@@ -20,6 +20,7 @@ CARI_API void* CreateSceneSystem();
 CARI_HANDLE(EntityHandle)
 CARI_API EntityHandle CreateEntityWorld();
 CARI_API bool IsValidEntity(uint32_t& _entityHandle);
+CARI_API bool* GetEntityMembers(EntityHandle* _entity);
 
 // Node
 CARI_API const char* GetNodeName(void* _node);
