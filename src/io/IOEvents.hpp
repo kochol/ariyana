@@ -1,8 +1,8 @@
-#pragma once
+#ifndef ARI_IO_EVENTS_HPP
+#define ARI_IO_EVENTS_HPP
+
 #include <cstdint>
 
-namespace ari::io
-{
     enum {
         ARI_MAX_TOUCHPOINTS = 8,
         ARI_MAX_MOUSEBUTTONS = 3,
@@ -201,4 +201,4 @@ namespace ari::io
         int framebuffer_height = 0;
     } ari_event;
 
-} // namespace ari::io
+#endif // ARI_IO_EVENTS_HPP

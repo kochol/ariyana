@@ -23,7 +23,7 @@ namespace ari
 
 		virtual void OnCleanup() = 0;
 
-		virtual void OnEvent(io::ari_event* event, io::WindowHandle _window) = 0;
+		virtual void OnEvent(ari_event* event, io::WindowHandle _window) = 0;
 
     };
   

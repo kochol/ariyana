@@ -141,32 +141,32 @@ public:
 		ari::net::ShutdownNetwork();
 	}
 
-	void OnEvent(ari::io::ari_event* event, ari::io::WindowHandle _window) override
+	void OnEvent(ari_event* event, ari::io::WindowHandle _window) override
 	{
-		if (event->type == ari::io::ARI_EVENTTYPE_KEY_UP)
+		if (event->type == ARI_EVENTTYPE_KEY_UP)
 		{
 			switch (event->key_code)
 			{
-			case ari::io::ARI_KEYCODE_C:
+			case ARI_KEYCODE_C:
 				{
 					Client* client = ari::core::Memory::New<Client>();
 					m_aClients.Add(client)->Init();
 				}
 				break;
-			case ari::io::ARI_KEYCODE_S:
+			case ARI_KEYCODE_S:
 				m_bRotate = !m_bRotate;
 				break;
-			case ari::io::ARI_KEYCODE_Q:
+			case ARI_KEYCODE_Q:
 				if (_window.Index > 0)
 					m_aClients[_window.Index - 1]->m_client_system.CallRPC(g_rpc_server, 7);
 				break;
-			case ari::io::ARI_KEYCODE_W:
+			case ARI_KEYCODE_W:
 				if (_window.Index == 0) // On main window
 				{
 					m_server_system.CallRPC(0, g_rpc_client, 12.5f);
 				}
 				break;
-			case ari::io::ARI_KEYCODE_E:
+			case ARI_KEYCODE_E:
 				if (_window.Index == 0) // On main window
 				{
 					m_server_system.CallRPC(g_rpc_multicast, 12.5f);

@@ -82,7 +82,7 @@ namespace ari::en
 
 		struct OnInputEvent
 		{
-			io::ari_event* event;
+			ari_event* event;
 			io::WindowHandle window;
 		};
 

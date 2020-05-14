@@ -26,7 +26,7 @@ public:
 		
 	}
 
-	void OnEvent(ari::io::ari_event* event, ari::io::WindowHandle _window) override
+	void OnEvent(ari_event* event, ari::io::WindowHandle _window) override
 	{
 		
 	}
