@@ -51,6 +51,11 @@ namespace ari
             return g_FrameNumber;
         }
 
+		uint32_t* GetFrameNumberPointer()
+		{
+			return &g_FrameNumber;
+		}
+
     } // namespace gfx
     
 } // namespace ari

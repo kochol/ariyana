@@ -484,6 +484,8 @@ namespace ari
 
 		uint32_t GetFrameNumber();
 
+		uint32_t* GetFrameNumberPointer();
+
 		BufferHandle CreateVertexBuffer(int size, void* content, BufferUsage usage = BufferUsage::Immutable);
 
 		BufferHandle CreateIndexBuffer(int size, void* content, BufferUsage usage = BufferUsage::Immutable);

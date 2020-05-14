@@ -8,10 +8,16 @@ ari::Application* ari_main(int argc, char* argv[])
     return nullptr;
 }
 
+// Globals
 bool SetupGfx(GfxSetup& _setup)
 {
     union { GfxSetup c; ari::gfx::GfxSetup cpp; } setup = { _setup };
     return ari::gfx::SetupGfx(setup.cpp);
+}
+
+uint32_t* GetFrameNumberPointer()
+{
+    return ari::gfx::GetFrameNumberPointer();
 }
 
 // Texture

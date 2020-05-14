@@ -19,7 +19,9 @@ struct GfxSetup
     int swap_interval;                  /* the preferred swap interval (ignored on some platforms) */
 };
 
+// Globals
 CARI_API bool SetupGfx(GfxSetup& setup);
+CARI_API uint32_t* GetFrameNumberPointer();
 
 // Texture
 CARI_HANDLE(TextureHandle)
