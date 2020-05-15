@@ -83,9 +83,9 @@ void SetNodeName(void* _node, char* _name)
 }
 
 // Node3D
-bool IsValidNode3D(uint32_t& _cameraHandle)
+bool IsValidNode3D(uint32_t& _handle)
 {
-    return ari::core::HandleManager<ari::en::Node3D>::IsHandleValid(_cameraHandle);
+    return ari::core::HandleManager<ari::en::Node3D>::IsHandleValid(_handle);
 }
 
 Node3dMembers GetNode3dMembers(void* _node)
@@ -133,11 +133,11 @@ Node3dHandle CreateBoxShapeComponent()
     return { c.Handle, c.Index, c.Component };
 }
 
-void AddBoxShapeToWorld(void* _world, EntityHandle* _entity, const Node3dHandle& _camera)
+void AddBoxShapeToWorld(void* _world, EntityHandle* _entity, const Node3dHandle& _box)
 {
-    const union { Node3dHandle c{}; ari::en::ComponentHandle<ari::en::BoxShape> cpp; } cam = { _camera };
+    const union { Node3dHandle c{}; ari::en::ComponentHandle<ari::en::BoxShape> cpp; } box = { _box };
     const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
-    reinterpret_cast<ari::en::World*>(_world)->AddDerivedComponent<ari::en::BoxShape, ari::en::Node3D>(en.cpp, cam.cpp);
+    reinterpret_cast<ari::en::World*>(_world)->AddDerivedComponent<ari::en::BoxShape, ari::en::Node3D>(en.cpp, box.cpp);
 }
 
 BoxShapeMembers GetBoxShapeMembers(void* _node)

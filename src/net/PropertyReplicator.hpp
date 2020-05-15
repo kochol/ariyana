@@ -88,7 +88,7 @@ namespace ari::net
 				en::ComponentHandle<void> cmpVoid = { cmp.Handle, cmp.Index, (void*)cmp.Component };
 				PropertyIndex property;
 				property.Component = cmpVoid;
-				property.ComponentId = T::Id;
+				property.ComponentId = cmp.Component->GetId();
 				property.Index = property_index;
 				property.PropertyClone = clone;
 				property.isDiffFn = T::IsDiff;

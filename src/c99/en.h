@@ -36,7 +36,7 @@ struct Node3dMembers
 	Quat* Rotation;
 	Vector3* Scale;
 };
-CARI_API bool IsValidNode3D(uint32_t& _cameraHandle);
+CARI_API bool IsValidNode3D(uint32_t& _handle);
 CARI_API Node3dMembers GetNode3dMembers(void* _node);
 
 // Camera
