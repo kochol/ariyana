@@ -26,26 +26,30 @@ void ari_init_cb()
 	// Setup shaders
 	ari::gfx::SetupShaders();
 
-	g_application->OnInit();
+	if (g_application)
+		g_application->OnInit();
 }
 
 void ari_frame_cb()
 {
     g_FrameNumber++;
 	ari::io::Update();
-    g_application->OnFrame((float)sx_tm_sec(sx_tm_laptime(&last_time)));
+	if (g_application)
+	    g_application->OnFrame((float)sx_tm_sec(sx_tm_laptime(&last_time)));
 }
 
 void ari_cleanup_cb()
 {
-	g_application->OnCleanup();
+	if (g_application)
+		g_application->OnCleanup();
 	ari::core::Memory::Delete(g_application);
 	sg_shutdown();
 }
 
 void ari_event_cb(const sapp_event* event)
 {
-	g_application->OnEvent((ari::io::ari_event*)(event), {0, 0});
+	if (g_application)
+		g_application->OnEvent((ari_event*)(event), {0, 0});
 }
 
 void ari_fail_cb(const char* msg)
