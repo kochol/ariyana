@@ -13,6 +13,26 @@ ari::Application* g_application = nullptr;
 static uint64_t g_FrameNumber = 0;
 static uint64_t last_time = 0;
 
+struct sapp_data
+{
+	_sapp_state* p_sapp;
+	_sapp_android_state_t* p_sapp_android_state;
+};
+
+extern "C" sapp_data CreateSg(sg_context_desc _desc)
+{
+	sg_desc desc;
+	ari::core::Memory::Fill(&desc, sizeof(sg_desc), 0);
+	desc.context = _desc;
+
+	sg_setup(&desc);
+
+	// Setup shaders
+	ari::gfx::SetupShaders();
+
+	return { &_sapp, &_sapp_android_state };
+}
+
 void ari_init_cb()
 {
 	sg_desc desc;
