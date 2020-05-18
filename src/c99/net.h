@@ -20,10 +20,42 @@ CARI_API bool InitNetworkLink
 CARI_API void ShutdownNetwork();
 
 // Serialize stuffs
+// bool
+CARI_API bool SerializeBool(void* _stream, bool* _val);
+CARI_API bool SerializeMeasureBool(void* _stream, bool* _val);
+CARI_API bool DeserializeBool(void* _stream, bool* _val);
+// int32
+CARI_API bool SerializeInt32(void* _stream, int* _val);
+CARI_API bool SerializeMeasureInt32(void* _stream, int* _val);
+CARI_API bool DeserializeInt32(void* _stream, int* _val);
 // uint32
-CARI_API bool SerializeUint32(void* _stream, uint32_t& _val);
-CARI_API bool SerializeMeasureUint32(void* _stream, uint32_t& _val);
-CARI_API bool DeserializeUint32(void* _stream, uint32_t& _val);
+CARI_API bool SerializeUint32(void* _stream, uint32_t* _val);
+CARI_API bool SerializeMeasureUint32(void* _stream, uint32_t* _val);
+CARI_API bool DeserializeUint32(void* _stream, uint32_t* _val);
+// uint64
+CARI_API bool SerializeUint64(void* _stream, uint64_t* _val);
+CARI_API bool SerializeMeasureUint64(void* _stream, uint64_t* _val);
+CARI_API bool DeserializeUint64(void* _stream, uint64_t* _val);
+// float
+CARI_API bool SerializeFloat(void* _stream, float* _val);
+CARI_API bool SerializeMeasureFloat(void* _stream, float* _val);
+CARI_API bool DeserializeFloat(void* _stream, float* _val);
+// double
+CARI_API bool SerializeDouble(void* _stream, double* _val);
+CARI_API bool SerializeMeasureDouble(void* _stream, double* _val);
+CARI_API bool DeserializeDouble(void* _stream, double* _val);
+// string
+CARI_API bool SerializeString(void* _stream, char* _val, int* _size);
+CARI_API bool SerializeMeasureString(void* _stream, char* _val, int* _size);
+CARI_API bool DeserializeString(void* _stream, char* _val, int* _size);
+// bits
+CARI_API bool SerializeBits(void* _stream, void* _val, int* _size);
+CARI_API bool SerializeMeasureBits(void* _stream, void* _val, int* _size);
+CARI_API bool DeserializeBits(void* _stream, void* _val, int* _size);
+// bytes
+CARI_API bool SerializeBytes(void* _stream, void* _val, int* _size);
+CARI_API bool SerializeMeasureBytes(void* _stream, void* _val, int* _size);
+CARI_API bool DeserializeBytes(void* _stream, void* _val, int* _size);
 
 // RPC stuffs
 enum RpcType
@@ -32,16 +64,6 @@ enum RpcType
 	RpcType_Client,
 	RpcType_MultiCast,
 };
-
-struct AriRPC
-{
-	void* rpc;
-	char* function_name;
-	uint32_t function_hash;
-	RpcType rpc_type;
-};
-
-CARI_API void AddRpc(AriRPC* _rpc);
 
 // Server System
 CARI_API void* CreateServerSystem();

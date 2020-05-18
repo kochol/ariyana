@@ -4,6 +4,8 @@
 #include "net/ClientSystem.hpp"
 #include "3d/BoxShape.hpp"
 #include "net/Serialize.hpp"
+#include "yojimbo.h"
+#include "netSerializer.hpp"
 
 // Globals
 bool InitNetworkLink
@@ -28,47 +30,130 @@ void ShutdownNetwork()
 
 // Serialize stuffs
 
+// bool
+bool SerializeBool(void* _stream, bool* _val)
+{
+    return SerializeBool(*((yojimbo::WriteStream*)_stream), *_val);
+}
+bool SerializeMeasureBool(void* _stream, bool* _val)
+{
+    return SerializeBool(*((yojimbo::MeasureStream*)_stream), *_val);
+}
+bool DeserializeBool(void* _stream, bool* _val)
+{
+    return SerializeBool(*((yojimbo::ReadStream*)_stream), *_val);
+}
+
+// int32
+bool SerializeInt32(void* _stream, int* _val)
+{
+    return SerializeBits(*((yojimbo::WriteStream*)_stream), *(uint32_t*)_val, 32);
+}
+bool SerializeMeasureInt32(void* _stream, int* _val)
+{
+    return SerializeBits(*((yojimbo::MeasureStream*)_stream), *(uint32_t*)_val, 32);
+}
+bool DeserializeInt32(void* _stream, int* _val)
+{
+    return SerializeBits(*((yojimbo::ReadStream*)_stream), *(uint32_t*)_val, 32);
+}
+
 // uint32
-bool SerializeUint32(void* _stream, uint32_t& _val)
+bool SerializeUint32(void* _stream, uint32_t* _val)
 {
-    return ari::net::Serialize(*((yojimbo::WriteStream*)_stream), _val);
+    return SerializeBits(*((yojimbo::WriteStream*)_stream), *_val, 32);
 }
-bool SerializeMeasureUint32(void* _stream, uint32_t& _val)
+bool SerializeMeasureUint32(void* _stream, uint32_t* _val)
 {
-    return ari::net::Serialize(*((yojimbo::MeasureStream*)_stream), _val);
+    return SerializeBits(*((yojimbo::MeasureStream*)_stream), *_val, 32);
 }
-bool DeserializeUint32(void* _stream, uint32_t& _val)
+bool DeserializeUint32(void* _stream, uint32_t* _val)
 {
-    return ari::net::Serialize(*((yojimbo::ReadStream*)_stream), _val);
+    return SerializeBits(*((yojimbo::ReadStream*)_stream), *_val, 32);
 }
 
-// RPC stuff
-class CRPC: ari::net::RPC
+// uint64
+bool SerializeUint64(void* _stream, uint64_t* _val)
 {
-    // Inherited via RPC
-    virtual bool Serialize(void* stream) override
-    {
-        return false;
-    }
-
-    virtual bool Deserialize(void* stream) override
-    {
-        return false;
-    }
-
-    virtual bool SerializeMeasure(void* stream) override
-    {
-        return false;
-    }
-
-    virtual void Call() override
-    {
-    }
-};
-
-void AddRpc(AriRPC* _rpc)
+    return SerializeUInt64(*((yojimbo::WriteStream*)_stream), *_val);
+}
+bool SerializeMeasureUint64(void* _stream, uint64_t* _val)
 {
-	
+    return SerializeUInt64(*((yojimbo::MeasureStream*)_stream), *_val);
+}
+bool DeserializeUint64(void* _stream, uint64_t* _val)
+{
+    return SerializeUInt64(*((yojimbo::ReadStream*)_stream), *_val);
+}
+
+// float
+bool SerializeFloat(void* _stream, float* _val)
+{
+    return SerializeFloat(*((yojimbo::WriteStream*)_stream), *_val);
+}
+bool SerializeMeasureFloat(void* _stream, float* _val)
+{
+    return SerializeFloat(*((yojimbo::MeasureStream*)_stream), *_val);
+}
+bool DeserializeFloat(void* _stream, float* _val)
+{
+    return SerializeFloat(*((yojimbo::ReadStream*)_stream), *_val);
+}
+
+// double
+bool SerializeDouble(void* _stream, double* _val)
+{
+    return SerializeDouble(*((yojimbo::WriteStream*)_stream), *_val);
+}
+bool SerializeMeasureDouble(void* _stream, double* _val)
+{
+    return SerializeDouble(*((yojimbo::MeasureStream*)_stream), *_val);
+}
+bool DeserializeDouble(void* _stream, double* _val)
+{
+    return SerializeDouble(*((yojimbo::ReadStream*)_stream), *_val);
+}
+
+// string
+bool SerializeString(void* _stream, char* _val, int* _size)
+{
+    return SerializeString(*((yojimbo::WriteStream*)_stream), _val, *_size);
+}
+bool SerializeMeasureString(void* _stream, char* _val, int* _size)
+{
+    return SerializeString(*((yojimbo::MeasureStream*)_stream), _val, *_size);
+}
+bool DeserializeString(void* _stream, char* _val, int* _size)
+{
+    return SerializeString(*((yojimbo::ReadStream*)_stream), _val, *_size);
+}
+
+// bits
+bool SerializeBits(void* _stream, void* _val, int* _size)
+{
+    return SerializeBits(*((yojimbo::WriteStream*)_stream), *(uint32_t*)_val, *_size);
+}
+bool SerializeMeasureBits(void* _stream, void* _val, int* _size)
+{
+    return SerializeBits(*((yojimbo::MeasureStream*)_stream), *(uint32_t*)_val, *_size);
+}
+bool DeserializeBits(void* _stream, void* _val, int* _size)
+{
+    return SerializeBits(*((yojimbo::ReadStream*)_stream), *(uint32_t*)_val, *_size);
+}
+
+// bytes
+bool SerializeBytes(void* _stream, void* _val, int* _size)
+{
+    return SerializeBytes(*((yojimbo::WriteStream*)_stream), _val, *_size);
+}
+bool SerializeMeasureBytes(void* _stream, void* _val, int* _size)
+{
+    return SerializeBytes(*((yojimbo::MeasureStream*)_stream), _val, *_size);
+}
+bool DeserializeBytes(void* _stream, void* _val, int* _size)
+{
+    return SerializeBytes(*((yojimbo::ReadStream*)_stream), _val, *_size);
 }
 
 // Server System

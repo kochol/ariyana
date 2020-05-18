@@ -9,5 +9,6 @@ fips_begin_sharedlib(cari)
         io.h                    io.cpp
         macros.h
         net.h                   net.cpp
+        netSerializer.hpp
     )
 fips_end_sharedlib()
