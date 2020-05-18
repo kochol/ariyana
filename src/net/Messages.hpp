@@ -19,7 +19,8 @@ namespace ari::net
 		ClientSystem* client_system = nullptr;
 
 		template <typename Stream>
-		bool Serialize(Stream& stream, bool Measure = false) {
+		bool Serialize(Stream& stream, bool Measure = false) 
+		{
 			a_assert(World);
 			serialize_uint32(stream, Entity.Handle);
 			if (Stream::IsWriting)
@@ -106,7 +107,8 @@ namespace ari::net
 		void* Component = nullptr;
 
 		template <typename Stream>
-		bool Serialize(Stream& stream, bool Measure = false) {
+		bool Serialize(Stream& stream, bool Measure = false) 
+		{
 			serialize_uint32(stream, CmpId);
 			serialize_uint32(stream, CmpHandle);
 			serialize_int(stream, MemberIndex, 0, 31);
@@ -163,7 +165,8 @@ namespace ari::net
 		RPC* rpc = nullptr;
 
 		template <typename Stream>
-		bool Serialize(Stream& stream, bool Measure = false) {
+		bool Serialize(Stream& stream, bool Measure = false) 
+		{
 			if (Stream::IsWriting)
 			{
 				a_assert(rpc);
@@ -198,10 +201,45 @@ namespace ari::net
 
 	};
 
+	class CRpcCallMessage : public yojimbo::Message
+	{
+	public:
+
+		void* rpc = nullptr;
+		int rpc_index = 0;
+
+		template <typename Stream>
+		bool Serialize(Stream& stream, bool Measure = false) 
+		{
+			if (Stream::IsWriting)
+			{
+				a_assert(rpc);
+				if (!Measure)
+				{
+					return g_on_serialize((void*)&stream, rpc);
+				}
+				else
+				{
+					return g_on_serialize_measure((void*)&stream, rpc);
+				}
+			}
+			else
+			{
+				return g_on_deserialize((void*)&stream, &rpc_index);
+			}
+		}
+
+		bool SerializeInternal(class yojimbo::ReadStream& stream) override { return Serialize(stream); };
+		bool SerializeInternal(class yojimbo::WriteStream& stream) override { return Serialize(stream); };
+		bool SerializeInternal(class yojimbo::MeasureStream& stream) override { return Serialize(stream, true); };
+
+	};
+
 	// the message factory
 	ARI_MESSAGE_FACTORY_START(GameMessageFactory, (int)GameMessageType::COUNT)
 	YOJIMBO_DECLARE_MESSAGE_TYPE((int)GameMessageType::DESTROY_ENTITY, DestroyEntityMessage)
 	YOJIMBO_DECLARE_MESSAGE_TYPE((int)GameMessageType::RPC_CALL, RpcCallMessage)
+	YOJIMBO_DECLARE_MESSAGE_TYPE((int)GameMessageType::CRPC_CALL, CRpcCallMessage)
 	YOJIMBO_MESSAGE_FACTORY_FINISH()
 
 } // namespace ari::net

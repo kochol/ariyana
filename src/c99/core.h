@@ -18,4 +18,6 @@ struct Quat
         w;
 };
 
+CARI_API uint32_t HashStringFNV32(char* _str);
+
 #endif // ARI_CORE_H

@@ -6,6 +6,11 @@ namespace ari::net
 	core::Map<uint32_t, RPC*> g_mRpcs;
 	int g_iLastRpcClientIndex = -1;
 
+	serialize_cb* g_on_serialize = nullptr;
+	serialize_cb* g_on_serialize_measure = nullptr;
+	deserialize_cb* g_on_deserialize = nullptr;
+	call_c_rpc_cb* g_on_call_rpc = nullptr;
+
 	//------------------------------------------------------------------------------
 	bool InitNetwork()
 	{

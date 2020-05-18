@@ -15,6 +15,7 @@ namespace ari::net
 		UPDATE_ENTITY,
 		DESTROY_ENTITY,
 		RPC_CALL,
+		CRPC_CALL,
 		COUNT
 	};
 
@@ -33,6 +34,15 @@ namespace ari::net
 			channel[(int)GameChannel::UNRELIABLE].type = yojimbo::CHANNEL_TYPE_UNRELIABLE_UNORDERED;
 		}
 	};
+
+	// CRPC callbacks
+	typedef bool (serialize_cb)(void* _stream, void* _rpc);
+	extern serialize_cb* g_on_serialize;
+	extern serialize_cb* g_on_serialize_measure;
+	typedef bool (deserialize_cb)(void* _stream, int* _out_index);
+	extern deserialize_cb* g_on_deserialize;
+	typedef void (call_c_rpc_cb)(int rpc_index);
+	extern call_c_rpc_cb* g_on_call_rpc;
 
 	/// For internal use only.
 	void _AddRPC(RPC* rpc);

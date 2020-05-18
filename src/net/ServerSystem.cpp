@@ -215,6 +215,41 @@ namespace ari::net
 	}
 
 	//------------------------------------------------------------------------------
+	void ServerSystem::Call_C_RPC(void* rpc, bool _reliable, RpcType _rpc_type, int client_id)
+	{
+		if (m_iClientCount == 0)
+			return;
+
+		GameChannel channel = _reliable ? GameChannel::RELIABLE : GameChannel::UNRELIABLE;
+
+		if (_rpc_type == RpcType::MultiCast)
+		{
+			// Send to all clients
+			for (int i = 0; i < MAX_PLAYERS; i++)
+			{
+				if (m_pServer->IsClientConnected(i))
+				{
+					auto msg = (CRpcCallMessage*)m_pServer->CreateMessage
+					(i, int(GameMessageType::CRPC_CALL));
+					msg->rpc = rpc;
+					m_pServer->SendMessage(i, int(channel), msg);
+				}
+			}
+		}
+		else
+		{
+			a_assert(_rpc_type == RpcType::Client);
+			if (m_pServer->IsClientConnected(client_id))
+			{
+				auto msg = (CRpcCallMessage*)m_pServer->CreateMessage
+				(client_id, int(GameMessageType::CRPC_CALL));
+				msg->rpc = rpc;
+				m_pServer->SendMessage(client_id, int(channel), msg);
+			}
+		}
+	}
+
+	//------------------------------------------------------------------------------
 	void ServerSystem::SendRPC(RPC* rpc, int client_id)
 	{
 		if (m_iClientCount == 0)
@@ -258,6 +293,11 @@ namespace ari::net
 			a_assert(rpc_msg->rpc->rpc_type == RpcType::Server);
 			g_iLastRpcClientIndex = client_index;
 			rpc_msg->rpc->Call();
+		}
+		else if (msg->GetType() == int(GameMessageType::CRPC_CALL))
+		{
+			auto rpc_msg = (CRpcCallMessage*)msg;
+			g_on_call_rpc(rpc_msg->rpc_index);
 		}
 	}
 

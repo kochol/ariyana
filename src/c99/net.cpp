@@ -3,16 +3,72 @@
 #include "net/ServerSystem.hpp"
 #include "net/ClientSystem.hpp"
 #include "3d/BoxShape.hpp"
+#include "net/Serialize.hpp"
 
 // Globals
-bool InitNetwork()
+bool InitNetworkLink
+(
+    serialize_cb* _on_serialize,
+    deserialize_cb* _on_deserialize,
+    serialize_cb* _on_serialize_measure,
+    call_rpc_cb* _on_call_rpc
+)
 {
+    ari::net::g_on_serialize = _on_serialize;
+    ari::net::g_on_deserialize = _on_deserialize;
+    ari::net::g_on_serialize_measure = _on_serialize_measure;
+    ari::net::g_on_call_rpc = _on_call_rpc;
     return ari::net::InitNetwork();
 }
 
 void ShutdownNetwork()
 {
     ari::net::ShutdownNetwork();
+}
+
+// Serialize stuffs
+
+// uint32
+bool SerializeUint32(void* _stream, uint32_t& _val)
+{
+    return ari::net::Serialize(*((yojimbo::WriteStream*)_stream), _val);
+}
+bool SerializeMeasureUint32(void* _stream, uint32_t& _val)
+{
+    return ari::net::Serialize(*((yojimbo::MeasureStream*)_stream), _val);
+}
+bool DeserializeUint32(void* _stream, uint32_t& _val)
+{
+    return ari::net::Serialize(*((yojimbo::ReadStream*)_stream), _val);
+}
+
+// RPC stuff
+class CRPC: ari::net::RPC
+{
+    // Inherited via RPC
+    virtual bool Serialize(void* stream) override
+    {
+        return false;
+    }
+
+    virtual bool Deserialize(void* stream) override
+    {
+        return false;
+    }
+
+    virtual bool SerializeMeasure(void* stream) override
+    {
+        return false;
+    }
+
+    virtual void Call() override
+    {
+    }
+};
+
+void AddRpc(AriRPC* _rpc)
+{
+	
 }
 
 // Server System
@@ -33,7 +89,12 @@ bool CreateServerServerSystem(void* _obj, char* ip, int port)
 
 void StopServerSystem(void* _obj)
 {
-    return reinterpret_cast<ari::net::ServerSystem*>(_obj)->StopServer();
+    reinterpret_cast<ari::net::ServerSystem*>(_obj)->StopServer();
+}
+
+void CallCRPCServerSystem(void* _obj, void* _rpc, bool _reliable, RpcType _rpc_type, int client_id)
+{
+    reinterpret_cast<ari::net::ServerSystem*>(_obj)->Call_C_RPC(_rpc, _reliable, ari::net::RpcType(_rpc_type), client_id);
 }
 
 // Client System
@@ -55,6 +116,11 @@ void ConnectClientSystem(void* _obj, char* ip, int port)
 void StopClientSystem(void* _obj)
 {
     reinterpret_cast<ari::net::ClientSystem*>(_obj)->StopClient();
+}
+
+void CallCRPCClientSystem(void* _obj, void* _rpc, bool _reliable, RpcType _rpc_type)
+{
+    reinterpret_cast<ari::net::ClientSystem*>(_obj)->Call_C_RPC(_rpc, _reliable, ari::net::RpcType(_rpc_type), 0);
 }
 
 // PropertyReplicator
