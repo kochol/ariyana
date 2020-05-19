@@ -31,7 +31,7 @@ bool SerializeBool(Stream& _stream, bool& _obj)
 }
 
 template <typename Stream>
-bool SerializeString(Stream& _stream, char* _obj, int length)
+bool SerializeString(Stream& _stream, char* _obj, int& length)
 {
 	serialize_string(_stream, _obj, length);
 	return true;
@@ -45,7 +45,7 @@ bool SerializeBits(Stream& _stream, uint32_t& _obj, int bits)
 }
 
 template <typename Stream>
-bool SerializeBytes(Stream& _stream, void* _obj, int bytes)
+bool SerializeBytes(Stream& _stream, void* _obj, int& bytes)
 {
 	serialize_bytes(_stream, (uint8_t*)_obj, bytes);
 	return true;

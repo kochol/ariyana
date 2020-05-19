@@ -45,17 +45,17 @@ CARI_API bool SerializeDouble(void* _stream, double* _val);
 CARI_API bool SerializeMeasureDouble(void* _stream, double* _val);
 CARI_API bool DeserializeDouble(void* _stream, double* _val);
 // string
-CARI_API bool SerializeString(void* _stream, char* _val, int* _size);
-CARI_API bool SerializeMeasureString(void* _stream, char* _val, int* _size);
-CARI_API bool DeserializeString(void* _stream, char* _val, int* _size);
+CARI_API bool SerializeString(void* _stream, char* _val, int _size);
+CARI_API bool SerializeMeasureString(void* _stream, char* _val, int _size);
+CARI_API bool DeserializeString(void* _stream, char* _val, int _size);
 // bits
-CARI_API bool SerializeBits(void* _stream, void* _val, int* _size);
-CARI_API bool SerializeMeasureBits(void* _stream, void* _val, int* _size);
-CARI_API bool DeserializeBits(void* _stream, void* _val, int* _size);
+CARI_API bool SerializeBits(void* _stream, void* _val, int _size);
+CARI_API bool SerializeMeasureBits(void* _stream, void* _val, int _size);
+CARI_API bool DeserializeBits(void* _stream, void* _val, int _size);
 // bytes
-CARI_API bool SerializeBytes(void* _stream, void* _val, int* _size);
-CARI_API bool SerializeMeasureBytes(void* _stream, void* _val, int* _size);
-CARI_API bool DeserializeBytes(void* _stream, void* _val, int* _size);
+CARI_API bool SerializeBytes(void* _stream, void* _val, int _size);
+CARI_API bool SerializeMeasureBytes(void* _stream, void* _val, int _size);
+CARI_API bool DeserializeBytes(void* _stream, void* _val, int _size);
 
 // RPC stuffs
 enum RpcType

@@ -115,45 +115,45 @@ bool DeserializeDouble(void* _stream, double* _val)
 }
 
 // string
-bool SerializeString(void* _stream, char* _val, int* _size)
+bool SerializeString(void* _stream, char* _val, int _size)
 {
-    return SerializeString(*((yojimbo::WriteStream*)_stream), _val, *_size);
+    return SerializeString(*((yojimbo::WriteStream*)_stream), _val, _size);
 }
-bool SerializeMeasureString(void* _stream, char* _val, int* _size)
+bool SerializeMeasureString(void* _stream, char* _val, int _size)
 {
-    return SerializeString(*((yojimbo::MeasureStream*)_stream), _val, *_size);
+    return SerializeString(*((yojimbo::MeasureStream*)_stream), _val, _size);
 }
-bool DeserializeString(void* _stream, char* _val, int* _size)
+bool DeserializeString(void* _stream, char* _val, int _size)
 {
-    return SerializeString(*((yojimbo::ReadStream*)_stream), _val, *_size);
+    return SerializeString(*((yojimbo::ReadStream*)_stream), _val, _size);
 }
 
 // bits
-bool SerializeBits(void* _stream, void* _val, int* _size)
+bool SerializeBits(void* _stream, void* _val, int _size)
 {
-    return SerializeBits(*((yojimbo::WriteStream*)_stream), *(uint32_t*)_val, *_size);
+    return SerializeBits(*((yojimbo::WriteStream*)_stream), *(uint32_t*)_val, _size);
 }
-bool SerializeMeasureBits(void* _stream, void* _val, int* _size)
+bool SerializeMeasureBits(void* _stream, void* _val, int _size)
 {
-    return SerializeBits(*((yojimbo::MeasureStream*)_stream), *(uint32_t*)_val, *_size);
+    return SerializeBits(*((yojimbo::MeasureStream*)_stream), *(uint32_t*)_val, _size);
 }
-bool DeserializeBits(void* _stream, void* _val, int* _size)
+bool DeserializeBits(void* _stream, void* _val, int _size)
 {
-    return SerializeBits(*((yojimbo::ReadStream*)_stream), *(uint32_t*)_val, *_size);
+    return SerializeBits(*((yojimbo::ReadStream*)_stream), *(uint32_t*)_val, _size);
 }
 
 // bytes
-bool SerializeBytes(void* _stream, void* _val, int* _size)
+bool SerializeBytes(void* _stream, void* _val, int _size)
 {
-    return SerializeBytes(*((yojimbo::WriteStream*)_stream), _val, *_size);
+    return SerializeBytes(*((yojimbo::WriteStream*)_stream), _val, _size);
 }
-bool SerializeMeasureBytes(void* _stream, void* _val, int* _size)
+bool SerializeMeasureBytes(void* _stream, void* _val, int _size)
 {
-    return SerializeBytes(*((yojimbo::MeasureStream*)_stream), _val, *_size);
+    return SerializeBytes(*((yojimbo::MeasureStream*)_stream), _val, _size);
 }
-bool DeserializeBytes(void* _stream, void* _val, int* _size)
+bool DeserializeBytes(void* _stream, void* _val, int _size)
 {
-    return SerializeBytes(*((yojimbo::ReadStream*)_stream), _val, *_size);
+    return SerializeBytes(*((yojimbo::ReadStream*)_stream), _val, _size);
 }
 
 // Server System
