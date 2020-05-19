@@ -1,5 +1,6 @@
 #include "net.h"
 #include "en.h"
+#include "3d.h"
 #include "net/ServerSystem.hpp"
 #include "net/ClientSystem.hpp"
 #include "3d/BoxShape.hpp"
