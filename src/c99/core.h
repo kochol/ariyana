@@ -3,6 +3,12 @@
 
 #include "macros.h"
 
+struct Vector2
+{
+    float   x,
+            y;
+};
+
 struct Vector3
 {
     float   x,
