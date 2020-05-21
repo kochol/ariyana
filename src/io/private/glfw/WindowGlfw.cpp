@@ -39,7 +39,7 @@ namespace ari
 				return;
 
 			ari_event event;
-			if (GLFW_PRESS == action)
+			if (GLFW_PRESS == action || GLFW_REPEAT == action)
 				event.type = ARI_EVENTTYPE_KEY_DOWN;
 			else if (GLFW_RELEASE == action)
 				event.type = ARI_EVENTTYPE_KEY_UP;
