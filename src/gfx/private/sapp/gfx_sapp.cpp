@@ -92,6 +92,7 @@ sapp_desc sokol_main(int argc, char* argv[]) {
 	desc.high_dpi = setup->window.HighDpi;
 	desc.sample_count = setup->sample_count;
 	desc.swap_interval = setup->swap_interval;
+	desc.window_title = "Ari 0.5";
 
 	desc.init_cb = ari_init_cb;
 	desc.frame_cb = ari_frame_cb;
