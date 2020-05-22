@@ -49,7 +49,10 @@ namespace ari::en
 				});
 			if (m_pActiveCamera2D)
 			{
-				m_pActiveCamera2D->_view = sx_mat4_ident();
+				m_pActiveCamera2D->_view = sx_mat4_SRT(
+					m_pActiveCamera2D->Scale.x, m_pActiveCamera2D->Scale.y, 1.0f, 
+					0, 0, m_pActiveCamera2D->Rotation,
+					m_pActiveCamera2D->Position.x, m_pActiveCamera2D->Position.y, 0.0f);
 
 				core::RectI rect;
 				gfx::Viewport* p = m_pActiveCamera2D->GetViewport();
