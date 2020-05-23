@@ -38,7 +38,7 @@ Node3dHandle CreateCameraComponent()
 
 void AddCameraToWorld(void* _world, EntityHandle* _entity, const Node3dHandle& _camera)
 {
-    const union { Node3dHandle c{}; ari::en::ComponentHandle<ari::en::Camera> cpp; } cam = { _camera };
+    union { Node3dHandle c{}; ari::en::ComponentHandle<ari::en::Camera> cpp; } cam = { _camera };
     const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
     reinterpret_cast<ari::en::World*>(_world)->AddDerivedComponent<ari::en::Camera, ari::en::Node3D>(en.cpp, cam.cpp);
 }
@@ -68,7 +68,7 @@ Node3dHandle CreateBoxShapeComponent()
 
 void AddBoxShapeToWorld(void* _world, EntityHandle* _entity, const Node3dHandle& _box)
 {
-    const union { Node3dHandle c{}; ari::en::ComponentHandle<ari::en::BoxShape> cpp; } box = { _box };
+    union { Node3dHandle c{}; ari::en::ComponentHandle<ari::en::BoxShape> cpp; } box = { _box };
     const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
     reinterpret_cast<ari::en::World*>(_world)->AddDerivedComponent<ari::en::BoxShape, ari::en::Node3D>(en.cpp, box.cpp);
 }

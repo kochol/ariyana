@@ -43,7 +43,7 @@ namespace ari::en
 			m_pFrameDataTransforms->Nodes.Clear();
 
 			// Get all entities and calc transforms
-			p_world->GetDerivedComponents<Node2D>([this](uint32_t _entity_handle, const ComponentHandle<Node2D>& node)
+			p_world->GetDerivedComponents<Node2D>([this](const ComponentHandle<Node2D>& node)
 				{
 					this->CalcTransform(node.Component, nullptr);
 				});

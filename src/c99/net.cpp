@@ -232,7 +232,7 @@ bool IsValidPropertyReplicator(uint32_t& _handle)
 
 void AddPropertyReplicatorToWorld(void* _world, EntityHandle* _entity, PropertyReplicatorHandle* _cmp)
 {
-    const union { PropertyReplicatorHandle c{}; ari::en::ComponentHandle<ari::net::PropertyReplicator> cpp; } cmp = { *_cmp };
+    union { PropertyReplicatorHandle c{}; ari::en::ComponentHandle<ari::net::PropertyReplicator> cpp; } cmp = { *_cmp };
     const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
     reinterpret_cast<ari::en::World*>(_world)->AddComponent<ari::net::PropertyReplicator>(en.cpp, cmp.cpp);
 }

@@ -7,6 +7,8 @@ namespace ari
 {
 	namespace en
 	{
+		struct Entity;
+
 		template<class T>
 		class ComponentHandle
 		{
@@ -14,7 +16,8 @@ namespace ari
 			uint32_t			Handle = core::aInvalidHandle;
 			uint32_t			Index = core::aInvalidHandle;
 			
-			T*					Component;
+			T*					Component = nullptr;
+			Entity*				Owner = nullptr;
 
 			T* operator->() const
 			{

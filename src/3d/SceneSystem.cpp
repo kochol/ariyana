@@ -41,7 +41,7 @@ namespace ari::en
 
 			// Get all entities and calc transforms
 			p_world->GetDerivedComponents<Node3D>(
-				[this](uint32_t _entity_handle, const ComponentHandle<Node3D>& node)
+				[this](const ComponentHandle<Node3D>& node)
 				{
 					this->CalcTransform(node.Component, nullptr);
 				});

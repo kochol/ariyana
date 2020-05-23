@@ -44,15 +44,12 @@ namespace ari::en
 
 		//! Add a component to an entity
 		template<class T>
-		void AddComponent(const EntityHandle& _entity, const ComponentHandle<T>& _cmp);
+		void AddComponent(const EntityHandle& _entity, ComponentHandle<T>& _cmp);
 
 		template<class T, class BASE>
-		void AddDerivedComponent(const EntityHandle& _entity, const ComponentHandle<T>& _cmp);
+		void AddDerivedComponent(const EntityHandle& _entity, ComponentHandle<T>& _cmp);
 
 		void* GetComponent(const uint32_t& cmp_id, const uint32_t& cmp_handle);
-
-		//! Removes a component from an entity
-		void RemoveComponent(const EntityHandle& _entity, const uint32_t& _id);
 
 		//! Add a system to the world
 		void AddSystem(System* _system);
@@ -67,9 +64,6 @@ namespace ari::en
 
 		template<class BASE, typename FUNC>
 		void GetDerivedComponents(FUNC _func);
-
-		template<typename FUNC>
-		void GetEntityComponents(const EntityHandle& _handle, FUNC _func);
 
 		/**
 		* Subscribe to an event.
@@ -148,12 +142,9 @@ namespace ari::en
 		{
 			uint32_t handle;
 			void* cmp;
+			Entity* entity;
 			bool IsBased = false;
 		};
-
-		core::Map<uint32_t /* cmp id */ , 
-			core::Map<uint32_t /* entity handle */, cmp_handle /* cmp handle */>>
-			m_mEntityComponents;
 
 		core::Map<uint32_t /* cmp id */,
 			core::Map<uint32_t /* cmp handle */, cmp_handle /* cmp handle */>>
@@ -197,33 +188,41 @@ namespace ari::en
 
 	// Add a component to an entity
 	template <class T>
-	void World::AddComponent(const EntityHandle& _entity, const ComponentHandle<T>& _cmp)
+	void World::AddComponent(const EntityHandle& _entity, ComponentHandle<T>& _cmp)
 	{
 		const uint32_t cmpId = T::Id;
-		if (!m_mEntityComponents.Contains(cmpId))
-		{
-			m_mEntityComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
-			m_mComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
-		}
-		
-		m_mEntityComponents[cmpId].Add(_entity.Handle, { _cmp.Handle, (void*)_cmp.Component });
-		m_mComponents[cmpId].Add(_cmp.Handle, { _cmp.Handle, (void*)_cmp.Component });
 
+		// Add component to the world
+		if (!m_mComponents.Contains(cmpId))
+			m_mComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
+		m_mComponents[cmpId].Add(_cmp.Handle, { _cmp.Handle, (void*)_cmp.Component, _entity.entity });
+
+		// Add component to the entity
+		if (!_entity->mComponents.Contains(cmpId))
+			_entity->mComponents.Add(cmpId, core::Array<Entity::cmp_pair>());
+		_entity->mComponents[cmpId].Add({ _cmp.Handle, (void*)_cmp.Component, false });
+
+		// Set the component owner
+		_cmp.Owner = _entity.entity;
+
+		// Emit to the world
 		emit<events::OnComponentAssigned<T>>({ _entity, _cmp.Component });
 	}
 
 	template<class T, class BASE>
-	void World::AddDerivedComponent(const EntityHandle& _entity, const ComponentHandle<T>& _cmp)
+	void World::AddDerivedComponent(const EntityHandle& _entity, ComponentHandle<T>& _cmp)
 	{
 		const uint32_t cmpId = BASE::Id;
-		if (!m_mEntityComponents.Contains(cmpId))
-		{
-			m_mEntityComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
-			m_mComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
-		}
 
-		m_mEntityComponents[cmpId].Add(_entity.Handle, { _cmp.Handle, (void*)_cmp.Component, true });
-		m_mComponents[cmpId].Add(_cmp.Handle, { _cmp.Handle, (void*)_cmp.Component });
+		// Add component to the world
+		if (!m_mComponents.Contains(cmpId))
+			m_mComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
+		m_mComponents[cmpId].Add(_cmp.Handle, { _cmp.Handle, (void*)_cmp.Component, _entity.entity, true });
+
+		// Add component to the entity
+		if (!_entity->mComponents.Contains(cmpId))
+			_entity->mComponents.Add(cmpId, core::Array<Entity::cmp_pair>());
+		_entity->mComponents[cmpId].Add({ _cmp.Handle, (void*)_cmp.Component, true });
 
 		// Also add T class to the list
 		AddComponent(_entity, _cmp);
@@ -232,46 +231,30 @@ namespace ari::en
 	template<class T, typename Func>
 	void World::GetComponents(uint32_t _id, Func _func)
 	{
-		if (!m_mEntityComponents.Contains(_id))
+		if (!m_mComponents.Contains(_id))
 			return;
-		auto& m = m_mEntityComponents[_id];
+		auto& m = m_mComponents[_id];
 		for (auto it = m.begin(); it != m.end(); it++)
 		{
 			const cmp_handle& h = it->value;
 			uint32_t i = core::HandleManager<T>::FindIndex(h);
-			ComponentHandle<T> cmp = { h.handle, i, core::ObjectPool<T>::GetByIndex(i) };
-			_func(it->key, cmp);
+			ComponentHandle<T> cmp = { h.handle, i, core::ObjectPool<T>::GetByIndex(i), h.entity };
+			_func(cmp);
 		}
 	}
 
 	template<class BASE, typename FUNC>
 	void World::GetDerivedComponents(FUNC _func)
 	{
-		if (!m_mEntityComponents.Contains(BASE::Id))
+		if (!m_mComponents.Contains(BASE::Id))
 			return;
-		auto& m = m_mEntityComponents[BASE::Id];
+		auto& m = m_mComponents[BASE::Id];
 		for (auto it = m.begin(); it != m.end(); ++it)
 		{
 			const cmp_handle& h = it->value;
 			uint32_t i = core::HandleManager<BASE>::FindIndex(h.handle);
-			ComponentHandle<BASE> cmp = { h.handle, i, core::MemoryPool<BASE>::GetByIndex(i) };
-			_func(it->key, cmp);
-		}
-	}
-
-	template<typename FUNC>
-	void World::GetEntityComponents(const EntityHandle& _handle, FUNC _func)
-	{
-		for (auto it = m_mEntityComponents.begin(); it != m_mEntityComponents.end(); ++it)
-		{
-			if (it->value.Contains(_handle.Handle))
-			{
-				const auto& e = it->value[_handle.Handle];
-				if (e.IsBased)
-					continue;
-				uint32_t h = e.handle;
-				_func(it->key, h, e.cmp);
-			}
+			ComponentHandle<BASE> cmp = { h.handle, i, core::MemoryPool<BASE>::GetByIndex(i), h.entity };
+			_func(cmp);
 		}
 	}
 

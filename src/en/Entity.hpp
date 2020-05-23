@@ -30,11 +30,36 @@ namespace ari
 			
 		struct Entity
         {
+			friend struct World;
+
 			//! Should network replicates this entity?
 			bool bReplicates = false;
 
+			template<typename FUNC>
+			void GetComponents(FUNC _func)
+			{
+				for (auto it = mComponents.begin(); it != mComponents.end(); ++it)
+				{
+					for (auto it_cmp = it->value.begin(); it_cmp != it->value.end(); ++it_cmp)
+					{
+						if (it_cmp->IsBased)
+							continue;
+						uint32_t h = it_cmp->handle;
+						_func(it->key, h, it_cmp->cmp);
+					}
+				}
+			}
+
+		private:
+			struct cmp_pair
+			{
+				uint32_t handle;
+				void* cmp;
+				bool IsBased = false;
+			};
+
 			core::Map<uint32_t, // cmp ID
-				core::Array<uint32_t>> mComponents;
+				core::Array<cmp_pair>> mComponents;
         };        
 
 	} // en

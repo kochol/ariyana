@@ -62,12 +62,6 @@ namespace ari
 			return m_mComponents[cmp_id][cmp_handle].cmp;
 		}
 
-		// Removes a component from an entity
-		void World::RemoveComponent(const EntityHandle& _entity, const uint32_t& _id)
-		{
-			m_mEntityComponents[_id].Erase(_entity.Handle);
-		}
-
 		//! Add a system to the world
 		void World::AddSystem(System* _system)
 		{

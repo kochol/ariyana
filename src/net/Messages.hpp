@@ -25,7 +25,7 @@ namespace ari::net
 			serialize_uint32(stream, Entity.Handle);
 			if (Stream::IsWriting)
 			{
-				World->GetEntityComponents(Entity, [&stream, &Measure](uint32_t& CmpId, uint32_t& CmpHandle, void* Cmp)
+				Entity->GetComponents([&stream, &Measure](uint32_t& CmpId, uint32_t& CmpHandle, void* Cmp)
 					{
 						if (CmpId == PropertyReplicator::Id)
 							return true; // Don't send the PropertyReplicator component
