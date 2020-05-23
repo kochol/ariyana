@@ -164,7 +164,7 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	void ServerSystem::Receive(en::World* world, const en::events::OnEntityCreated& event)
 	{
-		if (world->GetEntity(event.entity)->bReplicates)
+		if (event.entity->bReplicates)
 		{
 			m_aEntities.Add(event.entity);
 			if (m_iClientCount == 0)
@@ -185,7 +185,7 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	void ServerSystem::Receive(en::World* world, const en::events::OnEntityDestroyed& event)
 	{
-		if (world->GetEntity(event.entity)->bReplicates)
+		if (event.entity->bReplicates)
 			for(int i = 0; i < m_aEntities.Size(); i++)
 				if (m_aEntities[i].Handle == event.entity.Handle)
 				{

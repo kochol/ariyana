@@ -56,7 +56,7 @@ bool IsValidEntity(uint32_t& _entityHandle)
 bool* GetEntityMembers(EntityHandle* _entity)
 {
     union { EntityHandle c; ari::en::EntityHandle cpp; } h = { *_entity };    
-    return &ari::en::World::GetEntity(h.cpp)->bReplicates;
+    return &h.cpp->bReplicates;
 }
 
 // Node

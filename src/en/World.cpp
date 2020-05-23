@@ -48,13 +48,8 @@ namespace ari
 			core::MemoryPool<Entity>::Setup(65536);
 			uint32_t i;
 			uint32_t h = core::HandleManager<EntityHandle>::GetNewHandle(i);
-			core::MemoryPool<Entity>::New<Entity>(i);
-			return { h , i };
-		}
-
-		Entity* World::GetEntity(const EntityHandle& _handle)
-		{
-			return core::MemoryPool<Entity>::GetByIndex(_handle.Index);
+			auto en = core::MemoryPool<Entity>::New<Entity>(i);
+			return { h , i , en };
 		}
 
 		void World::AddEntity(const EntityHandle& _handle)

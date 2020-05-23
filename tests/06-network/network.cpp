@@ -106,8 +106,7 @@ public:
 		m_world.AddComponent(entity, replicator);
 
 		// Add entity to the world
-		auto en = m_world.GetEntity(entity);
-		en->bReplicates = true;
+		entity->bReplicates = true;
 		m_world.AddEntity(entity);
 
 		// Add RPC functions
