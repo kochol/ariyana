@@ -21,6 +21,7 @@ CARI_API Node2dMembers GetNode2dMembers(void* _node);
 // Camera2D
 CARI_API Node2dHandle CreateCamera2dComponent();
 CARI_API void AddCamera2dToWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _camera);
+CARI_API void RemoveCamera2dFromWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _camera, bool _dispose);
 
 // Sprite2D
 struct Sprite2dMembers

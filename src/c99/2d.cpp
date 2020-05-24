@@ -44,6 +44,13 @@ void AddCamera2dToWorld(void* _world, EntityHandle* _entity, const Node2dHandle&
     reinterpret_cast<ari::en::World*>(_world)->AddDerivedComponent<ari::en::Camera2D, ari::en::Node2D>(en.cpp, cam.cpp);
 }
 
+void RemoveCamera2dFromWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _camera, bool _dispose)
+{
+    union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Camera2D> cpp; } cam = { _camera };
+    const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
+    reinterpret_cast<ari::en::World*>(_world)->RemoveComponent(en.cpp, cam.cpp, _dispose);
+}
+
 // Sprite2D
 Node2dHandle CreateSprite2dComponent()
 {

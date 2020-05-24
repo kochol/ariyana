@@ -221,8 +221,9 @@ namespace ari::en
 		// Add component to the world
 		if (!m_mComponents.Contains(cmpId))
 			m_mComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
-		m_mComponents[cmpId].Add(_cmp.Handle, { _cmp.Handle, (void*)_cmp.Component, _entity.entity });
-
+		if (!m_mComponents[cmpId].AddUnique(_cmp.Handle, { _cmp.Handle, (void*)_cmp.Component, _entity.entity }))
+			m_mComponents[cmpId][_cmp.Handle].entity = _entity.entity;
+		
 		// Add component to the entity
 		if (!_entity->mComponents.Contains(cmpId))
 			_entity->mComponents.Add(cmpId, core::Array<Entity::cmp_pair>());
@@ -243,7 +244,8 @@ namespace ari::en
 		// Add component to the world
 		if (!m_mComponents.Contains(cmpId))
 			m_mComponents.Add(cmpId, core::Map<uint32_t, cmp_handle>());
-		m_mComponents[cmpId].Add(_cmp.Handle, { _cmp.Handle, (void*)_cmp.Component, _entity.entity, true });
+		if (!m_mComponents[cmpId].AddUnique(_cmp.Handle, { _cmp.Handle, (void*)_cmp.Component, _entity.entity, true }))
+			m_mComponents[cmpId][_cmp.Handle].entity = _entity.entity;
 
 		// Add component to the entity
 		if (!_entity->mComponents.Contains(cmpId))

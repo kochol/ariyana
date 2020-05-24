@@ -33,7 +33,7 @@ Node3dMembers GetNode3dMembers(void* _node)
 Node3dHandle CreateCameraComponent()
 {
 	const auto c = ari::en::World::CreateComponent<ari::en::Camera, ari::en::Node3D>();
-    return { c.Handle, c.Index, c.Component };
+    return { c.Handle, c.Index, c.Component, c.Owner };
 }
 
 void AddCameraToWorld(void* _world, EntityHandle* _entity, const Node3dHandle& _camera)
@@ -63,7 +63,7 @@ CameraMembers GetCameraMembers(void* _node)
 Node3dHandle CreateBoxShapeComponent()
 {
     const auto c = ari::en::World::CreateComponent<ari::en::BoxShape, ari::en::Node3D>();
-    return { c.Handle, c.Index, c.Component };
+    return { c.Handle, c.Index, c.Component, c.Owner };
 }
 
 void AddBoxShapeToWorld(void* _world, EntityHandle* _entity, const Node3dHandle& _box)

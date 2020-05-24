@@ -45,7 +45,7 @@ void DeleteSystem(void* _obj)
 EntityHandle CreateEntityWorld()
 {
 	const auto e = ari::en::World::CreateEntity();
-    return { e.Handle, e.Index };
+    return { e.Handle, e.Index, e.entity };
 }
 
 bool IsValidEntity(uint32_t& _entityHandle)

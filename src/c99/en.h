@@ -5,7 +5,12 @@
 #include "core.h"
 #include "gfx.h"
 
-CARI_HANDLE(EntityHandle)
+struct EntityHandle
+{
+	uint32_t Handle;
+	uint32_t Index;
+	void* Entity;
+};
 
 // World functions
 CARI_API void* CreateWorld();

@@ -41,6 +41,7 @@ struct _name \
     uint32_t Handle; \
 	uint32_t Index; \
     void* Component; \
+    void* Entity; \
 };
 
 #endif // ARI_MACROS_H
