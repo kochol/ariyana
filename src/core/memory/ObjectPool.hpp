@@ -61,7 +61,7 @@ namespace ari::core
 
 		/// replacement delete (see Memory::New())
 		static void Delete(T* ptr) {
-			ptr->~TYPE();
+			ptr->~T();
 			m_pAlloc->Free(ptr);
 		};
 

@@ -39,7 +39,14 @@ namespace ari::en
 		template<class T, class BASE>
 		static ComponentHandle<T> CreateComponent();
 
+		// Dispose will destroy component two frame later so every system has two frame time before deleting it.
 		template<class T>
+		void DisposeComponent(ComponentHandle<T>& _cmp);
+
+		template<class T>
+		static void DestroyComponent(const ComponentHandle<T>& _cmp);
+
+		template<class T, class BASE>
 		static void DestroyComponent(const ComponentHandle<T>& _cmp);
 
 		//! Add a component to an entity
@@ -48,6 +55,9 @@ namespace ari::en
 
 		template<class T, class BASE>
 		void AddDerivedComponent(const EntityHandle& _entity, ComponentHandle<T>& _cmp);
+
+		template<class T>
+		void RemoveComponent(const EntityHandle& _entity, ComponentHandle<T>& _cmp, bool _dispose = true);
 
 		void* GetComponent(const uint32_t& cmp_id, const uint32_t& cmp_handle);
 
@@ -138,6 +148,8 @@ namespace ari::en
 
 	private:
 
+		void AddComponentToDispose(const uint32_t& _id, const uint32_t& base_id, uint32_t& handle, uint32_t& index) const;
+
 		struct cmp_handle
 		{
 			uint32_t handle;
@@ -153,9 +165,9 @@ namespace ari::en
 		core::Map<TypeIndex,
 			core::Array<Internal::BaseEventSubscriber* >> subscribers;
 
-
 		core::Array<System*>	m_aSystems;			
 
+		int	m_iTurnIndex = 0;
 	};
 
 	template <class T>
@@ -168,7 +180,7 @@ namespace ari::en
 		return { h, i, core::ObjectPool<T>::New(i) };
 	}
 
-	//! Creates a component from memory pool
+	// Creates a component from memory pool
 	template<class T, class BASE>
 	ComponentHandle<T> World::CreateComponent()
 	{
@@ -180,10 +192,24 @@ namespace ari::en
 	}
 
 	template<class T>
+	void World::DisposeComponent(ComponentHandle<T>& _cmp)
+	{
+		AddComponentToDispose(T::Id, _cmp.Component->GetBaseId(), _cmp.Handle, _cmp.Index);
+		_cmp.Handle = ari::core::aInvalidHandle;
+	}
+
+	template<class T>
 	void World::DestroyComponent(const ComponentHandle<T>& _cmp)
 	{
 		core::HandleManager<T>::RemoveHandle(_cmp.Handle);
 		core::ObjectPool<T>::Delete(core::ObjectPool<T>::GetByIndex(_cmp.Index));
+	}
+
+	template <class T, class BASE>
+	void World::DestroyComponent(const ComponentHandle<T>& _cmp)
+	{
+		core::HandleManager<BASE>::RemoveHandle(_cmp.Handle);
+		core::MemoryPool<BASE>::Delete(core::MemoryPool<BASE>::GetByIndex(_cmp.Index));
 	}
 
 	// Add a component to an entity
@@ -226,6 +252,14 @@ namespace ari::en
 
 		// Also add T class to the list
 		AddComponent(_entity, _cmp);
+	}
+
+	template<class T>
+	void World::RemoveComponent(const EntityHandle& _entity, ComponentHandle<T>& _cmp, bool _dispose)
+	{
+		_entity.entity->RemoveComponent(_cmp);
+		if (_dispose)
+			DisposeComponent(_cmp);
 	}
 
 	template<class T, typename Func>

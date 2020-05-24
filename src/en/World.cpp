@@ -4,10 +4,23 @@
 #include "sx/jobs.h"
 #include "core/memory/MemoryPool.hpp"
 #include "ComponentManager.hpp"
+#include  "core/threading/ThreadLocalPtr.hpp"
+#include "core/LockScope.hpp"
 
 ari::TypeIndex ari::TypeRegistry::nextIndex = 0;
 ari::core::Map<uint32_t, ari::en::ComponentManager::ComponentData>*	
 	ari::en::ComponentManager::m_mComponentsData = nullptr;
+
+struct component_to_dispose_data
+{
+	uint32_t Id;
+	uint32_t BaseId;
+	uint32_t Handle;
+	uint32_t Index;
+};
+
+ARI_THREADLOCAL_PTR(ari::core::Array<component_to_dispose_data>) cmp_dispose_queue = nullptr;
+ari::core::Array<ari::core::Array<component_to_dispose_data>*> cmp_dispose_queue_array;
 
 static void thread_init(sx_job_context* ctx, int thread_index, uint32_t thread_id, void* user) 
 {
@@ -181,7 +194,47 @@ namespace ari
 				// Wait on frame rendering updates
 				if (!frameJobs.Empty())
 					sx_job_wait_and_del(JobContext, frameJobHandle);
-			}		
+			}
+
+			// Remove components from list
+			for (int i = m_iTurnIndex; i < cmp_dispose_queue_array.Size(); i += 3)
+			{
+				for (int j = 0; j < cmp_dispose_queue_array[i]->Size(); j++)
+				{
+					auto& d = (*cmp_dispose_queue_array[i])[j];
+					m_mComponents[d.Id].Erase(d.Handle);
+					if (d.Id != d.BaseId)
+						m_mComponents[d.BaseId].Erase(d.Handle);
+				}
+			}
+
+			m_iTurnIndex++;
+			if (m_iTurnIndex > 2)
+				m_iTurnIndex = 0;
+
+			// delete components
+			for (int i = m_iTurnIndex; i < cmp_dispose_queue_array.Size(); i+=3)
+			{
+				for (int j = 0; j < cmp_dispose_queue_array[i]->Size(); j++)
+				{
+					auto& d = (*cmp_dispose_queue_array[i])[j];
+					ComponentManager::DeleteComponent(d.Id, d.Handle, d.Index);
+				}
+				cmp_dispose_queue_array[i]->Clear();
+			}
+		}
+
+		void World::AddComponentToDispose(const uint32_t& _id, const uint32_t& base_id, uint32_t& handle, uint32_t& index) const
+		{
+			if (cmp_dispose_queue == nullptr)
+			{
+				cmp_dispose_queue = new ari::core::Array<component_to_dispose_data>[3];
+				LOCKSCOPE;
+				cmp_dispose_queue_array.Add(&cmp_dispose_queue[0]);
+				cmp_dispose_queue_array.Add(&cmp_dispose_queue[1]);
+				cmp_dispose_queue_array.Add(&cmp_dispose_queue[2]);
+			}
+			cmp_dispose_queue[m_iTurnIndex].Add({ _id, base_id, handle, index });
 		}
 
 	} // en

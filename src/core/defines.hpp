@@ -31,6 +31,10 @@ inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _wo
 	auto c = _world->CreateComponent<_name>(); \
 	return { c.Handle, c.Index, (void*)c.Component }; \
 } \
+inline static void DeleteComponent(const ari::en::ComponentHandle<void>& _cmp) \
+{ \
+	ari::en::World::DestroyComponent(ari::en::CastComponentHandle<void, _name>(_cmp)); \
+} \
 inline static void AddComponent(ari::en::World* _world, \
 	const ari::en::EntityHandle& _entity, ari::en::ComponentHandle<void> cmp) \
 { \
@@ -60,12 +64,16 @@ bool _name::IsDiff(void* clone, void* obj, int index) \
 #define ARI_COMPONENT_CHILD(_name, _base) \
 static const uint32_t Id; \
 static bool IsRegisteredWithComponentManager; \
-virtual uint32_t GetId() override { return _name::Id; } \
-virtual uint32_t GetBaseId() { return _base::Id; } \
+uint32_t GetId() override { return _name::Id; } \
+uint32_t GetBaseId() override { return _base::Id; } \
 inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _world) \
 { \
 	auto c = _world->CreateComponent<_name, _base>(); \
 	return { c.Handle, c.Index, (void*)c.Component }; \
+} \
+inline static void DeleteComponent(const ari::en::ComponentHandle<void>& _cmp) \
+{ \
+	ari::en::World::DestroyComponent<_name, _base>(ari::en::CastComponentHandle<void, _name>(_cmp)); \
 } \
 inline static void AddComponent(ari::en::World* _world, \
 	const ari::en::EntityHandle& _entity, ari::en::ComponentHandle<void> cmp) \

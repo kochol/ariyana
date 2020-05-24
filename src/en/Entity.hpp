@@ -2,6 +2,7 @@
 
 #include "core/defines.hpp"
 #include "core/containers/Array.hpp"
+#include "ComponentHandle.hpp"
 
 namespace ari
 {
@@ -60,6 +61,22 @@ namespace ari
 
 			core::Map<uint32_t, // cmp ID
 				core::Array<cmp_pair>> mComponents;
+
+			template<typename T>
+			void RemoveComponent(ComponentHandle<T>& _cmp)
+			{
+				auto& l = mComponents[T::Id];
+				for (int i = 0; i < l.Size(); ++i)
+				{
+					if (l[i].handle == _cmp.Handle)
+					{
+						l.EraseSwap(i);
+						_cmp.Owner = nullptr;
+						return;
+					}
+				}
+			}
+
         };        
 
 	} // en

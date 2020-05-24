@@ -35,6 +35,7 @@ namespace ari
 			r.Handle = cmp.Handle;
 			r.Index = cmp.Index;
 			r.Component = reinterpret_cast<To*>(cmp.Component);
+			r.Owner = cmp.Owner;
 			return r;
 		}
 		
