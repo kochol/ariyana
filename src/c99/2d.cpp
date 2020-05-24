@@ -3,6 +3,7 @@
 #include "2d/SceneSystem2D.hpp"
 #include "2d/Camera2D.hpp"
 #include "2d/Sprite.hpp"
+#include "core/log.h"
 
 // System functions
 void* CreateRenderSystem2D()
@@ -64,6 +65,13 @@ void AddSprite2dToWorld(void* _world, EntityHandle* _entity, const Node2dHandle&
     union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Sprite> cpp; } node = { _node };
     const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
     reinterpret_cast<ari::en::World*>(_world)->AddDerivedComponent<ari::en::Sprite, ari::en::Node2D>(en.cpp, node.cpp);
+}
+
+void RemoveSprite2dFromWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node, bool _dispose)
+{
+    union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Sprite> cpp; } node = { _node };
+    const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
+    reinterpret_cast<ari::en::World*>(_world)->RemoveComponent(en.cpp, node.cpp, _dispose);
 }
 
 Sprite2dMembers GetSprite2dMembers(void* _node)

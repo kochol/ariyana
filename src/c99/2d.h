@@ -30,6 +30,7 @@ struct Sprite2dMembers
 };
 CARI_API Node2dHandle CreateSprite2dComponent();
 CARI_API void AddSprite2dToWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node);
+CARI_API void RemoveSprite2dFromWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node, bool _dispose);
 CARI_API Sprite2dMembers GetSprite2dMembers(void* _node);
 
 #endif // ARI_2D_H
