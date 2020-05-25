@@ -22,11 +22,13 @@ namespace ari::en
 		{
 			if (node.Component->GetId() == MeshNode::Id)
 			{
-				p_world->AddDerivedComponent<MeshNode, Node3D>(entity, CastComponentHandle<Node3D, MeshNode>(node));
+				auto h = CastComponentHandle<Node3D, MeshNode>(node);
+				p_world->AddDerivedComponent<MeshNode, Node3D>(entity, h);
 			}
 			else if (node.Component->GetId() == Camera::Id)
-			{
-				p_world->AddDerivedComponent<Camera, Node3D>(entity, CastComponentHandle<Node3D, Camera>(node));
+			{ 
+				auto h = CastComponentHandle<Node3D, Camera>(node);
+				p_world->AddDerivedComponent<Camera, Node3D>(entity, h);
 			}
 			else if (node.Component->GetId() == Node3D::Id)
 			{
