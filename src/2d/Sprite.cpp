@@ -37,7 +37,7 @@ namespace ari::en
 	{
 		ari_vs_params_t vs_params;
 		vs_params.mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
-		vs_params.colorf = m_v4Color;
+		vs_params.colorf = v4Color;
 
 		ApplyPipeline(m_sPipeline);
 
@@ -100,9 +100,9 @@ namespace ari::en
 
 	void Sprite::SetColor(float r, float g, float b, float a)
 	{
-		m_v4Color.x = r;
-		m_v4Color.y = g;
-		m_v4Color.z = b;
-		m_v4Color.w = a;
+		v4Color.x = r;
+		v4Color.y = g;
+		v4Color.z = b;
+		v4Color.w = a;
 	}
 } // ari::en
