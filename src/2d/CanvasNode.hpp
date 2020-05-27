@@ -13,6 +13,8 @@ namespace ari::en
 		//! Constructor
 		CanvasNode()
 		{
+			Size.xmax = 100;
+			Size.ymax = 100;
 		}
 
 		//! Destructor

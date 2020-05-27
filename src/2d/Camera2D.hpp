@@ -15,6 +15,9 @@ namespace ari::en
 		//! Constructor
 		Camera2D()
 		{
+			width = 640;
+			height = 480;
+			aspectRatio = width / height;
 		}
 
 		//! Destructor
@@ -22,9 +25,11 @@ namespace ari::en
 
 		float		width,
 					height;
+		float		aspectRatio;
 		sx_mat4		_view,
 					_proj;
 		bool		_isActive = false;
+		sx_rect		WindowRect;
 
 		//! Rotate the Camera around Z axis
 		void Rotate(float _angle);
@@ -40,11 +45,16 @@ namespace ari::en
 
 		void SetViewport(const gfx::Viewport& _viewport);
 
-		void SetViewportRect(int x, int y, int width, int height, bool top_left);
-		//! set current window size to viewport rect size 
-		void SetViewportRect(bool top_left);
+		void SetWindowRect(sx_rect& _rect);
 
-		void SetScissorRect(int x, int y, int width, int height, bool top_left);
+		void SetViewportRect(int _x, int _y, int _width, int _height, bool _top_left);
+		void SetViewportRect(sx_rect& _rect, bool _top_left);
+		//! set current window size to viewport rect size 
+		void SetViewportRect(bool _top_left);
+
+		sx_vec2 GetViewportScale();
+
+		void SetScissorRect(int _x, int _y, int _width, int _height, bool _top_left);
 
 	protected:
 

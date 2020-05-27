@@ -651,12 +651,6 @@ namespace ari
 			sg_apply_viewport(_rViewport.xmin, _rViewport.ymin, _rViewport.xmax, _rViewport.ymax, _origin_top_left);
 		}
 
-		void SetViewportRect(bool _origin_top_left)
-		{
-			//sx_rect rect = io::GetWindowSize();
-			//sg_apply_viewport(rect.xmin, rect.ymin, rect.xmax, rect.ymax, _origin_top_left);
-		}
-
 //------------------------------------------------------------------------------
 		TextureHandle LoadTexture(core::String _path)
 		{

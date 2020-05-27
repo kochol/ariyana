@@ -54,15 +54,18 @@ namespace ari::en
 					m_pActiveCamera2D->Position.x, m_pActiveCamera2D->Position.y, 0.0f);
 
 				sx_rect rect;
+				rect = io::GetWindowSize(TargetWindow);
+
 				gfx::Viewport* p = m_pActiveCamera2D->GetViewport();
 				if (p)
 					rect = p->Rect;
 				else
 				{
-					rect = io::GetWindowSize(TargetWindow);
+					m_pActiveCamera2D->SetWindowRect(rect);
 				}
 
-				//m_pActiveCamera2D->_proj = sx_mat4_ortho_offcenter(0,0,rect.width/2, rect.height/2, 0.1f, 100, 0, true);
+				m_pActiveCamera2D->SetWindowRect(rect);
+
 				m_pActiveCamera2D->_proj = sx_mat4_ortho(rect.xmax, rect.ymax, 0.1f, 100, 0, false);
 			}
 
@@ -115,9 +118,9 @@ namespace ari::en
 		}
 		else
 		{
-			
+			sx_vec2 vpScale = m_pActiveCamera2D->GetViewportScale();
 			m = sx_mat4_SRT(
-				node->Scale.x, node->Scale.y, 1.0f, 
+				node->Scale.x * vpScale.x, node->Scale.y * vpScale.y, 1.0f,
 				0, 0, node->Rotation,
 				node->Position.x, node->Position.y, 0.0f);
 		}

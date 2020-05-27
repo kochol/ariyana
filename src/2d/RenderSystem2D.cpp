@@ -1,6 +1,7 @@
 #include "RenderSystem2D.hpp"
 #include "gfx/Viewport.hpp"
 #include "Sprite.hpp"
+#include "Canvas.hpp"
 #include "FrameData2D.hpp"
 #include "Camera2D.hpp"
 #include "en/World.hpp"
@@ -9,6 +10,8 @@
 namespace ari::en
 {
 	ARI_COMPONENT_IMP(Node2D)
+	ARI_COMPONENT_IMP(CanvasNode)
+
 
 	RenderSystem2D::RenderSystem2D() :
 		m_pFrameDataCurrent(nullptr),
@@ -40,7 +43,9 @@ namespace ari::en
 				gfx::SetViewProjMatrix(m_pFrameDataCurrent->Camera2dObj->_view,
 					m_pFrameDataCurrent->Camera2dObj->_proj);
 
-				m_pFrameDataCurrent->Camera2dObj->SetViewportRect(false);
+				m_pFrameDataCurrent->Camera2dObj->SetViewportRect(true);
+				//m_pFrameDataCurrent->Camera2dObj->SetViewportRect(0,0,1333,700,true);
+
 				for (auto node : m_pFrameDataCurrent->Nodes)
 				{
 					node->Render(m_pFrameDataCurrent->FrameDataTurnIndex);

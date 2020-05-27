@@ -5,6 +5,7 @@
 #include "2d/SceneSystem2D.hpp"
 #include "2d/Camera2D.hpp"
 #include "2d/Sprite.hpp"
+#include "2d/Canvas.hpp"
 #include "fs_local/FileSystemLocal.hpp"
 #include "io/FileSystem.hpp"
 
@@ -42,6 +43,9 @@ public:
 		m_pSprite->Scale.x = 100;
 		m_pSprite->Scale.y = 100;
 		m_pSprite->SetColor(1.0, 1.0, 0.0, 1.0);
+
+		auto canvas = m_world.CreateComponent<ari::en::Canvas, ari::en::CanvasNode>();
+		m_world.AddDerivedComponent<ari::en::Canvas, ari::en::CanvasNode>(entity, canvas);
 	}
 
 	void OnFrame(float _elapsedTime) override
