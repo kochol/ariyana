@@ -53,8 +53,8 @@ namespace ari
 		void GuiSystem::Update(World* _world, const float& _elapsed,
 			UpdateState::Enum _state)
 		{
-			core::RectI size = io::GetWindowSize({ 0,0 });
-			simgui_new_frame(size.width, size.height, _elapsed);
+			sx_rect size = io::GetWindowSize({ 0,0 });
+			simgui_new_frame(size.xmax, size.ymax, _elapsed);
 
 			_world->GetDerivedComponents<Gui>([this](const ComponentHandle<Gui>& gui)
 				{

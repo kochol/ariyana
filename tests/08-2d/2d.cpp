@@ -32,7 +32,6 @@ public:
 		auto camera = m_world.CreateComponent<ari::en::Camera2D, ari::en::Node2D>();
 		camera.Component->Position.x = 0.0f;
 		camera.Component->Position.y = 0.0f;
-
 		m_world.AddDerivedComponent<ari::en::Camera2D, ari::en::Node2D>(entity, camera);
 		auto sprite = m_world.CreateComponent<ari::en::Sprite, ari::en::Node2D>();
 		sprite.Component->Texture = ari::gfx::LoadTexture("res:baboon.png");

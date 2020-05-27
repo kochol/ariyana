@@ -505,8 +505,8 @@ namespace ari
 		{
 			sg_pass_action pass;
 			core::Memory::Fill(&pass, sizeof(sg_pass_action), 0);
-			const core::RectI r = io::GetWindowSize(_handle);
-			sg_begin_default_pass(&pass, r.width, r.height);
+			const sx_rect r = io::GetWindowSize(_handle);
+			sg_begin_default_pass(&pass, r.xmax, r.ymax);
 		}
 
 		//------------------------------------------------------------------------------
@@ -640,8 +640,24 @@ namespace ari
 				return SG_PIXELFORMAT_NONE;
 			}
 		}
-
 		//------------------------------------------------------------------------------
+		void SetScissorRect(const sx_rect& _rScissor, bool _origin_top_left)
+		{ 
+			sg_apply_scissor_rect(_rScissor.xmin, _rScissor.ymin, _rScissor.xmax, _rScissor.ymax, _origin_top_left);
+		}
+		//------------------------------------------------------------------------------
+		void SetViewportRect(const sx_rect& _rViewport, bool _origin_top_left)
+		{
+			sg_apply_viewport(_rViewport.xmin, _rViewport.ymin, _rViewport.xmax, _rViewport.ymax, _origin_top_left);
+		}
+
+		void SetViewportRect(bool _origin_top_left)
+		{
+			//sx_rect rect = io::GetWindowSize();
+			//sg_apply_viewport(rect.xmin, rect.ymin, rect.xmax, rect.ymax, _origin_top_left);
+		}
+
+//------------------------------------------------------------------------------
 		TextureHandle LoadTexture(core::String _path)
 		{
 			sg_image img = sg_alloc_image();

@@ -40,9 +40,14 @@ namespace ari::en
 
 		void SetViewport(const gfx::Viewport& _viewport);
 
+		void SetViewportRect(int x, int y, int width, int height, bool top_left);
+		//! set current window size to viewport rect size 
+		void SetViewportRect(bool top_left);
 
+		void SetScissorRect(int x, int y, int width, int height, bool top_left);
 
 	protected:
+
 		
 		gfx::Viewport	m_viewport;
 		bool			m_bHasViewPort = false;

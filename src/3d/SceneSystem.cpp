@@ -50,7 +50,7 @@ namespace ari::en
 			{
 				m_pActiveCamera->_view = sx_mat4_view_lookat(m_pActiveCamera->Position, m_pActiveCamera->Target, m_pActiveCamera->Up);
 
-				core::RectI rect;
+				sx_rect rect;
 				gfx::Viewport* p = m_pActiveCamera->GetViewport();
 				if (p)
 					rect = p->Rect;
@@ -59,7 +59,7 @@ namespace ari::en
 					rect = io::GetWindowSize(TargetWindow);
 				}
 				m_pActiveCamera->_proj = sx_mat4_perspectiveFOV(sx_torad(m_pActiveCamera->Fov),
-					float(rect.width) / float(rect.height), m_pActiveCamera->zNear, m_pActiveCamera->zFar, true);				
+					float(rect.xmax) / float(rect.ymax), m_pActiveCamera->zNear, m_pActiveCamera->zFar, true);				
 			}
 
 			m_FrameDataTurnIndex++;

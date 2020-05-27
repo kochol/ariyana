@@ -39,6 +39,8 @@ namespace ari::en
 				gfx::Viewport* pViewport = m_pFrameDataCurrent->Camera2dObj->GetViewport();
 				gfx::SetViewProjMatrix(m_pFrameDataCurrent->Camera2dObj->_view,
 					m_pFrameDataCurrent->Camera2dObj->_proj);
+
+				m_pFrameDataCurrent->Camera2dObj->SetViewportRect(false);
 				for (auto node : m_pFrameDataCurrent->Nodes)
 				{
 					node->Render(m_pFrameDataCurrent->FrameDataTurnIndex);

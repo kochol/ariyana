@@ -3,6 +3,8 @@ fips_begin_module(ari_2d)
 	fips_deps(ari_en ari_gfx)
     fips_files(
 		Camera2D.hpp              Camera2D.cpp		
+		Canvas.hpp				  Canvas.cpp
+		CanvasNode.hpp
         FrameData2D.hpp			 
         Node2D.hpp
 		RenderSystem2D.hpp        RenderSystem2D.cpp

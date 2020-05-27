@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/defines.hpp"
-#include "core/Rect.hpp"
+#include "sx/math.h"
 
 struct GLFWwindow;
 
@@ -38,7 +38,7 @@ namespace ari
          */
 		bool Run();
 
-		core::RectI GetWindowSize(const WindowHandle& handle);
+		sx_rect GetWindowSize(const WindowHandle& handle);
 
 		const void* AndroidGetNativeActivity();
 

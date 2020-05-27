@@ -2,7 +2,6 @@
 #include "en/World.hpp"
 #include "Camera2D.hpp"
 #include "Node2D.hpp"
-#include "core/Rect.hpp"
 #include "gfx/gfx.hpp"
 
 namespace ari::en
@@ -54,7 +53,7 @@ namespace ari::en
 					0, 0, m_pActiveCamera2D->Rotation,
 					m_pActiveCamera2D->Position.x, m_pActiveCamera2D->Position.y, 0.0f);
 
-				core::RectI rect;
+				sx_rect rect;
 				gfx::Viewport* p = m_pActiveCamera2D->GetViewport();
 				if (p)
 					rect = p->Rect;
@@ -64,7 +63,7 @@ namespace ari::en
 				}
 
 				//m_pActiveCamera2D->_proj = sx_mat4_ortho_offcenter(0,0,rect.width/2, rect.height/2, 0.1f, 100, 0, true);
-				m_pActiveCamera2D->_proj = sx_mat4_ortho(rect.width, rect.height, 0.1f, 100, 0, false);
+				m_pActiveCamera2D->_proj = sx_mat4_ortho(rect.xmax, rect.ymax, 0.1f, 100, 0, false);
 			}
 
 			m_FrameDataTurnIndex++;

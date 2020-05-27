@@ -228,12 +228,17 @@ namespace ari
 		}
         
 		//------------------------------------------------------------------------------
-        core::RectI GetWindowSize(const WindowHandle& handle)
+        sx_rect GetWindowSize(const WindowHandle& handle)
 		{
-			core::RectI v;
-            glfwGetFramebufferSize(g_Windows[handle.Index], &v.width, &v.height);
+			sx_rect rect;
+			int width, height;
 
-			return v;
+            glfwGetFramebufferSize(g_Windows[handle.Index], &width, &height);
+
+			rect.xmax = width;
+			rect.ymax = height;
+
+			return rect;
 		}
 
 		//------------------------------------------------------------------------------

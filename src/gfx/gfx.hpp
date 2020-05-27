@@ -547,6 +547,13 @@ namespace ari
 
 		sx_mat4 GetWorldViewProjMatrix();
 
+		void SetScissorRect(const sx_rect& _rScissor, bool _origin_top_left);
+
+		void SetViewportRect(const sx_rect& _rViewport, bool _origin_top_left);
+		//! Set viewport size to current window size
+		void SetViewportRect(bool _origin_top_left);
+
+
     	TextureHandle LoadTexture(core::String _path);
 
 		void SetDirLight(const sx_vec3& dir, const sx_vec4& color);
