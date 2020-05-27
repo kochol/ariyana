@@ -67,6 +67,14 @@ WindowHandle CreateAriWindow(WindowSetup* _setup, char* _title)
     return w.c;
 }
 
+void GetWindowSize(WindowHandle* _handle, int* width, int* height)
+{
+	const union { WindowHandle c{}; ari::io::WindowHandle cpp; } w = { *_handle };
+	const auto r = ari::io::GetWindowSize(w.cpp);
+	*width = r.width;
+	*height = r.height;
+}
+
 // FileSystem
 void RegisterFileSystemLink(void* _obj, char* _scheme)
 {
