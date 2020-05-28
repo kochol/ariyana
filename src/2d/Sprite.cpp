@@ -37,7 +37,9 @@ namespace ari::en
 	{
 		ari_vs_params_t vs_params;
 		vs_params.mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
-		vs_params.colorf = v4Color;
+
+		ari_fs_params_t fs_params;
+		fs_params.color = v4Color;
 
 		ApplyPipeline(m_sPipeline);
 
@@ -49,6 +51,7 @@ namespace ari::en
 		ApplyBindings(m_sBinding);
 
 		ApplyUniforms(gfx::ShaderStage::VertexShader, SLOT_ari_vs_params, &vs_params, sizeof(ari_vs_params_t));
+		ApplyUniforms(gfx::ShaderStage::FragmentShader , SLOT_ari_fs_params, &fs_params, sizeof(ari_fs_params_t));
 
 		gfx::Draw(0, 6, 1);
 	}
