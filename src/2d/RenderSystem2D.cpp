@@ -67,7 +67,11 @@ namespace ari::en
 	
 	bool RenderSystem2D::NeedUpdateOn(UpdateState::Enum state)
 	{
+#ifdef ARI_SERVER
+		return false;
+#else
 		return state == UpdateState::MainThreadState;
+#endif
 	}
 
 	void RenderSystem2D::Receive(World* world, const events::OnComponentAssigned<Sprite>& event)

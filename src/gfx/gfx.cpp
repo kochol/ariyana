@@ -43,6 +43,9 @@ namespace ari
 				hash = sx_hash_xxh32(name.AsCStr(), name.Length(), 0);
 				Uniforms.Clear();
 
+#ifdef ARI_SERVER				
+				return;
+#else
 				// Prepare uniform data
 				VS_UniformSize = desc->vs.uniform_blocks[0].size;
 				FS_UniformSize = desc->fs.uniform_blocks[0].size;
@@ -91,6 +94,7 @@ namespace ari
 						index++;
 					}
 				}
+#endif
 			}
 		};
 
@@ -242,8 +246,13 @@ namespace ari
 		//------------------------------------------------------------------------------
 		ShaderHandle CreateShader(const sg_shader_desc* desc)
 		{
+#ifdef ARI_SERVER
+			uint32_t i = 0;
+			return { core::HandleManager<ShaderHandle>::GetNewHandle(i), 0 };
+#else
 			const sg_shader shader = sg_make_shader(desc);
 			return { core::HandleManager<ShaderHandle>::CreateHandleByIndex(shader.id), shader.id };
+#endif
 		}
 
 		//------------------------------------------------------------------------------

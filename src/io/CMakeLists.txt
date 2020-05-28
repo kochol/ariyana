@@ -13,7 +13,12 @@ fips_begin_module(ari_io)
         Window.hpp
     )
     
-    if (ARI_GLFW AND ARI_OPENGL)
+    if (ARI_SERVER)
+        fips_dir(private/server)
+        fips_files(
+            WindowServer.cpp
+        )    
+    elseif (ARI_GLFW AND ARI_OPENGL)
         fips_deps(glfw3)
         fips_dir(private/glfw)
         fips_files(
