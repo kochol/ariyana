@@ -69,7 +69,11 @@ namespace ari::en
 
 	bool RenderSystem::NeedUpdateOn(UpdateState::Enum state)
 	{
+#ifdef ARI_SERVER
+		return false;
+#else
 		return state == UpdateState::MainThreadState;
+#endif
 	}
 
 	void RenderSystem::Receive(World * world, const events::OnComponentAssigned<BoxShape>& event)

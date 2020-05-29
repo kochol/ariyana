@@ -20,7 +20,12 @@ fips_begin_module(ari_gfx)
         tinyktx.h                   tinyktx.cpp
     )
 
-    if (ARI_GLFW AND ARI_OPENGL)
+    if (ARI_SERVER)
+        fips_dir(private/server)
+        fips_files(
+            gfx_server.cpp
+        )
+    elseif (ARI_GLFW AND ARI_OPENGL)
         fips_dir(private/glfw)
         fips_files(
             gfx_glfw.cpp

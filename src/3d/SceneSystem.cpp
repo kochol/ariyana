@@ -79,7 +79,11 @@ namespace ari::en
 
 	bool SceneSystem::NeedUpdateOn(UpdateState::Enum state)
 	{
+#ifdef ARI_SERVER
+		return false;
+#else
 		return state == UpdateState::SceneState;
+#endif
 	}
 
 	void SceneSystem::Receive(World * world, const events::OnComponentAssigned<Camera>& event)
