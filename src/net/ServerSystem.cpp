@@ -152,6 +152,7 @@ namespace ari::net
 			msg->World = m_pWorld;
 			m_pServer->SendMessage(client_id, int(GameChannel::RELIABLE), msg);
 		}
+		m_pWorld->emit<en::events::OnClientConnected>({ client_id });
 	}
 
 	//------------------------------------------------------------------------------
@@ -159,6 +160,7 @@ namespace ari::net
 	{
 		m_iClientCount--;
 		log_info("Client with id %d has been disconnected.", client_id);
+		m_pWorld->emit<en::events::OnClientDisconnected>({ client_id });
 	}
 
 	//------------------------------------------------------------------------------
@@ -297,6 +299,7 @@ namespace ari::net
 		else if (msg->GetType() == int(GameMessageType::CRPC_CALL))
 		{
 			auto rpc_msg = (CRpcCallMessage*)msg;
+			g_iLastRpcClientIndex = client_index;
 			g_on_call_rpc(rpc_msg->rpc_index);
 		}
 	}

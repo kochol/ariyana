@@ -71,6 +71,8 @@ CARI_API void DeleteServerSystem(void* _obj);
 CARI_API bool CreateServerServerSystem(void* _obj, char* ip, int port);
 CARI_API void StopServerSystem(void* _obj);
 CARI_API void CallCRPCServerSystem(void* _obj, void* _rpc, bool _reliable, RpcType _rpc_type, int client_id);
+typedef void(client_cb)(int client_id, void* userData);
+CARI_API void SetOnClientConnectCb(void* _obj, void* _world, void* _userData, client_cb* on_connect_cb, client_cb* on_disconnect_cb);
 
 // Client System
 CARI_API void* CreateClientSystem();

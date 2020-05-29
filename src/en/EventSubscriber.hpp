@@ -86,6 +86,16 @@ namespace ari::en
 			io::WindowHandle window;
 		};
 
+		struct OnClientConnected
+		{
+			int client_index;
+		};
+
+		struct OnClientDisconnected
+		{
+			int client_index;
+		};
+
 	} // events
 
 } // ari::en

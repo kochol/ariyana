@@ -158,14 +158,51 @@ bool DeserializeBytes(void* _stream, void* _val, int _size)
 }
 
 // Server System
+class ServerSystemCallBack :
+    public ari::en::EventSubscriber<ari::en::events::OnClientConnected>,
+    public ari::en::EventSubscriber<ari::en::events::OnClientDisconnected>
+{
+public:
+    ari::en::World* m_pWorld = nullptr;
+    client_cb* on_connect_cb = nullptr;
+    client_cb* on_disconnect_cb = nullptr;
+    void* user_data = nullptr;
+
+    ~ServerSystemCallBack()
+    {
+        if (m_pWorld)
+            m_pWorld->unsubscribeAll(this);
+    }
+
+    void Receive(ari::en::World* world, const ari::en::events::OnClientConnected& event) override
+    {
+        if (on_connect_cb)
+            on_connect_cb(event.client_index, user_data);
+    }
+
+    void Receive(ari::en::World* world, const ari::en::events::OnClientDisconnected& event) override
+    {
+        if (on_disconnect_cb)
+            on_disconnect_cb(event.client_index, user_data);
+    }
+};
+
+ari::core::Map<size_t, ServerSystemCallBack*> g_ServerSystemCallBacks;
+
 void* CreateServerSystem()
 {
-    return ari::core::Memory::New<ari::net::ServerSystem>();
+    void* obj = ari::core::Memory::New<ari::net::ServerSystem>();
+    const auto cb = ari::core::Memory::New<ServerSystemCallBack>();
+    g_ServerSystemCallBacks.Add(reinterpret_cast<size_t>(obj), cb);
+    return obj;
 }
 
 void DeleteServerSystem(void* _obj)
 {
     ari::core::Memory::Delete(reinterpret_cast<ari::net::ServerSystem*>(_obj));
+    const int i = g_ServerSystemCallBacks.FindIndex(reinterpret_cast<size_t>(_obj));
+    ari::core::Memory::Delete(g_ServerSystemCallBacks.ValueAtIndex(i));
+    g_ServerSystemCallBacks.EraseIndex(i);
 }
 
 bool CreateServerServerSystem(void* _obj, char* ip, int port)
@@ -181,6 +218,17 @@ void StopServerSystem(void* _obj)
 void CallCRPCServerSystem(void* _obj, void* _rpc, bool _reliable, RpcType _rpc_type, int client_id)
 {
     reinterpret_cast<ari::net::ServerSystem*>(_obj)->Call_C_RPC(_rpc, _reliable, ari::net::RpcType(_rpc_type), client_id);
+}
+
+void SetOnClientConnectCb(void* _obj, void* _world, void* _userData, client_cb* on_connect_cb, client_cb* on_disconnect_cb)
+{
+    auto cb = g_ServerSystemCallBacks[reinterpret_cast<size_t>(_obj)];
+    cb->m_pWorld = reinterpret_cast<ari::en::World*>(_world);
+    cb->on_connect_cb = on_connect_cb;
+    cb->on_disconnect_cb = on_disconnect_cb;
+    cb->user_data = _userData;
+    cb->m_pWorld->Subscribe<ari::en::events::OnClientConnected>(cb);
+    cb->m_pWorld->Subscribe<ari::en::events::OnClientDisconnected>(cb);
 }
 
 // Client System
