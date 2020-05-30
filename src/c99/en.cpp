@@ -48,6 +48,12 @@ EntityHandle CreateEntityWorld()
     return { e.Handle, e.Index, e.entity };
 }
 
+void DeleteEntityWorld(EntityHandle _entity)
+{
+    const union { EntityHandle c; ari::en::EntityHandle cpp; } h = { _entity };
+    ari::en::World::DeleteEntity(h.cpp);
+}
+
 bool IsValidEntity(uint32_t& _entityHandle)
 {
     return ari::core::HandleManager<ari::en::EntityHandle>::IsHandleValid(_entityHandle);

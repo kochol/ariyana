@@ -18,6 +18,7 @@ namespace ari::en
 		struct ComponentData
 		{
 			ComponentHandle<void>(*createFn)(World*) = nullptr;
+			void(*DisposeFn)(ari::en::World* _world, const ari::en::ComponentHandle<void>& cmp) = nullptr;
 			void(*DeleteFn)(const ari::en::ComponentHandle<void>& cmp) = nullptr;
 			void(*AddComponentFn)(ari::en::World* _world,
 				const ari::en::EntityHandle& _entity, ari::en::ComponentHandle<void> cmp) = nullptr;
@@ -38,6 +39,7 @@ namespace ari::en
 			}
 			ComponentData data;
 			data.createFn = T::CreateComponent;
+			data.DisposeFn = T::DisposeComponent;
 			data.DeleteFn = T::DeleteComponent;
 			data.AddComponentFn = T::AddComponent;
 			data.serializeFn = &T::Serialize;
@@ -50,6 +52,11 @@ namespace ari::en
 		static ComponentHandle<void> CreateComponent(uint32_t Id, World* pWorld)
 		{
 			return (*m_mComponentsData)[Id].createFn(pWorld);
+		}
+
+		static void DisposeComponent(ari::en::World* _world, const uint32_t& Id, const uint32_t& handle, const uint32_t& index, void* cmp)
+		{
+			(*m_mComponentsData)[Id].DisposeFn(_world, { handle, index, cmp, nullptr });
 		}
 
 		static void DeleteComponent(const uint32_t& Id, const uint32_t& handle, const uint32_t& index)

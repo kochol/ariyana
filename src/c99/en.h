@@ -24,6 +24,7 @@ CARI_API void DeleteSystem(void* _obj);
 
 // Entity functions
 CARI_API EntityHandle CreateEntityWorld();
+CARI_API void DeleteEntityWorld(EntityHandle _entity);
 CARI_API bool IsValidEntity(uint32_t& _entityHandle);
 CARI_API bool* GetEntityMembers(EntityHandle* _entity);
 

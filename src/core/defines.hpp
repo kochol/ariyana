@@ -31,6 +31,11 @@ inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _wo
 	auto c = _world->CreateComponent<_name>(); \
 	return { c.Handle, c.Index, (void*)c.Component }; \
 } \
+inline static void DisposeComponent(ari::en::World* _world, \
+									const ari::en::ComponentHandle<void>& _cmp) \
+{ \
+	_world->DisposeComponent(ari::en::CastComponentHandle<void, _name>(_cmp)); \
+} \
 inline static void DeleteComponent(const ari::en::ComponentHandle<void>& _cmp) \
 { \
 	ari::en::World::DestroyComponent(ari::en::CastComponentHandle<void, _name>(_cmp)); \
@@ -70,6 +75,11 @@ inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _wo
 { \
 	auto c = _world->CreateComponent<_name, _base>(); \
 	return { c.Handle, c.Index, (void*)c.Component }; \
+} \
+inline static void DisposeComponent(ari::en::World* _world, \
+									const ari::en::ComponentHandle<void>& _cmp) \
+{ \
+	_world->DisposeComponent(ari::en::CastComponentHandle<void, _name>(_cmp)); \
 } \
 inline static void DeleteComponent(const ari::en::ComponentHandle<void>& _cmp) \
 { \
