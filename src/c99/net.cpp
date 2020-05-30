@@ -29,6 +29,11 @@ void ShutdownNetwork()
     ari::net::ShutdownNetwork();
 }
 
+int GetLastRpcClientIndex()
+{
+    return ari::net::GetLastRpcClientIndex();
+}
+
 // Serialize stuffs
 
 // bool
@@ -132,15 +137,26 @@ bool DeserializeString(void* _stream, char* _val, int _size)
 // bits
 bool SerializeBits(void* _stream, void* _val, int _size)
 {
-    return SerializeBits(*((yojimbo::WriteStream*)_stream), *(uint32_t*)_val, _size);
+    uint32_t val = 0;
+    val = *(uint32_t*)_val & ((1ULL << _size) - 1);
+    return SerializeBits(*((yojimbo::WriteStream*)_stream), val, _size);
 }
 bool SerializeMeasureBits(void* _stream, void* _val, int _size)
 {
-    return SerializeBits(*((yojimbo::MeasureStream*)_stream), *(uint32_t*)_val, _size);
+    uint32_t val = 0;
+    val = *(uint32_t*)_val & ((1ULL << _size) - 1);
+    return SerializeBits(*((yojimbo::MeasureStream*)_stream), val, _size);
 }
 bool DeserializeBits(void* _stream, void* _val, int _size)
 {
-    return SerializeBits(*((yojimbo::ReadStream*)_stream), *(uint32_t*)_val, _size);
+    uint32_t val = 0;
+    if (SerializeBits(*((yojimbo::ReadStream*)_stream), val, _size))
+    {
+        uint32_t val2 = *(uint32_t*)_val >> _size << _size;
+        *(uint32_t*)_val = val2 | val;
+	    return true;
+    }
+    return false;
 }
 
 // bytes

@@ -9,6 +9,7 @@ namespace ari
 	namespace en
 	{
 		struct Entity;
+		struct World;
 
 		struct EntityHandle
 		{
@@ -35,6 +36,9 @@ namespace ari
 
 			//! Should network replicates this entity?
 			bool bReplicates = false;
+			World* p_world = nullptr;
+
+			~Entity();
 
 			template<typename FUNC>
 			void GetComponents(FUNC _func)
@@ -55,6 +59,7 @@ namespace ari
 			struct cmp_pair
 			{
 				uint32_t handle;
+				uint32_t index;
 				void* cmp;
 				bool IsBased = false;
 			};

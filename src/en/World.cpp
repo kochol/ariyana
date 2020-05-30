@@ -65,8 +65,16 @@ namespace ari
 			return { h , i , en };
 		}
 
+		void World::DeleteEntity(const EntityHandle& _entity)
+		{
+			a_assert(_entity.entity);
+			core::HandleManager<EntityHandle>::RemoveHandle(_entity.Handle);
+			core::MemoryPool<Entity>::Delete(_entity.entity);
+		}
+
 		void World::AddEntity(const EntityHandle& _handle)
 		{
+			_handle.entity->p_world = this;
 			emit<events::OnEntityCreated>({ _handle });
 		}
 

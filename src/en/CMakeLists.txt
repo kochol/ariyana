@@ -7,7 +7,7 @@ fips_begin_module(ari_en)
         AriTypeId.hpp
         ComponentHandle.hpp
         ComponentManager.hpp
-        Entity.hpp
+        Entity.hpp          Entity.cpp
         EventSubscriber.hpp
 		Node.hpp			Node.cpp
 		System.hpp

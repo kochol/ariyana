@@ -29,6 +29,8 @@ namespace ari::en
 		//! Creates a new entity
 		static EntityHandle CreateEntity();
 
+		static void DeleteEntity(const EntityHandle& _entity);
+
 		void AddEntity(const EntityHandle& _handle);
 
 		//! Creates a component from object pool
@@ -227,7 +229,7 @@ namespace ari::en
 		// Add component to the entity
 		if (!_entity->mComponents.Contains(cmpId))
 			_entity->mComponents.Add(cmpId, core::Array<Entity::cmp_pair>());
-		_entity->mComponents[cmpId].Add({ _cmp.Handle, (void*)_cmp.Component, false });
+		_entity->mComponents[cmpId].Add({ _cmp.Handle, _cmp.Index, (void*)_cmp.Component, false });
 
 		// Set the component owner
 		_cmp.Owner = _entity.entity;
@@ -250,7 +252,7 @@ namespace ari::en
 		// Add component to the entity
 		if (!_entity->mComponents.Contains(cmpId))
 			_entity->mComponents.Add(cmpId, core::Array<Entity::cmp_pair>());
-		_entity->mComponents[cmpId].Add({ _cmp.Handle, (void*)_cmp.Component, true });
+		_entity->mComponents[cmpId].Add({ _cmp.Handle, _cmp.Index, (void*)_cmp.Component, true });
 
 		// Also add T class to the list
 		AddComponent(_entity, _cmp);
