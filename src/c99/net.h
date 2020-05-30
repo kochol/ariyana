@@ -18,6 +18,7 @@ CARI_API bool InitNetworkLink
 		call_rpc_cb* _on_call_rpc
 	);
 CARI_API void ShutdownNetwork();
+CARI_API int GetLastRpcClientIndex();
 
 // Serialize stuffs
 // bool
