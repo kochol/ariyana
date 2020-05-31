@@ -34,7 +34,7 @@ namespace ari::net
 
     public:
 
-		virtual void Call_C_RPC(void* rpc, bool _reliable, RpcType _rpc_type, int client_id) = 0;
+		virtual void Call_C_RPC(void* rpc, bool _reliable, uint32_t _index, RpcType _rpc_type, int client_id) = 0;
 
 		template<typename P1>
 		void CallRPC(RPC* rpc, P1 p1)

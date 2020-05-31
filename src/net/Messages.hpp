@@ -205,8 +205,18 @@ namespace ari::net
 	{
 	public:
 
+		~CRpcCallMessage()
+		{
+			g_on_delete_rpc(rpc_index);
+		}
+
+		void AddRef() const
+		{
+			g_on_add_ref_rpc(rpc_index);
+		}
+
 		void* rpc = nullptr;
-		int rpc_index = 0;
+		uint32_t rpc_index = 0;
 
 		template <typename Stream>
 		bool Serialize(Stream& stream, bool Measure = false) 
@@ -216,11 +226,11 @@ namespace ari::net
 				a_assert(rpc);
 				if (!Measure)
 				{
-					return g_on_serialize((void*)&stream, rpc);
+					return g_on_serialize((void*)&stream, rpc, rpc_index);
 				}
 				else
 				{
-					return g_on_serialize_measure((void*)&stream, rpc);
+					return g_on_serialize_measure((void*)&stream, rpc, rpc_index);
 				}
 			}
 			else

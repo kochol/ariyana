@@ -49,7 +49,7 @@ namespace ari::net
 
 		void Receive(en::World* world, const en::events::OnComponentRemoved<PropertyReplicator>& event) override;
 
-		void Call_C_RPC(void* rpc, bool _reliable, RpcType _rpc_type, int client_id);
+		void Call_C_RPC(void* rpc, bool _reliable, uint32_t _index, RpcType _rpc_type, int client_id) override;
 
 	protected:
 

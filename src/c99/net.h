@@ -7,15 +7,17 @@ struct EntityHandle;
 struct Node3dHandle;
 
 // Globals
-typedef bool (serialize_cb)(void* _stream, void* _rpc);
-typedef bool (deserialize_cb)(void* _stream, int* _out_index);
+typedef bool (serialize_cb)(void* _stream, void* _rpc, uint32_t _index);
+typedef bool (deserialize_cb)(void* _stream, uint32_t* _out_index);
 typedef void (call_rpc_cb)(int rpc_index);
 CARI_API bool InitNetworkLink
 	(
 		serialize_cb* _on_serialize, 
 		deserialize_cb* _on_deserialize, 
 		serialize_cb* _on_serialize_measure,
-		call_rpc_cb* _on_call_rpc
+		call_rpc_cb* _on_call_rpc,
+		call_rpc_cb* _on_delete_rpc,
+		call_rpc_cb* _on_add_ref_rpc
 	);
 CARI_API void ShutdownNetwork();
 CARI_API int GetLastRpcClientIndex();
@@ -71,7 +73,7 @@ CARI_API void* CreateServerSystem();
 CARI_API void DeleteServerSystem(void* _obj);
 CARI_API bool CreateServerServerSystem(void* _obj, char* ip, int port);
 CARI_API void StopServerSystem(void* _obj);
-CARI_API void CallCRPCServerSystem(void* _obj, void* _rpc, bool _reliable, RpcType _rpc_type, int client_id);
+CARI_API void CallCRPCServerSystem(void* _obj, void* _rpc, bool _reliable, uint32_t _index, RpcType _rpc_type, int client_id);
 typedef void(client_cb)(int client_id, void* userData);
 CARI_API void SetOnClientConnectCb(void* _obj, void* _world, void* _userData, client_cb* on_connect_cb, client_cb* on_disconnect_cb);
 
@@ -80,7 +82,7 @@ CARI_API void* CreateClientSystem();
 CARI_API void DeleteClientSystem(void* _obj);
 CARI_API void ConnectClientSystem(void* _obj, char* ip, int port);
 CARI_API void StopClientSystem(void* _obj);
-CARI_API void CallCRPCClientSystem(void* _obj, void* _rpc, bool _reliable, RpcType _rpc_type);
+CARI_API void CallCRPCClientSystem(void* _obj, void* _rpc, bool _reliable, uint32_t _index, RpcType _rpc_type);
 
 // PropertyReplicator
 CARI_COMPONENT_HANDLE(PropertyReplicatorHandle)

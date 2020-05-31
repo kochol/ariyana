@@ -14,13 +14,17 @@ bool InitNetworkLink
     serialize_cb* _on_serialize,
     deserialize_cb* _on_deserialize,
     serialize_cb* _on_serialize_measure,
-    call_rpc_cb* _on_call_rpc
+    call_rpc_cb* _on_call_rpc,
+    call_rpc_cb* _on_delete_rpc,
+    call_rpc_cb* _on_add_ref_rpc
 )
 {
     ari::net::g_on_serialize = _on_serialize;
     ari::net::g_on_deserialize = _on_deserialize;
     ari::net::g_on_serialize_measure = _on_serialize_measure;
     ari::net::g_on_call_rpc = _on_call_rpc;
+    ari::net::g_on_delete_rpc = _on_delete_rpc;
+    ari::net::g_on_add_ref_rpc = _on_add_ref_rpc;
     return ari::net::InitNetwork();
 }
 
@@ -231,9 +235,9 @@ void StopServerSystem(void* _obj)
     reinterpret_cast<ari::net::ServerSystem*>(_obj)->StopServer();
 }
 
-void CallCRPCServerSystem(void* _obj, void* _rpc, bool _reliable, RpcType _rpc_type, int client_id)
+void CallCRPCServerSystem(void* _obj, void* _rpc, bool _reliable, uint32_t _index, RpcType _rpc_type, int client_id)
 {
-    reinterpret_cast<ari::net::ServerSystem*>(_obj)->Call_C_RPC(_rpc, _reliable, ari::net::RpcType(_rpc_type), client_id);
+    reinterpret_cast<ari::net::ServerSystem*>(_obj)->Call_C_RPC(_rpc, _reliable, _index, ari::net::RpcType(_rpc_type), client_id);
 }
 
 void SetOnClientConnectCb(void* _obj, void* _world, void* _userData, client_cb* on_connect_cb, client_cb* on_disconnect_cb)
@@ -268,9 +272,9 @@ void StopClientSystem(void* _obj)
     reinterpret_cast<ari::net::ClientSystem*>(_obj)->StopClient();
 }
 
-void CallCRPCClientSystem(void* _obj, void* _rpc, bool _reliable, RpcType _rpc_type)
+void CallCRPCClientSystem(void* _obj, void* _rpc, bool _reliable, uint32_t _index, RpcType _rpc_type)
 {
-    reinterpret_cast<ari::net::ClientSystem*>(_obj)->Call_C_RPC(_rpc, _reliable, ari::net::RpcType(_rpc_type), 0);
+    reinterpret_cast<ari::net::ClientSystem*>(_obj)->Call_C_RPC(_rpc, _reliable, _index, ari::net::RpcType(_rpc_type), 0);
 }
 
 // PropertyReplicator

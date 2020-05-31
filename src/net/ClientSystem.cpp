@@ -127,7 +127,7 @@ namespace ari::net
 	}
 
 	//------------------------------------------------------------------------------
-	void ClientSystem::Call_C_RPC(void* rpc, bool _reliable, RpcType _rpc_type, int client_id)
+	void ClientSystem::Call_C_RPC(void* rpc, bool _reliable, uint32_t _index, RpcType _rpc_type, int client_id)
 	{
 		a_assert(_rpc_type == RpcType::Server);
 
@@ -137,6 +137,7 @@ namespace ari::net
 		GameChannel channel = _reliable ? GameChannel::RELIABLE : GameChannel::UNRELIABLE;
 		auto msg = (CRpcCallMessage*)m_pClient->CreateMessage(int(GameMessageType::CRPC_CALL));
 		msg->rpc = rpc;
+		msg->rpc_index = _index;
 		m_pClient->SendMessage(int(channel), msg);
 	}
 

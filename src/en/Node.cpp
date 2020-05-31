@@ -14,12 +14,16 @@ namespace ari
 				m_mChilds.Add(_child->GetId(), core::Array<Node*>());
 
 			m_mChilds[_child->GetId()].Add(_child);
+			if (_child->m_pParent)
+				_child->m_pParent->RemoveChild(_child);
+			_child->m_pParent = this;
 		}
 
 		void Node::RemoveChild(Node * _child)
 		{
 			auto& v = m_mChilds[_child->GetId()];
 			v.EraseSwap(v.FindIndexLinear(_child, 0, v.Size() - 1));
+			_child->m_pParent = nullptr;
 		}
 
 		bool Node::HasChildWithId(uint32_t _id) const

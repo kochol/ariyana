@@ -124,7 +124,8 @@ namespace ari::en
 				const int subIndex = kv.value.FindIndexLinear(
 					reinterpret_cast<Internal::BaseEventSubscriber*>(subscriber),
 					0, kv.value.Size());
-				kv.value.EraseSwap(subIndex);
+				if (subIndex != core::InvalidIndex)
+					kv.value.EraseSwap(subIndex);
 			}
 		}
 

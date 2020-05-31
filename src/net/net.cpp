@@ -10,6 +10,8 @@ namespace ari::net
 	serialize_cb* g_on_serialize_measure = nullptr;
 	deserialize_cb* g_on_deserialize = nullptr;
 	call_c_rpc_cb* g_on_call_rpc = nullptr;
+	call_c_rpc_cb* g_on_delete_rpc = nullptr;
+	call_c_rpc_cb* g_on_add_ref_rpc = nullptr;
 
 	//------------------------------------------------------------------------------
 	bool InitNetwork()

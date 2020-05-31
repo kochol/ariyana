@@ -47,9 +47,12 @@ namespace ari
 
 			Node* GetChild(uint32_t _id);
 
-		private:
+			Node* GetParent() const { return m_pParent; }
+
+		protected:
 
 			core::Map<uint32_t, core::Array<Node*>>	m_mChilds;
+			Node* m_pParent = nullptr;
 
 		};
 		
