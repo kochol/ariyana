@@ -77,7 +77,19 @@ namespace ari
 					{
 						l.EraseSwap(i);
 						_cmp.Owner = nullptr;
-						return;
+						break;
+					}
+				}
+				if (T::Id != _cmp.Component->GetBaseId())
+				{
+					l = mComponents[_cmp.Component->GetBaseId()];
+					for (int i = 0; i < l.Size(); ++i)
+					{
+						if (l[i].handle == _cmp.Handle)
+						{
+							l.EraseSwap(i);
+							break;
+						}
 					}
 				}
 			}
