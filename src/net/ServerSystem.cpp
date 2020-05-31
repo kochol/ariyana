@@ -217,7 +217,7 @@ namespace ari::net
 	}
 
 	//------------------------------------------------------------------------------
-	void ServerSystem::Call_C_RPC(void* rpc, bool _reliable, RpcType _rpc_type, int client_id)
+	void ServerSystem::Call_C_RPC(void* rpc, bool _reliable, uint32_t _index, RpcType _rpc_type, int client_id)
 	{
 		if (m_iClientCount == 0)
 			return;
@@ -227,13 +227,18 @@ namespace ari::net
 		if (_rpc_type == RpcType::MultiCast)
 		{
 			// Send to all clients
+			CRpcCallMessage* msg = nullptr;
 			for (int i = 0; i < MAX_PLAYERS; i++)
 			{
 				if (m_pServer->IsClientConnected(i))
 				{
-					auto msg = (CRpcCallMessage*)m_pServer->CreateMessage
-					(i, int(GameMessageType::CRPC_CALL));
+					if (msg)
+						msg->AddRef();
+					msg = (CRpcCallMessage*)m_pServer->CreateMessage
+						(i, int(GameMessageType::CRPC_CALL));
+
 					msg->rpc = rpc;
+					msg->rpc_index = _index;
 					m_pServer->SendMessage(i, int(channel), msg);
 				}
 			}
@@ -246,6 +251,7 @@ namespace ari::net
 				auto msg = (CRpcCallMessage*)m_pServer->CreateMessage
 				(client_id, int(GameMessageType::CRPC_CALL));
 				msg->rpc = rpc;
+				msg->rpc_index = _index;
 				m_pServer->SendMessage(client_id, int(channel), msg);
 			}
 		}

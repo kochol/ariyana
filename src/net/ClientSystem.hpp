@@ -38,7 +38,7 @@ namespace ari::net
 
 		void* GetComponent(const uint32_t& component_id, const uint32_t& component_server_handle);
 
-		void Call_C_RPC(void* rpc, bool _reliable, RpcType _rpc_type, int client_id);
+		void Call_C_RPC(void* rpc, bool _reliable, uint32_t _index, RpcType _rpc_type, int client_id) override;
 
 	protected:
 
