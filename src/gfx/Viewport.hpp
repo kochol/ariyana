@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/Rect.hpp"
+
 namespace ari::gfx
 {
 	struct Viewport
