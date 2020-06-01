@@ -105,6 +105,7 @@ namespace ari
 		static sx_vec3 g_vLightDir, g_vLightPos, g_vCamPos;
 		static sx_vec4 g_cLightColor;
 		static bool g_bHasDirLight = false, g_bHasOmniLight = false;
+		static core::RectI g_viewportSize;
 
 		ShaderHandle g_shaders[int(ShaderType::Count)];
 
@@ -205,9 +206,22 @@ namespace ari
 			}
 		}
 
+		//------------------------------------------------------------------------------
 		ShaderHandle GetShader(ShaderType shader)
 		{
 			return g_shaders[int(shader)];
+		}
+		
+		//------------------------------------------------------------------------------
+		void SetViewportSize(const core::RectI& _rect)
+		{
+			g_viewportSize = _rect;
+		}
+
+		//------------------------------------------------------------------------------
+		core::RectI GetViewportSize()
+		{
+			return g_viewportSize;
 		}
 
 		//------------------------------------------------------------------------------

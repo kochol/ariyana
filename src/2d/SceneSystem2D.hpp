@@ -14,9 +14,7 @@ namespace ari::en
 	class Node2D;
 
 	class SceneSystem2D :
-		public System,
-		public EventSubscriber<events::OnComponentAssigned<Camera2D>>,
-		public EventSubscriber<events::OnComponentRemoved<Camera2D>>
+		public System
 	{
 	public:
 		
@@ -31,20 +29,17 @@ namespace ari::en
 		void Unconfigure(World* p_world) override;
 		bool NeedUpdateOn(UpdateState::Enum _state) override;
 
-		void Receive(World* p_world, const events::OnComponentAssigned<Camera2D>& event) override;
-		void Receive(World* p_world, const events::OnComponentRemoved<Camera2D>& event) override;
-
 		io::WindowHandle		TargetWindow;
 
 	protected:
 
-		Camera2D		*	m_pActiveCamera2D;
 		core::StaticArray<FrameData2D, 3>
 			m_aFrameData2D;
 		int m_FrameDataTurnIndex = 0;
 		FrameData2D		*	m_pFrameDataUnused,		// This is the unused frame data pointers
 						*	m_pFrameDataTransforms,	// This is the transform calculated nodes
 						*	m_pFrameDataVisible;	// This is the visible nodes that must be rendered.
+		PassData2D		*   m_pCurrentPass = nullptr;
 
 		void CalcTransform(Entity* entity, Node2D* parent);
 		void CalcTransform(Node2D* node, Node2D* parent);

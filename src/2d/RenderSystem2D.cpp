@@ -33,17 +33,20 @@ namespace ari::en
 		m_pFrameDataCurrent = m_pFrameDataNext;
 		if (m_pFrameDataCurrent)
 		{
-			//set the camera2D
-			if (m_pFrameDataCurrent->Camera2dObj)
+			gfx::SetViewportSize(io::GetWindowSize(TargetWindow));
+
+			for (auto node : m_pFrameDataCurrent->Nodes)
 			{
-				gfx::Viewport* pViewport = m_pFrameDataCurrent->Camera2dObj->GetViewport();
-				gfx::SetViewProjMatrix(m_pFrameDataCurrent->Camera2dObj->_view,
-					m_pFrameDataCurrent->Camera2dObj->_proj);
-				for (auto node : m_pFrameDataCurrent->Nodes)
+				node->Render(m_pFrameDataCurrent->FrameDataTurnIndex);
+			}
+
+			// render the passes
+			for (auto& pass : m_pFrameDataCurrent->Passes)
+			{
+				for (auto node : pass.Nodes)
 				{
 					node->Render(m_pFrameDataCurrent->FrameDataTurnIndex);
 				}
-
 			}
 		}
 		gfx::EndPass();

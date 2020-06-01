@@ -16,10 +16,13 @@ namespace ari::en
 		//! Constructor
 		Camera2D()
 		{
+			_isRenderable = true;
 		}
 
 		//! Destructor
 		virtual ~Camera2D() = default;
+
+		
 
 		float		width,
 					height;
@@ -27,26 +30,13 @@ namespace ari::en
 					_proj;
 		bool		_isActive = false;
 
-		//! Rotate the Camera around Z axis
-		void Rotate(float _angle);
-
-
 		//! Move Camera left & right
 		void MoveLR(const float& _speed);
 
 		//! Move Camera up & down
 		void MoveUD(const float& _speed);
 
-		gfx::Viewport* GetViewport();
-
-		void SetViewport(const gfx::Viewport& _viewport);
-
-
-
-	protected:
-		
-		gfx::Viewport	m_viewport;
-		bool			m_bHasViewPort = false;
+		void Render(const int& _frameTurnIndex) override;
 
 	}; // Camera2D
 

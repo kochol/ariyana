@@ -486,6 +486,10 @@ namespace ari
 
 		uint64_t* GetFrameNumberPointer();
 
+		void SetViewportSize(const core::RectI& _rect);
+
+		core::RectI GetViewportSize();
+
 		BufferHandle CreateVertexBuffer(int size, void* content, BufferUsage usage = BufferUsage::Immutable);
 
 		BufferHandle CreateIndexBuffer(int size, void* content, BufferUsage usage = BufferUsage::Immutable);
