@@ -3,6 +3,7 @@
 #include "Node2D.hpp"
 #include "gfx/Viewport.hpp"
 #include "sx/math.h"
+#include "en/World.hpp"
 
 namespace ari::en
 {

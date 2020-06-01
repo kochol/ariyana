@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include "core/Types.hpp"
+#include "core/HandleManager.hpp"
 
 namespace ari
 {
@@ -38,6 +39,25 @@ namespace ari
 			r.Owner = cmp.Owner;
 			return r;
 		}
+
+		struct EntityHandle
+		{
+			uint32_t Handle = ari::core::aInvalidHandle;
+			uint32_t Index = ari::core::aInvalidHandle;
+			Entity* entity = nullptr;
+
+			Entity* operator -> () const
+			{
+				return this->entity;
+			}
+
+			bool IsValid()
+			{
+				if (this->entity == nullptr || Handle == ari::core::aInvalidHandle || Index == ari::core::aInvalidHandle)
+					return false;
+				return ari::core::HandleManager<EntityHandle>::IsHandleValid(Handle);
+			}
+		};
 		
 	} // en
 	

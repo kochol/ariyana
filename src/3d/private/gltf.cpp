@@ -8,6 +8,7 @@
 #include "3d/MeshNode.hpp"
 #include "3d/Camera.hpp"
 #include "core/log.h"
+#include "en/World.hpp"
 
 namespace ari::en
 {

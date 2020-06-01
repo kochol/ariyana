@@ -2,6 +2,7 @@
 #include "Node3D.hpp"
 #include "gfx/gfx.hpp"
 #include "gfx/SubMesh.hpp"
+#include "en/World.hpp"
 
 namespace ari::en
 {

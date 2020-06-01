@@ -1,9 +1,10 @@
 #include "Camera.hpp"
 #include "en/ComponentManager.hpp"
+#include "en/World.hpp"
 
 namespace ari::en
 {
-	ARI_COMPONENT_IMP(Camera);
+	ARI_COMPONENT_IMP_CHILD(Camera, Node3D);
 
 	void Camera::Rotate(float _angle, const sx_vec3& _axis)
 	{

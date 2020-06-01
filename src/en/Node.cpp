@@ -1,6 +1,7 @@
 #include "Node.hpp"
 #include "ComponentManager.hpp"
 #include "core/string/StringBuilder.hpp"
+#include "World.hpp"
 
 namespace ari
 {

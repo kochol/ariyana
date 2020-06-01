@@ -5,7 +5,7 @@
 
 namespace ari::en
 {
-	ARI_COMPONENT_IMP(BoxShape)
+	ARI_COMPONENT_IMP_CHILD(BoxShape, Node3D)
 
 	gfx::BufferHandle BoxShape::m_sVBPos;
 	gfx::BufferHandle BoxShape::m_sVBNormal;

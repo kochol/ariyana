@@ -1,6 +1,7 @@
 #pragma once
 #include "Node2D.hpp"
 #include "gfx/gfx.hpp"
+#include "en/World.hpp"
 
 namespace ari::en
 {

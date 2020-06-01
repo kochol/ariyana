@@ -3,7 +3,7 @@
 
 namespace ari::en
 {
-	ARI_COMPONENT_IMP(Camera2D);
+	ARI_COMPONENT_IMP_CHILD(Camera2D, Node2D);
 
 	void Camera2D::Rotate(float _angle)
 	{

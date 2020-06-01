@@ -6,7 +6,7 @@
 
 namespace ari::en
 {
-	ARI_COMPONENT_IMP(Sprite)
+	ARI_COMPONENT_IMP_CHILD(Sprite, Node2D)
 	
 	gfx::BufferHandle Sprite::m_sVBPos;
 	gfx::BufferHandle Sprite::m_sIB;

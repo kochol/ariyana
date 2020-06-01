@@ -4,6 +4,8 @@
 
 namespace ari::en
 {
+	ARI_COMPONENT_IMP(Entity);
+
 	Entity::~Entity()
 	{
 		for (auto it = mComponents.begin(); it != mComponents.end(); ++it)

@@ -45,7 +45,8 @@ namespace ari::en
 			// Get all entities and calc transforms
 			p_world->GetDerivedComponents<Node2D>([this](const ComponentHandle<Node2D>& node)
 				{
-					this->CalcTransform(node.Component, nullptr);
+					if (node.Owner->GetParent() == nullptr)
+						this->CalcTransform(node.Component, nullptr);
 				});
 			if (m_pActiveCamera2D)
 			{
@@ -110,6 +111,19 @@ namespace ari::en
 		}
 	}
 
+	void SceneSystem2D::CalcTransform(Entity* entity, Node2D* parent)
+	{		
+		entity->GetComponents<Node2D>([parent, this](const ComponentHandle<Node2D>& n)
+			{
+				CalcTransform(n.Component, parent);
+			});
+		auto l = entity->GetChildren(Entity::Id);
+		for (auto e: l)
+		{
+			CalcTransform(reinterpret_cast<Entity*>(e), parent);
+		}
+	}
+
 	void SceneSystem2D::CalcTransform(Node2D* node, Node2D* parent)
 	{
 		sx_mat4 m;
@@ -145,6 +159,10 @@ namespace ari::en
 				if (n->GetBaseId() == Node2D::Id)
 				{
 					CalcTransform(reinterpret_cast<Node2D*>(n), parent);
+				}
+				else if (n->GetId() == Entity::Id)
+				{
+					CalcTransform(reinterpret_cast<Entity*>(n), parent);
 				}
 			});
 
