@@ -755,7 +755,6 @@ namespace ari
 				return core::ObjectPool<gfx::SubMesh>::GetByIndex(sub_mesh_handle.Handle);
 			return nullptr;
 		}
-
     } // namespace gfx
     
 } // namespace ari

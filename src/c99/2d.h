@@ -27,6 +27,7 @@ CARI_API void RemoveCamera2dFromWorld(void* _world, EntityHandle* _entity, const
 struct Sprite2dMembers
 {
 	TextureHandle* Texture;
+	Color		 *  v4Color;
 };
 CARI_API Node2dHandle CreateSprite2dComponent();
 CARI_API void AddSprite2dToWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node);
