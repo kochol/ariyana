@@ -6,12 +6,12 @@
 namespace ari::en
 {
 	class Node2D;
-	class Camera2D;
+	struct Canvas;
 
 	struct PassData2D
 	{
 		core::Array<Node2D*>	Nodes;
-		Camera2D* camera_2d;
+		Canvas* canvas;
 	};	
 
 	struct FrameData2D

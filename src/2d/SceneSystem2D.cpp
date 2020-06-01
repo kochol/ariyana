@@ -115,6 +115,7 @@ namespace ari::en
 			a_assert(m_pCurrentPass == nullptr); // Can not add one canvas inside another one
 			m_pFrameDataTransforms->Passes.Add(PassData2D());
 			m_pCurrentPass = &m_pFrameDataTransforms->Passes[m_pFrameDataTransforms->Passes.Size() - 1];
+			m_pCurrentPass->canvas = reinterpret_cast<Canvas*>(node);
 		}
 
 		if (node->_isRenderable)

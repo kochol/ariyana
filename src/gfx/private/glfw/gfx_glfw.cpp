@@ -15,11 +15,15 @@ namespace ari
 {
     namespace gfx
     {
+		extern GfxSetup g_setup;
+
 		bool SetupGfx(GfxSetup& setup)
 		{
 			io::WindowHandle window = io::CreateAriWindow(setup.window, "Ari 0.5");
 			if (!window.IsValid())
 				return false;
+
+			g_setup = setup;
 
 			glfwSwapInterval(setup.swap_interval);
 

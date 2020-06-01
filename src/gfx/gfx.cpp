@@ -106,6 +106,7 @@ namespace ari
 		static sx_vec4 g_cLightColor;
 		static bool g_bHasDirLight = false, g_bHasOmniLight = false;
 		static core::RectI g_viewportSize;
+		GfxSetup g_setup;
 
 		ShaderHandle g_shaders[int(ShaderType::Count)];
 
@@ -216,6 +217,7 @@ namespace ari
 		void SetViewportSize(const core::RectI& _rect)
 		{
 			g_viewportSize = _rect;
+			sg_apply_viewport(_rect.x, _rect.y, _rect.width, _rect.height, false);
 		}
 
 		//------------------------------------------------------------------------------

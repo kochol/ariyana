@@ -5,6 +5,7 @@
 #include "Camera2D.hpp"
 #include "en/World.hpp"
 #include "en/ComponentManager.hpp"
+#include "Canvas.hpp"
 
 namespace ari::en
 {
@@ -43,10 +44,25 @@ namespace ari::en
 			// render the passes
 			for (auto& pass : m_pFrameDataCurrent->Passes)
 			{
+				// Set the canvas
+				pass.canvas->UpdateRect();
+
+				if (!pass.Nodes.Empty())
+				{
+					if (pass.Nodes[0]->GetId() == Camera2D::Id)
+					{
+						pass.canvas->UpdateCamera(reinterpret_cast<Camera2D*>(pass.Nodes[0]),
+							m_pFrameDataCurrent->FrameDataTurnIndex);
+					}
+				}
+
 				for (auto node : pass.Nodes)
 				{
 					node->Render(m_pFrameDataCurrent->FrameDataTurnIndex);
 				}
+
+				// revert viewport size
+				gfx::SetViewportSize(io::GetWindowSize(TargetWindow));
 			}
 		}
 		gfx::EndPass();
