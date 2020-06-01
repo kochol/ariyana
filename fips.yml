@@ -19,6 +19,8 @@ imports:
         git: https://github.com/kochol/yojimbo.git
     fips-MetaStuff:
         git: https://github.com/kochol/fips-MetaStuff.git
+    fips-soloud:
+        git: https://github.com/floooh/fips-soloud.git
 
 exports:
     header-dirs :
@@ -33,7 +35,7 @@ exports:
         ari_gui  :          src/gui
         ari_io   :          src/io
         ari_net  :          src/net
-
+        ari_sfx  :          src/sfx
 run:
     t05texcube:
         cwd: tests/05-texcube

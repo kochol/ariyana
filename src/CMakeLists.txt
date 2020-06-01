@@ -8,3 +8,5 @@ fips_add_subdirectory(gfx)
 fips_add_subdirectory(gui)
 fips_add_subdirectory(io)
 fips_add_subdirectory(net)
+fips_add_subdirectory(sfx)
+
