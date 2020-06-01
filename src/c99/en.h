@@ -31,5 +31,7 @@ CARI_API bool* GetEntityMembers(EntityHandle* _entity);
 // Node
 CARI_API const char* GetNodeName(void* _node);
 CARI_API void SetNodeName(void* _node, char* _name);
+CARI_API void NodeAddChild(void* _node, void* _child);
+CARI_API void NodeRemoveChild(void* _node, void* _child);
 
 #endif // ARI_EN_H

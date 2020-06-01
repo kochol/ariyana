@@ -75,3 +75,15 @@ void SetNodeName(void* _node, char* _name)
 {
     return reinterpret_cast<ari::en::Node*>(_node)->Name = _name;
 }
+
+void NodeAddChild(void* _node, void* _child)
+{
+    reinterpret_cast<ari::en::Node*>(_node)->AddChild(
+        reinterpret_cast<ari::en::Node*>(_child));
+}
+
+void NodeRemoveChild(void* _node, void* _child)
+{
+	reinterpret_cast<ari::en::Node*>(_node)->RemoveChild(
+		reinterpret_cast<ari::en::Node*>(_child));
+}

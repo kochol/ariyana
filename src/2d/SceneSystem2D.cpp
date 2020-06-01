@@ -77,10 +77,13 @@ namespace ari::en
 			{
 				CalcTransform(n.Component, parent);
 			});
-		auto l = entity->GetChildren(Entity::Id);
-		for (auto e: l)
+		if (entity->HasChildWithId(Entity::Id))
 		{
-			CalcTransform(reinterpret_cast<Entity*>(e), parent);
+			auto l = entity->GetChildren(Entity::Id);
+			for (auto e : l)
+			{
+				CalcTransform(reinterpret_cast<Entity*>(e), parent);
+			}
 		}
 	}
 

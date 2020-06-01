@@ -23,7 +23,7 @@ namespace ari
 		void Node::RemoveChild(Node * _child)
 		{
 			auto& v = m_mChilds[_child->GetId()];
-			v.EraseSwap(v.FindIndexLinear(_child, 0, v.Size() - 1));
+			v.EraseSwap(v.FindIndexLinear(_child, 0, core::InvalidIndex));
 			_child->m_pParent = nullptr;
 		}
 
