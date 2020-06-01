@@ -43,10 +43,10 @@ namespace ari::en
 			m_pFrameDataTransforms->Passes.Clear();
 			m_pCurrentPass = nullptr;
 
-			// Get all entities and calc transforms
+			// Get all entities and calculate transforms
 			p_world->GetDerivedComponents<Node2D>([this](const ComponentHandle<Node2D>& node)
 				{
-					if (node.Owner->GetParent() == nullptr)
+					if (!node->GetParent() && !node.Owner->GetParent())
 						this->CalcTransform(node.Component, nullptr);
 				});
 
