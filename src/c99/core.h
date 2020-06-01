@@ -33,6 +33,14 @@ struct Color
 			a;
 };
 
+struct RectI
+{
+	int x,
+		y,
+		width,
+		height;
+};
+
 CARI_API uint32_t HashStringFNV32(char* _str);
 
 CARI_API void ari_os_sleep(int ms);

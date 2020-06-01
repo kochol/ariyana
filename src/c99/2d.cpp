@@ -4,6 +4,7 @@
 #include "2d/Camera2D.hpp"
 #include "2d/Sprite.hpp"
 #include "core/log.h"
+#include "2d/Canvas.hpp"
 
 // System functions
 void* CreateRenderSystem2D()
@@ -80,6 +81,35 @@ Sprite2dMembers GetSprite2dMembers(void* _node)
     return {
         reinterpret_cast<TextureHandle*>(&node->Texture),
 		reinterpret_cast<Color*>(&node->v4Color)
-
     };
+}
+
+// Canvas
+Node2dHandle CreateCanvasComponent()
+{
+	const union { ari::en::ComponentHandle<ari::en::Canvas> cpp; Node2dHandle c; } h =
+	{ ari::en::World::CreateComponent<ari::en::Canvas, ari::en::Node2D>() };
+	return h.c;
+}
+
+void AddCanvasToWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node)
+{
+	union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Canvas> cpp; } node = { _node };
+	const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
+	reinterpret_cast<ari::en::World*>(_world)->AddDerivedComponent<ari::en::Canvas, ari::en::Node2D>(en.cpp, node.cpp);
+}
+
+void RemoveCanvasFromWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node, bool _dispose)
+{
+	union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Canvas> cpp; } node = { _node };
+	const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
+	reinterpret_cast<ari::en::World*>(_world)->RemoveComponent(en.cpp, node.cpp, _dispose);
+}
+
+CanvasMembers GetCanvasMembers(void* _node)
+{
+	auto node = reinterpret_cast<ari::en::Canvas*>(_node);
+	return {
+		reinterpret_cast<RectI*>(&node->Rect)
+	};
 }

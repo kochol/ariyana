@@ -34,4 +34,14 @@ CARI_API void AddSprite2dToWorld(void* _world, EntityHandle* _entity, const Node
 CARI_API void RemoveSprite2dFromWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node, bool _dispose);
 CARI_API Sprite2dMembers GetSprite2dMembers(void* _node);
 
+// Canvas
+struct CanvasMembers
+{
+	RectI* Rect;
+};
+CARI_API Node2dHandle CreateCanvasComponent();
+CARI_API void AddCanvasToWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node);
+CARI_API void RemoveCanvasFromWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node, bool _dispose);
+CARI_API CanvasMembers GetCanvasMembers(void* _node);
+
 #endif // ARI_2D_H
