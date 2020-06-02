@@ -8,6 +8,7 @@ namespace ari::en
 
 	Entity::~Entity()
 	{
+		a_assert(p_world);
 		for (auto it = mComponents.begin(); it != mComponents.end(); ++it)
 		{
 			for (auto it_cmp = it->value.begin(); it_cmp != it->value.end(); ++it_cmp)
