@@ -55,7 +55,8 @@ ari::en::ComponentHandle<void> _name::CreateComponent(ari::en::World* _world) \
 void _name::DisposeComponent(ari::en::World* _world, \
 									const ari::en::ComponentHandle<void>& _cmp) \
 { \
-	_world->DisposeComponent(ari::en::CastComponentHandle<void, _name>(_cmp)); \
+	auto h = ari::en::CastComponentHandle<void, _name>(_cmp); \
+	_world->DisposeComponent(h); \
 } \
 void _name::DeleteComponent(const ari::en::ComponentHandle<void>& _cmp) \
 { \
@@ -106,7 +107,8 @@ ari::en::ComponentHandle<void> _name::CreateComponent(ari::en::World* _world) \
 void _name::DisposeComponent(ari::en::World* _world, \
 							const ari::en::ComponentHandle<void>& _cmp) \
 { \
-	_world->DisposeComponent(ari::en::CastComponentHandle<void, _name>(_cmp)); \
+	auto h = ari::en::CastComponentHandle<void, _name>(_cmp); \
+	_world->DisposeComponent(h); \
 } \
 void _name::DeleteComponent(const ari::en::ComponentHandle<void>& _cmp) \
 { \
