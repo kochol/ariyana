@@ -25,6 +25,7 @@ bool IsValidNode2D(uint32_t& _handle)
 
 Node2dMembers GetNode2dMembers(void* _node)
 {
+    log_debug("node2d obj %p", _node);
     auto node = reinterpret_cast<ari::en::Node2D*>(_node);
     return { reinterpret_cast<Vector2*>(&node->Position),
         &node->Rotation,
@@ -36,6 +37,7 @@ Node2dHandle CreateCamera2dComponent()
 {
     const union { ari::en::ComponentHandle<ari::en::Camera2D> cpp; Node2dHandle c; } h =
     { ari::en::World::CreateComponent<ari::en::Camera2D, ari::en::Node2D>() };
+    log_debug("camera h: %d, i: %d, obj %p", h.c.Handle, h.c.Index, h.c.Component);
     return h.c;
 }
 
@@ -58,6 +60,7 @@ Node2dHandle CreateSprite2dComponent()
 {
     const union { ari::en::ComponentHandle<ari::en::Sprite> cpp; Node2dHandle c; } h =
     { ari::en::World::CreateComponent<ari::en::Sprite, ari::en::Node2D>() };
+    log_debug("sprite h: %d, i: %d, obj %p", h.c.Handle, h.c.Index, h.c.Component);
     return h.c;
 }
 
@@ -77,6 +80,8 @@ void RemoveSprite2dFromWorld(void* _world, EntityHandle* _entity, const Node2dHa
 
 Sprite2dMembers GetSprite2dMembers(void* _node)
 {
+    log_debug("sprite obj %p", _node);
+
     auto node = reinterpret_cast<ari::en::Sprite*>(_node);
     return {
         reinterpret_cast<TextureHandle*>(&node->Texture),
@@ -89,6 +94,7 @@ Node2dHandle CreateCanvasComponent()
 {
 	const union { ari::en::ComponentHandle<ari::en::Canvas> cpp; Node2dHandle c; } h =
 	{ ari::en::World::CreateComponent<ari::en::Canvas, ari::en::Node2D>() };
+    log_debug("canvas h: %d, i: %d, obj %p", h.c.Handle, h.c.Index, h.c.Component);
 	return h.c;
 }
 
@@ -108,6 +114,8 @@ void RemoveCanvasFromWorld(void* _world, EntityHandle* _entity, const Node2dHand
 
 CanvasMembers GetCanvasMembers(void* _node)
 {
+    log_debug("canvas obj %p", _node);
+
 	auto node = reinterpret_cast<ari::en::Canvas*>(_node);
 	return {
 		reinterpret_cast<RectI*>(&node->Rect)

@@ -30,7 +30,7 @@ namespace ari::en
 	Sprite::Sprite()
 	{
 		_isRenderable = true;
-
+		v4Color = sx_vec4f(1, 1, 1, 1);
 	}
 
 	void Sprite::Render(const int& _frameTurnIndex)

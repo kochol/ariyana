@@ -23,7 +23,7 @@ namespace ari::en
 		void Render(const int& _frameTurnIndex) override;
 
 		gfx::TextureHandle Texture;
-		sx_vec4 v4Color = { 1, 1, 1, 1 };
+		sx_vec4 v4Color;
 
 		static void Init(RenderSystem2D* render_system_2D);
 		static void Shutdown();
