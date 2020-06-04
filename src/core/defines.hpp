@@ -26,29 +26,12 @@ static const uint32_t Id; \
 static bool IsRegisteredWithComponentManager; \
 virtual uint32_t GetId() { return _name::Id; } \
 virtual uint32_t GetBaseId() { return _name::Id; } \
-inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _world) \
-{ \
-	auto c = _world->CreateComponent<_name>(); \
-	return { c.Handle, c.Index, (void*)c.Component }; \
-} \
-inline static void DisposeComponent(ari::en::World* _world, \
-									const ari::en::ComponentHandle<void>& _cmp) \
-{ \
-	_world->DisposeComponent(ari::en::CastComponentHandle<void, _name>(_cmp)); \
-} \
-inline static void DeleteComponent(const ari::en::ComponentHandle<void>& _cmp) \
-{ \
-	ari::en::World::DestroyComponent(ari::en::CastComponentHandle<void, _name>(_cmp)); \
-} \
-inline static void AddComponent(ari::en::World* _world, \
-	const ari::en::EntityHandle& _entity, ari::en::ComponentHandle<void> cmp) \
-{ \
-	ari::en::ComponentHandle<_name> c; \
-	c.Handle = cmp.Handle; \
-	c.Index = cmp.Index; \
-	c.Component = (_name*)cmp.Component; \
-	_world->AddComponent(_entity, c); \
-} \
+static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _world); \
+static void DisposeComponent(ari::en::World* _world, \
+							const ari::en::ComponentHandle<void>& _cmp); \
+static void DeleteComponent(const ari::en::ComponentHandle<void>& _cmp); \
+static void AddComponent(ari::en::World* _world, \
+	const ari::en::EntityHandle& _entity, ari::en::ComponentHandle<void> cmp); \
 template <typename Stream> \
 inline static bool Serialize(Stream& stream, void* obj, const int& member_index = -1) \
 { \
@@ -63,7 +46,31 @@ bool _name::IsRegisteredWithComponentManager = ari::en::ComponentManager::Regist
 bool _name::IsDiff(void* clone, void* obj, int index) \
 { \
 	return ari::en::ComponentManager::IsDiff<_name>(clone, obj, index); \
-}
+} \
+ari::en::ComponentHandle<void> _name::CreateComponent(ari::en::World* _world) \
+{ \
+	auto c = _world->CreateComponent<_name>(); \
+	return { c.Handle, c.Index, (void*)c.Component }; \
+} \
+void _name::DisposeComponent(ari::en::World* _world, \
+									const ari::en::ComponentHandle<void>& _cmp) \
+{ \
+	auto h = ari::en::CastComponentHandle<void, _name>(_cmp); \
+	_world->DisposeComponent(h); \
+} \
+void _name::DeleteComponent(const ari::en::ComponentHandle<void>& _cmp) \
+{ \
+	ari::en::World::DestroyComponent(ari::en::CastComponentHandle<void, _name>(_cmp)); \
+} \
+void _name::AddComponent(ari::en::World* _world, \
+	const ari::en::EntityHandle& _entity, ari::en::ComponentHandle<void> cmp) \
+{ \
+	ari::en::ComponentHandle<_name> c; \
+	c.Handle = cmp.Handle; \
+	c.Index = cmp.Index; \
+	c.Component = (_name*)cmp.Component; \
+	_world->AddComponent(_entity, c); \
+} 
 
 //------------------------------------------------------------------------------
 #define ARI_COMPONENT_CHILD(_name, _base) \
@@ -71,21 +78,43 @@ static const uint32_t Id; \
 static bool IsRegisteredWithComponentManager; \
 uint32_t GetId() override { return _name::Id; } \
 uint32_t GetBaseId() override { return _base::Id; } \
-inline static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _world) \
+static ari::en::ComponentHandle<void> CreateComponent(ari::en::World* _world); \
+static void DisposeComponent(ari::en::World* _world, \
+									const ari::en::ComponentHandle<void>& _cmp); \
+static void DeleteComponent(const ari::en::ComponentHandle<void>& _cmp); \
+static void AddComponent(ari::en::World* _world, \
+	const ari::en::EntityHandle& _entity, ari::en::ComponentHandle<void> cmp); \
+template <typename Stream> \
+inline static bool Serialize(Stream& stream, void* obj, const int& member_index = -1) \
+{ \
+	return ari::net::Serialize<_name, Stream>(stream, *((_name*)obj), member_index); \
+} \
+static bool IsDiff(void* clone, void* obj, int index);
+
+//------------------------------------------------------------------------------
+#define ARI_COMPONENT_IMP_CHILD(_name, _base) \
+const uint32_t _name::Id = COMPILE_TIME_CRC32_STR(#_name); \
+bool _name::IsRegisteredWithComponentManager = ari::en::ComponentManager::RegisterComponent<_name>(#_name); \
+bool _name::IsDiff(void* clone, void* obj, int index) \
+{ \
+	return ari::en::ComponentManager::IsDiff<_name>(clone, obj, index); \
+} \
+ari::en::ComponentHandle<void> _name::CreateComponent(ari::en::World* _world) \
 { \
 	auto c = _world->CreateComponent<_name, _base>(); \
 	return { c.Handle, c.Index, (void*)c.Component }; \
 } \
-inline static void DisposeComponent(ari::en::World* _world, \
-									const ari::en::ComponentHandle<void>& _cmp) \
+void _name::DisposeComponent(ari::en::World* _world, \
+							const ari::en::ComponentHandle<void>& _cmp) \
 { \
-	_world->DisposeComponent(ari::en::CastComponentHandle<void, _name>(_cmp)); \
+	auto h = ari::en::CastComponentHandle<void, _name>(_cmp); \
+	_world->DisposeComponent(h); \
 } \
-inline static void DeleteComponent(const ari::en::ComponentHandle<void>& _cmp) \
+void _name::DeleteComponent(const ari::en::ComponentHandle<void>& _cmp) \
 { \
 	ari::en::World::DestroyComponent<_name, _base>(ari::en::CastComponentHandle<void, _name>(_cmp)); \
 } \
-inline static void AddComponent(ari::en::World* _world, \
+void _name::AddComponent(ari::en::World* _world, \
 	const ari::en::EntityHandle& _entity, ari::en::ComponentHandle<void> cmp) \
 { \
 	ari::en::ComponentHandle<_name> c; \
@@ -94,12 +123,6 @@ inline static void AddComponent(ari::en::World* _world, \
 	c.Component = (_name*)cmp.Component; \
 	_world->AddDerivedComponent<_name, _base>(_entity, c); \
 } \
-template <typename Stream> \
-inline static bool Serialize(Stream& stream, void* obj, const int& member_index = -1) \
-{ \
-	return ari::net::Serialize<_name, Stream>(stream, *((_name*)obj), member_index); \
-} \
-static bool IsDiff(void* clone, void* obj, int index);
 
 // ARI_MESSAGE_FACTORY_START
 //------------------------------------------------------------------------------

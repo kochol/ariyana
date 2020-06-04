@@ -1,9 +1,10 @@
 #include "MeshNode.hpp"
 #include "en/ComponentManager.hpp"
+#include "en/World.hpp"
 
 namespace ari::en
 {
-    ARI_COMPONENT_IMP(MeshNode);
+    ARI_COMPONENT_IMP_CHILD(MeshNode, Node3D);
 
     void MeshNode::Render(const int& _frameTurnIndex)
     {

@@ -6,7 +6,7 @@
 
 namespace ari::en
 {
-	ARI_COMPONENT_IMP(Sprite)
+	ARI_COMPONENT_IMP_CHILD(Sprite, Node2D)
 	
 	gfx::BufferHandle Sprite::m_sVBPos;
 	gfx::BufferHandle Sprite::m_sIB;
@@ -30,13 +30,16 @@ namespace ari::en
 	Sprite::Sprite()
 	{
 		_isRenderable = true;
-
+		v4Color = sx_vec4f(1, 1, 1, 1);
 	}
 
 	void Sprite::Render(const int& _frameTurnIndex)
 	{
 		ari_vs_params_t vs_params;
 		vs_params.mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
+
+		ari_fs_params_t fs_params;
+		fs_params.color = v4Color;
 
 		ApplyPipeline(m_sPipeline);
 
@@ -48,6 +51,7 @@ namespace ari::en
 		ApplyBindings(m_sBinding);
 
 		ApplyUniforms(gfx::ShaderStage::VertexShader, SLOT_ari_vs_params, &vs_params, sizeof(ari_vs_params_t));
+		ApplyUniforms(gfx::ShaderStage::FragmentShader , SLOT_ari_fs_params, &fs_params, sizeof(ari_fs_params_t));
 
 		gfx::Draw(0, 6, 1);
 	}
@@ -95,5 +99,13 @@ namespace ari::en
 			DestroyPipeline(m_sPipeline);
 			DestroyBinding(m_sBinding);
 		}
+	}
+
+	void Sprite::SetColor(float r, float g, float b, float a)
+	{
+		v4Color.x = r;
+		v4Color.y = g;
+		v4Color.z = b;
+		v4Color.w = a;
 	}
 } // ari::en

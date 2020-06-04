@@ -2,7 +2,6 @@
 
 #include "core/containers/Map.hpp"
 #include "core/containers/Array.hpp"
-#include "World.hpp"
 #include "ComponentHandle.hpp"
 #include "core/defines.hpp"
 #include "core/string/String.hpp"
@@ -11,6 +10,8 @@ namespace ari
 {
 	namespace en
 	{
+		struct World;
+
 		class Node
 		{			
 		public:

@@ -19,10 +19,26 @@ struct Vector3
 
 struct Quat
 {
-    float x,
-        y,
-        z,
-        w;
+    float	x,
+			y,
+			z,
+			w;
+};
+
+struct Color
+{
+	float	r,
+			g,
+			b,
+			a;
+};
+
+struct RectI
+{
+	int x,
+		y,
+		width,
+		height;
 };
 
 CARI_API uint32_t HashStringFNV32(char* _str);

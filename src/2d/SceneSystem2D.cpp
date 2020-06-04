@@ -4,12 +4,12 @@
 #include "Node2D.hpp"
 #include "core/Rect.hpp"
 #include "gfx/gfx.hpp"
+#include "Canvas.hpp"
 
 namespace ari::en
 {
 
 	SceneSystem2D::SceneSystem2D() :
-		m_pActiveCamera2D(nullptr),
 		m_pFrameDataUnused(nullptr),
 		m_pFrameDataTransforms(nullptr),
 		m_pFrameDataVisible(nullptr)
@@ -39,33 +39,16 @@ namespace ari::en
 				m_FrameDataTurnIndex = 0;
 			m_pFrameDataTransforms = &m_aFrameData2D[m_FrameDataTurnIndex];
 			m_pFrameDataTransforms->FrameNumber = gfx::GetFrameNumber();
-			m_pFrameDataTransforms->Camera2dObj = m_pActiveCamera2D;
 			m_pFrameDataTransforms->Nodes.Clear();
+			m_pFrameDataTransforms->Passes.Clear();
+			m_pCurrentPass = nullptr;
 
-			// Get all entities and calc transforms
+			// Get all entities and calculate transforms
 			p_world->GetDerivedComponents<Node2D>([this](const ComponentHandle<Node2D>& node)
 				{
-					this->CalcTransform(node.Component, nullptr);
+					if (!node->GetParent() && !node.Owner->GetParent())
+						this->CalcTransform(node.Component, nullptr);
 				});
-			if (m_pActiveCamera2D)
-			{
-				m_pActiveCamera2D->_view = sx_mat4_SRT(
-					m_pActiveCamera2D->Scale.x, m_pActiveCamera2D->Scale.y, 1.0f, 
-					0, 0, m_pActiveCamera2D->Rotation,
-					m_pActiveCamera2D->Position.x, m_pActiveCamera2D->Position.y, 0.0f);
-
-				core::RectI rect;
-				gfx::Viewport* p = m_pActiveCamera2D->GetViewport();
-				if (p)
-					rect = p->Rect;
-				else
-				{
-					rect = io::GetWindowSize(TargetWindow);
-				}
-
-				//m_pActiveCamera2D->_proj = sx_mat4_ortho_offcenter(0,0,rect.width/2, rect.height/2, 0.1f, 100, 0, true);
-				m_pActiveCamera2D->_proj = sx_mat4_ortho(rect.width, rect.height, 0.1f, 100, 0, false);
-			}
 
 			m_FrameDataTurnIndex++;
 		}
@@ -73,13 +56,10 @@ namespace ari::en
 
 	void SceneSystem2D::Configure(World * p_world)
 	{
-		p_world->Subscribe<events::OnComponentAssigned<Camera2D>>(this);
-		p_world->Subscribe<events::OnComponentRemoved<Camera2D>>(this);
 	}
 
 	void SceneSystem2D::Unconfigure(World * p_world)
 	{
-		p_world->unsubscribeAll(this);
 	}
 
 	bool SceneSystem2D::NeedUpdateOn(UpdateState::Enum state)
@@ -91,22 +71,19 @@ namespace ari::en
 #endif
 	}
 
-	void SceneSystem2D::Receive	(World * world, const events::OnComponentAssigned<Camera2D>& event)
-	{
-		sx_unused(world);
-		if (!m_pActiveCamera2D)
+	void SceneSystem2D::CalcTransform(Entity* entity, Node2D* parent)
+	{		
+		entity->GetComponents<Node2D>([parent, this](const ComponentHandle<Node2D>& n)
+			{
+				CalcTransform(n.Component, parent);
+			});
+		if (entity->HasChildWithId(Entity::Id))
 		{
-			m_pActiveCamera2D = event.component;
-			m_pActiveCamera2D->_isActive = true;
-		}
-	}
-
-	void SceneSystem2D::Receive(World* world, const events::OnComponentRemoved<Camera2D>& event)
-	{
-		sx_unused(world);
-		if (m_pActiveCamera2D == event.component)
-		{
-			m_pActiveCamera2D = nullptr;
+			auto l = entity->GetChildren(Entity::Id);
+			for (auto e : l)
+			{
+				CalcTransform(reinterpret_cast<Entity*>(e), parent);
+			}
 		}
 	}
 
@@ -135,10 +112,32 @@ namespace ari::en
 		}
 		parent = node;
 
+		if (node->GetId() == Canvas::Id)
+		{
+			// We have a new canvas create a render pass
+			a_assert(m_pCurrentPass == nullptr); // Can not add one canvas inside another one
+			m_pFrameDataTransforms->Passes.Add(PassData2D());
+			m_pCurrentPass = &m_pFrameDataTransforms->Passes[m_pFrameDataTransforms->Passes.Size() - 1];
+			m_pCurrentPass->canvas = reinterpret_cast<Canvas*>(node);
+		}
+
 		if (node->_isRenderable)
 		{
 			// Add it to frame data
-			m_pFrameDataTransforms->Nodes.Add(node);
+			if (m_pCurrentPass)
+			{
+				if (node->GetId() == Camera2D::Id)
+					m_pCurrentPass->Nodes.Insert(0, node);
+				else
+					m_pCurrentPass->Nodes.Add(node);
+			}
+			else
+			{
+				if (node->GetId() == Camera2D::Id)
+					m_pFrameDataTransforms->Nodes.Insert(0, node);
+				else
+					m_pFrameDataTransforms->Nodes.Add(node);
+			}
 		}
 		node->GetChildren([parent, this](Node* n)
 			{
@@ -146,7 +145,14 @@ namespace ari::en
 				{
 					CalcTransform(reinterpret_cast<Node2D*>(n), parent);
 				}
+				else if (n->GetId() == Entity::Id)
+				{
+					CalcTransform(reinterpret_cast<Entity*>(n), parent);
+				}
 			});
+
+		if (node->GetId() == Canvas::Id)
+			m_pCurrentPass = nullptr;
 
 	} // CalcTransform
 

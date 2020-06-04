@@ -263,6 +263,7 @@ namespace ari::en
 	void World::RemoveComponent(const EntityHandle& _entity, ComponentHandle<T>& _cmp, bool _dispose)
 	{
 		_entity.entity->RemoveComponent(_cmp);
+		emit<events::OnComponentRemoved<T>>({ _entity, _cmp.Component });
 		if (_dispose)
 			DisposeComponent(_cmp);
 	}

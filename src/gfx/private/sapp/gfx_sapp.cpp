@@ -107,8 +107,11 @@ namespace ari
 {
 	namespace gfx
 	{
+		extern GfxSetup g_setup;
+
 		bool SetupGfx(GfxSetup& setup)
 		{
+			g_setup = setup;
 			return true;
 		}
 

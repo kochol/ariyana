@@ -486,6 +486,10 @@ namespace ari
 
 		uint64_t* GetFrameNumberPointer();
 
+		void SetViewportSize(const core::RectI& _rect);
+
+		core::RectI GetViewportSize();
+
 		BufferHandle CreateVertexBuffer(int size, void* content, BufferUsage usage = BufferUsage::Immutable);
 
 		BufferHandle CreateIndexBuffer(int size, void* content, BufferUsage usage = BufferUsage::Immutable);
@@ -554,7 +558,7 @@ namespace ari
 		void SetOmniLight(const sx_vec3& pos, const sx_vec4& color);
 
 		void SetCameraPosition(const sx_vec3& pos);
-        
+
     } // namespace gfx
     
 } // namespace ari

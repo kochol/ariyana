@@ -42,7 +42,7 @@ public:
 
 		m_pSprite->Scale.x = 100;
 		m_pSprite->Scale.y = 100;
-
+		m_pSprite->SetColor(1.0, 1.0, 0.0, 1.0);
 	}
 
 	void OnFrame(float _elapsedTime) override

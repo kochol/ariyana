@@ -2,6 +2,7 @@
 
 #include "en/System.hpp"
 #include "Gui.hpp"
+#include "en/EventSubscriber.hpp"
 
 namespace ari
 {

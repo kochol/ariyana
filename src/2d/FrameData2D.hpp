@@ -6,13 +6,19 @@
 namespace ari::en
 {
 	class Node2D;
-	class Camera2D;
+	struct Canvas;
+
+	struct PassData2D
+	{
+		core::Array<Node2D*>	Nodes;
+		Canvas* canvas;
+	};	
 
 	struct FrameData2D
 	{
 		core::Array<Node2D*> Nodes;
+		core::Array<PassData2D> Passes;
 		uint32_t FrameNumber = 0;
-		Camera2D* Camera2dObj;
 		int FrameDataTurnIndex = 0;
 
 	}; // FrameData2D

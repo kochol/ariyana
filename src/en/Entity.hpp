@@ -3,36 +3,20 @@
 #include "core/defines.hpp"
 #include "core/containers/Array.hpp"
 #include "ComponentHandle.hpp"
+#include "Node.hpp"
 
 namespace ari
 {
 	namespace en
 	{
 		struct Entity;
-		struct World;
-
-		struct EntityHandle
-		{
-			uint32_t Handle = ari::core::aInvalidHandle;
-			uint32_t Index = ari::core::aInvalidHandle;
-			Entity* entity = nullptr;
-
-			Entity* operator -> () const
-			{
-				return this->entity;
-			}
-
-			bool IsValid() 
-			{ 
-				if (this->entity == nullptr || Handle == ari::core::aInvalidHandle || Index == ari::core::aInvalidHandle) 
-					return false; 
-				return ari::core::HandleManager<EntityHandle>::IsHandleValid(Handle);
-			} 
-		};
+		struct World;		
 			
-		struct Entity
+		struct Entity : public Node
         {
 			friend struct World;
+
+			ARI_COMPONENT(Entity);
 
 			//! Should network replicates this entity?
 			bool bReplicates = false;
@@ -49,8 +33,21 @@ namespace ari
 					{
 						if (it_cmp->IsBased)
 							continue;
-						uint32_t h = it_cmp->handle;
-						_func(it->key, h, it_cmp->cmp);
+						_func(it->key, it_cmp->handle, it_cmp->cmp);
+					}
+				}
+			}
+
+			template<typename T, typename FUNC>
+			void GetComponents(FUNC _func)
+			{
+				if (mComponents.Contains(T::Id))
+				{
+					auto& l = mComponents[T::Id];
+					for (auto& cmp : l)
+					{
+						ComponentHandle<T> h = { cmp.handle, cmp.index, reinterpret_cast<T*>(cmp.cmp), this };
+						_func(h);
 					}
 				}
 			}
