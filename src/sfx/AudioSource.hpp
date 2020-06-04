@@ -1,17 +1,15 @@
 #pragma once
 
-#include "en/Node.hpp"
+#include "sfx.hpp"
 
 namespace ari::en
 {
 	namespace sfx
 	{
-		class Sfx : public Node
+		class AudioSource : public Sfx
 		{
 		public:
-			ARI_COMPONENT(Sfx)
-
-			virtual ~Sfx() = default;
+			ARI_COMPONENT_CHILD(AudioSource, Sfx)
 		};
 	} // namespace sfx
 

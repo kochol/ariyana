@@ -1,7 +1,10 @@
 fips_begin_module(ari_sfx)
 	fips_vs_warning_level(3)
-	fips_deps(ari_io soloud)
+	fips_deps(ari_en soloud)
     fips_files(
-        sfx.hpp         sfx.cpp
+		AudioSource.hpp		AudioSource.cpp	
+        sfx.hpp				sfx.cpp
+		sfxSystem.hpp		sfxSystem.cpp
+
     )
 fips_end_module()

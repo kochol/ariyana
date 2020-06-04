@@ -1,13 +1,13 @@
-#include "sfx.hpp"
-#include "soloud.h"
+#pragma once
+
+#include"AudioSource.hpp"
 #include "en/ComponentManager.hpp"
-#include "en/World.hpp"
 
 namespace ari::en
 {
 	namespace sfx
 	{
-		ARI_COMPONENT_IMP(Sfx)
+		ARI_COMPONENT_IMP(AudioSource)
 
 	} // namespace sfx
 
