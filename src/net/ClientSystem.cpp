@@ -72,8 +72,8 @@ namespace ari::net
 		if (!adapter)
 		{
 			adapter = core::Memory::New<GameAdapter>(m_pWorld, nullptr, this);
-			m_pAdapter = adapter;
 		}
+		m_pAdapter = adapter;
 		m_connectionConfig = config;
 		m_pClient = core::Memory::New<yojimbo::Client>(
 			yojimbo::GetDefaultAllocator(), yojimbo::Address("0.0.0.0"), 

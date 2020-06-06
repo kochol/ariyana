@@ -45,6 +45,9 @@ CARI_API uint32_t HashStringFNV32(char* _str);
 
 CARI_API void ari_os_sleep(int ms);
 
+// log functions
+CARI_API void ari_log_debug(char* _text);
+
 // Time functions
 CARI_API void ari_tm_init();
 CARI_API uint64_t ari_tm_now();

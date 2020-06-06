@@ -16,6 +16,7 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	bool InitNetwork()
 	{
+		yojimbo_log_level(YOJIMBO_LOG_LEVEL_INFO);
 		return InitializeYojimbo();
 	}
 
