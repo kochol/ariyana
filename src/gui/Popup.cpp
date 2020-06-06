@@ -1,10 +1,13 @@
 #include "Popup.hpp"
 #include "imgui.h"
+#include "en/ComponentManager.hpp"
 
 namespace ari
 {
 	namespace gui
 	{
+		ARI_COMPONENT_IMP_CHILD(Popup, Gui)
+
 		bool Popup::BeginRender()
 		{
 			if (m_bOpenPopup)

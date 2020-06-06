@@ -1,10 +1,13 @@
 #include "Label.hpp"
 #include "imgui.h"
+#include "en/ComponentManager.hpp"
 
 namespace ari
 {
 	namespace gui
 	{
+		ARI_COMPONENT_IMP_CHILD(Label, Gui)
+			
 		Label::Label() : Text(nullptr)
 		{
 		}

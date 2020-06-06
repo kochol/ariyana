@@ -1,5 +1,6 @@
 #pragma once
 #include "Gui.hpp"
+#include "en/World.hpp"
 
 namespace ari
 {
@@ -8,6 +9,8 @@ namespace ari
 		class Popup : public Gui
 		{
 		public:
+
+			ARI_COMPONENT_CHILD(Popup, Gui)
 
 			bool BeginRender() override;
 
