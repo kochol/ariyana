@@ -2,17 +2,14 @@
 
 #include "en/Node.hpp"
 
-namespace ari::en
+namespace ari::sfx
 {
-	namespace sfx
+	class Sfx : public Node
 	{
-		class Sfx : public Node
-		{
-		public:
-			ARI_COMPONENT(Sfx)
+	public:
+		ARI_COMPONENT(Sfx)
 
-			virtual ~Sfx() = default;
-		};
-	} // namespace sfx
+		virtual ~Sfx() = default;
+	};
 
-} // namespace ari
+} // namespace ari::sfx

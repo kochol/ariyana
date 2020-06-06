@@ -4,24 +4,20 @@
 #include "sfx.hpp"
 #include "soloud.h"
 
-namespace ari::en
+namespace ari::sfx
 {
-	namespace sfx
+	class SfxSystem : public en::System
 	{
-		class SfxSystem : public en::System
-		{
-		public:
+	public:
 
-			SfxSystem();
+		SfxSystem();
 
-			~SfxSystem();
+		~SfxSystem();
 
-			void Configure(World* _world) override;
+		void Configure(World* _world) override;
 
-			void Unconfigure(World* _world) override;
+		void Unconfigure(World* _world) override;
 
-		};
+	};
 
-	} // namespace sfx
-
-} // namespace ari
+} // namespace ari::sfx

@@ -3,12 +3,9 @@
 #include"AudioSource.hpp"
 #include "en/ComponentManager.hpp"
 
-namespace ari::en
+namespace ari::sfx
 {
-	namespace sfx
-	{
-		ARI_COMPONENT_IMP(AudioSource)
+	ARI_COMPONENT_IMP(AudioSource)
 
-	} // namespace sfx
 
-} // namespace ari
+} // namespace ari::sfx

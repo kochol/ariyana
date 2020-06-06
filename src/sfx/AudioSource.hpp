@@ -1,16 +1,14 @@
 #pragma once
 
 #include "sfx.hpp"
+#include "en/World.hpp"
 
-namespace ari::en
+namespace ari::sfx
 {
-	namespace sfx
+	class AudioSource : public Sfx
 	{
-		class AudioSource : public Sfx
-		{
-		public:
-			ARI_COMPONENT_CHILD(AudioSource, Sfx)
-		};
-	} // namespace sfx
+	public:
+		ARI_COMPONENT_CHILD(AudioSource, Sfx)
+	};
 
-} // namespace ari
+} // namespace ari::sfx

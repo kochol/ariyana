@@ -3,12 +3,10 @@
 #include "en/ComponentManager.hpp"
 #include "en/World.hpp"
 
-namespace ari::en
-{
-	namespace sfx
+	namespace ari::sfx
 	{
 		ARI_COMPONENT_IMP(Sfx)
 
-	} // namespace sfx
+	} 
 
-} // namespace ari
+} // namespace ari::sfx
