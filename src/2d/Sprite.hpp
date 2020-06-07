@@ -24,11 +24,20 @@ namespace ari::en
 
 		gfx::TextureHandle Texture;
 		sx_vec4 v4Color;
+		sx_vec4 UV;
 
 		static void Init(RenderSystem2D* render_system_2D);
 		static void Shutdown();
 
 		void SetColor(float r, float g, float b, float a);
+
+		void SetUV(float x, float sx, float y, float sy)
+		{
+			UV.x = x;
+			UV.y = y;
+			UV.z = sx;
+			UV.w = sy;
+		}
 
 		static gfx::BufferHandle m_sVBPos;
 		static gfx::BufferHandle m_sIB;
