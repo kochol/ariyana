@@ -131,6 +131,9 @@ namespace ari::net
 	{
 		a_assert(_rpc_type == RpcType::Server);
 
+		if (!m_pClient)
+			return;
+
 		if (!m_pClient->IsConnected())
 			return;
 
