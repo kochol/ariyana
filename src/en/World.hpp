@@ -159,7 +159,6 @@ namespace ari::en
 			void* cmp;
 			Entity* entity;
 			bool IsBased = false;
-			bool IsDisposed = false;
 		};
 
 		core::Map<uint32_t /* cmp id */,
@@ -278,7 +277,7 @@ namespace ari::en
 		for (auto it = m.begin(); it != m.end(); it++)
 		{
 			const cmp_handle& h = it->value;
-			if (h.IsDisposed)
+			if (h.entity == nullptr)
 				continue;
 			uint32_t i = core::HandleManager<T>::FindIndex(h);
 			ComponentHandle<T> cmp = { h.handle, i, core::ObjectPool<T>::GetByIndex(i), h.entity };
@@ -295,7 +294,7 @@ namespace ari::en
 		for (auto it = m.begin(); it != m.end(); ++it)
 		{
 			const cmp_handle& h = it->value;
-			if (h.IsDisposed)
+			if (h.entity == nullptr)
 				continue;
 			uint32_t i = core::HandleManager<BASE>::FindIndex(h.handle);
 			ComponentHandle<BASE> cmp = { h.handle, i, core::MemoryPool<BASE>::GetByIndex(i), h.entity };

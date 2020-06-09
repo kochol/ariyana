@@ -243,14 +243,10 @@ namespace ari
 				cmp_dispose_queue_array.Add(&cmp_dispose_queue[2]);
 			}
 			cmp_dispose_queue[m_iTurnIndex].Add({ _id, base_id, handle, index });
-			cmp_handle& c = m_mComponents[_id][handle];
-			c.IsDisposed = true;
-			c.entity = nullptr;
+			m_mComponents[_id][handle].entity = nullptr;
 			if (_id != base_id)
 			{
-				cmp_handle& d = m_mComponents[base_id][handle];
-				d.IsDisposed = true;
-				d.entity = nullptr;
+				m_mComponents[base_id][handle].entity = nullptr;
 			}
 		}
 
