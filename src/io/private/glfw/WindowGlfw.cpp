@@ -33,6 +33,13 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
+		void SetWindowAndFrameBufferSize(GLFWwindow* _window, ari_event* _event)
+		{
+			glfwGetWindowSize(_window, &_event->window_width, &_event->window_height);
+			glfwGetFramebufferSize(_window, &_event->framebuffer_width, &_event->framebuffer_height);
+		}
+
+		//------------------------------------------------------------------------------
 		void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
 			if (!g_application)
@@ -51,6 +58,7 @@ namespace ari
 
 			event.key_code = ari_keycode(key);
 			event.modifiers = mods;
+			SetWindowAndFrameBufferSize(window, &event);
 
 			g_application->OnEvent(&event, get_window_handle(window));
 		}
@@ -64,6 +72,7 @@ namespace ari
 			ari_event event;
 			event.type = ARI_EVENTTYPE_CHAR;
 			event.char_code = codepoint;
+			SetWindowAndFrameBufferSize(window, &event);
 
 			g_application->OnEvent(&event, get_window_handle(window));
 		}
@@ -91,6 +100,7 @@ namespace ari
 			event.mouse_x = float(xpos);
 			event.mouse_y = float(ypos);
 			event.mouse_button = get_mouse_button(window);
+			SetWindowAndFrameBufferSize(window, &event);
 
 			g_application->OnEvent(&event, get_window_handle(window));
 		}
@@ -113,10 +123,12 @@ namespace ari
 				// The cursor left the content area of the window
 				event.type = ARI_EVENTTYPE_MOUSE_LEAVE;
 			}
+			SetWindowAndFrameBufferSize(window, &event);
 			g_application->OnEvent(&event, get_window_handle(window));
 		}
 		
 
+		//------------------------------------------------------------------------------
 		void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 		{
 			if (!g_application)
@@ -141,6 +153,8 @@ namespace ari
 			event.mouse_x = float(xpos);
 			event.mouse_y = float(ypos);
 
+			SetWindowAndFrameBufferSize(window, &event);
+
 			g_application->OnEvent(&event, get_window_handle(window));
 		}
 
@@ -154,6 +168,7 @@ namespace ari
 			event.type = ARI_EVENTTYPE_MOUSE_SCROLL;
 			event.scroll_x = float(xoffset);
 			event.scroll_y = float(yoffset);
+			SetWindowAndFrameBufferSize(window, &event);
 
 			g_application->OnEvent(&event, get_window_handle(window));
 		}
@@ -231,8 +246,8 @@ namespace ari
         core::RectI GetWindowSize(const WindowHandle& handle)
 		{
 			core::RectI v;
-            glfwGetFramebufferSize(g_Windows[handle.Index], &v.width, &v.height);
-
+			glfwGetWindowSize(g_Windows[handle.Index], &v.width, &v.height);
+			
 			return v;
 		}
 

@@ -72,8 +72,8 @@ namespace ari::net
 		if (!adapter)
 		{
 			adapter = core::Memory::New<GameAdapter>(m_pWorld, nullptr, this);
-			m_pAdapter = adapter;
 		}
+		m_pAdapter = adapter;
 		m_connectionConfig = config;
 		m_pClient = core::Memory::New<yojimbo::Client>(
 			yojimbo::GetDefaultAllocator(), yojimbo::Address("0.0.0.0"), 
@@ -130,6 +130,9 @@ namespace ari::net
 	void ClientSystem::Call_C_RPC(void* rpc, bool _reliable, uint32_t _index, RpcType _rpc_type, int client_id)
 	{
 		a_assert(_rpc_type == RpcType::Server);
+
+		if (!m_pClient)
+			return;
 
 		if (!m_pClient->IsConnected())
 			return;

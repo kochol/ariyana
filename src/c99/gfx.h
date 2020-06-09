@@ -2,6 +2,7 @@
 #define ARI_GFX_H
 
 #include "macros.h"
+#include "core.h"
 
 struct WindowSetup
 {
@@ -22,6 +23,7 @@ struct GfxSetup
 // Globals
 CARI_API bool SetupGfx(GfxSetup& setup);
 CARI_API uint64_t* GetFrameNumberPointer();
+CARI_API void SetClearColor(Quat* _quat);
 
 // Texture
 CARI_HANDLE(TextureHandle)

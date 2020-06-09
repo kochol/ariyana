@@ -2,6 +2,7 @@
 #include "core/memory/Memory.hpp"
 #include "en/World.hpp"
 #include "en/Node.hpp"
+#include "core/log.h"
 #include "en/System.hpp"
 
 // World
@@ -45,12 +46,14 @@ void DeleteSystem(void* _obj)
 EntityHandle CreateEntityWorld()
 {
 	const auto e = ari::en::World::CreateEntity();
+    log_debug("Entiy h: %d i: %d obj: %p", e.Handle, e.Index, e.entity);
     return { e.Handle, e.Index, e.entity };
 }
 
-void DeleteEntityWorld(EntityHandle _entity)
+void DeleteEntityWorld(EntityHandle* _entity)
 {
-    const union { EntityHandle c; ari::en::EntityHandle cpp; } h = { _entity };
+    log_debug("Entiy h: %d i: %d obj: %p", _entity->Handle, _entity->Index, _entity->Entity);
+    const union { EntityHandle c; ari::en::EntityHandle cpp; } h = { *_entity };
     ari::en::World::DeleteEntity(h.cpp);
 }
 

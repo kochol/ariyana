@@ -31,12 +31,14 @@ namespace ari::en
 	{
 		_isRenderable = true;
 		v4Color = sx_vec4f(1, 1, 1, 1);
+		UV = sx_vec4f(0, 0, 1, 1);
 	}
 
 	void Sprite::Render(const int& _frameTurnIndex)
 	{
 		ari_vs_params_t vs_params;
 		vs_params.mvp = gfx::GetViewProjMatrix() * _finalMat[_frameTurnIndex];
+		vs_params.texuv = UV;
 
 		ari_fs_params_t fs_params;
 		fs_params.color = v4Color;

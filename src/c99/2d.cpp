@@ -85,7 +85,8 @@ Sprite2dMembers GetSprite2dMembers(void* _node)
     auto node = reinterpret_cast<ari::en::Sprite*>(_node);
     return {
         reinterpret_cast<TextureHandle*>(&node->Texture),
-		reinterpret_cast<Color*>(&node->v4Color)
+		reinterpret_cast<Color*>(&node->v4Color),
+        reinterpret_cast<Quat*>(&node->UV)
     };
 }
 

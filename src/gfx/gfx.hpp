@@ -486,6 +486,8 @@ namespace ari
 
 		uint64_t* GetFrameNumberPointer();
 
+		void SetClearColor(const sx_vec4& _color);
+
 		void SetViewportSize(const core::RectI& _rect);
 
 		core::RectI GetViewportSize();

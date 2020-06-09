@@ -6,6 +6,7 @@
 
 uniform vs_params {
     mat4 mvp;
+    vec4 texuv;
 };
 
 in vec4 pos;
@@ -14,7 +15,7 @@ out vec2 uv;
 
 void main() {
     gl_Position = mvp * vec4(pos.xy, 0.0f, 1.0f);
-    uv = uv0;
+    uv = uv0 * texuv.zw + texuv.xy;
 }
 @end
 

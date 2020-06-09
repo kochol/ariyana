@@ -213,6 +213,12 @@ namespace ari
 			return g_shaders[int(shader)];
 		}
 		
+		sx_vec4 g_clear_color = sx_vec4f(.5f, .5f, .5f, 1.0);
+		void SetClearColor(const sx_vec4& _color)
+		{
+			g_clear_color = _color;
+		}
+
 		//------------------------------------------------------------------------------
 		void SetViewportSize(const core::RectI& _rect)
 		{
@@ -530,7 +536,11 @@ namespace ari
 		{
 			sg_pass_action pass;
 			core::Memory::Fill(&pass, sizeof(sg_pass_action), 0);
+			pass.colors->action = SG_ACTION_CLEAR;
+			core::Memory::Copy(g_clear_color.f, pass.colors->val, sizeof(g_clear_color.f));
+
 			const core::RectI r = io::GetWindowSize(_handle);
+
 			sg_begin_default_pass(&pass, r.width, r.height);
 		}
 

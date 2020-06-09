@@ -20,6 +20,11 @@ uint64_t* GetFrameNumberPointer()
     return ari::gfx::GetFrameNumberPointer();
 }
 
+void SetClearColor(Quat* _quat)
+{
+    ari::gfx::SetClearColor(*(sx_vec4*)_quat);
+}
+
 // Texture
 bool IsValidTexture(uint32_t& _handle)
 {

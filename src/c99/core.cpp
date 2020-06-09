@@ -2,6 +2,7 @@
 #include "sx/hash.h"
 #include "sx/timer.h"
 #include "sx/os.h"
+#include "core/log.h"
 
 uint32_t HashStringFNV32(char* _str)
 {
@@ -11,6 +12,12 @@ uint32_t HashStringFNV32(char* _str)
 void ari_os_sleep(int ms)
 {
 	sx_os_sleep(ms);
+}
+
+// log functions
+void ari_log_debug(char* _text)
+{
+	log_debug(_text);
 }
 
 // Time functions
