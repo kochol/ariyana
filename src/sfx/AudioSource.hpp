@@ -2,13 +2,12 @@
 
 #include "sfx.hpp"
 #include "en/World.hpp"
-
+#include ""
 namespace ari::sfx
 {
-	class AudioSource : public Sfx
+	class AudioSource 
 	{
-	public:
-		ARI_COMPONENT_CHILD(AudioSource, Sfx)
+	
 	};
 
 } // namespace ari::sfx

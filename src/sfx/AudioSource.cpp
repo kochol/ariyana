@@ -5,7 +5,6 @@
 
 namespace ari::sfx
 {
-	ARI_COMPONENT_IMP(AudioSource)
 
 
 } // namespace ari::sfx
