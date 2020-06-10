@@ -232,7 +232,7 @@ namespace ari
 			}
 		}
 
-		void World::AddComponentToDispose(const uint32_t& _id, const uint32_t& base_id, uint32_t& handle, uint32_t& index) const
+		void World::AddComponentToDispose(const uint32_t& _id, const uint32_t& base_id, uint32_t& handle, uint32_t& index)
 		{
 			if (cmp_dispose_queue == nullptr)
 			{
@@ -243,6 +243,11 @@ namespace ari
 				cmp_dispose_queue_array.Add(&cmp_dispose_queue[2]);
 			}
 			cmp_dispose_queue[m_iTurnIndex].Add({ _id, base_id, handle, index });
+			m_mComponents[_id][handle].entity = nullptr;
+			if (_id != base_id)
+			{
+				m_mComponents[base_id][handle].entity = nullptr;
+			}
 		}
 
 	} // en

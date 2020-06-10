@@ -151,7 +151,7 @@ namespace ari::en
 
 	private:
 
-		void AddComponentToDispose(const uint32_t& _id, const uint32_t& base_id, uint32_t& handle, uint32_t& index) const;
+		void AddComponentToDispose(const uint32_t& _id, const uint32_t& base_id, uint32_t& handle, uint32_t& index);
 
 		struct cmp_handle
 		{
@@ -277,6 +277,8 @@ namespace ari::en
 		for (auto it = m.begin(); it != m.end(); it++)
 		{
 			const cmp_handle& h = it->value;
+			if (h.entity == nullptr)
+				continue;
 			uint32_t i = core::HandleManager<T>::FindIndex(h);
 			ComponentHandle<T> cmp = { h.handle, i, core::ObjectPool<T>::GetByIndex(i), h.entity };
 			_func(cmp);
@@ -292,6 +294,8 @@ namespace ari::en
 		for (auto it = m.begin(); it != m.end(); ++it)
 		{
 			const cmp_handle& h = it->value;
+			if (h.entity == nullptr)
+				continue;
 			uint32_t i = core::HandleManager<BASE>::FindIndex(h.handle);
 			ComponentHandle<BASE> cmp = { h.handle, i, core::MemoryPool<BASE>::GetByIndex(i), h.entity };
 			_func(cmp);
