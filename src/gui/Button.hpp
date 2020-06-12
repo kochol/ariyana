@@ -2,6 +2,7 @@
 
 #include "Gui.hpp"
 #include "core/Delegate.hpp"
+#include "en/World.hpp"
 
 namespace ari
 {
@@ -10,6 +11,8 @@ namespace ari
 		class Button : public Gui
 		{
 		public:
+
+			ARI_COMPONENT_CHILD(Button, Gui)
 
 			bool BeginRender() override;
 

@@ -2,6 +2,7 @@
 #include "Gui.hpp"
 #include "imgui.h"
 #include "core/Delegate.hpp"
+#include "en/World.hpp"
 
 namespace ari
 {
@@ -10,6 +11,8 @@ namespace ari
 		class Image : public Gui
 		{
 		public:
+
+			ARI_COMPONENT_CHILD(Image, Gui)
 
 			Image();
 

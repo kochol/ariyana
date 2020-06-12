@@ -1,5 +1,6 @@
 #pragma once
 #include "Gui.hpp"
+#include "en/World.hpp"
 
 namespace ari
 {
@@ -8,6 +9,8 @@ namespace ari
 		class TextBox : public Gui
 		{
 		public:
+
+			ARI_COMPONENT_CHILD(TextBox, Gui)
 
 			TextBox(int maxLength = 128);
 
