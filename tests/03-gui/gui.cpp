@@ -26,7 +26,7 @@ public:
 		auto entity = m_world.CreateEntity();
 		auto window = m_world.CreateComponent<gui::Window, gui::Gui>();
 		window.Component->Name = "Test Gui";
-		m_world.AddComponent(entity, window);
+		m_world.AddDerivedComponent<gui::Window, gui::Gui>(entity, window);
 		auto btn = m_world.CreateComponent<gui::Button, gui::Gui>();
 		btn->Label = "Click me!";
 		window.Component->AddChild(btn.Component);

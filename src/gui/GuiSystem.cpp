@@ -69,6 +69,22 @@ namespace ari
 			return _state == UpdateState::MainThreadState;
 		}
 
+		void GuiSystem::RenderGui(Entity* entity) const
+		{
+			entity->GetComponents<Gui>([this](const ComponentHandle<Gui>& n)
+				{
+					RenderGui(n.Component);
+				});
+			if (entity->HasChildWithId(Entity::Id))
+			{
+				auto l = entity->GetChildren(Entity::Id);
+				for (auto e : l)
+				{
+					RenderGui(reinterpret_cast<Entity*>(e));
+				}
+			}
+		}
+
 		void GuiSystem::RenderGui(Gui * _gui) const
 		{
 			if (!_gui->Visible)
@@ -82,8 +98,17 @@ namespace ari
 
 			if (_gui->BeginRender())
 			{
-				for (auto child: _gui->GetChildren(_gui->GetId()))
-					this->RenderGui(static_cast<Gui*>(child));
+				_gui->GetChildren([this](Node* n)
+					{
+						if (n->GetBaseId() == Gui::Id)
+						{
+							this->RenderGui(reinterpret_cast<Gui*>(n));
+						}
+						else if (n->GetId() == Entity::Id)
+						{
+							this->RenderGui(reinterpret_cast<Entity*>(n));
+						}
+					});
 			}
 			_gui->EndRender();
 		}
