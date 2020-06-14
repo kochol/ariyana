@@ -4,7 +4,6 @@
 #include "sfx/AudioSource.hpp"
 
 // Globals
-
 void InitSfx()
 {
 	ari::sfx::InitSfx();
@@ -13,6 +12,11 @@ void InitSfx()
 void ShutdownSfx()
 {
 	ari::sfx::ShutdownSfx();
+}
+
+bool IsValidChannel(uint32_t& _handle)
+{
+	return ari::core::HandleManager<ari::sfx::AudioSourceHandle>::IsHandleValid(_handle);
 }
 
 ChannelHandle Play(void* _audio)
@@ -25,7 +29,14 @@ ChannelHandle Play(void* _audio)
 
 	return r.c;
 }
-//
+
+// AudioSource
+bool IsValidAudio(uint32_t& _handle)
+{
+	return ari::core::HandleManager<ari::sfx::AudioSourceHandle>::IsHandleValid(_handle);
+}
+
+
 AudioSourceHandle LoadAudioSource(char* _path)
 {
 	union
