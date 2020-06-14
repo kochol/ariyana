@@ -1,9 +1,12 @@
 #include "Image.hpp"
+#include "en/ComponentManager.hpp"
 
 namespace ari
 {
 	namespace gui
 	{
+		ARI_COMPONENT_IMP_CHILD(Image, Gui)
+
 		Image::Image()
 		{
 //			ImageUi = Oryol::IMUI::AllocImage();

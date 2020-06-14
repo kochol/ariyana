@@ -1,0 +1,9 @@
+FileVersion = 1
+Dependencies = {corlib = "*", Ariyana_beef = "*"}
+
+[Project]
+Name = "t01Init"
+StartupObject = "t01Init.Program"
+
+[Configs.Debug.Win64]
+BeefLibType = "DynamicDebug"

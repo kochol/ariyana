@@ -41,16 +41,16 @@ Node2dHandle CreateCamera2dComponent()
     return h.c;
 }
 
-void AddCamera2dToWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _camera)
+void AddCamera2dToWorld(void* _world, EntityHandle* _entity, Node2dHandle* _camera)
 {
-    union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Camera2D> cpp; } cam = { _camera };
+    union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Camera2D> cpp; } cam = { *_camera };
     const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
     reinterpret_cast<ari::en::World*>(_world)->AddDerivedComponent<ari::en::Camera2D, ari::en::Node2D>(en.cpp, cam.cpp);
 }
 
-void RemoveCamera2dFromWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _camera, bool _dispose)
+void RemoveCamera2dFromWorld(void* _world, EntityHandle* _entity, Node2dHandle* _camera, bool _dispose)
 {
-    union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Camera2D> cpp; } cam = { _camera };
+    union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Camera2D> cpp; } cam = { *_camera };
     const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
     reinterpret_cast<ari::en::World*>(_world)->RemoveComponent(en.cpp, cam.cpp, _dispose);
 }
@@ -64,16 +64,16 @@ Node2dHandle CreateSprite2dComponent()
     return h.c;
 }
 
-void AddSprite2dToWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node)
+void AddSprite2dToWorld(void* _world, EntityHandle* _entity, Node2dHandle* _node)
 {    
-    union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Sprite> cpp; } node = { _node };
+    union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Sprite> cpp; } node = { *_node };
     const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
     reinterpret_cast<ari::en::World*>(_world)->AddDerivedComponent<ari::en::Sprite, ari::en::Node2D>(en.cpp, node.cpp);
 }
 
-void RemoveSprite2dFromWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node, bool _dispose)
+void RemoveSprite2dFromWorld(void* _world, EntityHandle* _entity, Node2dHandle* _node, bool _dispose)
 {
-    union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Sprite> cpp; } node = { _node };
+    union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Sprite> cpp; } node = { *_node };
     const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
     reinterpret_cast<ari::en::World*>(_world)->RemoveComponent(en.cpp, node.cpp, _dispose);
 }
@@ -99,16 +99,16 @@ Node2dHandle CreateCanvasComponent()
 	return h.c;
 }
 
-void AddCanvasToWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node)
+void AddCanvasToWorld(void* _world, EntityHandle* _entity, Node2dHandle* _node)
 {
-	union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Canvas> cpp; } node = { _node };
+	union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Canvas> cpp; } node = { *_node };
 	const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
 	reinterpret_cast<ari::en::World*>(_world)->AddDerivedComponent<ari::en::Canvas, ari::en::Node2D>(en.cpp, node.cpp);
 }
 
-void RemoveCanvasFromWorld(void* _world, EntityHandle* _entity, const Node2dHandle& _node, bool _dispose)
+void RemoveCanvasFromWorld(void* _world, EntityHandle* _entity, Node2dHandle* _node, bool _dispose)
 {
-	union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Canvas> cpp; } node = { _node };
+	union { Node2dHandle c{}; ari::en::ComponentHandle<ari::en::Canvas> cpp; } node = { *_node };
 	const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
 	reinterpret_cast<ari::en::World*>(_world)->RemoveComponent(en.cpp, node.cpp, _dispose);
 }

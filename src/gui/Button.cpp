@@ -1,12 +1,16 @@
 #include "Button.hpp"
 #include "imgui.h"
+#include "en/ComponentManager.hpp"
 
 namespace ari
 {
 	namespace gui
 	{
+		ARI_COMPONENT_IMP_CHILD(Button, Gui)
+
 		bool Button::BeginRender()
 		{
+
 			if (ImGui::Button(Label) && OnClick.IsBound())
 			{
 				OnClick.Execute();

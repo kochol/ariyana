@@ -1,0 +1,6 @@
+FileVersion = 1
+Projects = {Ariyana_beef = {Path = "."}, t01Init = {Path = "tests/t01Init"}, t02Network = {Path = "tests/t02Network"}, t02NetworkClient = {Path = "tests/t02NetworkClient"}}
+ExtraPlatforms = ["armv7-none-linux-android21"]
+
+[Workspace]
+StartupProject = "t02Network"

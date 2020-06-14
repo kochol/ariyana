@@ -1,9 +1,12 @@
 #include "Window.hpp"
+#include "en/ComponentManager.hpp"
 
 namespace ari
 {
 	namespace gui
 	{
+		ARI_COMPONENT_IMP_CHILD(Window, Gui)
+
 		Window::Window() : Name(nullptr), CloseButton(false), isOpen(true), Flags(0)
 		{
 		}

@@ -34,6 +34,7 @@ namespace ari
 
 		private:
 
+			void RenderGui(Entity* _entity) const;
 			void RenderGui(Gui* _gui) const;
 
 		};

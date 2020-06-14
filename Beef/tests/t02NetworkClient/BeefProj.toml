@@ -1,0 +1,6 @@
+FileVersion = 1
+Dependencies = {corlib = "*", Ariyana_beef = "*"}
+
+[Project]
+Name = "t02NetworkClient"
+StartupObject = "Program"

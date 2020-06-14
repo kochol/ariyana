@@ -1,6 +1,7 @@
 #pragma once
 #include "Gui.hpp"
 #include "imgui.h"
+#include "en/World.hpp"
 
 namespace ari
 {
@@ -9,6 +10,9 @@ namespace ari
 		class Window : public Gui
 		{
 		public:
+
+			ARI_COMPONENT_CHILD(Window, Gui)
+
 			Window();
 
 			~Window() = default;
