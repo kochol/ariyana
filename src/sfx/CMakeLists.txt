@@ -4,7 +4,6 @@ fips_begin_module(ari_sfx)
     fips_files(
 		AudioSource.hpp		AudioSource.cpp	
         sfx.hpp				sfx.cpp
-		sfxSystem.hpp		sfxSystem.cpp
 
     )
 fips_end_module()

@@ -1,13 +1,15 @@
 #include "sfx.hpp"
-#include "core/log.h"
 #include "soloud.h"
-#include "en/ComponentManager.hpp"
-#include "en/World.hpp"
+
+#include "core/log.h"
 
 namespace ari::sfx
 {
-	SoLoud::Soloud* soloud;
+	SoLoud::Soloud* soloud =
+		core::Memory::New<SoLoud::Soloud>();
+
 	
+
 	//------------------------------------------------------------------------------
 	void InitSfx()
 	{
@@ -22,9 +24,11 @@ namespace ari::sfx
 		soloud->deinit();
 	}
 
-	int Play(AudioSource* audioSource)
+	//------------------------------------------------------------------------------
+	ChannelHandle Play(SoLoud::Wav& _wave)
 	{
-
+		uint32_t channelId = soloud->play(_wave);
+		return { core::HandleManager<ChannelHandle>::CreateHandleByIndex(channelId), channelId };
 	}
 
 	//------------------------------------------------------------------------------

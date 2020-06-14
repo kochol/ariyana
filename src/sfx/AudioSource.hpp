@@ -1,13 +1,11 @@
 #pragma once
 
-#include "sfx.hpp"
-#include "en/World.hpp"
-#include ""
+#include "core/defines.hpp"
+
 namespace ari::sfx
 {
-	class AudioSource 
-	{
-	
-	};
+	ARI_HANDLE(AudioSourceHandle);
 
+	AudioSourceHandle LoadAudioSource(char* _path);
+		
 } // namespace ari::sfx
