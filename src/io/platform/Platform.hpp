@@ -11,8 +11,8 @@ namespace ari::io
 
     /**
      * @brief Get the unique Device ID.
-     * This function works on android and windows for now
-     * On windows it hash the mac address of network adapter
+     * This function works on android, Linux and windows for now
+     * On windows and Linux it hash the mac address of network adapter
      * On Android it hash the android device ID so it can change if user factory reset her/his device.
      * @return String 
      */
