@@ -1,0 +1,3 @@
+[submodule "Beef/deps/CurlBeef"]
+	path = Beef/deps/CurlBeef
+	url = https://github.com/kochol/CurlBeef.git
