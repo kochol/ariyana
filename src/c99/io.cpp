@@ -4,6 +4,7 @@
 #include "io/Window.hpp"
 #include "fs_local/FileSystemLocal.hpp"
 #include "gfx/Application.hpp"
+#include "io/platform/Platform.hpp"
 
 extern ari::Application* g_application;
 on_event_cb* g_OnEvent = nullptr;
@@ -73,6 +74,11 @@ void GetWindowSize(WindowHandle* _handle, int* width, int* height)
 	const auto r = ari::io::GetWindowSize(w.cpp);
 	*width = r.width;
 	*height = r.height;
+}
+
+CARI_API uint32_t GetDeviceID()
+{
+	return ari::io::GetDeviceID();
 }
 
 // FileSystem
