@@ -87,8 +87,7 @@ namespace ari.user
 			login.Url.Append("Android/");
 #endif
 			let os = scope OperatingSystem();
-			//os.ToString(login.Url);
-			login.Url.Append("WDW");
+			os.ToString(login.Url);
 
 			request_queue.Push(ref login);
 			ThreadWaitEvent.Set();
