@@ -60,4 +60,13 @@ CARI_API double ari_tm_ms(uint64_t ticks);
 CARI_API double ari_tm_us(uint64_t ticks);
 CARI_API double ari_tm_ns(uint64_t ticks);
 
+// SPSC Queue
+CARI_API void* ari_queue_spsc_create(int item_sz, int capacity);
+CARI_API void ari_queue_spsc_destroy(void* queue);
+CARI_API bool ari_queue_spsc_produce(void* queue, const void* data);
+CARI_API bool ari_queue_spsc_consume(void* queue, void* data);
+CARI_API bool ari_queue_spsc_grow(void* queue);
+CARI_API bool ari_queue_spsc_full(const void* queue);
+
+
 #endif // ARI_CORE_H

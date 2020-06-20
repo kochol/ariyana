@@ -1,4 +1,5 @@
 FileVersion = 1
+Dependencies = {corlib = "*", CurlBeef = "*"}
 
 [Project]
 Name = "Ariyana_beef"
