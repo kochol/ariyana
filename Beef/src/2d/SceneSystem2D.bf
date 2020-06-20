@@ -10,6 +10,7 @@ namespace ari
 		public this()
 		{
 			_obj = CreateSceneSystem2D();
+			IsNativeSystem = true;
 		}
 	}
 }

@@ -11,6 +11,7 @@ namespace ari
 		{
 			m_network_type = SystemNetworkType.Server;
 			_obj = CreateServerSystem();
+			IsNativeSystem = true;
 		}
 
 		[CLink]

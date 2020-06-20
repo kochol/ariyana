@@ -1,10 +1,12 @@
 using System;
+using System.Collections;
 
 namespace ari
 {
 	public class World
 	{
 		void* _obj = null;
+		List<AriSystem> BeefSystems = new List<AriSystem>() ~ DeleteContainerAndItems!(_);
 
 		// Constructor
 		[CLink]
@@ -30,7 +32,9 @@ namespace ari
 
 		public void Update(float _elapsedTime)
 		{
-			 UpdateWorld(_obj, _elapsedTime);
+			for (var sys in BeefSystems)
+				sys.[Friend]Update(this, _elapsedTime);
+			UpdateWorld(_obj, _elapsedTime);
 		}
 
 		// Add system
@@ -39,7 +43,10 @@ namespace ari
 
 		public void AddSystem(AriSystem pSystem)
 		{
-			AddSystemToWorld(_obj, pSystem.[Friend]_obj);
+			if (pSystem.[Friend]IsNativeSystem)
+				AddSystemToWorld(_obj, pSystem.[Friend]_obj);
+			else
+				BeefSystems.Add(pSystem);
 			pSystem.[Friend]Configure(this);
 		}
 
