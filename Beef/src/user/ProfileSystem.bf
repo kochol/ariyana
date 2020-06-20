@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace ari.user
 {
-	public class ProfileServer
+	public class ProfileSystem : AriSystem
 	{
 		struct Request
 		{
@@ -22,7 +22,8 @@ namespace ari.user
 		private Thread WorkerThreadObj = null ~ delete _;
 		private WaitEvent ThreadWaitEvent = new WaitEvent() ~ delete _;
 		private bool ThreadRun = true;
-		private ari.core.SpScQueue<Request> request_queue = new ari.core.SpScQueue<Request>() ~ delete _; 
+		private ari.core.SpScQueue<Request> request_queue = new ari.core.SpScQueue<Request>() ~ delete _;
+		private ari.core.SpScQueue<Request> response_queue = new ari.core.SpScQueue<Request>() ~ delete _; 
 
 		private void WorkerThread()
 		{
@@ -35,6 +36,7 @@ namespace ari.user
 					{
 						session.Url = r.Url;
 						r.Result = session.GetString();
+						response_queue.Push(ref r);
 					}
 				}
 			}
@@ -53,6 +55,16 @@ namespace ari.user
 		{
 			ThreadRun = false;
 			ThreadWaitEvent.Set();
+		}
+
+		protected override void Update(World _world, float _elapsed)
+		{
+			base.Update(_world, _elapsed);
+			Request r = .();
+			while (response_queue.TryPop(ref r))
+			{
+				Console.WriteLine(r.Result);
+			}
 		}
 
 		public void Login()

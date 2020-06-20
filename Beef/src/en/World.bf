@@ -34,6 +34,7 @@ namespace ari
 		{
 			for (var sys in BeefSystems)
 				sys.[Friend]Update(this, _elapsedTime);
+
 			UpdateWorld(_obj, _elapsedTime);
 		}
 
