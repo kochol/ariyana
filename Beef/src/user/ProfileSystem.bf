@@ -18,11 +18,11 @@ namespace ari.user
 		curl.Session session = new curl.Session() ~ delete _;
 
 		// Thread stuff
-		private ThreadStart WorkerThreadDelegate = null ~ delete _;
-		private Thread WorkerThreadObj = null ~ delete _;
-		private WaitEvent ThreadWaitEvent = new WaitEvent() ~ delete _;
+		private ThreadStart WorkerThreadDelegate = null;
+		private Thread WorkerThreadObj = null;
+		private WaitEvent ThreadWaitEvent = new WaitEvent();
 		private bool ThreadRun = true;
-		private ari.core.SpScQueue<Request> request_queue = new ari.core.SpScQueue<Request>() ~ delete _;
+		private ari.core.SpScQueue<Request> request_queue = new ari.core.SpScQueue<Request>();
 		private ari.core.SpScQueue<Request> response_queue = new ari.core.SpScQueue<Request>() ~ delete _; 
 
 		private void WorkerThread()
@@ -40,6 +40,8 @@ namespace ari.user
 					}
 				}
 			}
+			delete ThreadWaitEvent;
+			ThreadWaitEvent = null;
 		}
 
 		public this(String server_address)
@@ -55,6 +57,11 @@ namespace ari.user
 		{
 			ThreadRun = false;
 			ThreadWaitEvent.Set();
+			while (ThreadWaitEvent != null)
+			{
+				Thread.Sleep(1);
+			}
+			delete request_queue;
 		}
 
 		protected override void Update(World _world, float _elapsed)
