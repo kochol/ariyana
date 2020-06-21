@@ -33,7 +33,15 @@ namespace ari.net
 					{
 						session.Url = r.Url;
 						HttpResponse res = .();
-						res.Body = session.GetString();
+						let sr = session.GetString();
+						switch (sr)
+						{
+						case .Err(let err):
+							res.Status = err;
+						case .Ok(let val):
+							res.Body = new String(val);
+							res.Status = .Ok;
+						}
 						ResonseTuple t = .();
 						t.Response = res;
 						t.OnDone = r.OnRequestDone;

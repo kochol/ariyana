@@ -18,7 +18,13 @@ namespace ari.user
 
 		void OnLogin(HttpResponse response)
 		{
-			Token.Append("Bearer ", response.Body);
+			if (response.Status == .Ok)
+			{
+				Token.Append("Bearer ", response.Body);
+				response.Dispose();
+			}
+			else
+				Console.WriteLine(response.Status);
 		}
 
 		public void Login()
