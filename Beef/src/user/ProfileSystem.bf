@@ -2,22 +2,29 @@ using System;
 using System.Threading;
 using ari.net;
 using curl;
+using System.Collections;
 
 namespace ari.user
 {
 	public delegate void dOnLoggedIn();
-	public delegate void dOnLoginFailed(Easy.ReturnCode err);
+	public delegate void dOnHttpFailed(Easy.ReturnCode err);
+
+	public delegate void dOnPlayerData(Player player);
 
 	public class ProfileSystem
 	{
 		private String ServerAddress = null ~ delete _;
-		private String Token = new String() ~ delete _;
 		private HttpClientService http_client;
+		List<String> headers = new List<String>() ~ DeleteContainerAndItems!(_);
+		bool isLoggedIn = false;
 
 		// Callbacks
 		public dOnLoggedIn OnLoggedIn = null ~ delete _;
-		public dOnLoginFailed OnLoginFailed = null ~ delete _;
+		public dOnHttpFailed OnLoginFailed = null ~ delete _;
 
+		public dOnPlayerData OnPlayerData = null ~ delete _;
+
+		// Constructor
 		public this(String server_address, HttpClientService _http_client)
 		{
 			ServerAddress = new String(server_address);
@@ -28,8 +35,12 @@ namespace ari.user
 		{
 			if (response.Status == .Ok)
 			{
-				Token.Append("Bearer ", response.Body);
+				var token = new String();
+				token.Append("Authorization: ", "Bearer ", response.Body);
 				response.Dispose();
+				headers.Add(token);
+				http_client.session.SetHeaders(headers);
+				isLoggedIn = true;
 				OnLoggedIn();
 			}
 			else
@@ -62,7 +73,29 @@ namespace ari.user
 
 		public bool IsLoggedIn()
 		{
-			return Token.Length > 0;
+			return isLoggedIn;
+		}
+
+		void OnGetPlayerDataCB(HttpResponse res)
+		{
+			if (res.Status == .Ok)
+			{
+				Console.WriteLine(res.Body);
+				res.Dispose();
+			}
+			else
+			{
+				Console.WriteLine(res.Status);
+			}
+		}
+
+		public void GetPlayerData()
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.Append("player");
+			req.OnRequestDone = new => OnGetPlayerDataCB;
+			http_client.AddRequest(ref req);
 		}
 	}
 }

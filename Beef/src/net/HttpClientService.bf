@@ -12,7 +12,7 @@ namespace ari.net
 		}
 
 		// Session
-		curl.Session session = new curl.Session();
+		public curl.Session session = new curl.Session();
 
 		// Thread stuff
 		private ThreadStart WorkerThreadDelegate = null;
@@ -46,6 +46,7 @@ namespace ari.net
 						t.Response = res;
 						t.OnDone = r.OnRequestDone;
 						response_queue.Push(ref t);
+						delete r.Url;
 					}
 				}
 			}
