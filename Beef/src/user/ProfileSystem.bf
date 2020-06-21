@@ -16,6 +16,11 @@ namespace ari.user
 			http_client = _http_client;
 		}
 
+		void OnLogin(HttpResponse response)
+		{
+			Token.Append("Bearer ", response.Body);
+		}
+
 		public void Login()
 		{
 			HttpRequest login = .();
@@ -30,6 +35,8 @@ namespace ari.user
 #endif
 			let os = scope OperatingSystem();
 			os.ToString(login.Url);
+
+			login.OnRequestDone = new => OnLogin;
 
 			http_client.AddRequest(ref login);
 		}

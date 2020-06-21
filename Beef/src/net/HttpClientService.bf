@@ -74,7 +74,10 @@ namespace ari.net
 			{
 				Console.WriteLine(r.Response.Body);
 				if (r.OnDone != null)
+				{
 					r.OnDone(r.Response);
+					delete r.OnDone;
+				}
 			}
 		}
 
