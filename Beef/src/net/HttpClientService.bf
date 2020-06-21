@@ -5,6 +5,12 @@ namespace ari.net
 {
 	class HttpClientService: AriSystem
 	{
+		struct ResonseTuple
+		{
+			public OnRequestDoneDelegate OnDone;
+			public HttpResponse Response;
+		}
+
 		// Session
 		curl.Session session = new curl.Session();
 
@@ -14,7 +20,7 @@ namespace ari.net
 		private WaitEvent ThreadWaitEvent = new WaitEvent();
 		private bool ThreadRun = true;
 		private ari.core.SpScQueue<HttpRequest> request_queue = new ari.core.SpScQueue<HttpRequest>();
-		private ari.core.SpScQueue<HttpResponse> response_queue = new ari.core.SpScQueue<HttpResponse>(); 
+		private ari.core.SpScQueue<ResonseTuple> response_queue = new ari.core.SpScQueue<ResonseTuple>(); 
 
 		private void WorkerThread()
 		{
@@ -28,7 +34,10 @@ namespace ari.net
 						session.Url = r.Url;
 						HttpResponse res = .();
 						res.Body = session.GetString();
-						response_queue.Push(ref res);
+						ResonseTuple t = .();
+						t.Response = res;
+						t.OnDone = r.OnRequestDone;
+						response_queue.Push(ref t);
 					}
 				}
 			}
@@ -60,10 +69,12 @@ namespace ari.net
 		protected override void Update(World _world, float _elapsed)
 		{
 			base.Update(_world, _elapsed);
-			HttpResponse r = .();
+			ResonseTuple r = .();
 			while (response_queue.TryPop(ref r))
 			{
-				Console.WriteLine(r.Body);
+				Console.WriteLine(r.Response.Body);
+				if (r.OnDone != null)
+					r.OnDone(r.Response);
 			}
 		}
 
