@@ -1,14 +1,22 @@
 using System;
 using System.Threading;
 using ari.net;
+using curl;
 
 namespace ari.user
 {
+	public delegate void dOnLoggedIn();
+	public delegate void dOnLoginFailed(Easy.ReturnCode err);
+
 	public class ProfileSystem
 	{
 		private String ServerAddress = null ~ delete _;
 		private String Token = new String() ~ delete _;
 		private HttpClientService http_client;
+
+		// Callbacks
+		public dOnLoggedIn OnLoggedIn = null ~ delete _;
+		public dOnLoginFailed OnLoginFailed = null ~ delete _;
 
 		public this(String server_address, HttpClientService _http_client)
 		{
@@ -22,9 +30,14 @@ namespace ari.user
 			{
 				Token.Append("Bearer ", response.Body);
 				response.Dispose();
+				OnLoggedIn();
 			}
 			else
+			{
 				Console.WriteLine(response.Status);
+				if (OnLoginFailed != null)
+					OnLoginFailed(response.Status);
+			}
 		}
 
 		public void Login()
@@ -45,6 +58,11 @@ namespace ari.user
 			login.OnRequestDone = new => OnLogin;
 
 			http_client.AddRequest(ref login);
+		}
+
+		public bool IsLoggedIn()
+		{
+			return Token.Length > 0;
 		}
 	}
 }
