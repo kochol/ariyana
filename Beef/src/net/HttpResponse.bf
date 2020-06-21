@@ -6,6 +6,7 @@ namespace ari.net
 	{
 		public String Body;
 		public curl.Easy.ReturnCode Status;
+		public int64 StatusCode;
 
 		public void Dispose()
 		{

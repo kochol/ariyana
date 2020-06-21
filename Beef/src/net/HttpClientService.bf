@@ -41,6 +41,7 @@ namespace ari.net
 						case .Ok(let val):
 							res.Body = new String(val);
 							res.Status = .Ok;
+							res.StatusCode = session.ResponseCode;
 						}
 						ResonseTuple t = .();
 						t.Response = res;

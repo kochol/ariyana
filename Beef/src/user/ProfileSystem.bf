@@ -33,11 +33,10 @@ namespace ari.user
 
 		void OnLogin(HttpResponse response)
 		{
-			if (response.Status == .Ok)
+			if (response.Status == .Ok && response.StatusCode == 200)
 			{
 				var token = new String();
 				token.Append("Authorization: ", "Bearer ", response.Body);
-				response.Dispose();
 				headers.Add(token);
 				http_client.session.SetHeaders(headers);
 				isLoggedIn = true;
@@ -45,10 +44,11 @@ namespace ari.user
 			}
 			else
 			{
-				Console.WriteLine(response.Status);
+				Console.WriteLine("{} {}", response.Status, response.StatusCode);
 				if (OnLoginFailed != null)
 					OnLoginFailed(response.Status);
 			}
+			response.Dispose();
 		}
 
 		public void Login()
@@ -78,15 +78,15 @@ namespace ari.user
 
 		void OnGetPlayerDataCB(HttpResponse res)
 		{
-			if (res.Status == .Ok)
+			if (res.Status == .Ok && res.StatusCode == 200)
 			{
 				Console.WriteLine(res.Body);
-				res.Dispose();
 			}
 			else
 			{
-				Console.WriteLine(res.Status);
+				Console.WriteLine("{} {}", res.Status, res.StatusCode);
 			}
+			res.Dispose();
 		}
 
 		public void GetPlayerData()
