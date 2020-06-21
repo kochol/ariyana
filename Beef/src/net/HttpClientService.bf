@@ -67,5 +67,10 @@ namespace ari.net
 			}
 		}
 
+		public void AddRequest(ref HttpRequest request)
+		{
+			request_queue.Push(ref request);
+			ThreadWaitEvent.Set();
+		}
 	}
 }
