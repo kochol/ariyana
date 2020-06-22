@@ -1,3 +1,9 @@
 [submodule "Beef/deps/CurlBeef"]
 	path = Beef/deps/CurlBeef
 	url = https://github.com/kochol/CurlBeef.git
+[submodule "Beef/deps/JSON_Beef"]
+	path = Beef/deps/JSON_Beef
+	url = https://github.com/kochol/JSON_Beef.git
+[submodule "Beef/deps/Beef-Extensions-Lib"]
+	path = Beef/deps/Beef-Extensions-Lib
+	url = https://github.com/kochol/Beef-Extensions-Lib.git
