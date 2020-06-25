@@ -7,8 +7,8 @@ namespace ari.user
 	{
 		public uint64 id;
 
-		public String userName;
+		public String userName = null ~ delete _;
 
-		public String password;
+		public String password = null ~ delete _;
 	}
 }
