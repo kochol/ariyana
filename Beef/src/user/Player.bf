@@ -2,12 +2,13 @@ using System;
 
 namespace ari.user
 {
+	[Reflect]
 	public class Player
 	{
-		public uint64 Id;
+		public uint64 id;
 
-		public String UserName;
+		public String userName;
 
-		public String Password;
+		public String password;
 	}
 }

@@ -80,7 +80,21 @@ namespace ari.user
 		{
 			if (res.Status == .Ok && res.StatusCode == 200)
 			{
-				Console.WriteLine(res.Body);
+				var r = JSON_Beef.JSONDeserializer.Deserialize<Player>(res.Body);
+				switch (r)
+				{
+				case .Err(let err):
+					Console.WriteLine(err);
+				case .Ok(let val):
+					if (OnPlayerData != null)
+					{
+						OnPlayerData(val);
+					}
+					else
+					{
+						delete val;
+					}
+				}
 			}
 			else
 			{
@@ -95,6 +109,29 @@ namespace ari.user
 			req.Url = new String(ServerAddress);
 			req.Url.Append("player");
 			req.OnRequestDone = new => OnGetPlayerDataCB;
+			http_client.AddRequest(ref req);
+		}
+
+		void OnAutoJoinToLobbyCB(HttpResponse res)
+		{
+			if (res.Status == .Ok && res.StatusCode == 200)
+			{
+				// Todo: Check if the player found a lobby or not
+				// Todo: must check the server again
+			}
+			else
+			{
+				Console.WriteLine("{} {}", res.Status, res.StatusCode);
+			}
+			res.Dispose();
+		}
+
+		public void AutoJoinToLobby()
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.Append("player/lobby");
+			req.OnRequestDone = new => OnAutoJoinToLobbyCB;
 			http_client.AddRequest(ref req);
 		}
 	}
