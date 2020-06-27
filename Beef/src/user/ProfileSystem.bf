@@ -11,6 +11,8 @@ namespace ari.user
 
 	public delegate void dOnPlayerData(Player player);
 
+	public delegate void dOnJoinedLobby(Lobby lobby);
+
 	public class ProfileSystem: AriSystem
 	{
 		private String ServerAddress = null ~ delete _;
@@ -25,6 +27,9 @@ namespace ari.user
 		public dOnHttpFailed OnLoginFailed = null ~ delete _;
 
 		public dOnPlayerData OnPlayerData = null ~ delete _;
+		public dOnHttpFailed OnHttpFaild = null ~ delete _;
+
+		public dOnJoinedLobby OnJoinedLobby = null ~ delete _;
 
 		// Constructor
 		public this(String server_address, HttpClientService _http_client)
@@ -112,6 +117,8 @@ namespace ari.user
 			else
 			{
 				Console.WriteLine("{} {}", res.Status, res.StatusCode);
+				if (OnHttpFaild != null)
+					OnHttpFaild(res.Status);
 			}
 			res.Dispose();
 		}
@@ -130,17 +137,32 @@ namespace ari.user
 			if (res.StatusCode == 200)
 			{
 				// We found a lobby to join
-
+				var r = JSON_Beef.JSONDeserializer.Deserialize<Lobby>(res.Body);
+				switch (r)
+				{
+				case .Err(let err):
+					Console.WriteLine(err);
+				case .Ok(let val):
+					if (OnJoinedLobby != null)
+					{
+						OnJoinedLobby(val);
+					}
+					else
+					{
+						delete val;
+					}
+				}
 			}
 			else if(res.StatusCode == 204)
 			{
 				// we have to check again in next 3 seconds
-				Console.WriteLine("{} {}", res.Status, res.StatusCode);
 				sendAutoJoinAgain = 3;
 			}
 			else
 			{
 				Console.WriteLine("{} {}", res.Status, res.StatusCode);
+				if (OnHttpFaild != null)
+					OnHttpFaild(res.Status);
 			}
 			res.Dispose();
 		}
@@ -153,6 +175,11 @@ namespace ari.user
 			req.Url.Append("player/lobby");
 			req.OnRequestDone = new => OnAutoJoinToLobbyCB;
 			http_client.AddRequest(ref req);
+		}
+
+		public void CancelAutoJoinToLobby()
+		{
+			sendAutoJoinAgain = -2;
 		}
 	}
 }
