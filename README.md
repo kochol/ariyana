@@ -2,6 +2,28 @@
 
 Ariyana Game Engine
 
+# Features
+
+- Simple [Orthodox C++](https://gist.github.com/bkaradzic/2e39896bc7d8c34e042b) coding style and APIs
+- Entity component system
+- Cross-platform not only the code but also the textures and shaders will be converted to the target platform on the build phase.
+- Async file I/O
+- Texture conversion and loading.
+- [Dear-ImGUI](https://github.com/ocornut/imgui) support.
+- Networking support through [Yojimbo](https://github.com/networkprotocol/yojimbo)
+  - Secure client and server
+  - Auto serialize and deserialize of entities and their components.
+  - Sync entities with clients automatically
+  - RPC support with auto parameter serializing and deserializing.
+  - Automatic property replication
+- GLTF 2.0 mesh loading
+- Material system (Experimental)
+- 3D and 2D supported
+- 2D Sprite
+- [Beef language](https://www.beeflang.org/) support for making your game in Beef and enjoy the live update feature and its performance
+- Dedicated server build
+- Players [profile server](https://github.com/kochol/AriyanaProfileServer) to run the game servers and matchmaking
+
 # How To Build
 
 We are using [fips](https://github.com/floooh/fips) as a high level build system for Ariyana.
