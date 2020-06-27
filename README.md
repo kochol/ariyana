@@ -2,7 +2,7 @@
 
 Ariyana Game Engine
 
-# Features
+## Features
 
 - Simple [Orthodox C++](https://gist.github.com/bkaradzic/2e39896bc7d8c34e042b) coding style and APIs
 - Entity component system
@@ -23,8 +23,9 @@ Ariyana Game Engine
 - [Beef language](https://www.beeflang.org/) support for making your game in Beef and enjoy the live update feature and its performance
 - Dedicated server build
 - Players [profile server](https://github.com/kochol/AriyanaProfileServer) to run the game servers and matchmaking
+- Http client system to working with rest APIs
 
-# How To Build
+## How To Build
 
 We are using [fips](https://github.com/floooh/fips) as a high level build system for Ariyana.
 
@@ -65,6 +66,16 @@ now ```./fips open``` will open it up in your C/C++ development environment:
 done! it's ready to rock.
 
 # Changes
+
+## Ariyana Game Engine 0.5
+
+- Add 2D module thanks to [AmirArdroudi](https://github.com/AmirArdroudi)
+- Add [Beef language](https://www.beeflang.org/)  bindings
+- Add Dedicated server builds
+- Add Http client system
+- Get unique id for each device
+- Add [profile server](https://github.com/kochol/AriyanaProfileServer)
+- Update ECS design 
 
 ## Ariyana Game Engine 0.4
 
