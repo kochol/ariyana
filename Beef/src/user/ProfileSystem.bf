@@ -11,12 +11,14 @@ namespace ari.user
 
 	public delegate void dOnPlayerData(Player player);
 
-	public class ProfileSystem
+	public class ProfileSystem: AriSystem
 	{
 		private String ServerAddress = null ~ delete _;
 		private HttpClientService http_client;
 		List<String> headers = new List<String>() ~ DeleteContainerAndItems!(_);
 		bool isLoggedIn = false;
+		float sendAutoJoinAgain = -1;
+
 
 		// Callbacks
 		public dOnLoggedIn OnLoggedIn = null ~ delete _;
@@ -29,6 +31,17 @@ namespace ari.user
 		{
 			ServerAddress = new String(server_address);
 			http_client = _http_client;
+		}
+
+		protected override void Update(World _world, float _elapsed)
+		{
+			base.Update(_world, _elapsed);
+			if (sendAutoJoinAgain > 0)
+			{
+				sendAutoJoinAgain -= _elapsed;
+				if (sendAutoJoinAgain <= 0)
+					AutoJoinToLobby();
+			}
 		}
 
 		void OnLogin(HttpResponse response)
@@ -114,10 +127,16 @@ namespace ari.user
 
 		void OnAutoJoinToLobbyCB(HttpResponse res)
 		{
-			if (res.Status == .Ok && res.StatusCode == 200)
+			if (res.StatusCode == 200)
 			{
-				// Todo: Check if the player found a lobby or not
-				// Todo: must check the server again
+				// We found a lobby to join
+
+			}
+			else if(res.StatusCode == 204)
+			{
+				// we have to check again in next 3 seconds
+				Console.WriteLine("{} {}", res.Status, res.StatusCode);
+				sendAutoJoinAgain = 3;
 			}
 			else
 			{
@@ -128,6 +147,7 @@ namespace ari.user
 
 		public void AutoJoinToLobby()
 		{
+			sendAutoJoinAgain = -1;
 			HttpRequest req = .();
 			req.Url = new String(ServerAddress);
 			req.Url.Append("player/lobby");
