@@ -149,7 +149,7 @@ namespace ari
 		public static readonly Color WHITE = Color(1.0f, 1.0f, 1.0f, 1.0f);
 		public static readonly Color BLACK = Color(0.0f, 0.0f, 0.0f, 1.0f);
 		public static readonly Color BLANK = Color(0.0f, 0.0f, 0.0f, 0.0f);
-		public static readonly Color MAGENTA = Color(1, 0.0f, 1, 1.0f);
+		public static readonly Color MAGENTA = Color(1.0f, 0.0f, 1.0f, 1.0f);
 		public static readonly Color RAYWHITE = Color(0.9607f, 0.9607f, 0.9607f, 1.0f);
 	}
 

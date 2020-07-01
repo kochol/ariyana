@@ -24,7 +24,8 @@ namespace ari
 
 			virtual bool NeedUpdateOn(UpdateState::Enum _state) { return false; }
 
-			virtual void AddChildSystem(System* pSystem) { m_Childs.Add(pSystem); }
+			virtual void AddChildSystem(World* _world, System* pSystem) 
+				{ m_Childs.Add(pSystem); pSystem->Configure(_world); }
 
 		protected:
 

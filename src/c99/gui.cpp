@@ -52,7 +52,7 @@ void RemoveWindowFromWorld(void* _world, EntityHandle* _entity, GuiHandle* _node
 WindowMembers GetWindowMembers(void* _node)
 {
 	auto node = reinterpret_cast<ari::gui::Window*>(_node);
-	return { node->Name, &node->CloseButton, &node->isOpen,
+	return { &node->Name, &node->CloseButton, &node->isOpen,
 		&node->Pos, &node->Size, &node->Flags };
 }
 

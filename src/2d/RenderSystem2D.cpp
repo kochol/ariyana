@@ -31,12 +31,6 @@ namespace ari::en
 		gfx::RenderToWindow(TargetWindow);
 		gfx::BeginDefaultPass(TargetWindow);
 
-		// call update on child systems
-		for (auto s : m_Childs)
-		{
-			s->Update(_world, _elapsed, _state);
-		}
-
 		m_pFrameDataCurrent = m_pFrameDataNext;
 		if (m_pFrameDataCurrent)
 		{
@@ -71,6 +65,13 @@ namespace ari::en
 				gfx::SetViewportSize(io::GetWindowSize(TargetWindow));
 			}
 		}
+
+		// call update on child systems
+		for (auto s : m_Childs)
+		{
+			s->Update(_world, _elapsed, _state);
+		}
+
 		gfx::EndPass();
 		gfx::Commit();
 		gfx::Present(TargetWindow);

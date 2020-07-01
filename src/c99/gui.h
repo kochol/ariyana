@@ -23,7 +23,7 @@ CARI_API GuiMembers GetGuiMembers(void* _node);
 // Window
 struct WindowMembers
 {
-    char	*	Name;
+    char	**	Name;
     bool	*	CloseButton,
             *   isOpen;
     ImVec2	*	Pos,
