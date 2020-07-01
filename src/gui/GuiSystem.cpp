@@ -1,7 +1,7 @@
 #include "en/World.hpp"
 #include "GuiSystem.hpp"
 #include "sokol_gfx.h"
-#include "imgui.h"
+#include "cimgui/imgui/imgui.h"
 
 #ifdef ARI_GLFW
 #define SOKOL_IMPL
