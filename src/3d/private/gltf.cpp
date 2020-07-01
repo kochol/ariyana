@@ -575,7 +575,7 @@ namespace ari::en
 
 								if (res != cgltf_result_success)
 								{
-									// TODO: Log error
+									log_error("cgltf data did NOT embed successfuly in base64 encoding!");
 								}
 
 								bufferData.Add(reinterpret_cast<uint8_t*>(data), int(gltf_buf->size));
