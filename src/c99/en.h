@@ -20,6 +20,7 @@ CARI_API void AddSystemToWorld(void* _world, void* _system);
 CARI_API void AddEntityToWorld(void* _world, EntityHandle* _entity);
 
 // System functions
+CARI_API void AddChildSystem(void* _obj, void* _system);
 CARI_API void DeleteSystem(void* _obj);
 
 // Entity functions

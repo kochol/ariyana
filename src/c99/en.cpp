@@ -37,6 +37,12 @@ void AddEntityToWorld(void* _world, EntityHandle* _entity)
 }
 
 // System
+void AddChildSystem(void* _obj, void* _system)
+{
+    reinterpret_cast<ari::en::System*>(_obj)->AddChildSystem(
+        reinterpret_cast<ari::en::System*>(_system));
+}
+
 void DeleteSystem(void* _obj)
 {
     ari::core::Memory::Delete(reinterpret_cast<ari::en::System*>(_obj));

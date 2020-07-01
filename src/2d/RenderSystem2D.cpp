@@ -26,10 +26,16 @@ namespace ari::en
 			Sprite::Shutdown();
 		}
 	}
-	void RenderSystem2D::Update(World* _world, const float& _elasoed, UpdateState::Enum _state)
+	void RenderSystem2D::Update(World* _world, const float& _elapsed, UpdateState::Enum _state)
 	{
 		gfx::RenderToWindow(TargetWindow);
 		gfx::BeginDefaultPass(TargetWindow);
+
+		// call update on child systems
+		for (auto s : m_Childs)
+		{
+			s->Update(_world, _elapsed, _state);
+		}
 
 		m_pFrameDataCurrent = m_pFrameDataNext;
 		if (m_pFrameDataCurrent)
