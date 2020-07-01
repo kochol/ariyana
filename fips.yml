@@ -13,8 +13,8 @@ imports:
         git: https://github.com/fips-libs/fips-glfw.git
     fips-memory-allocators:
         git: https://github.com/kochol/fips-memory-allocators.git
-    fips-imgui:
-        git: https://github.com/fips-libs/fips-imgui.git
+    fips-cimgui:
+        git: https://github.com/fips-libs/fips-cimgui.git
     yojimbo:
         git: https://github.com/kochol/yojimbo.git
     fips-MetaStuff:

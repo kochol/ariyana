@@ -12,6 +12,19 @@ fips_begin_module(ari_io)
         URLBuilder.hpp          URLBuilder.cpp
         Window.hpp
     )
+
+    fips_dir(platform)
+    fips_files(
+        Platform.hpp            Platform.cpp
+    )
+
+    if (FIPS_WINDOWS)
+        fips_files(PlatformWindows.cpp)
+    elseif (FIPS_POSIX)
+        fips_files(PlatformUnix.cpp)
+    elseif (FIPS_ANDROID)
+        fips_files(PlatformAndroid.cpp)
+    endif()
     
     if (ARI_SERVER)
         fips_dir(private/server)

@@ -10,6 +10,7 @@ namespace ari
 		public this()
 		{
 			_obj = CreateRenderSystem();
+			IsNativeSystem = true;
 		}
 	}
 }

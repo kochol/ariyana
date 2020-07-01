@@ -46,13 +46,11 @@ void DeleteSystem(void* _obj)
 EntityHandle CreateEntityWorld()
 {
     union { ari::en::EntityHandle cpp; EntityHandle c; } h = { ari::en::World::CreateEntity() };
-    log_debug("Entiy h: %d i: %d obj: %p", h.c.Handle, h.c.Index, h.c.Entity);
     return h.c;
 }
 
 void DeleteEntityWorld(EntityHandle* _entity)
 {
-    log_debug("Entiy h: %d i: %d obj: %p", _entity->Handle, _entity->Index, _entity->Entity);
     const union { EntityHandle c; ari::en::EntityHandle cpp; } h = { *_entity };
     ari::en::World::DeleteEntity(h.cpp);
 }

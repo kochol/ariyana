@@ -2,9 +2,13 @@
 #include "gfx/gfx.hpp"
 #include "gfx/Application.hpp"
 #include "gfx/Mesh.hpp"
+#define CIMGUI_DEFINE_ENUMS_AND_STRUCTS 1
+#include "cimgui/cimgui.h"
 
 ari::Application* ari_main(int argc, char* argv[]) 
 { 
+    // TODO: Move this function from here
+    igIsAnyItemActive();
     return nullptr;
 }
 

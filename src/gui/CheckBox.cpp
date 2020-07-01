@@ -1,5 +1,5 @@
 #include "CheckBox.hpp"
-#include "imgui.h"
+#include "cimgui/imgui/imgui.h"
 #include "en/ComponentManager.hpp"
 
 namespace ari

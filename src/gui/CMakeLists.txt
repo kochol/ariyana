@@ -2,7 +2,7 @@ fips_begin_module(ari_gui)
     set(CMAKE_CXX_STANDARD 17)
 	ari_setup()
 	fips_vs_warning_level(3)
-	fips_deps(ari_en imgui)
+	fips_deps(ari_en cimgui)
     fips_files(
 			Button.cpp		Button.hpp
 			CheckBox.cpp	CheckBox.hpp		
