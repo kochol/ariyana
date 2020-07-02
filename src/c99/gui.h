@@ -35,6 +35,13 @@ CARI_API void AddWindowToWorld(void* _world, EntityHandle* _entity, GuiHandle* _
 CARI_API void RemoveWindowFromWorld(void* _world, EntityHandle* _entity, GuiHandle* _node, bool _dispose);
 CARI_API WindowMembers GetWindowMembers(void* _node);
 
+// Script GUI
+typedef bool(sgBeginRender)(void* _userData);
+typedef void(sgEndRender)(void* _userData);
 
+CARI_API GuiHandle CreateScriptGuiComponent();
+CARI_API void AddScriptGuiToWorld(void* _world, EntityHandle* _entity, GuiHandle* _node);
+CARI_API void RemoveScriptGuiFromWorld(void* _world, EntityHandle* _entity, GuiHandle* _node, bool _dispose);
+CARI_API void InitScriptGuiMembers(void* _node, void* _userData, sgBeginRender* OnBegineRender, sgEndRender* OnEndRender);
 
 #endif // ARI_GUI_H

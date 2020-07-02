@@ -9,7 +9,7 @@ namespace ari.gui
 		public bool* IsOpen;
 		public Vector2*	Pos;
 		public Vector2*	Size;
-		public int*	Flags;
+		public int32* Flags;
 
 		public this(GuiHandle _handle): base (_handle)
 		{
@@ -24,7 +24,7 @@ namespace ari.gui
 			public bool* IsOpen;
 			public Vector2*	Pos;
 			public Vector2*	Size;
-			public int*	Flags;
+			public int32*	Flags;
 		}
 
 		[CLink]
