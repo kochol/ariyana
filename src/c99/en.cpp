@@ -4,6 +4,8 @@
 #include "en/Node.hpp"
 #include "core/log.h"
 #include "en/System.hpp"
+#include "en/EventSubscriber.hpp"
+#include "io.h"
 
 // World
 void* CreateWorld()
@@ -36,7 +38,22 @@ void AddEntityToWorld(void* _world, EntityHandle* _entity)
         *(reinterpret_cast<ari::en::EntityHandle*>(_entity)));
 }
 
+CARI_API void EmitOnInput(void* _world, ari_event* _event, WindowHandle* _handle)
+{
+	ari::en::events::OnInputEvent eve;
+	eve.event = _event;
+	eve.window = *reinterpret_cast<ari::io::WindowHandle*>(_handle);
+	reinterpret_cast<ari::en::World*>(_world)->emit(eve);
+}
+
 // System
+void AddChildSystem(void* _world, void* _obj, void* _system)
+{
+    reinterpret_cast<ari::en::System*>(_obj)->AddChildSystem(
+        reinterpret_cast<ari::en::World*>(_world),
+        reinterpret_cast<ari::en::System*>(_system));
+}
+
 void DeleteSystem(void* _obj)
 {
     ari::core::Memory::Delete(reinterpret_cast<ari::en::System*>(_obj));

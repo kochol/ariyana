@@ -26,7 +26,7 @@ namespace ari::en
 			Sprite::Shutdown();
 		}
 	}
-	void RenderSystem2D::Update(World* _world, const float& _elasoed, UpdateState::Enum _state)
+	void RenderSystem2D::Update(World* _world, const float& _elapsed, UpdateState::Enum _state)
 	{
 		gfx::RenderToWindow(TargetWindow);
 		gfx::BeginDefaultPass(TargetWindow);
@@ -65,6 +65,13 @@ namespace ari::en
 				gfx::SetViewportSize(io::GetWindowSize(TargetWindow));
 			}
 		}
+
+		// call update on child systems
+		for (auto s : m_Childs)
+		{
+			s->Update(_world, _elapsed, _state);
+		}
+
 		gfx::EndPass();
 		gfx::Commit();
 		gfx::Present(TargetWindow);

@@ -11,6 +11,8 @@ struct EntityHandle
 	uint32_t Index;
 	void* Entity;
 };
+struct WindowHandle;
+struct ari_event;
 
 // World functions
 CARI_API void* CreateWorld();
@@ -18,8 +20,10 @@ CARI_API void DeleteWorld(void* _obj);
 CARI_API void UpdateWorld(void* _obj, float _elapsedTime);
 CARI_API void AddSystemToWorld(void* _world, void* _system);
 CARI_API void AddEntityToWorld(void* _world, EntityHandle* _entity);
+CARI_API void EmitOnInput(void* _world, ari_event* _event, WindowHandle* _handle);
 
 // System functions
+CARI_API void AddChildSystem(void* _world, void* _obj, void* _system);
 CARI_API void DeleteSystem(void* _obj);
 
 // Entity functions

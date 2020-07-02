@@ -63,6 +63,6 @@ namespace ari
 	}
 
 	// This doesn't take into account the null char
-#define COMPILE_TIME_CRC32_STR(x) (crc32<sizeof(x) - 2>(x) ^ 0xFFFFFFFF)
+#define COMPILE_TIME_CRC32_STR(x) (ari::crc32<sizeof(x) - 2>(x) ^ 0xFFFFFFFF)
 
 } // namespace ari

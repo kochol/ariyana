@@ -25,5 +25,16 @@ namespace ari
 		protected virtual void Unconfigure(World _world) { }
 
 		protected virtual void Update(World _world, float _elapsed) { }
+
+		[CLink]
+		static extern void AddChildSystem(void* _world, void* _obj, void* _system);
+
+		public void AddChild(World world, AriSystem system)
+		{
+			if (IsNativeSystem)
+				AddChildSystem(world.[Friend]_obj, _obj, system._obj);
+
+			system.Configure(world);
+		}
 	}
 }
