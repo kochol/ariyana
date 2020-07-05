@@ -70,12 +70,15 @@ class ScriptGui : public ari::gui::Gui
 
     bool BeginRender() override
     {
-        return OnBeginRender(UserData);
+		if (UserData)
+			return OnBeginRender(UserData);
+		return false;
     }
 
     void EndRender() override
     {
-        OnEndRender(UserData);
+		if (UserData)
+			OnEndRender(UserData);
     }
 };
 

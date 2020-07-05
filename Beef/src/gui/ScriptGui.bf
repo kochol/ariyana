@@ -17,6 +17,11 @@ namespace ari.gui
 
 		}
 
+		public ~this()
+		{
+			InitScriptGuiMembers(Handle._obj, null, null, null);
+		}
+
 		function bool sgBeginRender(void* _userData);
 		function void sgEndRender(void* _userData);
 
