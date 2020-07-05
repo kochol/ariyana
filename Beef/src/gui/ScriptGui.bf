@@ -4,6 +4,8 @@ namespace ari.gui
 {
 	class ScriptGui: Gui
 	{
+		protected World _world = null;
+
 		[CLink]
 		static extern GuiHandle CreateScriptGuiComponent();
 

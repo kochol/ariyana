@@ -268,6 +268,7 @@ namespace ari
 		public void AddComponent(Entity _entity, ScriptGui _cmp)
 		{
 			AddScriptGuiToWorld(_obj, ref _entity.Handle, ref _cmp.Handle);
+			_cmp.[Friend]_world = this;
 			_cmp.Handle.Owner = _entity;
 		}
 
@@ -277,9 +278,13 @@ namespace ari
 		public void RemoveComponent(Entity _entity, ScriptGui _cmp, bool _dispose)
 		{
 			RemoveScriptGuiFromWorld(_obj, ref _entity.Handle, ref _cmp.Handle, _dispose);
-			_cmp.Handle.Owner = null;
 			if (_dispose)
 				delete _cmp;
+			else
+			{
+				_cmp.Handle.Owner = null;
+				_cmp.[Friend]_world = this;
+			}
 		}
 
 		//***************************************
