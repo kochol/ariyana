@@ -58,7 +58,8 @@ namespace ari
 
 			_world->GetDerivedComponents<Gui>([this](const ComponentHandle<Gui>& gui)
 				{
-					this->RenderGui(gui.Component);
+					if (!gui->GetParent() && !gui.Owner->GetParent())
+						this->RenderGui(gui.Component);
 				});
 
 			simgui_render();

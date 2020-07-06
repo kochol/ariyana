@@ -4,6 +4,8 @@ namespace ari.gui
 {
 	class ScriptGui: Gui
 	{
+		protected World _world = null;
+
 		[CLink]
 		static extern GuiHandle CreateScriptGuiComponent();
 
@@ -15,6 +17,11 @@ namespace ari.gui
 		public this(GuiHandle _handle): base(_handle)
 		{
 
+		}
+
+		public ~this()
+		{
+			InitScriptGuiMembers(Handle._obj, null, null, null);
 		}
 
 		function bool sgBeginRender(void* _userData);
