@@ -25,6 +25,7 @@ namespace ari.user
 		// Callbacks
 		public dOnLoggedIn OnLoggedIn = null ~ delete _;
 		public dOnHttpFailed OnLoginFailed = null ~ delete _;
+		public dOnLoggedIn OnRegistered = null ~ delete _;
 
 		public dOnPlayerData OnPlayerData = null ~ delete _;
 		public dOnHttpFailed OnHttpFaild = null ~ delete _;
@@ -87,6 +88,15 @@ namespace ari.user
 			login.OnRequestDone = new => OnLogin;
 
 			http_client.AddRequest(ref login);
+		}
+
+		public void Login(String username, String password)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.AppendF("auth/{}/{}", username, password);
+			req.OnRequestDone = new => OnLogin;
+			http_client.AddRequest(ref req);
 		}
 
 		public bool IsLoggedIn()
@@ -180,6 +190,31 @@ namespace ari.user
 		public void CancelAutoJoinToLobby()
 		{
 			sendAutoJoinAgain = -2;
+		}
+
+		void OnRegisterCB(HttpResponse res)
+		{
+			if (res.StatusCode == 200)
+			{
+				if (OnRegistered != null)
+					OnRegistered();
+			}
+			else
+			{
+				Console.WriteLine("{} {}", res.Status, res.StatusCode);
+				if (OnHttpFaild != null)
+					OnHttpFaild(res.Status);
+			}
+			res.Dispose();
+		}
+
+		public void Register(String userName, String password)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.AppendF("auth/register/{}/{}/{}", Io.GetDeviceID(), userName, password);
+			req.OnRequestDone = new => OnRegisterCB;
+			http_client.AddRequest(ref req);
 		}
 	}
 }
