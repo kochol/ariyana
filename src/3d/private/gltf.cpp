@@ -587,8 +587,8 @@ namespace ari::en
 							}
 							else
 							{
-								// return cgltf_result_unknown_format;
-								// TODO: Log error
+								log_error("cgltf result :unknown data format (cgltf result code: %d)", cgltf_result_unknown_format);
+								return;
 							}
 						}
 						else
