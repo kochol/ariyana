@@ -92,6 +92,10 @@ namespace ari.user
 
 		public void Login(String username, String password)
 		{
+			// clear the last headers
+			ClearAndDeleteItems(headers);
+			http_client.session.SetHeaders(null);
+
 			HttpRequest req = .();
 			req.Url = new String(ServerAddress);
 			req.Url.AppendF("auth/{}/{}", username, password);

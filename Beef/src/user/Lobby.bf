@@ -8,7 +8,7 @@ namespace ari.user
 	{
 		public uint64 id;
 
-		public String serverIp;
+		public String serverIp = null ~ delete _;
 
 		public int32 serverPort;
 
