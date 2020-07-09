@@ -86,7 +86,7 @@ namespace ari
 			Gfx.SetupGfx(_app.GetGfxSetup());
 
 #if BF_PLATFORM_ANDROID
-			while(!_app.Exit && Io.Run())
+			while(Io.Run())
 			{
 				System.Threading.Thread.Sleep(1000);
 			}
