@@ -3,6 +3,7 @@
 #include "sokol_gfx.h"
 #include "cimgui/imgui/imgui.h"
 
+#ifndef ARI_SERVER
 #ifdef ARI_GLFW
 #define SOKOL_IMPL
 #define SOKOL_NO_ENTRY
@@ -12,6 +13,7 @@
 
 #define SOKOL_IMGUI_IMPL
 #include "util/sokol_imgui.h"
+#endif
 #include "io/Window.hpp"
 #include "en/ComponentManager.hpp"
 #include "Gui.hpp"
@@ -33,26 +35,33 @@ namespace ari
 
 		void GuiSystem::Configure(World* p_world)
 		{
+#ifndef ARI_SERVER			
 			simgui_desc_t desc;
 			core::Memory::Fill(&desc, sizeof(simgui_desc_t), 0);
 			simgui_setup(&desc);
 			p_world->Subscribe<events::OnInputEvent>(this);
+#endif
 		}
 
 		void GuiSystem::Unconfigure(World* p_world)
 		{
+#ifndef ARI_SERVER
 			simgui_shutdown();
 			p_world->unsubscribeAll(this);
+#endif
 		}
 
 		void GuiSystem::Receive(World* p_world, const events::OnInputEvent& event)
 		{
+#ifndef ARI_SERVER
 			simgui_handle_event(reinterpret_cast<sapp_event*>(event.event));
+#endif
 		}
 
 		void GuiSystem::Update(World* _world, const float& _elapsed,
 			UpdateState::Enum _state)
 		{
+#ifndef ARI_SERVER
 			core::RectI size = io::GetWindowSize({ 0,0 });
 			simgui_new_frame(size.width, size.height, _elapsed);
 
@@ -63,11 +72,16 @@ namespace ari
 				});
 
 			simgui_render();
+#endif
 		}
 
 		bool GuiSystem::NeedUpdateOn(UpdateState::Enum _state)
 		{
+#ifdef ARI_SERVER
+			return false;
+#else
 			return _state == UpdateState::MainThreadState;
+#endif
 		}
 
 		void GuiSystem::RenderGui(Entity* entity) const

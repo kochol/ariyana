@@ -103,7 +103,7 @@ namespace ari
 			SetOnEventCallBack(=> OnEvent);
 
 			// run the loop
-			while (!_app.Exit && Io.Run())
+			while (!Application.Exit && Io.Run())
 			{
 				*FrameNumber += 1;
 
@@ -138,7 +138,7 @@ namespace ari
 	{
 		protected GfxSetup* setup = null;
 
-		public bool Exit = false;
+		public static bool Exit = false;
 
 		public virtual GfxSetup* GetGfxSetup()
 		{

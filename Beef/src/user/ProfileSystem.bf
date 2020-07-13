@@ -54,11 +54,7 @@ namespace ari.user
 		{
 			if (response.Status == .Ok && response.StatusCode == 200)
 			{
-				var token = new String();
-				token.Append("Authorization: ", "Bearer ", response.Body);
-				headers.Add(token);
-				http_client.session.SetHeaders(headers);
-				isLoggedIn = true;
+				Login(response.Body);
 				OnLoggedIn();
 			}
 			else
@@ -68,6 +64,15 @@ namespace ari.user
 					OnLoginFailed(response.Status);
 			}
 			response.Dispose();
+		}
+
+		public void Login(String _token)
+		{
+			var token = new String();
+			token.Append("Authorization: ", "Bearer ", _token);
+			headers.Add(token);
+			http_client.session.SetHeaders(headers);
+			isLoggedIn = true;
 		}
 
 		public void Login()
@@ -218,6 +223,14 @@ namespace ari.user
 			req.Url = new String(ServerAddress);
 			req.Url.AppendF("auth/register/{}/{}/{}", Io.GetDeviceID(), userName, password);
 			req.OnRequestDone = new => OnRegisterCB;
+			http_client.AddRequest(ref req);
+		}
+
+		public void ServerStartGame(int64 lobby_id)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.AppendF("server/game_start/{}", lobby_id);
 			http_client.AddRequest(ref req);
 		}
 	}
