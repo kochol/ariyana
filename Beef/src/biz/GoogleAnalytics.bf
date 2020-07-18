@@ -36,8 +36,10 @@ namespace ari.biz
 			req.SetHeaders(h);*/
 			req.Url = new String();
 			req.Url.Append("http://www.google-analytics.com/collect?v=1&t=",
-				hitType, "&tid=", m_sTrackingID, "&cid=", m_sPlayerID,
-				"&an=", m_sAppName, "&av=", m_sAppVer,
+				hitType, "&tid=", m_sTrackingID);
+			if (!String.IsNullOrEmpty(m_sPlayerID))
+				req.Url.Append("&cid=", m_sPlayerID);
+			req.Url.Append("&an=", m_sAppName, "&av=", m_sAppVer,
 				"&ds=app&", OptionalParams);
 
 			//HttpRequest->SetContentAsString(Payload);
