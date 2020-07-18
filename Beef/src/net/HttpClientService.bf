@@ -32,8 +32,24 @@ namespace ari.net
 					while (request_queue.TryPop(ref r))
 					{
 						session.Url = r.Url;
-						HttpResponse res = .();
+						if (r.[Friend]SetHeaders)
+						{
+							session.SetHeaders(r.[Friend]Headers);
+						}
 						let sr = session.GetString();
+						if (r.OnRequestDone == null) // The request response is not important for the user
+						{
+							switch(sr)
+							{
+							case .Err(let err):
+								Console.WriteLine(err);
+							case .Ok(let val):
+
+							}
+							continue;
+						}
+
+						HttpResponse res = .();
 						switch (sr)
 						{
 						case .Err(let err):
@@ -47,7 +63,7 @@ namespace ari.net
 						t.Response = res;
 						t.OnDone = r.OnRequestDone;
 						response_queue.Push(ref t);
-						delete r.Url;
+						r.Dispose();
 					}
 				}
 			}
