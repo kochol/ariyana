@@ -6,9 +6,9 @@ namespace ari.biz
 {
 	class GoogleAnalytics
 	{
-		String			m_sTrackingID = null ~ delete _,
-						m_sAppName = null ~ delete _,
-						m_sAppVer = null ~ delete _,
+		String			m_sTrackingID,
+						m_sAppName,
+						m_sAppVer,
 						m_sPlayerID = null ~ delete _;
 		HttpClientService m_http;
 

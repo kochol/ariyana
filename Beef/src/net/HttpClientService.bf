@@ -39,6 +39,7 @@ namespace ari.net
 						let sr = session.GetString();
 						if (r.OnRequestDone == null) // The request response is not important for the user
 						{
+							r.Dispose();
 							switch(sr)
 							{
 							case .Err(let err):
