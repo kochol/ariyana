@@ -80,6 +80,10 @@ namespace ari::en
 			// texCoord
 			pipeline_setup.layout.attrs[1].format = gfx::VertexFormat::Float2;
 			pipeline_setup.index_type = gfx::IndexType::Uint16;
+			// blending
+			pipeline_setup.blend.enabled = true;
+			pipeline_setup.blend.src_factor_rgb = gfx::BlendFactor::Src_Alpha;
+			pipeline_setup.blend.dst_factor_rgb = gfx::BlendFactor::One_Minus_Src_Alpha;			
 
 			m_sPipeline = gfx::CreatePipeline(pipeline_setup);
 

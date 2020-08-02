@@ -125,6 +125,27 @@ namespace ari
 			a = (float)_a / 255.0f;
 		}
 
+		public void Set(float _r, float _g, float _b, float _a) mut
+		{
+			r = _r;
+			g = _g;
+			b = _b;
+			a = _a;
+		}
+
+		public void Set(int32 _r, int32 _g, int32 _b, int32 _a) mut
+		{
+			r = (float)_r / 255.0f;
+			g = (float)_g / 255.0f;
+			b = (float)_b / 255.0f;
+			a = (float)_a / 255.0f;
+		}
+
+		public void Set(float _f) mut
+		{
+			r = g = b = a = _f;
+		}
+
 		public static readonly Color LIGHTGRAY = Color(0.784f, 0.784f, 0.784f, 1.0f);
 		public static readonly Color GRAY = Color(0.509f, 0.509f, 0.509f, 1.0f);
 		public static readonly Color DARKGRAY = Color(0.313f, 0.313f, 0.313f, 1.0f);
