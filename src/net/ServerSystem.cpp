@@ -132,6 +132,7 @@ namespace ari::net
 
 	void ServerSystem::StopServer()
 	{
+		m_time = 0;
 		if (m_pServer)
 		{
 			m_pServer->Stop();

@@ -87,6 +87,7 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	void ClientSystem::StopClient()
 	{
+		m_time = 0;
 		if (m_pClient)
 		{
 			m_pClient->Disconnect();
