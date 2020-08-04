@@ -50,7 +50,7 @@ namespace ari
 			return rpc.SerializeMeasure(_stream);
 		}
 
-		static bool DerializeRPC(void* _stream, out uint32 _index)
+		static bool DerializeRPC(void* _stream, out void* _rpc, out uint32 _index)
 		{
 			uint32 rpc_hash = 0;
 
@@ -61,6 +61,7 @@ namespace ari
 
 			RPC orig_rpc = g_dRpcs[rpc_hash];
 			RPC rpc = NetworkSystem.[Friend]GetRpcClone(orig_rpc, out _index);
+			_rpc = Internal.UnsafeCastToPtr(rpc);
 			if (!rpc.Deserialize(_stream))
 			{
 				NetworkSystem.[Friend]DeleteRpc(_index);
@@ -77,7 +78,7 @@ namespace ari
 		}
 
 		function bool serialize_cb(void* _stream, void* _rpc, uint32 _index);
-		function bool deserialize_cb(void* _stream, out uint32 _index);
+		function bool deserialize_cb(void* _stream, out void* _rpc, out uint32 _index);
 		function void call_rpc_cb(uint32 rpc_index);
 
 		[CLink]

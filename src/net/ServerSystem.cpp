@@ -133,6 +133,9 @@ namespace ari::net
 	void ServerSystem::StopServer()
 	{
 		m_time = 0;
+		m_iClientCount = 0;
+		m_bSaveReply = false;
+		m_sReplyFileName.Clear();
 		if (m_pServer)
 		{
 			m_pServer->Stop();

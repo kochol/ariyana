@@ -235,7 +235,7 @@ namespace ari::net
 			}
 			else
 			{
-				return g_on_deserialize((void*)&stream, &rpc_index);
+				return g_on_deserialize((void*)&stream, &rpc, &rpc_index);
 			}
 		}
 

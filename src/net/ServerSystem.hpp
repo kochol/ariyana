@@ -35,6 +35,12 @@ namespace ari::net
 			, const yojimbo::ClientServerConfig& config = GameConnectionConfig()
 			, yojimbo::Adapter* adapter = nullptr);
 
+		void SaveReply(char* file_name) 
+		{
+			m_bSaveReply = true; 
+			m_sReplyFileName = file_name;
+		}
+
 		void StopServer();
 
 		virtual void ClientConnected(int client_id);
@@ -62,6 +68,8 @@ namespace ari::net
 		core::Array<PropertyReplicator*>
 			m_aPropertyReplicators;
 		int						m_iClientCount = 0;
+		bool					m_bSaveReply = false;
+		core::String			m_sReplyFileName;
     };
 
 } // namespace ari::net

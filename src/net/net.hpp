@@ -42,7 +42,7 @@ namespace ari::net
 	typedef bool (serialize_cb)(void* _stream, void* _rpc, uint32_t _index);
 	extern serialize_cb* g_on_serialize;
 	extern serialize_cb* g_on_serialize_measure;
-	typedef bool (deserialize_cb)(void* _stream, uint32_t* _out_index);
+	typedef bool (deserialize_cb)(void* _stream, void** _rpc, uint32_t* _out_index);
 	extern deserialize_cb* g_on_deserialize;
 	typedef void (call_c_rpc_cb)(int rpc_index);
 	extern call_c_rpc_cb* g_on_call_rpc;
