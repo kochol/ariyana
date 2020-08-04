@@ -36,7 +36,15 @@ namespace ari::net
 			, const yojimbo::ClientServerConfig& config = GameConnectionConfig()
 			, yojimbo::Adapter* adapter = nullptr);
 
-		void SaveReply(char* file_name);
+		void RecordReplay();
+
+		void StopReplay();
+
+		uint8_t* GetReplay();
+
+		int GetReplaySize();
+
+		void PlayReplay(uint8_t* data, int size);
 
 		void StopServer();
 
@@ -68,7 +76,7 @@ namespace ari::net
 
 		// Replay vars
 		bool					m_bSaveReply = false;
-		core::String			m_sReplyFileName;
+		bool					m_bPlayReplay = false;
 		core::Buffer			m_bReplayBuffer;
     };
 

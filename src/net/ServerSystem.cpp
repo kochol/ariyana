@@ -130,10 +130,32 @@ namespace ari::net
 		return true;
 	}
 
-	void ServerSystem::SaveReply(char* file_name)
+	void ServerSystem::RecordReplay()
 	{
-		m_bSaveReply = true; 
-		m_sReplyFileName = file_name;
+		m_bSaveReply = true;
+		m_bReplayBuffer.Clear();
+	}
+
+	void ServerSystem::StopReplay()
+	{
+		m_bSaveReply = false;
+	}
+
+	uint8_t* ServerSystem::GetReplay()
+	{
+		return m_bReplayBuffer.Data();
+	}
+
+	int ServerSystem::GetReplaySize()
+	{
+		return m_bReplayBuffer.Size();
+	}
+
+	void ServerSystem::PlayReplay(uint8_t* data, int size)
+	{
+		m_bReplayBuffer.Clear();
+		m_bReplayBuffer.Add(data, size);
+		m_bPlayReplay = true;
 	}
 
 	void ServerSystem::StopServer()
@@ -141,7 +163,6 @@ namespace ari::net
 		m_time = 0;
 		m_iClientCount = 0;
 		m_bSaveReply = false;
-		m_sReplyFileName.Clear();
 		if (m_pServer)
 		{
 			m_pServer->Stop();
