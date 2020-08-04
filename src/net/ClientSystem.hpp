@@ -3,6 +3,7 @@
 #include <yojimbo.h>
 #include "GameAdapter.hpp"
 #include "NetworkSystem.hpp"
+#include "core/memory/Buffer.hpp"
 
 namespace ari::net
 {
@@ -40,6 +41,8 @@ namespace ari::net
 
 		void Call_C_RPC(void* rpc, bool _reliable, uint32_t _index, RpcType _rpc_type, int client_id) override;
 
+		void PlayReplay(uint8_t* data, int size);
+
 	protected:
 
 		void SendRPC(RPC* rpc, int client_id) override;
@@ -52,5 +55,11 @@ namespace ari::net
 		core::Map<uint32_t // Component ID
 			, core::Map<uint32_t/* Server component handle*/
 			, uint32_t /* Client component handle */>> m_mComponents;
+
+		bool					m_bPlayReplay = false;
+		core::Buffer			m_bReplayBuffer;
+		double					m_replay_time;
+
+		void UpdateReplay();
 	};
 } // namespace ari::net

@@ -44,8 +44,6 @@ namespace ari::net
 
 		int GetReplaySize();
 
-		void PlayReplay(uint8_t* data, int size);
-
 		void StopServer();
 
 		virtual void ClientConnected(int client_id);
@@ -76,7 +74,6 @@ namespace ari::net
 
 		// Replay vars
 		bool					m_bSaveReply = false;
-		bool					m_bPlayReplay = false;
 		core::Buffer			m_bReplayBuffer;
     };
 
