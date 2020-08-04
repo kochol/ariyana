@@ -130,6 +130,12 @@ namespace ari::net
 		return true;
 	}
 
+	void ServerSystem::SaveReply(char* file_name)
+	{
+		m_bSaveReply = true; 
+		m_sReplyFileName = file_name;
+	}
+
 	void ServerSystem::StopServer()
 	{
 		m_time = 0;
@@ -228,6 +234,17 @@ namespace ari::net
 
 		GameChannel channel = _reliable ? GameChannel::RELIABLE : GameChannel::UNRELIABLE;
 
+		// Save the replay data
+		int bytesNeeded = 12; /* 1 byte for rpc type 
+							   + 1 byte for client count if it is a multi cast otherwise it is client id
+							   + 1 byte for message type
+							   + 8 bytes for time */
+		CRpcCallMessage* replay_msg = nullptr;
+		static core::Array<uint8_t> clients;
+
+		if (m_bSaveReply)
+			clients.Clear();
+
 		if (_rpc_type == RpcType::MultiCast)
 		{
 			// Send to all clients
@@ -240,12 +257,19 @@ namespace ari::net
 						msg->AddRef();
 					msg = (CRpcCallMessage*)m_pServer->CreateMessage
 						(i, int(GameMessageType::CRPC_CALL));
+					if (!replay_msg)
+						replay_msg = msg;
+					if (m_bSaveReply)
+						clients.Add(uint8_t(i));
 
 					msg->rpc = rpc;
 					msg->rpc_index = _index;
 					m_pServer->SendMessage(i, int(channel), msg);
 				}
 			}
+
+			if (clients.Size() == 0)
+				return;
 		}
 		else
 		{
@@ -254,9 +278,63 @@ namespace ari::net
 			{
 				auto msg = (CRpcCallMessage*)m_pServer->CreateMessage
 				(client_id, int(GameMessageType::CRPC_CALL));
+				replay_msg = msg;
 				msg->rpc = rpc;
 				msg->rpc_index = _index;
 				m_pServer->SendMessage(client_id, int(channel), msg);
+			}
+		}
+
+		// Save the replay data
+		if (m_bSaveReply)
+		{
+			// Save the replay to m_bReplayBuffer
+			yojimbo::MeasureStream mStream(yojimbo::GetDefaultAllocator());
+			if (replay_msg->SerializeInternal(mStream))
+			{
+				bytesNeeded += mStream.GetBytesProcessed() + clients.Size();
+				bytesNeeded += bytesNeeded % 4 == 0 ? 0: 4 - bytesNeeded % 4;
+
+ 			    // Create write stream
+				uint8_t* buffer = m_bReplayBuffer.Add(bytesNeeded);
+				yojimbo::WriteStream wStream(
+					yojimbo::GetDefaultAllocator(),
+					buffer,
+					bytesNeeded
+					);
+
+				auto save_replay = [&]()
+				{
+					// Save the rpc type
+					int8_t rpc_type = int8_t(_rpc_type);
+					serialize_bytes(wStream, (uint8_t*)&rpc_type, 1);
+
+					if (clients.Size() > 0)
+					{
+						// Save the clients count and ids
+						uint8_t client_count = uint8_t(clients.Size());
+						serialize_bytes(wStream, &client_count, 1);
+						for (int i = 0; i < clients.Size(); i++)
+						{
+							serialize_bytes(wStream, &clients[i], 1);
+						}
+					}
+					else
+					{
+						// Save the client id
+						uint8_t client_id_u8 = uint8_t(client_id);
+						serialize_bytes(wStream, &client_id_u8, 1);
+					}
+
+					// Save the message type
+					int8_t msgType = int8_t(GameMessageType::CRPC_CALL);
+					serialize_bytes(wStream, (uint8_t*)&msgType, 1);
+					// Save the time
+					serialize_double(wStream, m_time);
+					// Save the RPC
+					return replay_msg->SerializeInternal(wStream);
+				};
+				save_replay();
 			}
 		}
 	}
@@ -297,7 +375,7 @@ namespace ari::net
 	}
 
 	//------------------------------------------------------------------------------
-	void ServerSystem::ProcessMessage(int client_index, yojimbo::Message* msg)
+	bool ServerSystem::ProcessMessage(int client_index, yojimbo::Message* msg)
 	{
 		if (msg->GetType() == int(GameMessageType::RPC_CALL))
 		{
@@ -311,7 +389,45 @@ namespace ari::net
 			auto rpc_msg = (CRpcCallMessage*)msg;
 			g_iLastRpcClientIndex = client_index;
 			g_on_call_rpc(rpc_msg->rpc_index);
+
+			if (m_bSaveReply)
+			{
+				// Save the replay to m_bReplayBuffer
+				yojimbo::MeasureStream mStream(yojimbo::GetDefaultAllocator());
+				if (msg->SerializeInternal(mStream))
+				{
+					int bytesNeeded = mStream.GetBytesProcessed() 
+						+ 12; /* 1 byte for rpc type
+							   + 1 byte for client id;
+							   + 1 byte for message type 
+							   + 8 bytes for time */
+						
+					// Create write stream
+					uint8_t* buffer = m_bReplayBuffer.Add(bytesNeeded);
+					yojimbo::WriteStream wStream(
+						yojimbo::GetDefaultAllocator(),
+						buffer,
+						bytesNeeded
+						);
+
+					// Save the rpc type
+					int8_t rpc_type = -1; // It means it is an incoming msg
+					serialize_bytes(wStream, (uint8_t*)&rpc_type, 1);
+					// Save the client id
+					uint8_t client_id = client_index;
+					serialize_bytes(wStream, &client_id, 1);
+					// Save the message type
+					int8_t msgType = int8_t(GameMessageType::CRPC_CALL);
+					serialize_bytes(wStream, (uint8_t*)&msgType, 1);
+					// Save the time
+					serialize_double(wStream, m_time);
+					// Save the RPC
+					msg->SerializeInternal(wStream);
+				}
+			}
 		}
+
+		return true;
 	}
 
 } // namespace ari::net

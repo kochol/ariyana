@@ -5,6 +5,7 @@
 #include "en/EventSubscriber.hpp"
 #include "core/containers/Array.hpp"
 #include "NetworkSystem.hpp"
+#include "core/memory/Buffer.hpp"
 
 namespace ari::net
 {
@@ -35,11 +36,7 @@ namespace ari::net
 			, const yojimbo::ClientServerConfig& config = GameConnectionConfig()
 			, yojimbo::Adapter* adapter = nullptr);
 
-		void SaveReply(char* file_name) 
-		{
-			m_bSaveReply = true; 
-			m_sReplyFileName = file_name;
-		}
+		void SaveReply(char* file_name);
 
 		void StopServer();
 
@@ -61,15 +58,18 @@ namespace ari::net
 
 		void SendRPC(RPC* rpc, int client_id) override;
 
-		void ProcessMessage(int client_index, yojimbo::Message* msg);
+		bool ProcessMessage(int client_index, yojimbo::Message* msg);
 
 		yojimbo::Server		*	m_pServer	= nullptr;
 		core::Array<en::EntityHandle>	m_aEntities;
 		core::Array<PropertyReplicator*>
 			m_aPropertyReplicators;
 		int						m_iClientCount = 0;
+
+		// Replay vars
 		bool					m_bSaveReply = false;
 		core::String			m_sReplyFileName;
+		core::Buffer			m_bReplayBuffer;
     };
 
 } // namespace ari::net
