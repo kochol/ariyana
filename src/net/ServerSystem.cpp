@@ -155,6 +155,18 @@ namespace ari::net
 	{
 		m_iClientCount++;
 		log_info("A new client connected. client id = %d", client_id);
+
+		// save to replay buffer
+		if (m_bSaveReply)
+		{
+			int8_t msg_id = -2; // -2 for client gets connected
+			m_bReplayBuffer.Add((uint8_t*)&msg_id, 1);
+			uint8_t c_id = uint8_t(client_id);
+			m_bReplayBuffer.Add(&c_id, 1);
+			// save the time
+			m_bReplayBuffer.Add((uint8_t*)&m_time, 8);
+		}
+
 		for (auto& e : m_aEntities)
 		{
 			auto msg = (CreateEntityMessage*)m_pServer->CreateMessage(client_id, int(GameMessageType::CREATE_ENTITY));
@@ -170,6 +182,18 @@ namespace ari::net
 	{
 		m_iClientCount--;
 		log_info("Client with id %d has been disconnected.", client_id);
+
+		// save to replay buffer
+		if (m_bSaveReply)
+		{
+			int8_t msg_id = -3; // -3 for client gets disconnected
+			m_bReplayBuffer.Add((uint8_t*)&msg_id, 1);
+			uint8_t c_id = uint8_t(client_id);
+			m_bReplayBuffer.Add(&c_id, 1);
+			// save the time
+			m_bReplayBuffer.Add((uint8_t*)&m_time, 8);
+		}
+
 		m_pWorld->emit<en::events::OnClientDisconnected>({ client_id });
 	}
 
