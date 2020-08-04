@@ -176,7 +176,7 @@ namespace ari::net
 		log_info("A new client connected. client id = %d", client_id);
 
 		// save to replay buffer
-		if (m_bSaveReply)
+		/*if (m_bSaveReply)
 		{
 			// save the time
 			m_bReplayBuffer.Add((uint8_t*)&m_time, 8);
@@ -186,7 +186,7 @@ namespace ari::net
 			// save the client id
 			uint8_t c_id = uint8_t(client_id);
 			m_bReplayBuffer.Add(&c_id, 1);
-		}
+		}*/
 
 		for (auto& e : m_aEntities)
 		{
@@ -205,7 +205,7 @@ namespace ari::net
 		log_info("Client with id %d has been disconnected.", client_id);
 
 		// save to replay buffer
-		if (m_bSaveReply)
+		/*if (m_bSaveReply)
 		{
 			// save the time
 			m_bReplayBuffer.Add((uint8_t*)&m_time, 8);
@@ -215,7 +215,7 @@ namespace ari::net
 			// save the client id
 			uint8_t c_id = uint8_t(client_id);
 			m_bReplayBuffer.Add(&c_id, 1);
-		}
+		}*/
 
 		m_pWorld->emit<en::events::OnClientDisconnected>({ client_id });
 	}

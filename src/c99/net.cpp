@@ -253,6 +253,26 @@ void SetOnClientConnectCb(void* _obj, void* _world, void* _userData, client_cb* 
     cb->m_pWorld->Subscribe<ari::en::events::OnClientDisconnected>(cb);
 }
 
+void RecordReplayServerSystem(void* _obj)
+{
+    reinterpret_cast<ari::net::ServerSystem*>(_obj)->RecordReplay();
+}
+
+void StopReplayServerSystem(void* _obj)
+{
+    reinterpret_cast<ari::net::ServerSystem*>(_obj)->StopReplay();
+}
+
+uint8_t* GetReplayServerSystem(void* _obj)
+{
+    return reinterpret_cast<ari::net::ServerSystem*>(_obj)->GetReplay();
+}
+
+int GetReplaySizeServerSystem(void* _obj)
+{
+    return reinterpret_cast<ari::net::ServerSystem*>(_obj)->GetReplaySize();
+}
+
 // Client System
 void* CreateClientSystem()
 {
@@ -277,6 +297,11 @@ void StopClientSystem(void* _obj)
 void CallCRPCClientSystem(void* _obj, void* _rpc, bool _reliable, uint32_t _index, RpcType _rpc_type)
 {
     reinterpret_cast<ari::net::ClientSystem*>(_obj)->Call_C_RPC(_rpc, _reliable, _index, ari::net::RpcType(_rpc_type), 0);
+}
+
+void PlayReplayClientSystem(void* _obj, uint8_t* data, int size)
+{
+    reinterpret_cast<ari::net::ClientSystem*>(_obj)->PlayReplay(data, size);
 }
 
 // PropertyReplicator
