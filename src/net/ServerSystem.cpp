@@ -282,10 +282,10 @@ namespace ari::net
 		GameChannel channel = _reliable ? GameChannel::RELIABLE : GameChannel::UNRELIABLE;
 
 		// Save the replay data
-		int bytesNeeded = 16; /* 8 bytes for time
+		int bytesNeeded = 14; /* 8 bytes for time
 							   + 1 byte for message type
 							   + 1 byte for rpc type 
-							   + 1 byte for client count if it is a multi cast otherwise it is client id
+							   //+ 1 byte for client count if it is a multi cast otherwise it is client id
 							   + 4 byte for stream size */
 		CRpcCallMessage* replay_msg = nullptr;
 
@@ -332,6 +332,7 @@ namespace ari::net
 			if (replay_msg->SerializeInternal(mStream))
 			{
 				bytesNeeded += mStream.GetBytesProcessed();
+				bytesNeeded += bytesNeeded % 4 == 0 ? 0 : 4 - bytesNeeded % 4;
 
  			    // Create write stream
 				uint8_t* buffer = m_bReplayBuffer.Add(bytesNeeded);
@@ -345,7 +346,7 @@ namespace ari::net
 				{
 					// Save the time
 					serialize_double(wStream, m_time);
-
+					
 					// Save the message type
 					int8_t msgType = int8_t(GameMessageType::CRPC_CALL);
 					serialize_bytes(wStream, (uint8_t*)&msgType, 1);
@@ -362,6 +363,7 @@ namespace ari::net
 					return replay_msg->SerializeInternal(wStream);
 				};
 				save_replay();
+				wStream.Flush();
 			}
 		}
 	}

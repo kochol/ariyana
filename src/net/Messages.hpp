@@ -215,6 +215,11 @@ namespace ari::net
 			g_on_add_ref_rpc(rpc_index);
 		}
 
+		void InternalRelease()
+		{
+			Release();
+		}
+
 		void* rpc = nullptr;
 		uint32_t rpc_index = 0;
 
