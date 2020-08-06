@@ -199,7 +199,10 @@ namespace ari::net
 			// get next time from buffer
 			int size = m_bReplayBuffer.Read(&m_replay_time, 8);
 			if (size == 0)
+			{
+				m_bPlayReplay = false;
 				return;
+			}
 		}
 
 		if (m_replay_time <= m_time)
@@ -235,7 +238,6 @@ namespace ari::net
 				msg.SerializeInternal(readStream);
 
 				g_on_call_rpc(msg.rpc_index);
-				g_on_delete_rpc(msg.rpc_index);
 				msg.InternalRelease();
 			}
 			break;
