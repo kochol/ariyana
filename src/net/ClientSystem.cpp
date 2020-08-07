@@ -194,6 +194,8 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	void ClientSystem::UpdateReplay()
 	{
+	check_again:
+
 		if (m_replay_time < 0)
 		{
 			// get next time from buffer
@@ -248,7 +250,7 @@ namespace ari::net
 			}
 
 			m_replay_time = -1;
-			UpdateReplay();
+			goto check_again;
 		}
 	}
 
