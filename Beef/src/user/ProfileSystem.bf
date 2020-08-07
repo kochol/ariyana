@@ -117,19 +117,21 @@ namespace ari.user
 		{
 			if (res.Status == .Ok && res.StatusCode == 200)
 			{
-				var r = JSON_Beef.JSONDeserializer.Deserialize<Player>(res.Body);
+				Player player = new Player();
+				var r = JSON_Beef.Serialization.JSONDeserializer.Deserialize<Player>(res.Body, player);
 				switch (r)
 				{
 				case .Err(let err):
 					Console.WriteLine(err);
-				case .Ok(let val):
+					delete player;
+				case .Ok:
 					if (OnPlayerData != null)
 					{
-						OnPlayerData(val);
+						OnPlayerData(player);
 					}
 					else
 					{
-						delete val;
+						delete player;
 					}
 				}
 			}
@@ -156,19 +158,21 @@ namespace ari.user
 			if (res.StatusCode == 200)
 			{
 				// We found a lobby to join
-				var r = JSON_Beef.JSONDeserializer.Deserialize<Lobby>(res.Body);
+				Lobby lobby = new Lobby();
+				var r = JSON_Beef.Serialization.JSONDeserializer.Deserialize<Lobby>(res.Body, lobby);
 				switch (r)
 				{
 				case .Err(let err):
 					Console.WriteLine(err);
-				case .Ok(let val):
+					delete lobby;
+				case .Ok:
 					if (OnJoinedLobby != null)
 					{
-						OnJoinedLobby(val);
+						OnJoinedLobby(lobby);
 					}
 					else
 					{
-						delete val;
+						delete lobby;
 					}
 				}
 			}
