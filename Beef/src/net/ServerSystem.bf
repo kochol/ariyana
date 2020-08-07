@@ -85,5 +85,36 @@ namespace ari
 			CallCRPCServerSystem(_obj, Internal.UnsafeCastToPtr(_rpc), _rpc.Reliable, _index, _rpc.rpc_type, client_index);
 		}
 
+		[CLink]
+		static extern void RecordReplayServerSystem(void* _obj);
+
+		public void RecordReplay()
+		{
+			RecordReplayServerSystem(_obj);
+		}
+
+		[CLink]
+		static extern void StopReplayServerSystem(void* _obj);
+
+		public void StopReplay()
+		{
+			StopReplayServerSystem(_obj);
+		}
+
+		[CLink]
+		static extern uint8* GetReplayServerSystem(void* _obj);
+
+		public uint8* GetReplay()
+		{
+			return GetReplayServerSystem(_obj);
+		}
+
+		[CLink]
+		static extern int32 GetReplaySizeServerSystem(void* _obj);
+
+		public int32 GetReplaySize()
+		{
+			return GetReplaySizeServerSystem(_obj);
+		}
 	}
 }

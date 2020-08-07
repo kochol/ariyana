@@ -8,7 +8,7 @@ struct Node3dHandle;
 
 // Globals
 typedef bool (serialize_cb)(void* _stream, void* _rpc, uint32_t _index);
-typedef bool (deserialize_cb)(void* _stream, uint32_t* _out_index);
+typedef bool (deserialize_cb)(void* _stream, void** _rpc, uint32_t* _out_index);
 typedef void (call_rpc_cb)(int rpc_index);
 CARI_API bool InitNetworkLink
 	(
@@ -76,6 +76,10 @@ CARI_API void StopServerSystem(void* _obj);
 CARI_API void CallCRPCServerSystem(void* _obj, void* _rpc, bool _reliable, uint32_t _index, RpcType _rpc_type, int client_id);
 typedef void(client_cb)(int client_id, void* userData);
 CARI_API void SetOnClientConnectCb(void* _obj, void* _world, void* _userData, client_cb* on_connect_cb, client_cb* on_disconnect_cb);
+CARI_API void RecordReplayServerSystem(void* _obj);
+CARI_API void StopReplayServerSystem(void* _obj);
+CARI_API uint8_t* GetReplayServerSystem(void* _obj);
+CARI_API int GetReplaySizeServerSystem(void* _obj);
 
 // Client System
 CARI_API void* CreateClientSystem();
@@ -83,6 +87,7 @@ CARI_API void DeleteClientSystem(void* _obj);
 CARI_API void ConnectClientSystem(void* _obj, char* ip, int port);
 CARI_API void StopClientSystem(void* _obj);
 CARI_API void CallCRPCClientSystem(void* _obj, void* _rpc, bool _reliable, uint32_t _index, RpcType _rpc_type);
+CARI_API void PlayReplayClientSystem(void* _obj, uint8_t* data, int size);
 
 // PropertyReplicator
 CARI_COMPONENT_HANDLE(PropertyReplicatorHandle)

@@ -34,6 +34,13 @@ namespace ari::net
 	//------------------------------------------------------------------------------
 	void ClientSystem::Update(en::World* _world, const float& _elapsed, en::UpdateState::Enum _state)
 	{
+		if (m_bPlayReplay)
+		{
+			m_time += _elapsed;
+			UpdateReplay();
+			return;
+		}
+
 		if (!m_pClient)
 			return;
 
@@ -171,6 +178,79 @@ namespace ari::net
 		{
 			auto rpc_msg = (CRpcCallMessage*)msg;
 			g_on_call_rpc(rpc_msg->rpc_index);
+		}
+	}
+
+	//------------------------------------------------------------------------------
+	void ClientSystem::PlayReplay(uint8_t* data, int size)
+	{
+		m_bReplayBuffer.Clear();
+		m_bReplayBuffer.Add(data, size);
+		m_bPlayReplay = true;
+		m_time = 0;
+		m_replay_time = -1;
+	}
+
+	//------------------------------------------------------------------------------
+	void ClientSystem::UpdateReplay()
+	{
+	check_again:
+
+		if (m_replay_time < 0)
+		{
+			// get next time from buffer
+			int size = m_bReplayBuffer.Read(&m_replay_time, 8);
+			if (size == 0)
+			{
+				m_bPlayReplay = false;
+				return;
+			}
+		}
+
+		if (m_replay_time <= m_time)
+		{
+			// read the msg type
+			int8_t msgType;
+			m_bReplayBuffer.Read(&msgType, 1);
+
+			switch (msgType)
+			{
+				// CRPC CALL MSG
+			case int8_t(GameMessageType::CRPC_CALL):
+			{
+				// read the rpc type
+				int8_t rpc_type;
+				m_bReplayBuffer.Read(&rpc_type, 1);
+
+				// read the stream size
+				int streamSize;
+				m_bReplayBuffer.Read(&streamSize, 4);
+
+				// create the read stream
+				int pos = m_bReplayBuffer.Tell();
+				yojimbo::ReadStream readStream(yojimbo::GetDefaultAllocator(), m_bReplayBuffer.Data() + pos, streamSize);
+
+				streamSize += 14;
+				streamSize += streamSize % 4 == 0 ? 0 : 4 - streamSize % 4;
+				streamSize -= 14;
+				m_bReplayBuffer.Seek(pos + streamSize);
+
+				// create the c rpc message
+				CRpcCallMessage msg;
+				msg.SerializeInternal(readStream);
+
+				g_on_call_rpc(msg.rpc_index);
+				msg.InternalRelease();
+			}
+			break;
+
+			default:
+				a_assert(false);
+				break;
+			}
+
+			m_replay_time = -1;
+			goto check_again;
 		}
 	}
 
