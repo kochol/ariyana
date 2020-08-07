@@ -45,6 +45,9 @@ CARI_API uint32_t HashStringFNV32(char* _str);
 
 CARI_API void ari_os_sleep(int ms);
 
+// Memory
+CARI_API void ARI_FREE_MEM(void* _ptr);
+
 // log functions
 CARI_API void ari_log_debug(char* _text);
 
