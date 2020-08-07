@@ -5,6 +5,7 @@
 #include "fs_local/FileSystemLocal.hpp"
 #include "gfx/Application.hpp"
 #include "io/platform/Platform.hpp"
+#include "zip_file.hpp"
 
 extern ari::Application* g_application;
 on_event_cb* g_OnEvent = nullptr;
@@ -96,4 +97,34 @@ void* CreateFileSystemLocal()
 void DeleteFileSystemLocal(void* _obj)
 {
     ari::core::Memory::Delete(reinterpret_cast<ari::io::FileSystemLocal*>(_obj));
+}
+
+// ZIP
+uint8_t* Zip_Compress(uint8_t* data, int* size)
+{
+	std::string vData(data, data + *size);
+	std::vector<unsigned char> vOut;
+
+	miniz_cpp::zip_file file;
+	file.writestr("ari.file", vData);
+	file.save(vOut);
+	*size = int(vOut.size());
+	uint8_t* buffer = (uint8_t*)ari::core::Memory::Alloc(*size);
+	ari::core::Memory::Copy(vOut.data(), buffer, *size);
+
+	return buffer;
+}
+
+uint8_t* Zip_Decompress(uint8_t* data, int* size)
+{
+	std::vector<unsigned char> vData(data, data + *size);
+
+	miniz_cpp::zip_file file(vData);
+	auto out = file.read("ari.file");
+
+	*size = int(out.size());
+	uint8_t* buffer = (uint8_t*)ari::core::Memory::Alloc(*size);
+	ari::core::Memory::Copy(out.data(), buffer, *size);
+
+	return buffer;
 }

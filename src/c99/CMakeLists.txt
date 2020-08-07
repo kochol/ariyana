@@ -13,5 +13,6 @@ fips_begin_sharedlib(cari)
         macros.h
         net.h                   net.cpp
         netSerializer.hpp
+        zip_file.hpp
     )
 fips_end_sharedlib()
