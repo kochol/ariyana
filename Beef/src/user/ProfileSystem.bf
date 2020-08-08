@@ -237,5 +237,16 @@ namespace ari.user
 			req.Url.AppendF("server/game_start/{}", lobby_id);
 			http_client.AddRequest(ref req);
 		}
+
+		public void ServerUploadReplay(int64 game_id, uint8* data, int32 size, OnRequestDoneDelegate OnDone)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.AppendF("server/save_replay/{}", game_id);
+			req.FileData = data;
+			req.FileSize = size;
+			req.OnRequestDone = OnDone;
+			http_client.AddRequest(ref req);
+		}
 	}
 }

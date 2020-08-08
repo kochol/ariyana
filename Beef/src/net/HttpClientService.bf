@@ -32,11 +32,29 @@ namespace ari.net
 					while (request_queue.TryPop(ref r))
 					{
 						session.Url = r.Url;
+
+						// set the headers
 						if (r.[Friend]SetHeaders)
 						{
 							session.SetHeaders(r.[Friend]Headers);
 						}
+
+						// set the file upload
+						if (r.FileSize > 0)
+						{
+							session.AddFileToUpload(r.FileData, r.FileSize);
+							session.SetVerb(.Put);
+						}
+
 						let sr = session.GetString();
+
+						if (r.FileSize > 0)
+						{
+							// reset upload data
+							session.AddFileToUpload(null, 0);
+							session.SetVerb(.Get);
+						}
+
 						if (r.OnRequestDone == null) // The request response is not important for the user
 						{
 							r.Dispose();

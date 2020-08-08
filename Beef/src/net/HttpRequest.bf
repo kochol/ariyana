@@ -12,6 +12,10 @@ namespace ari.net
 		bool SetHeaders;
 		public OnRequestDoneDelegate OnRequestDone;
 
+		// File upload with put
+		public uint8* FileData;
+		public int32 FileSize;
+
 		public void SetHeaders(List<String> _headers) mut
 		{
 			Headers = _headers;
