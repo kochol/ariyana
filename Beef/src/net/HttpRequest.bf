@@ -16,6 +16,11 @@ namespace ari.net
 		public uint8* FileData;
 		public int32 FileSize;
 
+		// Set the request body
+		public String Body;
+
+		public curl.Session.Verbs Verb = .Get;
+
 		public void SetHeaders(List<String> _headers) mut
 		{
 			Headers = _headers;
@@ -26,6 +31,7 @@ namespace ari.net
 		{
 			delete Url;
 			DeleteContainerAndItems!(Headers);
+			delete Body;
 		}
 	}
 }

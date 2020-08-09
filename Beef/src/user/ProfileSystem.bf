@@ -21,7 +21,6 @@ namespace ari.user
 		bool isLoggedIn = false;
 		float sendAutoJoinAgain = -1;
 
-
 		// Callbacks
 		public dOnLoggedIn OnLoggedIn = null ~ delete _;
 		public dOnHttpFailed OnLoginFailed = null ~ delete _;
@@ -68,9 +67,14 @@ namespace ari.user
 
 		public void Login(String _token)
 		{
-			var token = new String();
+			let token = new String();
 			token.Append("Authorization: ", "Bearer ", _token);
 			headers.Add(token);
+
+			let ct = new String();
+			ct.Append("Content-Type: application/json; charset=utf-8");
+			headers.Add(ct);
+
 			http_client.session.SetHeaders(headers);
 			isLoggedIn = true;
 		}
@@ -245,6 +249,22 @@ namespace ari.user
 			req.Url.AppendF("server/save_replay/{}", game_id);
 			req.FileData = data;
 			req.FileSize = size;
+			req.Verb = .Put;
+			req.OnRequestDone = OnDone;
+			http_client.AddRequest(ref req);
+		}
+
+		public void ServerSaveGame(Game game, OnRequestDoneDelegate OnDone)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.Append("server/save_game");
+			let r = JSON_Beef.Serialization.JSONSerializer.Serialize<String>(game);
+			req.Verb = .Post;
+			if (r case .Ok(let val))
+			{
+				req.Body = val;
+			}
 			req.OnRequestDone = OnDone;
 			http_client.AddRequest(ref req);
 		}

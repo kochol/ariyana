@@ -39,11 +39,17 @@ namespace ari.net
 							session.SetHeaders(r.[Friend]Headers);
 						}
 
+						// Set the verb
+						session.SetVerb(r.Verb);
+
 						// set the file upload
 						if (r.FileSize > 0)
 						{
 							session.AddFileToUpload(r.FileData, r.FileSize);
-							session.SetVerb(.Put);
+						}
+						if (r.Body != null)
+						{
+							session.SetRequestBody(r.Body);
 						}
 
 						let sr = session.GetString();
@@ -52,7 +58,6 @@ namespace ari.net
 						{
 							// reset upload data
 							session.AddFileToUpload(null, 0);
-							session.SetVerb(.Get);
 						}
 
 						if (r.OnRequestDone == null) // The request response is not important for the user
