@@ -12,6 +12,6 @@ namespace ari.user
 
 		public int32 serverPort;
 
-		public List<List<int64>> Teams { get; set; }
+		public List<List<int64>> teams = null ~ delete _;
 	}
 }
