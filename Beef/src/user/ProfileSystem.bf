@@ -242,6 +242,38 @@ namespace ari.user
 			http_client.AddRequest(ref req);
 		}
 
+		public void ServerGetLobby(int64 lobby_id, dOnJoinedLobby _OnGetLobby)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.AppendF("server/get_lobby/{}", lobby_id);
+			req.OnRequestDone = new (res) => {
+				if (res.StatusCode == 200)
+				{
+					Lobby lobby = new Lobby();
+					var r = JSON_Beef.Serialization.JSONDeserializer.Deserialize<Lobby>(res.Body, lobby);
+					switch (r)
+					{
+					case .Err(let err):
+						Console.WriteLine(err);
+						delete lobby;
+					case .Ok:
+						if (_OnGetLobby != null)
+						{
+							_OnGetLobby(lobby);
+							delete _OnGetLobby;
+						}
+						else
+						{
+							delete lobby;
+						}
+					}
+				}
+				res.Dispose();
+			};
+			http_client.AddRequest(ref req);
+		}
+
 		public void ServerUploadReplay(int64 game_id, uint8* data, int32 size, OnRequestDoneDelegate OnDone)
 		{
 			HttpRequest req = .();
@@ -268,5 +300,6 @@ namespace ari.user
 			req.OnRequestDone = OnDone;
 			http_client.AddRequest(ref req);
 		}
+
 	}
 }

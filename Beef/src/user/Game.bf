@@ -17,7 +17,7 @@ namespace ari.user
 			}
 		};
 
-		public int winnerTeamId;
+		public int32 winnerTeamId;
 
 		public String playTime = null ~ delete _;
 
