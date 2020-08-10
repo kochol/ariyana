@@ -291,6 +291,13 @@ namespace ari.user
 			HttpRequest req = .();
 			req.Url = new String(ServerAddress);
 			req.Url.Append("server/save_game");
+			for (var t in game.teams)
+			{
+				for (var p in t)
+				{
+					p.score.Replace('\"', '\'');
+				}
+			}
 			let r = JSON_Beef.Serialization.JSONSerializer.Serialize<String>(game);
 			req.Verb = .Post;
 			if (r case .Ok(let val))
@@ -301,5 +308,14 @@ namespace ari.user
 			http_client.AddRequest(ref req);
 		}
 
+		public void DownloadReplay(int64 game_id, OnRequestDoneDelegate OnDone)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.RemoveFromEnd(4);
+			req.Url.AppendF("replays/{}.zip", game_id);
+			req.OnRequestDone = OnDone;
+			http_client.AddRequest(ref req);
+		}
 	}
 }
