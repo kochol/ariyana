@@ -1,6 +1,7 @@
 #include "gui.h"
 #include "gui/GuiSystem.hpp"
 #include "gui/Window.hpp"
+#include "cimgui/imgui/imgui_internal.h"
 #include "cimgui/cimgui.h"
 #include "en/ComponentManager.hpp"
 
