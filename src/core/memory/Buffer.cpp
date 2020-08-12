@@ -78,14 +78,16 @@ namespace ari::core
 	{
 		this->Reserve(numBytes);
 		this->copy(data, numBytes);
+		this->pos += numBytes;
 	}
 
 	//------------------------------------------------------------------------------
 	uint8_t* Buffer::Add(int numBytes)
 	{
 		this->Reserve(numBytes);
-		uint8_t* ptr = this->data + this->size;
+		uint8_t* ptr = this->data + this->pos;
 		this->size += numBytes;
+		this->pos += numBytes;
 		return ptr;
 	}
 
@@ -196,9 +198,8 @@ namespace ari::core
 	{
 		// NOTE: it is valid to call copy with numBytes==0
 		a_assert_dbg(this->data);
-		a_assert_dbg((this->size + numBytes) <= this->capacity);
-		Memory::Copy(ptr, this->data + this->size, numBytes);
-		this->size += numBytes;
+		a_assert_dbg((this->pos + numBytes) <= this->capacity);
+		Memory::Copy(ptr, this->data + this->pos, numBytes);
 	}
 
 

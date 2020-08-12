@@ -364,6 +364,8 @@ namespace ari::net
 				};
 				save_replay();
 				wStream.Flush();
+
+				m_bReplayBuffer.Seek(m_bReplayBuffer.Tell() - bytesNeeded + 14 + mStream.GetBytesProcessed());
 			}
 		}
 	}

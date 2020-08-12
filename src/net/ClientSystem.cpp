@@ -230,9 +230,6 @@ namespace ari::net
 				int pos = m_bReplayBuffer.Tell();
 				yojimbo::ReadStream readStream(yojimbo::GetDefaultAllocator(), m_bReplayBuffer.Data() + pos, streamSize);
 
-				streamSize += 14;
-				streamSize += streamSize % 4 == 0 ? 0 : 4 - streamSize % 4;
-				streamSize -= 14;
 				m_bReplayBuffer.Seek(pos + streamSize);
 
 				// create the c rpc message
