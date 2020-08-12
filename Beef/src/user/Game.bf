@@ -3,7 +3,7 @@ using System;
 
 namespace ari.user
 {
-	[Reflect]
+	[Reflect, AlwaysInclude(AssumeInstantiated=true, IncludeAllMethods=true)]
 	class Game
 	{
 		public int64 id;

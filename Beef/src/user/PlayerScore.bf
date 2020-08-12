@@ -2,7 +2,7 @@ using System;
 
 namespace ari.user
 {
-	[Reflect]
+	[Reflect, AlwaysInclude(AssumeInstantiated=true, IncludeAllMethods=true)]
 	class PlayerScore
 	{
 		public this()

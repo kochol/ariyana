@@ -13,6 +13,8 @@ namespace ari.user
 
 	public delegate void dOnJoinedLobby(Lobby lobby);
 
+	public delegate void dOnGameList(GameList games);
+
 	public class ProfileSystem: AriSystem
 	{
 		private String ServerAddress = null ~ delete _;
@@ -231,6 +233,34 @@ namespace ari.user
 			req.Url = new String(ServerAddress);
 			req.Url.AppendF("auth/register/{}/{}/{}", Io.GetDeviceID(), userName, password);
 			req.OnRequestDone = new => OnRegisterCB;
+			http_client.AddRequest(ref req);
+		}
+
+		public void GetGames(int32 offset, int32 count, dOnGameList onGameList, dOnHttpFailed onFailed)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.AppendF("player/games/{}/{}", offset, count);
+			req.OnRequestDone = new (res) => {
+				if (res.StatusCode == 200)
+				{
+					var games = new GameList();
+					JSON_Beef.Serialization.JSONDeserializer.Deserialize<List<Game>>(res.Body, games.Games);
+					if (onGameList != null)
+						onGameList(games);
+					else
+						delete games;
+				}
+				else
+				{
+					let err = scope String();
+					err.AppendF("Can not get player games {} {}", res.Status, res.StatusCode);
+					Logger.Error(err);
+					if (onFailed != null)
+						onFailed(res.Status);
+				}
+				res.Dispose();
+			};
 			http_client.AddRequest(ref req);
 		}
 
