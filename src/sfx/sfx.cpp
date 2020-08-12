@@ -5,6 +5,7 @@
 #include "core/log.h"
 #include "core/string/StringBuilder.hpp"
 #include "io/FileSystem.hpp"
+#include "core/memory/MemoryPool.hpp"
 
 namespace ari::sfx
 {
@@ -30,10 +31,11 @@ namespace ari::sfx
 	}
 
 	//------------------------------------------------------------------------------
+	// TODO: Use memory pool 
 	AudioSourceHandle LoadAudioSource(core::String _path)
 	{
 
-		SoLoud::Wav* wave;
+		SoLoud::Wav* wave = new SoLoud::Wav;
 		io::LoadFile(_path, [wave](core::Buffer * buffer)
 			{
 				SoLoud::result result = wave->loadMem(buffer->Data(), buffer->Size());
