@@ -50,6 +50,9 @@ CARI_API void ARI_FREE_MEM(void* _ptr);
 
 // log functions
 CARI_API void ari_log_debug(char* _text);
+CARI_API void ari_log_error(char* _text);
+CARI_API void ari_log_info(char* _text);
+CARI_API void ari_log_warning(char* _text);
 
 // Time functions
 CARI_API void ari_tm_init();

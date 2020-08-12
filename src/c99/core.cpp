@@ -29,6 +29,21 @@ void ari_log_debug(char* _text)
 	log_debug(_text);
 }
 
+void ari_log_error(char* _text)
+{
+	log_error(_text);
+}
+
+void ari_log_info(char* _text)
+{
+	log_info(_text);
+}
+
+void ari_log_warning(char* _text)
+{
+	log_warn(_text);
+}
+
 // Time functions
 void ari_tm_init()
 {

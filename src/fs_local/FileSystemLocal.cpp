@@ -131,6 +131,7 @@ namespace ari::io
 		// copy the file into the buffer:
 		request->Buffer.Clear();
 		size_t result = fread((void*)request->Buffer.Add(int(lSize)), 1, lSize, pFile);
+		request->Buffer.Seek(0);
 
 		// terminate
 		fclose(pFile);

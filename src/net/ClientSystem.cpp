@@ -186,6 +186,7 @@ namespace ari::net
 	{
 		m_bReplayBuffer.Clear();
 		m_bReplayBuffer.Add(data, size);
+		m_bReplayBuffer.Seek(0);
 		m_bPlayReplay = true;
 		m_time = 0;
 		m_replay_time = -1;

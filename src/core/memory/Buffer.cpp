@@ -78,6 +78,7 @@ namespace ari::core
 	{
 		this->Reserve(numBytes);
 		this->copy(data, numBytes);
+		this->size += numBytes;
 		this->pos += numBytes;
 	}
 
