@@ -247,7 +247,9 @@ namespace ari.user
 					var games = new GameList();
 					JSON_Beef.Serialization.JSONDeserializer.Deserialize<List<Game>>(res.Body, games.Games);
 					if (onGameList != null)
+					{
 						onGameList(games);
+					}
 					else
 						delete games;
 				}
@@ -257,9 +259,13 @@ namespace ari.user
 					err.AppendF("Can not get player games {} {}", res.Status, res.StatusCode);
 					Logger.Error(err);
 					if (onFailed != null)
+					{
 						onFailed(res.Status);
+					}
 				}
 				res.Dispose();
+				delete onFailed;
+				delete onGameList;
 			};
 			http_client.AddRequest(ref req);
 		}
