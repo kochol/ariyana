@@ -22,5 +22,7 @@ namespace ari.user
 		public String playTime = null ~ delete _;
 
 		public String version = null ~ delete _;
+
+		public double gameDuration;
 	}
 }
