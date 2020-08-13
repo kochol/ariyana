@@ -23,6 +23,15 @@ namespace ari.user
 		bool isLoggedIn = false;
 		float sendAutoJoinAgain = -1;
 
+		// player id <=> name dictionary
+		Dictionary<int64, String> playerNames = new Dictionary<int64, String>() ~ {
+			for (var kv in _)
+			{
+				delete kv.value;
+			}
+			delete _;
+		};
+
 		// Callbacks
 		public dOnLoggedIn OnLoggedIn = null ~ delete _;
 		public dOnHttpFailed OnLoginFailed = null ~ delete _;
@@ -268,6 +277,34 @@ namespace ari.user
 				delete onGameList;
 			};
 			http_client.AddRequest(ref req);
+		}
+
+		public String GetPlayerName(int64 player_id)
+		{
+			if (playerNames.ContainsKey(player_id))
+			{
+				return playerNames[player_id];
+			}
+			let playerName = new String();
+			playerNames.Add(player_id, playerName);
+
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.AppendF("player/name/{}", player_id);
+			req.OnRequestDone = new (res) => {
+				if (res.StatusCode == 200)
+				{
+					playerName.Set(res.Body);
+				}
+				else
+				{
+					playerName.Set("Error not found");
+				}
+				res.Dispose();
+			};
+			http_client.AddRequest(ref req);
+
+			return playerName;
 		}
 
 		public void ServerStartGame(int64 lobby_id)
