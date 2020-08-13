@@ -212,7 +212,6 @@ ari::core::Map<size_t, ServerSystemCallBack*> g_ServerSystemCallBacks;
 void* CreateServerSystem()
 {
     void* obj = ari::core::Memory::New<ari::net::ServerSystem>();
-    log_debug("Server system obj: %p", obj);
     const auto cb = ari::core::Memory::New<ServerSystemCallBack>();
     g_ServerSystemCallBacks.Add(reinterpret_cast<size_t>(obj), cb);
     return obj;
@@ -228,7 +227,6 @@ void DeleteServerSystem(void* _obj)
 
 bool CreateServerServerSystem(void* _obj, char* ip, int port)
 {
-    log_debug("ServerSystem->CreateServer obj = %p", _obj);
     return reinterpret_cast<ari::net::ServerSystem*>(_obj)->CreateServer(yojimbo::Address(ip, port));
 }
 
