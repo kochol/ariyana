@@ -46,6 +46,13 @@ namespace ari::core
 	}
 
 	//------------------------------------------------------------------------------
+	void Buffer::SetSize(int _size)
+	{
+		a_assert(_size >= 0 && _size <= capacity);
+		size = _size;
+	}
+
+	//------------------------------------------------------------------------------
 	bool Buffer::Empty() const
 	{
 		return size == 0;
@@ -78,17 +85,14 @@ namespace ari::core
 	{
 		this->Reserve(numBytes);
 		this->copy(data, numBytes);
-		this->size += numBytes;
-		this->pos += numBytes;
 	}
 
 	//------------------------------------------------------------------------------
 	uint8_t* Buffer::Add(int numBytes)
 	{
 		this->Reserve(numBytes);
-		uint8_t* ptr = this->data + this->pos;
+		uint8_t* ptr = this->data + this->size;
 		this->size += numBytes;
-		this->pos += numBytes;
 		return ptr;
 	}
 
@@ -199,8 +203,9 @@ namespace ari::core
 	{
 		// NOTE: it is valid to call copy with numBytes==0
 		a_assert_dbg(this->data);
-		a_assert_dbg((this->pos + numBytes) <= this->capacity);
-		Memory::Copy(ptr, this->data + this->pos, numBytes);
+		a_assert_dbg((this->size + numBytes) <= this->capacity);
+		Memory::Copy(ptr, this->data + this->size, numBytes);
+		this->size += numBytes;
 	}
 
 

@@ -23,6 +23,8 @@ namespace ari::core
 
         /// get number of bytes in buffer
         int Size() const;
+        /// Sets the buffer size. This function does not change capacity
+        void SetSize(int _size);
         /// return true if empty
         bool Empty() const;
         /// get capacity in bytes of buffer
