@@ -95,6 +95,7 @@ namespace ari::net
 	void ClientSystem::StopClient()
 	{
 		m_time = 0;
+		m_bPlayReplay = false;
 		if (m_pClient)
 		{
 			m_pClient->Disconnect();
