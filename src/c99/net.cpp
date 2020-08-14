@@ -302,6 +302,16 @@ void PlayReplayClientSystem(void* _obj, uint8_t* data, int size)
     reinterpret_cast<ari::net::ClientSystem*>(_obj)->PlayReplay(data, size);
 }
 
+void SetReplaySpeedClientSystem(void* _obj, float _speed)
+{
+    reinterpret_cast<ari::net::ClientSystem*>(_obj)->SetReplaySpeed(_speed);
+}
+
+void SetFastForwardClientSystem(void* _obj, bool _fast_forward)
+{
+    reinterpret_cast<ari::net::ClientSystem*>(_obj)->FastForwardReplay(_fast_forward);
+}
+
 // PropertyReplicator
 PropertyReplicatorHandle CreatePropertyReplicatorComponent()
 {

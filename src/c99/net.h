@@ -88,6 +88,8 @@ CARI_API void ConnectClientSystem(void* _obj, char* ip, int port);
 CARI_API void StopClientSystem(void* _obj);
 CARI_API void CallCRPCClientSystem(void* _obj, void* _rpc, bool _reliable, uint32_t _index, RpcType _rpc_type);
 CARI_API void PlayReplayClientSystem(void* _obj, uint8_t* data, int size);
+CARI_API void SetReplaySpeedClientSystem(void* _obj, float _speed);
+CARI_API void SetFastForwardClientSystem(void* _obj, bool _fast_forward);
 
 // PropertyReplicator
 CARI_COMPONENT_HANDLE(PropertyReplicatorHandle)

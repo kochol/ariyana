@@ -36,7 +36,7 @@ namespace ari::net
 	{
 		if (m_bPlayReplay)
 		{
-			m_time += _elapsed;
+			m_time += _elapsed * m_replay_speed;
 			UpdateReplay();
 			return;
 		}
@@ -189,6 +189,19 @@ namespace ari::net
 		m_bPlayReplay = true;
 		m_time = 0;
 		m_replay_time = -1;
+		m_replay_speed = 1;
+		m_bFastForwardReplay = false;
+	}
+
+	void ClientSystem::SetReplaySpeed(float _speed)
+	{
+		a_assert(_speed >= 0);
+		m_replay_speed = _speed;
+	}
+
+	void ClientSystem::FastForwardReplay(bool _enable)
+	{
+		m_bFastForwardReplay = _enable;
 	}
 
 	//------------------------------------------------------------------------------
@@ -206,6 +219,9 @@ namespace ari::net
 				return;
 			}
 		}
+
+		if (m_bFastForwardReplay && m_time < m_replay_time)
+			m_time = m_replay_time;
 
 		if (m_replay_time <= m_time)
 		{

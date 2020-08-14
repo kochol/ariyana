@@ -43,6 +43,10 @@ namespace ari::net
 
 		void PlayReplay(uint8_t* data, int size);
 
+		void SetReplaySpeed(float _speed);
+
+		void FastForwardReplay(bool _enable);
+
 	protected:
 
 		void SendRPC(RPC* rpc, int client_id) override;
@@ -57,8 +61,10 @@ namespace ari::net
 			, uint32_t /* Client component handle */>> m_mComponents;
 
 		bool					m_bPlayReplay = false;
+		bool					m_bFastForwardReplay;
 		core::Buffer			m_bReplayBuffer;
 		double					m_replay_time;
+		float					m_replay_speed;
 
 		void UpdateReplay();
 	};

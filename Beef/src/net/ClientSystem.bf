@@ -54,5 +54,21 @@ namespace ari
 		{
 			PlayReplayClientSystem(_obj, data, size);
 		}
+
+		[CLink]
+		static extern void SetReplaySpeedClientSystem(void* _obj, float _speed);
+
+		public void SetReplaySpeed(float _speed)
+		{
+			SetReplaySpeedClientSystem(_obj, _speed);
+		}
+
+		[CLink]
+		static extern void SetFastForwardClientSystem(void* _obj, bool _fast_forward);
+
+		public void SetFastForward(bool _enable)
+		{
+			SetFastForwardClientSystem(_obj, _enable);
+		}
 	}
 }
