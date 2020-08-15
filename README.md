@@ -76,8 +76,8 @@ done! it's ready to rock.
 - Add Google analytics support
 - Add blending for sprites
 - Create replay of networked games
-- Add zip compression and decomression
-- Upload replay to server
+- Add zip compression and decompression
+- Upload replay to the server
 - Get players game history from server
 - Add replay speed and fast forward
 
