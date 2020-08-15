@@ -16,6 +16,7 @@ Ariyana Game Engine
   - Sync entities with clients automatically
   - RPC support with auto parameter serializing and deserializing.
   - Automatic property replication
+  - Create replay of networked games
 - GLTF 2.0 mesh loading
 - Material system (Experimental)
 - 3D and 2D supported
@@ -24,6 +25,7 @@ Ariyana Game Engine
 - Dedicated server build
 - Players [profile server](https://github.com/kochol/AriyanaProfileServer) to run the game servers and matchmaking
 - Http client system to working with rest APIs
+- Google analytics support
 
 ## How To Build
 
@@ -66,6 +68,18 @@ now ```./fips open``` will open it up in your C/C++ development environment:
 done! it's ready to rock.
 
 # Changes
+
+## Ariyana Game Engine 0.6
+
+- Add ImGui support in Beef and ScriptGui for building custom GUI components from Beef
+- Add Login and Register to profile server
+- Add Google analytics support
+- Add blending for sprites
+- Create replay of networked games
+- Add zip compression and decomression
+- Upload replay to server
+- Get players game history from server
+- Add replay speed and fast forward
 
 ## Ariyana Game Engine 0.5
 
