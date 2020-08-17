@@ -32,8 +32,48 @@ namespace ari.net
 					while (request_queue.TryPop(ref r))
 					{
 						session.Url = r.Url;
-						HttpResponse res = .();
+
+						// set the headers
+						if (r.[Friend]SetHeaders)
+						{
+							session.SetHeaders(r.[Friend]Headers);
+						}
+
+						// Set the verb
+						session.SetVerb(r.Verb);
+
+						// set the file upload
+						if (r.FileSize > 0)
+						{
+							session.AddFileToUpload(r.FileData, r.FileSize);
+						}
+						if (r.Body != null)
+						{
+							session.SetRequestBody(r.Body);
+						}
+
 						let sr = session.GetString();
+
+						if (r.FileSize > 0)
+						{
+							// reset upload data
+							session.AddFileToUpload(null, 0);
+						}
+
+						if (r.OnRequestDone == null) // The request response is not important for the user
+						{
+							r.Dispose();
+							switch(sr)
+							{
+							case .Err(let err):
+								Console.WriteLine(err);
+							case .Ok(let val):
+
+							}
+							continue;
+						}
+
+						HttpResponse res = .();
 						switch (sr)
 						{
 						case .Err(let err):
@@ -47,7 +87,7 @@ namespace ari.net
 						t.Response = res;
 						t.OnDone = r.OnRequestDone;
 						response_queue.Push(ref t);
-						delete r.Url;
+						r.Dispose();
 					}
 				}
 			}

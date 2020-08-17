@@ -1,6 +1,7 @@
 #include "gui.h"
 #include "gui/GuiSystem.hpp"
 #include "gui/Window.hpp"
+#include "cimgui/imgui/imgui_internal.h"
 #include "cimgui/cimgui.h"
 #include "en/ComponentManager.hpp"
 
@@ -70,12 +71,15 @@ class ScriptGui : public ari::gui::Gui
 
     bool BeginRender() override
     {
-        return OnBeginRender(UserData);
+		if (UserData)
+			return OnBeginRender(UserData);
+		return false;
     }
 
     void EndRender() override
     {
-        OnEndRender(UserData);
+		if (UserData)
+			OnEndRender(UserData);
     }
 };
 

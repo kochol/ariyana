@@ -36,6 +36,7 @@ namespace ari
 
 		public ~this()
 		{
+			_obj = null;
 			delete _name;
 		}
 

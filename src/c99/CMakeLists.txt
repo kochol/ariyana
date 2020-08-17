@@ -14,5 +14,6 @@ fips_begin_sharedlib(cari)
         net.h                   net.cpp
         netSerializer.hpp
 		sfx.h					sfx.cpp
+        zip_file.hpp
     )
 fips_end_sharedlib()

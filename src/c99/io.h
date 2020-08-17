@@ -23,4 +23,8 @@ CARI_API void RegisterFileSystemLink(void* _obj, char* _scheme);
 CARI_API void* CreateFileSystemLocal();
 CARI_API void DeleteFileSystemLocal(void* _obj);
 
+// ZIP
+CARI_API uint8_t* Zip_Compress(uint8_t* data, int* in_out_size);
+CARI_API uint8_t* Zip_Decompress(uint8_t* data, int* in_out_size);
+
 #endif

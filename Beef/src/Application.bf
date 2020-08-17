@@ -90,7 +90,9 @@ namespace ari
 			{
 				System.Threading.Thread.Sleep(1000);
 			}
+			return;
 #else // !BF_PLATFORM_ANDROID
+
 			// init the app
 			_app.OnInit();
 
@@ -101,7 +103,7 @@ namespace ari
 			SetOnEventCallBack(=> OnEvent);
 
 			// run the loop
-			while (Io.Run())
+			while (!Application.Exit && Io.Run())
 			{
 				*FrameNumber += 1;
 
@@ -135,6 +137,8 @@ namespace ari
 	public class Application
 	{
 		protected GfxSetup* setup = null;
+
+		public static bool Exit = false;
 
 		public virtual GfxSetup* GetGfxSetup()
 		{

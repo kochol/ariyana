@@ -46,5 +46,13 @@ namespace ari
 		{
 			CallCRPCClientSystem(_obj, Internal.UnsafeCastToPtr(_rpc), _rpc.Reliable, _index, _rpc.rpc_type);
 		}
+
+		[CLink]
+		static extern void PlayReplayClientSystem(void* _obj, uint8* data, int32 size);
+
+		public void PlayReplay(uint8* data, int32 size)
+		{
+			PlayReplayClientSystem(_obj, data, size);
+		}
 	}
 }

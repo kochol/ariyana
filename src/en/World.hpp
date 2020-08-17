@@ -274,7 +274,9 @@ namespace ari::en
 		if (!m_mComponents.Contains(_id))
 			return;
 		auto& m = m_mComponents[_id];
-		for (auto it = m.begin(); it != m.end(); it++)
+		auto it_begin = m.begin();
+		auto it_end = m.end();
+		for (auto it = it_begin; it != it_end; ++it)
 		{
 			const cmp_handle& h = it->value;
 			if (h.entity == nullptr)
@@ -291,7 +293,9 @@ namespace ari::en
 		if (!m_mComponents.Contains(BASE::Id))
 			return;
 		auto& m = m_mComponents[BASE::Id];
-		for (auto it = m.begin(); it != m.end(); ++it)
+		auto it_begin = m.begin();
+		auto it_end = m.end();
+		for (auto it = it_begin; it != it_end; ++it)
 		{
 			const cmp_handle& h = it->value;
 			if (h.entity == nullptr)

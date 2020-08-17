@@ -43,8 +43,6 @@ BeefLibType = "Static"
 RelocType = "PIC"
 
 [Configs.ServerDebug.Linux64]
-OtherLinkFlags = "$(LinkFlags) cari"
 BeefLibType = "Static"
-LibPaths = ["$(ProjectDir)/dist/linux64/ServerDebug"]
 PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/dist/linux64/ServerDebug/*.so\")"]
 PreprocessorMacros = ["DEBUG", "ARI_SERVER"]

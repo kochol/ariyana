@@ -21,10 +21,10 @@ namespace ari.user
 		bool isLoggedIn = false;
 		float sendAutoJoinAgain = -1;
 
-
 		// Callbacks
 		public dOnLoggedIn OnLoggedIn = null ~ delete _;
 		public dOnHttpFailed OnLoginFailed = null ~ delete _;
+		public dOnLoggedIn OnRegistered = null ~ delete _;
 
 		public dOnPlayerData OnPlayerData = null ~ delete _;
 		public dOnHttpFailed OnHttpFaild = null ~ delete _;
@@ -53,11 +53,7 @@ namespace ari.user
 		{
 			if (response.Status == .Ok && response.StatusCode == 200)
 			{
-				var token = new String();
-				token.Append("Authorization: ", "Bearer ", response.Body);
-				headers.Add(token);
-				http_client.session.SetHeaders(headers);
-				isLoggedIn = true;
+				Login(response.Body);
 				OnLoggedIn();
 			}
 			else
@@ -67,6 +63,20 @@ namespace ari.user
 					OnLoginFailed(response.Status);
 			}
 			response.Dispose();
+		}
+
+		public void Login(String _token)
+		{
+			let token = new String();
+			token.Append("Authorization: ", "Bearer ", _token);
+			headers.Add(token);
+
+			let ct = new String();
+			ct.Append("Content-Type: application/json; charset=utf-8");
+			headers.Add(ct);
+
+			http_client.session.SetHeaders(headers);
+			isLoggedIn = true;
 		}
 
 		public void Login()
@@ -89,6 +99,19 @@ namespace ari.user
 			http_client.AddRequest(ref login);
 		}
 
+		public void Login(String username, String password)
+		{
+			// clear the last headers
+			ClearAndDeleteItems(headers);
+			http_client.session.SetHeaders(null);
+
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.AppendF("auth/{}/{}", username, password);
+			req.OnRequestDone = new => OnLogin;
+			http_client.AddRequest(ref req);
+		}
+
 		public bool IsLoggedIn()
 		{
 			return isLoggedIn;
@@ -98,19 +121,21 @@ namespace ari.user
 		{
 			if (res.Status == .Ok && res.StatusCode == 200)
 			{
-				var r = JSON_Beef.JSONDeserializer.Deserialize<Player>(res.Body);
+				Player player = new Player();
+				var r = JSON_Beef.Serialization.JSONDeserializer.Deserialize<Player>(res.Body, player);
 				switch (r)
 				{
 				case .Err(let err):
 					Console.WriteLine(err);
-				case .Ok(let val):
+					delete player;
+				case .Ok:
 					if (OnPlayerData != null)
 					{
-						OnPlayerData(val);
+						OnPlayerData(player);
 					}
 					else
 					{
-						delete val;
+						delete player;
 					}
 				}
 			}
@@ -137,19 +162,21 @@ namespace ari.user
 			if (res.StatusCode == 200)
 			{
 				// We found a lobby to join
-				var r = JSON_Beef.JSONDeserializer.Deserialize<Lobby>(res.Body);
+				Lobby lobby = new Lobby();
+				var r = JSON_Beef.Serialization.JSONDeserializer.Deserialize<Lobby>(res.Body, lobby);
 				switch (r)
 				{
 				case .Err(let err):
 					Console.WriteLine(err);
-				case .Ok(let val):
+					delete lobby;
+				case .Ok:
 					if (OnJoinedLobby != null)
 					{
-						OnJoinedLobby(val);
+						OnJoinedLobby(lobby);
 					}
 					else
 					{
-						delete val;
+						delete lobby;
 					}
 				}
 			}
@@ -180,6 +207,115 @@ namespace ari.user
 		public void CancelAutoJoinToLobby()
 		{
 			sendAutoJoinAgain = -2;
+		}
+
+		void OnRegisterCB(HttpResponse res)
+		{
+			if (res.StatusCode == 200)
+			{
+				if (OnRegistered != null)
+					OnRegistered();
+			}
+			else
+			{
+				Console.WriteLine("{} {}", res.Status, res.StatusCode);
+				if (OnHttpFaild != null)
+					OnHttpFaild(res.Status);
+			}
+			res.Dispose();
+		}
+
+		public void Register(String userName, String password)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.AppendF("auth/register/{}/{}/{}", Io.GetDeviceID(), userName, password);
+			req.OnRequestDone = new => OnRegisterCB;
+			http_client.AddRequest(ref req);
+		}
+
+		public void ServerStartGame(int64 lobby_id)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.AppendF("server/game_start/{}", lobby_id);
+			http_client.AddRequest(ref req);
+		}
+
+		public void ServerGetLobby(int64 lobby_id, dOnJoinedLobby _OnGetLobby)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.AppendF("server/get_lobby/{}", lobby_id);
+			req.OnRequestDone = new (res) => {
+				if (res.StatusCode == 200)
+				{
+					Lobby lobby = new Lobby();
+					var r = JSON_Beef.Serialization.JSONDeserializer.Deserialize<Lobby>(res.Body, lobby);
+					switch (r)
+					{
+					case .Err(let err):
+						Console.WriteLine(err);
+						delete lobby;
+					case .Ok:
+						if (_OnGetLobby != null)
+						{
+							_OnGetLobby(lobby);
+							delete _OnGetLobby;
+						}
+						else
+						{
+							delete lobby;
+						}
+					}
+				}
+				res.Dispose();
+			};
+			http_client.AddRequest(ref req);
+		}
+
+		public void ServerUploadReplay(int64 game_id, uint8* data, int32 size, OnRequestDoneDelegate OnDone)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.AppendF("server/save_replay/{}", game_id);
+			req.FileData = data;
+			req.FileSize = size;
+			req.Verb = .Put;
+			req.OnRequestDone = OnDone;
+			http_client.AddRequest(ref req);
+		}
+
+		public void ServerSaveGame(Game game, OnRequestDoneDelegate OnDone)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.Append("server/save_game");
+			for (var t in game.teams)
+			{
+				for (var p in t)
+				{
+					p.score.Replace('\"', '\'');
+				}
+			}
+			let r = JSON_Beef.Serialization.JSONSerializer.Serialize<String>(game);
+			req.Verb = .Post;
+			if (r case .Ok(let val))
+			{
+				req.Body = val;
+			}
+			req.OnRequestDone = OnDone;
+			http_client.AddRequest(ref req);
+		}
+
+		public void DownloadReplay(int64 game_id, OnRequestDoneDelegate OnDone)
+		{
+			HttpRequest req = .();
+			req.Url = new String(ServerAddress);
+			req.Url.RemoveFromEnd(4);
+			req.Url.AppendF("replays/{}.zip", game_id);
+			req.OnRequestDone = OnDone;
+			http_client.AddRequest(ref req);
 		}
 	}
 }

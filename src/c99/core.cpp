@@ -5,6 +5,7 @@
 #include "core/log.h"
 #include <sx/allocator.h>
 #include <sx/threads.h>
+#include "core/memory/Memory.hpp"
 
 uint32_t HashStringFNV32(char* _str)
 {
@@ -14,6 +15,12 @@ uint32_t HashStringFNV32(char* _str)
 void ari_os_sleep(int ms)
 {
 	sx_os_sleep(ms);
+}
+
+// Memory
+void ARI_FREE_MEM(void* _ptr)
+{
+	ari::core::Memory::Free(_ptr);
 }
 
 // log functions
