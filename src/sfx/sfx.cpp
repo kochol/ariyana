@@ -35,7 +35,7 @@ namespace ari::sfx
 	AudioSourceHandle LoadAudioSource(core::String _path)
 	{
 
-		SoLoud::Wav* wave = new SoLoud::Wav;
+		SoLoud::Wav* wave = core::Memory::New<SoLoud::Wav>();
 		io::LoadFile(_path, [wave](core::Buffer * buffer)
 			{
 				SoLoud::result result = wave->loadMem(buffer->Data(), buffer->Size());
