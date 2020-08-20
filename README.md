@@ -69,7 +69,7 @@ done! it's ready to rock.
 
 # Games that using Ariyana game engine
 
-## ![i](https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Twitter_colored_svg-64.png) Block heroes
+## ![block heroes](https://github.com/kochol/ariyana/raw/master/docs/images/logo2.jpg) Block heroes
 
 It's a multi player tetrix like game. 
 
