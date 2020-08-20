@@ -79,12 +79,12 @@ namespace ari
 				}
 				if (T::Id != _cmp.Component->GetBaseId())
 				{
-					l = mComponents[_cmp.Component->GetBaseId()];
-					for (int i = 0; i < l.Size(); ++i)
+					auto& l2 = mComponents[_cmp.Component->GetBaseId()];
+					for (int i = 0; i < l2.Size(); ++i)
 					{
-						if (l[i].handle == _cmp.Handle)
+						if (l2[i].handle == _cmp.Handle)
 						{
-							l.EraseSwap(i);
+							l2.EraseSwap(i);
 							break;
 						}
 					}
