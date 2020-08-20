@@ -67,7 +67,7 @@ now ```./fips open``` will open it up in your C/C++ development environment:
 
 done! it's ready to rock.
 
-# Games that using Ariyana game engine
+# Games that are using Ariyana game engine
 
 ## ![block heroes](https://github.com/kochol/ariyana/raw/master/docs/images/logo2.jpg) Block heroes
 
