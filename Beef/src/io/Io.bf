@@ -57,12 +57,14 @@ namespace ari.io
 		{
 			let fn = (dOnFileLoad)Internal.UnsafeCastToObject(_user_data);
 			fn(_data, size);
+			delete fn;
 		}
 
 		static void onFileFailed(int32 _error_code, void* _user_data)
 		{
 			let fn = (dOnFileFailed)Internal.UnsafeCastToObject(_user_data);
 			fn(_error_code);
+			delete fn;
 		}
 
 		// Load a file
