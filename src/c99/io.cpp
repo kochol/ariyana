@@ -82,6 +82,31 @@ CARI_API uint32_t GetDeviceID()
 	return ari::io::GetDeviceID();
 }
 
+// File
+void LoadFile(char* _path, on_file_load* _onLoad, void* _load_user_data,
+	on_file_failed* _onFailed, void* _failed_user_data)
+{
+	a_assert(_onLoad);
+
+	if (_onFailed)
+	{
+		ari::io::LoadFile(_path, [_onLoad, _load_user_data](ari::core::Buffer* _buffer) 
+			{
+				_onLoad(_buffer->Data(), _buffer->Size(), _load_user_data);
+			}, [_onFailed, _failed_user_data](ari::io::IOStatus::Code _code) 
+			{
+				_onFailed((int)_code, _failed_user_data);
+			});
+	}
+	else
+	{
+		ari::io::LoadFile(_path, [_onLoad, _load_user_data](ari::core::Buffer* _buffer) 
+			{
+				_onLoad(_buffer->Data(), _buffer->Size(), _load_user_data);
+			});
+	}
+}
+
 // FileSystem
 void RegisterFileSystemLink(void* _obj, char* _scheme)
 {
