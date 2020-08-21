@@ -1,6 +1,6 @@
 using System;
 
-namespace ari
+namespace ari.io
 {
 	[CRepr]
 	public struct WindowSetup

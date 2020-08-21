@@ -3,6 +3,7 @@ using System.Threading;
 using ari.net;
 using curl;
 using System.Collections;
+using ari.io;
 
 namespace ari.user
 {
