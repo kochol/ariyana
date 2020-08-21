@@ -69,6 +69,20 @@ namespace ari
 		public float z;
 		public float w;
 
+		public this()
+		{
+			x = y = z = 0;
+			w = 1;
+		}
+
+		public this(float _x, float _y, float _z, float _w)
+		{
+			x = _x;
+			y = _y;
+			z = _z;
+			w = _w;
+		}
+
 		public void Set(float _x, float _y, float _z, float _w) mut
 		{
 			x = _x;
