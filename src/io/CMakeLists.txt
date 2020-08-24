@@ -20,10 +20,10 @@ fips_begin_module(ari_io)
 
     if (FIPS_WINDOWS)
         fips_files(PlatformWindows.cpp)
-    elseif (FIPS_POSIX)
-        fips_files(PlatformUnix.cpp)
     elseif (FIPS_ANDROID)
         fips_files(PlatformAndroid.cpp)
+    elseif (FIPS_POSIX)
+        fips_files(PlatformUnix.cpp)
     endif()
     
     if (ARI_SERVER)
