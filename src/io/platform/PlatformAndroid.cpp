@@ -21,9 +21,7 @@ namespace ari::io
         ~AttachToVm()
         {
             // Detach from vm
-            log_debug("BEFORE Dtachsia");
             vm->DetachCurrentThread();
-            log_debug("Dtachsia");
         }
     };
     
