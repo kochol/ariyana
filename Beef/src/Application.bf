@@ -11,6 +11,8 @@ namespace ari
 		[Export, CLink, AlwaysInclude]
 		static GfxSetup* GetGfxSetup()
 		{
+			if (g_app == null)
+				return null;
 			return g_app.GetGfxSetup();
 		}
 

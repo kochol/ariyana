@@ -70,7 +70,9 @@ namespace ari.user
 			}
 			else
 			{
-				Console.WriteLine("{} {}", response.Status, response.StatusCode);
+				let s = scope String();
+				s.AppendF("{} {}", response.Status, response.StatusCode);
+				Logger.Error(s);
 				if (OnLoginFailed != null)
 					OnLoginFailed(response.Status);
 			}
@@ -138,7 +140,9 @@ namespace ari.user
 				switch (r)
 				{
 				case .Err(let err):
-					Console.WriteLine(err);
+					let s = scope String();
+					err.ToString(s);
+					Logger.Error(s);
 					delete player;
 				case .Ok:
 					if (OnPlayerData != null)
@@ -153,7 +157,9 @@ namespace ari.user
 			}
 			else
 			{
-				Console.WriteLine("{} {}", res.Status, res.StatusCode);
+				let s = scope String();
+				s.AppendF("{} {}", res.Status, res.StatusCode);
+				Logger.Error(s);
 				if (OnHttpFaild != null)
 					OnHttpFaild(res.Status);
 			}
@@ -179,7 +185,9 @@ namespace ari.user
 				switch (r)
 				{
 				case .Err(let err):
-					Console.WriteLine(err);
+					let s = scope String();
+					err.ToString(s);
+					Logger.Error(s);
 					delete lobby;
 				case .Ok:
 					if (OnJoinedLobby != null)
@@ -199,7 +207,9 @@ namespace ari.user
 			}
 			else
 			{
-				Console.WriteLine("{} {}", res.Status, res.StatusCode);
+				let s = scope String();
+				s.AppendF("{} {}", res.Status, res.StatusCode);
+				Logger.Error(s);
 				if (OnHttpFaild != null)
 					OnHttpFaild(res.Status);
 			}
@@ -230,7 +240,9 @@ namespace ari.user
 			}
 			else
 			{
-				Console.WriteLine("{} {}", res.Status, res.StatusCode);
+				let s = scope String();
+				s.AppendF("{} {}", res.Status, res.StatusCode);
+				Logger.Error(s);
 				if (OnHttpFaild != null)
 					OnHttpFaild(res.Status);
 			}
@@ -262,6 +274,15 @@ namespace ari.user
 					}
 					else
 						delete games;
+				}
+				else if (res.StatusCode == 204)
+				{
+					// no games yet
+					if (onGameList != null)
+					{
+						var games = new GameList();
+						onGameList(games);
+					}
 				}
 				else
 				{
@@ -329,7 +350,9 @@ namespace ari.user
 					switch (r)
 					{
 					case .Err(let err):
-						Console.WriteLine(err);
+						let s = scope String();
+						err.ToString(s);
+						Logger.Error(s);
 						delete lobby;
 					case .Ok:
 						if (_OnGetLobby != null)

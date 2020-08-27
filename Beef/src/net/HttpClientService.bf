@@ -66,7 +66,9 @@ namespace ari.net
 							switch(sr)
 							{
 							case .Err(let err):
-								Console.WriteLine(err);
+								let s = scope String();
+								err.ToString(s);
+								Logger.Error(s);
 							case .Ok(let val):
 
 							}
@@ -97,6 +99,7 @@ namespace ari.net
 
 		public this()
 		{
+			session.[Friend]easy.SetOpt(.SSLVerifyPeer, false);
 			WorkerThreadDelegate = new => WorkerThread;
 			WorkerThreadObj = new Thread(WorkerThreadDelegate);
 			WorkerThreadObj.Start();
@@ -122,7 +125,7 @@ namespace ari.net
 			ResonseTuple r = .();
 			while (response_queue.TryPop(ref r))
 			{
-				Console.WriteLine(r.Response.Body);
+				Logger.Debug(r.Response.Body);
 				if (r.OnDone != null)
 				{
 					r.OnDone(r.Response);
