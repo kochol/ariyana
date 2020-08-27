@@ -107,10 +107,8 @@ void RemoveCanvasFromWorld(void* _world, EntityHandle* _entity, Node2dHandle* _n
 	reinterpret_cast<ari::en::World*>(_world)->RemoveComponent(en.cpp, node.cpp, _dispose);
 }
 
-CanvasMembers GetCanvasMembers(void* _node)
+void GetCanvasMembers(void* _node, CanvasMembers* _out)
 {
 	auto node = reinterpret_cast<ari::en::Canvas*>(_node);
-	return {
-		reinterpret_cast<RectI*>(&node->Rect)
-	};
+    _out->Rect = reinterpret_cast<RectI*>(&node->Rect);
 }

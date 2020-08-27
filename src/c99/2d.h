@@ -43,6 +43,6 @@ struct CanvasMembers
 CARI_API Node2dHandle CreateCanvasComponent();
 CARI_API void AddCanvasToWorld(void* _world, EntityHandle* _entity, Node2dHandle* _node);
 CARI_API void RemoveCanvasFromWorld(void* _world, EntityHandle* _entity, Node2dHandle* _node, bool _dispose);
-CARI_API CanvasMembers GetCanvasMembers(void* _node);
+CARI_API void GetCanvasMembers(void* _node, CanvasMembers* _out);
 
 #endif // ARI_2D_H

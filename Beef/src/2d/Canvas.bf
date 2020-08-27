@@ -18,12 +18,13 @@ namespace ari
 		}
 
 		[CLink]
-		static extern CanvasMembers GetCanvasMembers(void* _node);
+		static extern void GetCanvasMembers(void* _node, out CanvasMembers _out);
 
 		protected override void Init()
 		{
 			base.Init();
-			var m = GetCanvasMembers(handle._obj);
+			CanvasMembers m;
+			GetCanvasMembers(handle._obj, out m);
 			Rect = m.Rect;
 		}
 	}
