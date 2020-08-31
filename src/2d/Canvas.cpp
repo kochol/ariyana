@@ -16,12 +16,20 @@ namespace ari::en
 	void Canvas::UpdateRect()
 	{
 		auto r = gfx::GetViewportSize();
-		float sx = (float(this->Rect.width * r.width) / float(gfx::g_setup.window.Width)) / float(this->Rect.width);
-		float sy = float(this->Rect.height * r.height) / float(gfx::g_setup.window.Height) / float(this->Rect.height);
-		sx = sx_min(sx, sy);
-		_RealRect = this->Rect * sx;
+		float sx = float(r.width) / float(gfx::g_setup.window.Width);
+		float sy = float(r.height) / float(gfx::g_setup.window.Height);
+		float s = sx_min(sx, sy);
+		_RealRect = this->Rect * s;
+		if (sy < sx)
+		{
+			_RealRect.x += sx_abs(r.width - gfx::g_setup.window.Width * s) / 2;
+		}
+		else if (sy > sx)
+		{
+			_RealRect.y += sx_abs(r.height - gfx::g_setup.window.Height * s) / 2;
+		}
 		gfx::SetViewportSize(_RealRect);
-		_finalMat[0] = sx_mat4_SRT(sx, sx, 1, 0, 0, 0, 
+		_finalMat[0] = sx_mat4_SRT(s, s, 1, 0, 0, 0, 
 			_RealRect.width / -2, _RealRect.height / -2, 0);
 	}
 
