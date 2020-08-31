@@ -670,6 +670,10 @@ namespace ari
 				return SG_PIXELFORMAT_BC3_RGBA;
 			case TKTX_ETC2_R8G8B8_UNORM_BLOCK:
 				return SG_PIXELFORMAT_ETC2_RGB8;
+			case TKTX_ETC2_R8G8B8A1_UNORM_BLOCK:
+				return SG_PIXELFORMAT_ETC2_RGB8A1;
+			case TKTX_ETC2_R8G8B8A8_UNORM_BLOCK:
+				return SG_PIXELFORMAT_ETC2_RGBA8;
 			default :
 				log_warn("Unsupported texture format %d", format);
 				return SG_PIXELFORMAT_NONE;
