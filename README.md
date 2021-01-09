@@ -55,7 +55,7 @@ it's better to create a Workspace directory (e.g. "ari-workspace") and clone the
 Here is the easiest part, run ```./fips build``` in ariyana directory (```fips build``` in windows):
 
 ```bash
-> cd your-workspace/ariyana   
+> cd ariyana   
 > ./fips build
 ```
 
