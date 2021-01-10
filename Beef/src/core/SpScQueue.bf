@@ -115,7 +115,7 @@ public class SpScQueue<T>
 			var data = _push_data;
 			var last_data = data;
 			bool reset;
-			int maxCap = 0;
+			int maxCap = 16;
 			while (data != null)
 			{
 				if (data.Push(ref item, out reset))

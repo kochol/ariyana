@@ -125,7 +125,7 @@ namespace ari.net
 			ResonseTuple r = .();
 			while (response_queue.TryPop(ref r))
 			{
-				Logger.Debug(r.Response.Body);
+				Logger.Debug(r.Response.Body ?? "NULL Body");
 				if (r.OnDone != null)
 				{
 					r.OnDone(r.Response);
