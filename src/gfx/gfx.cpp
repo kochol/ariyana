@@ -726,7 +726,7 @@ namespace ari
 				desc.render_target = false;
 				desc.width = w;
 				desc.height = h;
-				desc.depth = d;
+				desc.num_slices = d;
 				desc.num_mipmaps = int(TinyKtx_NumberOfMipmaps(ctx));
 				desc.pixel_format = fmt;
 				desc.min_filter = SG_FILTER_LINEAR_MIPMAP_LINEAR;
