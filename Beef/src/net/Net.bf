@@ -57,7 +57,11 @@ namespace ari
 			NetSerializer.Deserialize(_stream, ref rpc_hash);
 
 			if (!g_dRpcs.ContainsKey(rpc_hash))
+			{
+				_rpc = null;
+				_index = 0;
 				return false;
+			}
 
 			RPC orig_rpc = g_dRpcs[rpc_hash];
 			RPC rpc = NetworkSystem.[Friend]GetRpcClone(orig_rpc, out _index);
