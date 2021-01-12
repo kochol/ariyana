@@ -1,6 +1,6 @@
 using System;
 
-namespace ari
+namespace ari.en
 {
 	[CRepr]
 	struct Node2dHandle

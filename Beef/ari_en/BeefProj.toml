@@ -1,0 +1,23 @@
+FileVersion = 1
+Dependencies = {corlib = "*", ari_core = "*", ari_io = "*"}
+
+[Project]
+Name = "ari_en"
+TargetType = "BeefLib"
+StartupObject = "ari_en.Program"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/en/AriSystem.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/en/Entity.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/en/Node.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/en/World.bf"

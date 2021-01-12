@@ -1,6 +1,7 @@
 using System;
+using ari.en;
 
-namespace ari
+namespace ari.net
 {
 	public class ServerSystem: NetworkSystem
 	{

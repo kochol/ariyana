@@ -1,0 +1,24 @@
+FileVersion = 1
+Dependencies = {corlib = "*", ari_en = "*"}
+
+[Project]
+Name = "ari_gui"
+TargetType = "BeefLib"
+StartupObject = "ari_gui.Program"
+DefaultNamespace = "ari.gui"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/gui/Gui.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/gui/GuiSystem.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/gui/ScriptGui.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/gui/Window.bf"

@@ -1,0 +1,11 @@
+FileVersion = 1
+Dependencies = {corlib = "*", ari_io = "*"}
+
+[Project]
+Name = "ari_gfx"
+TargetType = "BeefLib"
+StartupObject = "ari_gfx.Program"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/gfx/Gfx.bf"

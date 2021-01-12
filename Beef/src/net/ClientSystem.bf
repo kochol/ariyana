@@ -1,6 +1,6 @@
 using System;
 
-namespace ari
+namespace ari.net
 {
 	public class ClientSystem: NetworkSystem
 	{

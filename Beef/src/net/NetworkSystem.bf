@@ -1,7 +1,8 @@
 using System;
 using System.Collections;
+using ari.en;
 
-namespace ari
+namespace ari.net
 {
 	public abstract class NetworkSystem: AriSystem
 	{

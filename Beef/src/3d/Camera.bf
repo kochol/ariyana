@@ -1,6 +1,6 @@
 using System;
 
-namespace ari
+namespace ari.en
 {
 
 	public class Camera	: Node3D

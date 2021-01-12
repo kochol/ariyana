@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 
-namespace ari
+namespace ari.net
 {
 	public enum RpcType : int32
 	{

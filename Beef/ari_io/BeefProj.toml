@@ -1,0 +1,27 @@
+FileVersion = 1
+Dependencies = {corlib = "*", ari_core = "*"}
+
+[Project]
+Name = "ari_io"
+TargetType = "BeefLib"
+StartupObject = "ari_io.Program"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/io/FileSystemBase.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/io/FileSystemLocal.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/io/Io.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/io/IoEvents.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/io/Zip.bf"

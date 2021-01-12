@@ -1,0 +1,44 @@
+FileVersion = 1
+Dependencies = {corlib = "*", ari_gfx = "*", ari_en = "*", JSON_Beef = "*"}
+
+[Project]
+Name = "ari_2d"
+TargetType = "BeefLib"
+StartupObject = "ari_2d.Program"
+DefaultNamespace = "ari.en"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/2d/Atlas.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/2d/AtlasData.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/2d/AtlasSpriteData.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/2d/Camera2D.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/2d/Canvas.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/2d/Node2D.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/2d/RenderSystem2D.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/2d/SceneSystem2D.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/2d/Sprite2D.bf"
