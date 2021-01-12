@@ -49,7 +49,7 @@ fips_begin_lib(cari_gfx)
 fips_end_lib()
 
 fips_begin_lib(cari_gui)
-    add_definitions(-DARI_NO_MAIN=1 -DCARI_NO_EXPORT=1 -DCIMGUI_NO_EXPORT=1)
+    add_definitions(-DARI_NO_MAIN=1 -DCARI_NO_EXPORT=1 -DCIMGUI_NO_EXPORT)
     fips_vs_warning_level(3)
     fips_deps(ari_gui)
     fips_files(
@@ -81,7 +81,8 @@ fips_begin_lib(cari_net)
 fips_end_lib()
 
 fips_begin_sharedlib(cari)
-    add_definitions(-DARI_NO_MAIN=1)
+    remove_definitions(-DCIMGUI_NO_EXPORT)
+    add_definitions(-DARI_NO_MAIN=1 -DCARI_NO_EXPORT=0)
     fips_vs_warning_level(3)
     fips_deps(ari_3d ari_2d ari_fs_local ari_net ari_gui)
     fips_files(
