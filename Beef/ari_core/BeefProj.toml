@@ -1,0 +1,33 @@
+FileVersion = 1
+
+[Project]
+Name = "ari_core"
+TargetType = "BeefLib"
+StartupObject = "ari_core.Program"
+
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_core.lib", "$(ProjectDir)/../dist/win64/Debug/sx.lib", "$(ProjectDir)/../dist/win64/Debug/ari_core.lib"]
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/core/Hash.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/core/Logger.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/core/Math.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/core/Memory.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/core/SpScQueue.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/core/Timer.bf"
