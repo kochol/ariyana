@@ -1,0 +1,11 @@
+FileVersion = 1
+Dependencies = {corlib = "*", ari_en = "*"}
+
+[Project]
+Name = "ari_gui"
+TargetType = "BeefLib"
+StartupObject = "ari_gui.Program"
+DefaultNamespace = "ari.gui"
+
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_gui.lib", "$(ProjectDir)/../dist/win64/Debug/ari_gui.lib"]

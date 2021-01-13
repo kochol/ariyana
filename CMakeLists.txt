@@ -14,6 +14,8 @@ endif()
 
 option(ARI_OPENGL "Use OpenGL as rendering backend" ON)
 option(ARI_GLFW "Use glfw on desktop" OFF)
+option(ARI_C99 "Create c99 API for engine" OFF)
+option(ARI_SERVER "Create headless engine" OFF)
 
 ari_setup()
 
@@ -23,7 +25,7 @@ fips_include_directories(src)
 fips_ide_group(Modules)
 fips_add_subdirectory(src)
 
-if (ARI_BUILD_TESTS)
+if (ARI_BUILD_TESTS AND NOT ARI_C99)
     fips_ide_group(Tests)
     fips_add_subdirectory(tests)
 endif()

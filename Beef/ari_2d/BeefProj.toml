@@ -1,0 +1,11 @@
+FileVersion = 1
+Dependencies = {corlib = "*", ari_gfx = "*", ari_en = "*", JSON_Beef = "*"}
+
+[Project]
+Name = "ari_2d"
+TargetType = "BeefLib"
+StartupObject = "ari_2d.Program"
+DefaultNamespace = "ari.en"
+
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_2d.lib", "$(ProjectDir)/../dist/win64/Debug/ari_2d.lib"]

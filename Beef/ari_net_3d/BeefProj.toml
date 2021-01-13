@@ -1,0 +1,7 @@
+FileVersion = 1
+Dependencies = {corlib = "*", ari_3d = "*", ari_net = "*"}
+
+[Project]
+Name = "ari_net_3d"
+TargetType = "BeefLib"
+StartupObject = "ari_net_3d.Program"

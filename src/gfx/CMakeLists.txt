@@ -1,6 +1,9 @@
 fips_begin_module(ari_gfx)
     ari_setup()
     set(CMAKE_CXX_STANDARD 17)
+    if (ARI_C99)
+        add_definitions(-DARI_NO_MAIN=1)
+    endif()
     fips_vs_warning_level(3)
     fips_deps(ari_io sx)
     fips_files(

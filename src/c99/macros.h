@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #if defined _WIN32 || defined __CYGWIN__
-    #ifdef CARI_NO_EXPORT
+    #if CARI_NO_EXPORT
         #define API
     #else
         #define API __declspec(dllexport)

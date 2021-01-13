@@ -1,6 +1,7 @@
 using System;
 using ari;
 using ari.io;
+using ari.en;
 
 namespace t01Init
 {
@@ -23,6 +24,7 @@ namespace t01Init
 			Io.RegisterFileSystem("file", _fs);
 
 			_entity = World.CreateEntity();
+			_world.AddEntity(_entity);
 
 			_cam = World.CreateCamera();
 			_cam.Position.x = _cam.Position.y = _cam.Position.z = 3.0f;
@@ -49,13 +51,13 @@ namespace t01Init
 		public override void OnCleanup()
 		{
 			base.OnCleanup();
-			delete _world;
 			delete _renderSystem;
 			delete _sceneSystem;
 			delete _fs;
 			delete _entity;
 			delete _box;
 			delete _cam;
+			delete _world;
 		}
 	}
 }

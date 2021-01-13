@@ -46,3 +46,39 @@ RelocType = "PIC"
 BeefLibType = "Static"
 PostBuildCmds = ["CopyToDependents(\"$(ProjectDir)/dist/linux64/ServerDebug/*.so\")"]
 PreprocessorMacros = ["DEBUG", "ARI_SERVER"]
+
+[[ProjectFolder.Items]]
+Type = "AutoFolder"
+Name = "2d"
+
+[[ProjectFolder.Items.Items]]
+Type = "Source"
+Path = "ari_2d/src/World2D.bf"
+
+[[ProjectFolder.Items]]
+Type = "AutoFolder"
+Name = "3d"
+
+[[ProjectFolder.Items.Items]]
+Type = "Source"
+Path = "ari_3d/src/World3D.bf"
+
+[[ProjectFolder.Items.Items]]
+Type = "Source"
+Path = "ari_net_3d/src/PropertyReplicator3D.bf"
+
+[[ProjectFolder.Items]]
+Type = "AutoFolder"
+Name = "gui"
+
+[[ProjectFolder.Items.Items]]
+Type = "Source"
+Path = "ari_gui/src/GuiWorld.bf"
+
+[[ProjectFolder.Items]]
+Type = "AutoFolder"
+Name = "net"
+
+[[ProjectFolder.Items.Items]]
+Type = "Source"
+Path = "ari_net/src/NetWorld.bf"

@@ -35,6 +35,7 @@
 .vscode
 Beef/build
 .idea
+Beef/recovery
 
 # Files
 .fips-imports.cmake

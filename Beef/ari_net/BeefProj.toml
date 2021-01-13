@@ -1,0 +1,11 @@
+FileVersion = 1
+Dependencies = {corlib = "*", ari_en = "*", CurlBeef = "*"}
+
+[Project]
+Name = "ari_net"
+TargetType = "BeefLib"
+StartupObject = "ari_net.Program"
+DefaultNamespace = "ari.net"
+
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_net.lib", "$(ProjectDir)/../dist/win64/Debug/ari_net.lib"]

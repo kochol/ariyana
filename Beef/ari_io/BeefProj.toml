@@ -1,0 +1,10 @@
+FileVersion = 1
+Dependencies = {corlib = "*", ari_core = "*"}
+
+[Project]
+Name = "ari_io"
+TargetType = "BeefLib"
+StartupObject = "ari_io.Program"
+
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_io.lib", "$(ProjectDir)/../dist/win64/Debug/ari_io.lib", "$(ProjectDir)/../dist/win64/Debug/ari_fs_local.lib"]
