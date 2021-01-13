@@ -9,39 +9,3 @@ DefaultNamespace = "ari.en"
 
 [Configs.Debug.Win64]
 LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_2d.lib", "$(ProjectDir)/../dist/win64/Debug/ari_2d.lib"]
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/2d/Atlas.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/2d/AtlasData.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/2d/AtlasSpriteData.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/2d/Camera2D.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/2d/Canvas.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/2d/Node2D.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/2d/RenderSystem2D.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/2d/SceneSystem2D.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/2d/Sprite2D.bf"

@@ -5,7 +5,3 @@ Dependencies = {corlib = "*", ari_net = "*"}
 Name = "ari_biz"
 TargetType = "BeefLib"
 StartupObject = "ari_biz.Program"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/biz/GoogleAnalytics.bf"

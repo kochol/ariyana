@@ -10,22 +10,3 @@ DefaultNamespace = "ari.en"
 [Configs.Debug.Win64]
 LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_3d.lib", "$(ProjectDir)/../dist/win64/Debug/ari_3d.lib"]
 
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/3d/BoxShape.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/3d/Camera.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/3d/Node3D.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/3d/RenderSystem.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/3d/SceneSystem.bf"

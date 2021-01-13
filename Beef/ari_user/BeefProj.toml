@@ -5,27 +5,3 @@ Dependencies = {corlib = "*", JSON_Beef = "*", ari_net = "*"}
 Name = "ari_user"
 TargetType = "BeefLib"
 StartupObject = "ari_user.Program"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/user/Game.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/user/GameList.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/user/Lobby.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/user/Player.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/user/PlayerScore.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/user/ProfileSystem.bf"

@@ -9,19 +9,3 @@ DefaultNamespace = "ari.gui"
 
 [Configs.Debug.Win64]
 LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_gui.lib", "$(ProjectDir)/../dist/win64/Debug/ari_gui.lib"]
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/gui/Gui.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/gui/GuiSystem.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/gui/ScriptGui.bf"
-
-[[ProjectFolder.Items]]
-Type = "Source"
-Path = "../src/gui/Window.bf"
