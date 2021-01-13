@@ -7,6 +7,9 @@ TargetType = "BeefLib"
 StartupObject = "ari_net.Program"
 DefaultNamespace = "ari.net"
 
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_net.lib", "$(ProjectDir)/../dist/win64/Debug/ari_net.lib"]
+
 [[ProjectFolder.Items]]
 Type = "Source"
 Path = "../src/net/ClientSystem.bf"

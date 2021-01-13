@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using ari.gui;
 using ari.io;
 
 namespace ari.en

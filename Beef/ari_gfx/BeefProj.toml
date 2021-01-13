@@ -6,6 +6,13 @@ Name = "ari_gfx"
 TargetType = "BeefLib"
 StartupObject = "ari_gfx.Program"
 
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_gfx.lib", "$(ProjectDir)/../dist/win64/Debug/ari_gfx.lib", "$(ProjectDir)/../dist/win64/Debug/glfw3.lib", "opengl32.lib", "gdi32.lib", "shell32.lib"]
+
 [[ProjectFolder.Items]]
 Type = "Source"
 Path = "../src/gfx/Gfx.bf"
+
+[[ProjectFolder.Items]]
+Type = "Source"
+Path = "../src/Application.bf"

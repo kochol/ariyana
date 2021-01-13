@@ -7,6 +7,9 @@ TargetType = "BeefLib"
 StartupObject = "ari_2d.Program"
 DefaultNamespace = "ari.en"
 
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_2d.lib", "$(ProjectDir)/../dist/win64/Debug/ari_2d.lib"]
+
 [[ProjectFolder.Items]]
 Type = "Source"
 Path = "../src/2d/Atlas.bf"
