@@ -25,6 +25,7 @@ exports:
         - src
     modules :
         # engine modules
+        ari_2d   :          src/2d
         ari_3d   :          src/3d
         ari_core :          src/core
         ari_en   :          src/en
