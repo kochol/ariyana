@@ -1,5 +1,5 @@
 FileVersion = 1
-Dependencies = {corlib = "*", Ariyana_beef = "*"}
+Dependencies = {corlib = "*", corlib = "*", ari_3d = "*", ari_net = "*", ari_net_3d = "*"}
 
 [Project]
 Name = "t02Network"

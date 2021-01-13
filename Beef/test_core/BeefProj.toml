@@ -1,6 +1,0 @@
-FileVersion = 1
-Dependencies = {corlib = "*", ari_core = "*"}
-
-[Project]
-Name = "test_core"
-StartupObject = "test_core.Program"
