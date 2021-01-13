@@ -80,22 +80,12 @@ fips_begin_lib(cari_net)
     )
 fips_end_lib()
 
-fips_begin_sharedlib(cari)
-    remove_definitions(-DCIMGUI_NO_EXPORT)
-    add_definitions(-DARI_NO_MAIN=1 -DCARI_NO_EXPORT=0)
+fips_begin_lib(cari_net_3d)
+    add_definitions(-DARI_NO_MAIN=1 -DCARI_NO_EXPORT=1)
     fips_vs_warning_level(3)
-    fips_deps(ari_3d ari_2d ari_fs_local ari_net ari_gui)
+    fips_deps(ari_net ari_3d)
     fips_files(
-        2d.h                    2d.cpp
-        3d.h                    3d.cpp
-        core.h                  core.cpp
-        en.h                    en.cpp
-        gfx.h                   gfx.cpp
-        gui.h                   gui.cpp
-        io.h                    io.cpp
         macros.h
-        net.h                   net.cpp
-        netSerializer.hpp
-        zip_file.hpp
+        net3d.h                   net3d.cpp
     )
-fips_end_sharedlib()
+fips_end_lib()

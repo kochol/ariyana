@@ -339,9 +339,3 @@ void AddPropertyReplicatorToWorld(void* _world, EntityHandle* _entity, PropertyR
     const union { EntityHandle c{}; ari::en::EntityHandle cpp; } en = { *_entity };
     reinterpret_cast<ari::en::World*>(_world)->AddComponent<ari::net::PropertyReplicator>(en.cpp, cmp.cpp);
 }
-
-void AddNode3dProperty(void* _obj, Node3dHandle* _node, char* _propertyName)
-{
-    const union { Node3dHandle c{}; ari::en::ComponentHandle<ari::en::Node3D> cpp; } node = { *_node };
-    reinterpret_cast<ari::net::PropertyReplicator*>(_obj)->AddProperty(node.cpp, _propertyName);
-}

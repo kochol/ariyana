@@ -5,3 +5,6 @@ Dependencies = {corlib = "*", ari_3d = "*", ari_net = "*"}
 Name = "ari_net_3d"
 TargetType = "BeefLib"
 StartupObject = "ari_net_3d.Program"
+
+[Configs.Debug.Win64]
+LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_net_3d.lib"]
