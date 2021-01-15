@@ -1,6 +1,4 @@
 #include "gfx/gfx.hpp"
-#include "io/private/flextgl/flextGL.h"
-#define SOKOL_IMPL
 #include "sokol_gfx.h"
 #include "GLFW/glfw3.h"
 #include "gfx/Application.hpp"

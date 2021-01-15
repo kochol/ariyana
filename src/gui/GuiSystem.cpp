@@ -5,7 +5,7 @@
 
 #ifndef ARI_SERVER
 #ifdef ARI_GLFW
-#define SOKOL_IMPL
+#define SOKOL_APP_IMPL
 #define SOKOL_NO_ENTRY
 #endif
 

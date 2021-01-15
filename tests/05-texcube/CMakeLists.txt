@@ -4,7 +4,8 @@ fips_begin_app(t05texcube cmdline)
     fips_files(
         texcube.cpp
     )
-    ari_tex(assets/baboon.png ${texfmt})
+    set(texop "-q 190")
+    ari_tex(assets/baboon.png ${texop})
     ari_assets()    
 fips_end_app()
 

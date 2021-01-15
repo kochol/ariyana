@@ -1,18 +1,22 @@
 #include "gfx.hpp"
-#include "sokol_gfx.h"
 #include "core/containers/Array.hpp"
 #include "io/FileSystem.hpp"
-#include "private/tinyktx.h"
 #include "core/log.h"
 #include "core/string/StringBuilder.hpp"
 #include "sx/hash.h"
 #include "Material.hpp"
+#include "private/ktx_loader.hpp"
+#include "private/basis_loader.hpp"
+#include "Mesh.hpp"
+#include "core/memory/ObjectPool.hpp"
+
+#include "io/private/flextgl/flextGL.h"
+#define SOKOL_GFX_IMPL
+#include "sokol_gfx.h"
 
 // Include shaders
 #include "basic.glsl.h"
 #include "mesh.glsl.h"
-#include "Mesh.hpp"
-#include "core/memory/ObjectPool.hpp"
 
 namespace ari
 {
@@ -625,130 +629,35 @@ namespace ari
 		}
 
 		//------------------------------------------------------------------------------
-		static void tinyktxCallbackError(void* user, char const* msg) {
-			log_error("Tiny_Ktx ERROR: %s", msg);
-		}
-
-		//------------------------------------------------------------------------------
-		static void* tinyktxCallbackAlloc(void* user, size_t size) {
-			return core::Memory::Alloc(int(size));
-		}
-
-		//------------------------------------------------------------------------------
-		static void tinyktxCallbackFree(void* user, void* data) {
-			core::Memory::Free(data);
-		}
-
-		//------------------------------------------------------------------------------
-		static size_t tinyktxCallbackRead(void* user, void* data, size_t size) {
-			auto buffer = reinterpret_cast<core::Buffer*>(user);
-			return buffer->Read(data, int(size));
-		}
-
-		//------------------------------------------------------------------------------
-		static bool tinyktxCallbackSeek(void* user, int64_t offset) {
-			auto buffer = reinterpret_cast<core::Buffer*>(user);
-			return buffer->Seek(int(offset));
-		}
-
-		//------------------------------------------------------------------------------
-		static int64_t tinyktxCallbackTell(void* user) {
-			const auto buffer = reinterpret_cast<core::Buffer*>(user);
-			return buffer->Tell();
-		}
-
-		//------------------------------------------------------------------------------
-		sg_pixel_format GetPixelFormatFromTinyktxFormat(TinyKtx_Format format)
-		{
-			switch (format)
-			{
-			case TKTX_BC1_RGBA_UNORM_BLOCK:
-				return SG_PIXELFORMAT_BC1_RGBA;
-			case TKTX_BC2_UNORM_BLOCK:
-				return SG_PIXELFORMAT_BC2_RGBA;
-			case TKTX_BC3_UNORM_BLOCK:
-				return SG_PIXELFORMAT_BC3_RGBA;
-			case TKTX_ETC2_R8G8B8_UNORM_BLOCK:
-				return SG_PIXELFORMAT_ETC2_RGB8;
-			case TKTX_ETC2_R8G8B8A1_UNORM_BLOCK:
-				return SG_PIXELFORMAT_ETC2_RGB8A1;
-			case TKTX_ETC2_R8G8B8A8_UNORM_BLOCK:
-				return SG_PIXELFORMAT_ETC2_RGBA8;
-			default :
-				log_warn("Unsupported texture format %d", format);
-				return SG_PIXELFORMAT_NONE;
-			}
-		}
-
-		//------------------------------------------------------------------------------
 		TextureHandle LoadTexture(core::String _path)
 		{
 			sg_image img = sg_alloc_image();
 
 			core::StringBuilder str = _path;
-			str.Append(".ktx");
-			io::LoadFile(str.GetString(), [img](core::Buffer* buffer)
+			bool isKtx = true;
+			if (!str.Contains(".ktx"))
 			{
-				TinyKtx_Callbacks callbacks{
-						&tinyktxCallbackError,
-						&tinyktxCallbackAlloc,
-						&tinyktxCallbackFree,
-						&tinyktxCallbackRead,
-						&tinyktxCallbackSeek,
-						&tinyktxCallbackTell
-					};
-				// Load with tinyktx
-				auto ctx = TinyKtx_CreateContext(&callbacks, buffer);
-				if (!TinyKtx_ReadHeader(ctx))
+				str.Append(".basis");
+				isKtx = false;
+			}
+			io::LoadFile(str.GetString(), [img, isKtx](core::Buffer* buffer)
+			{
+				if (isKtx)
 				{
-					log_error("Can't load the texture. Not a valid KTX format.");
-					TinyKtx_DestroyContext(ctx);
-					sg_fail_image(img);
-					return;
+					LoadKtxTexture(img, buffer);
 				}
-				uint32_t w = TinyKtx_Width(ctx);
-				uint32_t h = TinyKtx_Height(ctx);
-				uint32_t d = TinyKtx_Depth(ctx);
-				uint32_t s = TinyKtx_ArraySlices(ctx);
-				sg_pixel_format fmt = GetPixelFormatFromTinyktxFormat(TinyKtx_GetFormat(ctx));
-				if (fmt == SG_PIXELFORMAT_NONE) 
+				else
 				{
-					log_error("Can't load the texture. Unknown format.");
-					TinyKtx_DestroyContext(ctx);
-					sg_fail_image(img);
-					return;
+					LoadBasisTexture(img, buffer);
 				}
-
-
-				sg_image_desc desc;
-				core::Memory::Fill(&desc, sizeof(sg_image_desc), 0);
-				desc.type = SG_IMAGETYPE_2D;
-				desc.render_target = false;
-				desc.width = w;
-				desc.height = h;
-				desc.num_slices = d;
-				desc.num_mipmaps = int(TinyKtx_NumberOfMipmaps(ctx));
-				desc.pixel_format = fmt;
-				desc.min_filter = SG_FILTER_LINEAR_MIPMAP_LINEAR;
-				desc.mag_filter = SG_FILTER_LINEAR;
-
-				for (auto i = 0u; i < TinyKtx_NumberOfMipmaps(ctx); ++i) {
-					desc.content.subimage[0][i].size = TinyKtx_ImageSize(ctx, i);
-					void* pixels = core::Memory::Alloc(desc.content.subimage[0][i].size);
-					desc.content.subimage[0][i].ptr = pixels;
-
-					core::Memory::Copy(TinyKtx_ImageRawData(ctx, i), pixels, desc.content.subimage[0][i].size);
-					if (w > 1) w = w / 2;
-					if (h > 1) h = h / 2;
-					if (d > 1) d = d / 2;
-				}
-
-				TinyKtx_DestroyContext(ctx);
-				
-				sg_init_image(img, &desc);
 			});
 
 			return { core::HandleManager<TextureHandle>::CreateHandleByIndex(img.id), img.id };
+		}
+
+		uint32_t GetSurfacePitch(PixelFormat fmt, uint32_t width, uint32_t height, uint32_t row_align)
+		{
+			return _sg_surface_pitch((sg_pixel_format)fmt, width, height, row_align);
 		}
 
 		void SetDirLight(const sx_vec3& dir, const sx_vec4& color)

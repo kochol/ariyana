@@ -45,3 +45,4 @@ Beef/recovery
 tests/07-gltf/assets/Buggy.gltf
 tests/07-gltf/assets/Buggy0.bin
 Beef/BeefSpace_User.toml
+*.basis
