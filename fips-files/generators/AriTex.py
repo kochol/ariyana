@@ -15,7 +15,7 @@ import genutil as util
 from mod import log
 
 #-------------------------------------------------------------------------------
-def find_texc():
+def find_basisu():
     texc_path = os.path.dirname(os.path.abspath(__file__))
     texc_path += '/../../bin/'
     if platform.system() == 'Windows':
@@ -29,7 +29,7 @@ def find_texc():
             texc_path += 'linux/'
     else:
         log.error('Unknown host system {}'.format(platform.system()))
-    return texc_path + 'texturec'
+    return texc_path + 'basisu'
 
 #-------------------------------------------------------------------------------
 def fileFormatDirty(filePath, fmt) :
@@ -60,21 +60,21 @@ def generateHeader(hdrPath, fmt) :
 
 #-------------------------------------------------------------------------------
 def generate(input, out_src, out_hdr, args):
-    out_tex = input + '.ktx'
+    out_tex = input + '.basis'
     inputs = [input]
     if (os.path.exists(out_tex)) :
         inputs.append(out_tex)
-    if util.isDirty(Version, inputs, [out_hdr]) or not os.path.exists(out_tex) or fileFormatDirty(out_hdr, args['texfmt']):
-        print('## texurec: {} {}'.format(input, args['texfmt']))
-        cmd = [find_texc(), 
-                '-f', input,
-                '-o', out_tex,
-                '-t', args['texfmt'],
-                '-m'
+    texop = args['texop'] if 'texop' in args else None
+    if util.isDirty(Version, inputs, [out_hdr]) or not os.path.exists(out_tex) or fileFormatDirty(out_hdr, texop):
+        print('## basisu: {} {}'.format(input, texop))
+        cmd = [find_basisu(), 
+                '-file', input,
+                '-output_file', out_tex,                
                 ]
+        if texop != None: cmd.add(texop)
         res = subprocess.call(cmd)
         if res != 0:
-            log.error('texturec returned with error code {}'.format(res))
+            log.error('basisu returned with error code {}'.format(res))
         else:
-            generateHeader(out_hdr, args['texfmt'])
+            generateHeader(out_hdr, texop)
 
