@@ -1,7 +1,7 @@
+#include "sokol_gfx.h"
 #define SOKOL_IMPL
 #define SOKOL_WIN32_FORCE_MAIN
 #include "sokol_app.h"
-#include "sokol_gfx.h"
 #include "sokol_glue.h"
 #include "core/memory/Memory.hpp"
 #include "../../Application.hpp"

@@ -7,7 +7,6 @@
 #define NDEBUG
 #define NDEBUG_DEF
 #endif
-#define SOKOL_IMPL
 #include "sokol_gfx.h"
 #ifdef NDEBUG_DEF
 #undef NDEBUG
