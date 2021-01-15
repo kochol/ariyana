@@ -9,7 +9,7 @@ using namespace basist;
 
 namespace ari::gfx
 {
-    etc1_global_selector_codebook g_sel_codebook;
+    etc1_global_selector_codebook* g_pGsel_codebook = nullptr;
 
     sg_image_type GetImageType(basis_texture_type tx_type)
     {
@@ -33,17 +33,17 @@ namespace ari::gfx
         sg_pixel_format& fmt,
         transcoder_texture_format& tx_fmt)
     {
-        /*if (!image_info.m_alpha_flag && sg_query_pixelformat(SG_PIXELFORMAT_BC1_RGBA).sample)
+        if (!image_info.m_alpha_flag && sg_query_pixelformat(SG_PIXELFORMAT_BC1_RGBA).sample)
         {
             fmt = SG_PIXELFORMAT_BC1_RGBA;
             tx_fmt = transcoder_texture_format::cTFBC1_RGB;
         }
-        else if (sg_query_pixelformat(SG_PIXELFORMAT_BC3_RGBA).sample)
+        else if (image_info.m_alpha_flag && sg_query_pixelformat(SG_PIXELFORMAT_BC3_RGBA).sample)
         {
             fmt = SG_PIXELFORMAT_BC3_RGBA;
             tx_fmt = transcoder_texture_format::cTFBC3_RGBA;
         }
-        else*/ if (!image_info.m_alpha_flag && sg_query_pixelformat(SG_PIXELFORMAT_ETC2_RGB8).sample)
+        else if (!image_info.m_alpha_flag && sg_query_pixelformat(SG_PIXELFORMAT_ETC2_RGB8).sample)
         {
             fmt = SG_PIXELFORMAT_ETC2_RGB8;
             tx_fmt = transcoder_texture_format::cTFETC1_RGB;
@@ -64,7 +64,12 @@ namespace ari::gfx
 
     void LoadBasisTexture(sg_image img, core::Buffer* buffer)
     {     
-        basisu_transcoder transcoder(&g_sel_codebook);
+        if (!g_pGsel_codebook)
+        {
+            basisu_transcoder_init();
+            g_pGsel_codebook = new etc1_global_selector_codebook();
+        }
+        basisu_transcoder transcoder(g_pGsel_codebook);
 
         if (!transcoder.validate_header(buffer->Data(), buffer->Size()))
         {
