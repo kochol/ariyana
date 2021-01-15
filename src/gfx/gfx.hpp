@@ -555,6 +555,8 @@ namespace ari
 
     	TextureHandle LoadTexture(core::String _path);
 
+		uint32_t GetSurfacePitch(PixelFormat fmt, uint32_t width, uint32_t height, uint32_t row_align);
+
 		void SetDirLight(const sx_vec3& dir, const sx_vec4& color);
 
 		void SetOmniLight(const sx_vec3& pos, const sx_vec4& color);

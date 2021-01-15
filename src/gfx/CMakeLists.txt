@@ -25,6 +25,8 @@ fips_begin_module(ari_gfx)
         tinyktx.h                   tinyktx.cpp
     )
 
+    fips_files_ex(private/transcoder/ *.* GROUP_FOLDERS)
+
     if (ARI_SERVER)
         fips_dir(private/server)
         fips_files(

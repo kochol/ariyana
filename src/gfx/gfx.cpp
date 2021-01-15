@@ -1,19 +1,22 @@
 #include "gfx.hpp"
-#include "sokol_gfx.h"
 #include "core/containers/Array.hpp"
 #include "io/FileSystem.hpp"
 #include "core/log.h"
 #include "core/string/StringBuilder.hpp"
 #include "sx/hash.h"
 #include "Material.hpp"
+#include "private/ktx_loader.hpp"
+#include "private/basis_loader.hpp"
+#include "Mesh.hpp"
+#include "core/memory/ObjectPool.hpp"
+
+#include "io/private/flextgl/flextGL.h"
+#define SOKOL_GFX_IMPL
+#include "sokol_gfx.h"
 
 // Include shaders
 #include "basic.glsl.h"
 #include "mesh.glsl.h"
-#include "Mesh.hpp"
-#include "core/memory/ObjectPool.hpp"
-#include "private/ktx_loader.hpp"
-#include <gfx/private/basis_loader.cpp>
 
 namespace ari
 {
@@ -650,6 +653,11 @@ namespace ari
 			});
 
 			return { core::HandleManager<TextureHandle>::CreateHandleByIndex(img.id), img.id };
+		}
+
+		uint32_t GetSurfacePitch(PixelFormat fmt, uint32_t width, uint32_t height, uint32_t row_align)
+		{
+			return _sg_surface_pitch((sg_pixel_format)fmt, width, height, row_align);
 		}
 
 		void SetDirLight(const sx_vec3& dir, const sx_vec4& color)

@@ -71,7 +71,12 @@ def generate(input, out_src, out_hdr, args):
                 '-file', input,
                 '-output_file', out_tex,                
                 ]
-        if texop != None: cmd.add(texop)
+        if texop != None: 
+            ops = texop.split(' ')
+            for i in range(len(ops)): 
+                cmd.insert(1 + i, ops[i])
+        print(cmd)
+        print(args)
         res = subprocess.call(cmd)
         if res != 0:
             log.error('basisu returned with error code {}'.format(res))

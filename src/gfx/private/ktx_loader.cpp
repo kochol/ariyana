@@ -113,9 +113,6 @@ namespace ari::gfx
 			desc.content.subimage[0][i].ptr = pixels;
 
 			core::Memory::Copy(TinyKtx_ImageRawData(ctx, i), pixels, desc.content.subimage[0][i].size);
-			if (w > 1) w = w / 2;
-			if (h > 1) h = h / 2;
-			if (d > 1) d = d / 2;
 		}
 
 		TinyKtx_DestroyContext(ctx);
