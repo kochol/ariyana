@@ -7,3 +7,6 @@ StartupObject = "ari_core.Program"
 
 [Configs.Debug.Win64]
 LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_core.lib", "$(ProjectDir)/../dist/win64/Debug/sx.lib", "$(ProjectDir)/../dist/win64/Debug/ari_core.lib", "$(ProjectDir)/../dist/win64/Debug/memory-allocators.lib"]
+
+[Configs.Release.Win64]
+LibPaths = ["$(ProjectDir)/../dist/win64/Release/cari_core.lib", "$(ProjectDir)/../dist/win64/Release/sx.lib", "$(ProjectDir)/../dist/win64/Release/ari_core.lib", "$(ProjectDir)/../dist/win64/Release/memory-allocators.lib"]

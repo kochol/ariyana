@@ -9,3 +9,6 @@ DefaultNamespace = "ari.en"
 
 [Configs.Debug.Win64]
 LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_2d.lib", "$(ProjectDir)/../dist/win64/Debug/ari_2d.lib"]
+
+[Configs.Release.Win64]
+LibPaths = ["$(ProjectDir)/../dist/win64/Release/cari_2d.lib", "$(ProjectDir)/../dist/win64/Release/ari_2d.lib"]

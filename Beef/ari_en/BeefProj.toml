@@ -8,3 +8,6 @@ StartupObject = "ari_en.Program"
 
 [Configs.Debug.Win64]
 LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_en.lib", "$(ProjectDir)/../dist/win64/Debug/ari_en.lib", "$(ProjectDir)/../dist/win64/Debug/yojimbo.lib", "$(ProjectDir)/../dist/win64/Debug/mbedcrypto.lib", "$(ProjectDir)/../dist/win64/Debug/mbedtls.lib", "$(ProjectDir)/../dist/win64/Debug/mbedx509.lib", "$(ProjectDir)/../dist/win64/Debug/sodium.lib"]
+
+[Configs.Release.Win64]
+LibPaths = ["$(ProjectDir)/../dist/win64/Release/cari_en.lib", "$(ProjectDir)/../dist/win64/Release/ari_en.lib", "$(ProjectDir)/../dist/win64/Release/yojimbo.lib", "$(ProjectDir)/../dist/win64/Release/mbedcrypto.lib", "$(ProjectDir)/../dist/win64/Release/mbedtls.lib", "$(ProjectDir)/../dist/win64/Release/mbedx509.lib", "$(ProjectDir)/../dist/win64/Release/sodium.lib"]
