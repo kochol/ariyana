@@ -71,8 +71,9 @@ done! it's ready to rock.
 
 ## ![block heroes](https://github.com/kochol/ariyana/raw/master/docs/images/logo2.jpg) Block heroes
 
-It's a multi player tetrix like game. 
+It's a multi player tetrix like game.
 
+[![Github](https://cdn3.iconfinder.com/data/icons/social-media-2169/24/social_media_social_media_logo_github_2-64.png)](https://github.com/kochol/blockheroes)
 [![Game jolt](https://upload.wikimedia.org/wikipedia/en/thumb/c/c4/Game-jolt-logo.svg/200px-Game-jolt-logo.svg.png)](https://gamejolt.com/games/blockheroes/515039)
 [![Discord](https://img.icons8.com/fluent/1x/discord-logo.png)](https://discord.gg/RmKWW45)
 [![Twitter](https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Twitter_colored_svg-64.png)](https://twitter.com/BlockHeroes)
@@ -80,6 +81,16 @@ It's a multi player tetrix like game.
 [![Youtube](https://cdn2.iconfinder.com/data/icons/social-icon-3/512/social_style_3_youtube-64.png)](https://www.youtube.com/channel/UClMLFY20jWjCuZhvrhqLWew)
 
 # Changes
+
+## Ariyana Game Engine 0.7
+
+- Fix memory leak in component system
+- Support [AtlasC](https://github.com/septag/atlasc) atlas maker
+- Add SpScQueue in Beef to support Beef realtime leak detection
+- Modular the engine from Beef side. Now you can only add the parts that you need
+- Limit the user actions for profile server
+- Add [basisu](https://github.com/BinomialLLC/basis_universal) texture support
+- Add cubemap, 2d array and 3d texture support
 
 ## Ariyana Game Engine 0.6
 
