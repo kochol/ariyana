@@ -9,9 +9,9 @@ namespace ari.en
 		[CLink]
 		static extern GuiHandle CreateWindowComponent();
 
-		public static Window CreateWindow()
+		public static Window CreateWindow(String name)
 		{
-			var window = new Window(CreateWindowComponent());
+			var window = new Window(CreateWindowComponent(), name);
 			window.[Friend]Init();
 			return window;
 		}
