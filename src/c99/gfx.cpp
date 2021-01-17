@@ -25,6 +25,26 @@ void SetClearColor(Quat* _quat)
     ari::gfx::SetClearColor(*(sx_vec4*)_quat);
 }
 
+void BeginDefaultPass()
+{
+    ari::gfx::BeginDefaultPass();
+}
+
+void EndPass()
+{
+    ari::gfx::EndPass();
+}
+
+void Commit()
+{
+    ari::gfx::Commit();
+}
+
+void Present()
+{
+    ari::gfx::Present();
+}
+
 // Texture
 bool IsValidTexture(uint32_t& _handle)
 {
