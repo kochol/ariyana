@@ -33,9 +33,11 @@
 
 # Folders
 .vscode
-Beef/build
 .idea
+Beef/build
 Beef/recovery
+tools/project manager/build
+tools/project manager/recovery
 
 # Files
 .fips-imports.cmake
@@ -46,3 +48,4 @@ tests/07-gltf/assets/Buggy.gltf
 tests/07-gltf/assets/Buggy0.bin
 Beef/BeefSpace_User.toml
 *.basis
+tools/project manager/BeefSpace_User.toml

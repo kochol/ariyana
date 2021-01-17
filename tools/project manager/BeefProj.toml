@@ -1,0 +1,6 @@
+FileVersion = 1
+Dependencies = {corlib = "*", ari_gfx = "*", ari_gui = "*"}
+
+[Project]
+Name = "project manager"
+StartupObject = "projectmanager.Program"

@@ -1,0 +1,5 @@
+FileVersion = 1
+Projects = {"project manager" = {Path = "."}, ari_gui = {Path = "../../Beef/ari_gui"}, ari_en = {Path = "../../Beef/ari_en"}, ari_core = {Path = "../../Beef/ari_core"}, ari_gfx = {Path = "../../Beef/ari_gfx"}, ari_io = {Path = "../../Beef/ari_io"}}
+
+[Workspace]
+StartupProject = "project manager"
