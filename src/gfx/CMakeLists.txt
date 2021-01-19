@@ -33,11 +33,12 @@ fips_begin_module(ari_gfx)
             gfx_server.cpp
         )
     elseif (ARI_GLFW AND ARI_OPENGL)
+        add_definitions(-DARI_GLFW=1)
         fips_dir(private/glfw)
         fips_files(
             gfx_glfw.cpp
         )
-    else()
+    elseif (NOT ARI_C99 AND NOT FIPS_ANDROID)
         fips_dir(private/sapp)
         fips_files(
             gfx_sapp.cpp

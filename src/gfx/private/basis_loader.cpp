@@ -115,7 +115,7 @@ namespace ari::gfx
             {
                 basisu_image_level_info info;
                 transcoder.get_image_level_info(buffer->Data(), buffer->Size(), info, i, m);
-                uint32_t image_sz = GetSurfacePitch((PixelFormat)fmt, info.m_width, info.m_height, 1);//  info.m_total_blocks* bytes_per_block;
+                uint32_t image_sz = info.m_total_blocks * bytes_per_block;
                
                 desc.content.subimage[i][m].size = image_sz;
                 void* pixels = core::Memory::Alloc(image_sz);

@@ -11,14 +11,14 @@
     #endif
 #else
     #ifdef __GNUC__
-        #define API  __attribute__((__visibility__("default")))
+        #define API  __attribute__((__visibility__("default")))        
     #else
         #define API
     #endif
 #endif
 
 #if defined __cplusplus
-    #define EXTERN extern "C"
+    #define EXTERN extern "C"    
 #else
     #include <stdarg.h>
     #include <stdbool.h>

@@ -34,6 +34,15 @@ exports:
         ari_gui  :          src/gui
         ari_io   :          src/io
         ari_net  :          src/net
+        cari_2d  :          src/c99
+        cari_3d  :          src/c99
+        cari_core  :        src/c99
+        cari_io  :          src/c99
+        cari_en  :          src/c99
+        cari_gfx :          src/c99
+        cari_gui :          src/c99
+        cari_net :          src/c99
+        cari_net_3d :       src/c99
 
 run:
     t05texcube:

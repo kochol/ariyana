@@ -9,10 +9,13 @@
 #include "private/basis_loader.hpp"
 #include "Mesh.hpp"
 #include "core/memory/ObjectPool.hpp"
+#include "Application.hpp"
 
 #ifdef ARI_GLFW
 #include "io/private/flextgl/flextGL.h"
-#elif defined(ARI_ANDROID)
+#endif
+
+#if defined(ARI_ANDROID) && defined(ARI_NO_MAIN)
     #include <EGL/egl.h>
     #if defined(SOKOL_GLES3)
         #include <GLES3/gl3.h>
@@ -23,9 +26,9 @@
         #include <GLES2/gl2.h>
         #include <GLES2/gl2ext.h>
     #endif
-#endif
-
+#else
 #define SOKOL_GFX_IMPL
+#endif
 #include "sokol_gfx.h"
 
 // Include shaders
@@ -667,11 +670,6 @@ namespace ari
 			});
 
 			return { core::HandleManager<TextureHandle>::CreateHandleByIndex(img.id), img.id };
-		}
-
-		uint32_t GetSurfacePitch(PixelFormat fmt, uint32_t width, uint32_t height, uint32_t row_align)
-		{
-			return _sg_surface_pitch((sg_pixel_format)fmt, width, height, row_align);
 		}
 
 		void SetDirLight(const sx_vec3& dir, const sx_vec4& color)
