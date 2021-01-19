@@ -1,5 +1,5 @@
 #include "sokol_gfx.h"
-#define SOKOL_IMPL
+#define SOKOL_APP_IMPL
 #define SOKOL_WIN32_FORCE_MAIN
 #include "sokol_app.h"
 #include "sokol_glue.h"
@@ -15,8 +15,8 @@ static uint64_t last_time = 0;
 
 struct sapp_data
 {
-	_sapp_state* p_sapp;
-	_sapp_android_state_t* p_sapp_android_state;
+	_sapp_t* p_sapp;
+	_sapp_android_t* p_sapp_android_state;
 };
 
 extern "C" sapp_data CreateSg(sg_context_desc _desc)
@@ -30,7 +30,7 @@ extern "C" sapp_data CreateSg(sg_context_desc _desc)
 	// Setup shaders
 	ari::gfx::SetupShaders();
 
-	return { &_sapp, &_sapp_android_state };
+	return { &_sapp, &_sapp.android };
 }
 
 void ari_init_cb()
@@ -92,7 +92,7 @@ sapp_desc sokol_main(int argc, char* argv[]) {
 	desc.high_dpi = setup->window.HighDpi;
 	desc.sample_count = setup->sample_count;
 	desc.swap_interval = setup->swap_interval;
-	desc.window_title = "Ari 0.5";
+	desc.window_title = "Ari 0.8";
 
 	desc.init_cb = ari_init_cb;
 	desc.frame_cb = ari_frame_cb;

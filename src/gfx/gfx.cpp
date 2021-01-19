@@ -10,7 +10,21 @@
 #include "Mesh.hpp"
 #include "core/memory/ObjectPool.hpp"
 
+#ifdef ARI_GLFW
 #include "io/private/flextgl/flextGL.h"
+#elif defined(ARI_ANDROID)
+    #include <EGL/egl.h>
+    #if defined(SOKOL_GLES3)
+        #include <GLES3/gl3.h>
+    #else
+        #ifndef GL_EXT_PROTOTYPES
+            #define GL_GLEXT_PROTOTYPES
+        #endif
+        #include <GLES2/gl2.h>
+        #include <GLES2/gl2ext.h>
+    #endif
+#endif
+
 #define SOKOL_GFX_IMPL
 #include "sokol_gfx.h"
 
