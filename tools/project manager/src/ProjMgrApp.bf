@@ -52,7 +52,6 @@ namespace projectmanager
 
 		public override void OnFrame(float _elapsedTime)
 		{
-			base.OnFrame(_elapsedTime);
 			Gfx.BeginDefaultPass();
 			world.Update(_elapsedTime);
 			Gfx.EndPass();
