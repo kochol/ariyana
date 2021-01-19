@@ -57,5 +57,18 @@ namespace ari
 
 		[CLink]
 		public static extern void SetClearColor(ref Color _color);
+
+		[CLink]
+		public static extern void BeginDefaultPass();
+
+		[CLink]
+		public static extern void EndPass();
+
+		[CLink]
+		public static extern void Commit();
+
+		[CLink]
+		public static extern void Present();
+
 	}
 }

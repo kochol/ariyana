@@ -24,6 +24,10 @@ struct GfxSetup
 CARI_API bool SetupGfx(GfxSetup& setup);
 CARI_API uint64_t* GetFrameNumberPointer();
 CARI_API void SetClearColor(Quat* _quat);
+CARI_API void BeginDefaultPass();
+CARI_API void EndPass();
+CARI_API void Commit();
+CARI_API void Present();
 
 // Texture
 CARI_HANDLE(TextureHandle)

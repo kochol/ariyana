@@ -4,16 +4,29 @@ namespace ari.gui
 {
 	class Window : Gui
 	{
-		public char8** WindowName;
+		char8** p_window_name;
 		public bool* CloseButton;
 		public bool* IsOpen;
 		public Vector2*	Pos;
 		public Vector2*	Size;
 		public int32* Flags;
+		String window_name = null;
 
-		public this(GuiHandle _handle): base (_handle)
+		public this(GuiHandle _handle, String _window_name): base (_handle)
 		{
+			window_name = _window_name;
+		}
 
+		public String WindowName {
+			get
+			{
+				return window_name;
+			}
+			set
+			{
+				window_name = value;
+				*p_window_name = window_name;
+			}
 		}
 
 		[CRepr]
@@ -34,7 +47,8 @@ namespace ari.gui
 		{
 			base.Init();
 			var m = GetWindowMembers(Handle._obj);
-			WindowName = m.WindowName;
+			p_window_name = m.WindowName;
+			*p_window_name = window_name;
 			CloseButton = m.CloseButton;
 			IsOpen = m.IsOpen;
 			Pos = m.Pos;
