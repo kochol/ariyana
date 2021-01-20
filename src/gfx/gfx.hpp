@@ -561,6 +561,8 @@ namespace ari
 
 		void SetCameraPosition(const sx_vec3& pos);
 
+		void SetWindowSize(int _width, int _height, bool _soft = true);
+
     } // namespace gfx
     
 } // namespace ari

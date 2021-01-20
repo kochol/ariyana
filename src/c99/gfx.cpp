@@ -45,6 +45,11 @@ void Present()
     ari::gfx::Present();
 }
 
+void SetWindowSize(int _width, int _height, bool _soft)
+{
+    ari::gfx::SetWindowSize(_width, _height, _soft);
+}
+
 // Texture
 bool IsValidTexture(uint32_t& _handle)
 {

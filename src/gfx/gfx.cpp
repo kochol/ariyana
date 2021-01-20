@@ -693,6 +693,13 @@ namespace ari
 			g_vCamPos = pos;
 		}
 
+		void SetWindowSize(int _width, int _height, bool _soft)
+		{
+			g_setup.window.Width = _width;
+			g_setup.window.Height = _height;
+			// TODO: If _soft == false change the window size
+		}
+
 		Mesh* GetMesh(MeshHandle& mesh_handle)
 		{
 			if (mesh_handle.IsValid())

@@ -70,5 +70,7 @@ namespace ari
 		[CLink]
 		public static extern void Present();
 
+		[CLink]
+		public static extern void SetWindowSize(int32 _width, int32 _height, bool _soft);
 	}
 }

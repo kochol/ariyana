@@ -28,6 +28,7 @@ CARI_API void BeginDefaultPass();
 CARI_API void EndPass();
 CARI_API void Commit();
 CARI_API void Present();
+CARI_API void SetWindowSize(int _width, int _height, bool _soft);
 
 // Texture
 CARI_HANDLE(TextureHandle)
