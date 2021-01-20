@@ -36,6 +36,8 @@ namespace ari
 	    ARI_EVENTTYPE_RESUMED,
 	    ARI_EVENTTYPE_UPDATE_CURSOR,
 	    ARI_EVENTTYPE_QUIT_REQUESTED,
+		ARI_EVENTTYPE_CLIPBOARD_PASTED,
+		ARI_EVENTTYPE_FILES_DROPPED,
 	    _ARI_EVENTTYPE_NUM,
 	    _ARI_EVENTTYPE_FORCE_U32 = 0x07FFFFFF
 	}
@@ -175,7 +177,7 @@ namespace ari
 	}
 
 	public enum ari_mousebutton {
-	    ARI_MOUSEBUTTON_INVALID = -1,
+	    ARI_MOUSEBUTTON_INVALID = 0x100,
 	    ARI_MOUSEBUTTON_LEFT = 0,
 	    ARI_MOUSEBUTTON_RIGHT = 1,
 	    ARI_MOUSEBUTTON_MIDDLE = 2,
@@ -193,6 +195,8 @@ namespace ari
 	    public ari_mousebutton mouse_button = ari_mousebutton.ARI_MOUSEBUTTON_INVALID;
 	    public float mouse_x = 0.0f;
 	    public float mouse_y = 0.0f;
+	    public float mouse_dx = 0.0f;
+	    public float mouse_dy = 0.0f;
 	    public float scroll_x = 0.0f;
 	    public float scroll_y = 0.0f;
 	    public int32 num_touches = 0;

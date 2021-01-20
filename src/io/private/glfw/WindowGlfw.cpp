@@ -16,6 +16,8 @@ namespace ari
 		static bool g_GlfwInited = false;
 		GLFWwindow* g_FirstWindow = nullptr;
 		core::StaticArray<GLFWwindow*, MaxWindow>	g_Windows;
+		double g_last_mouse_pos_x = -110;
+		double g_last_mouse_pos_y = -110;
 
 		//------------------------------------------------------------------------------
 		WindowHandle get_window_handle(GLFWwindow* window)
@@ -95,11 +97,21 @@ namespace ari
 			if (!g_application)
 				return;
 
+			if (g_last_mouse_pos_x < -100)
+			{
+				g_last_mouse_pos_x = xpos;
+				g_last_mouse_pos_y = ypos;
+			}
+
 			ari_event event;
 			event.type = ARI_EVENTTYPE_MOUSE_MOVE;
 			event.mouse_x = float(xpos);
 			event.mouse_y = float(ypos);
+			event.mouse_dx = float(xpos - g_last_mouse_pos_x);
+			event.mouse_dy = float(ypos - g_last_mouse_pos_y);
 			event.mouse_button = get_mouse_button(window);
+			g_last_mouse_pos_x = xpos;
+			g_last_mouse_pos_y = ypos;
 			SetWindowAndFrameBufferSize(window, &event);
 
 			g_application->OnEvent(&event, get_window_handle(window));
@@ -152,6 +164,10 @@ namespace ari
 			glfwGetCursorPos(window, &xpos, &ypos); 
 			event.mouse_x = float(xpos);
 			event.mouse_y = float(ypos);
+			event.mouse_dx = float(xpos - g_last_mouse_pos_x);
+			event.mouse_dy = float(ypos - g_last_mouse_pos_y);
+			g_last_mouse_pos_x = xpos;
+			g_last_mouse_pos_y = ypos;
 
 			SetWindowAndFrameBufferSize(window, &event);
 
@@ -168,6 +184,15 @@ namespace ari
 			event.type = ARI_EVENTTYPE_MOUSE_SCROLL;
 			event.scroll_x = float(xoffset);
 			event.scroll_y = float(yoffset);
+			double xpos, ypos;
+			glfwGetCursorPos(window, &xpos, &ypos); 
+			event.mouse_x = float(xpos);
+			event.mouse_y = float(ypos);
+			event.mouse_dx = float(xpos - g_last_mouse_pos_x);
+			event.mouse_dy = float(ypos - g_last_mouse_pos_y);
+			g_last_mouse_pos_x = xpos;
+			g_last_mouse_pos_y = ypos;
+
 			SetWindowAndFrameBufferSize(window, &event);
 
 			g_application->OnEvent(&event, get_window_handle(window));
