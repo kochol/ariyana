@@ -1,6 +1,8 @@
 #include "sokol_gfx.h"
+#if !defined ARI_NO_MAIN && !defined ARI_ANDROID
 #define SOKOL_APP_IMPL
 #define SOKOL_WIN32_FORCE_MAIN
+#endif
 #include "sokol_app.h"
 #include "sokol_glue.h"
 #include "core/memory/Memory.hpp"
@@ -13,6 +15,7 @@ ari::Application* g_application = nullptr;
 static uint64_t g_FrameNumber = 0;
 static uint64_t last_time = 0;
 
+#if !defined ARI_NO_MAIN && !defined ARI_ANDROID
 struct sapp_data
 {
 	_sapp_t* p_sapp;
@@ -102,6 +105,7 @@ sapp_desc sokol_main(int argc, char* argv[]) {
 
 	return desc;
 }
+#endif
 
 namespace ari
 {

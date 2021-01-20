@@ -11,7 +11,7 @@
     #endif
 #else
     #ifdef __GNUC__
-        #define API  __attribute__((__visibility__("default")))        
+        #define API __attribute__((__visibility__("default")))        
     #else
         #define API
     #endif

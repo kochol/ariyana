@@ -38,7 +38,7 @@ fips_begin_module(ari_gfx)
         fips_files(
             gfx_glfw.cpp
         )
-    elseif (NOT ARI_C99 AND NOT FIPS_ANDROID)
+    else()
         fips_dir(private/sapp)
         fips_files(
             gfx_sapp.cpp
