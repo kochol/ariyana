@@ -1,1 +1,2 @@
 *.hpp linguist-language=C++
+*.bf linguist-language=Beef
