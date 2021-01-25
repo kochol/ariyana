@@ -8,21 +8,15 @@ namespace ari.en
 		uint32 cmp_id;
 		uint32 base_id;
 
-		public this(Type _cmp_type)
+		public this(String cmp_name)
 		{
-			var str = scope String();
-			_cmp_type.GetName(str);
-			cmp_id = base_id = Hash.HashStringFNV32(str);
+			cmp_id = base_id = Hash.HashStringFNV32(cmp_name);
 		}
 
-		public this(Type _cmp_type, Type _base_type)
+		public this(String cmp_name, String base_name)
 		{
-			var str = scope String();
-			_cmp_type.GetName(str);
-			cmp_id = Hash.HashStringFNV32(str);
-			str.Clear();
-			_base_type.GetName(str);
-			base_id = Hash.HashStringFNV32(str);
+			cmp_id = Hash.HashStringFNV32(cmp_name);
+			base_id = Hash.HashStringFNV32(base_name);
 		}
 
 		public uint32 Id

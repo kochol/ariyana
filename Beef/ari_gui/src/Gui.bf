@@ -32,7 +32,7 @@ namespace ari.gui
 		public GuiHandle Handle;
 
 		// constructor
-		public this(GuiHandle _handle) : base(_handle._obj)
+		public this(GuiHandle _handle)
 		{
 			this.Handle = _handle;
 		}

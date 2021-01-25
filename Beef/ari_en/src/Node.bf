@@ -2,12 +2,12 @@ using System;
 
 namespace ari.en
 {
-	[Component(typeof(Node))]
-	public class Node : Component<Node>
+	[Component("Node")]
+	public class Node 
 	{
 		public String Name = null ~ delete _;
 
-		protected this()
+		public this()
 		{
 		}
 

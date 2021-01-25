@@ -27,7 +27,7 @@ namespace ari.en
 		public EntityHandle Handle;
 		protected World world = null;
 
-		protected this(EntityHandle _handle): base(_handle._entity)
+		protected this(EntityHandle _handle)
 		{
 			Handle = _handle;
 		}

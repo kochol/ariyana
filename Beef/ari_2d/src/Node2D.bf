@@ -31,7 +31,7 @@ namespace ari.en
 		protected Node2dHandle handle;
 
 		// Constructor
-		public this(Node2dHandle _handle) : base(_handle._obj)
+		public this(Node2dHandle _handle)
 		{
 			this.handle = _handle;
 		}

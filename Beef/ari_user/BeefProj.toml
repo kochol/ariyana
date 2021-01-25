@@ -1,5 +1,5 @@
 FileVersion = 1
-Dependencies = {corlib = "*", JSON_Beef = "*", ari_net = "*"}
+Dependencies = {corlib = "*", JSON_Beef = "*", ari_net = "*", ari_io = "*"}
 
 [Project]
 Name = "ari_user"
