@@ -18,6 +18,7 @@ namespace ari.en
 
 		Dictionary<uint32, List<Node>> children = null ~ DeleteDictionaryAndValues!(_);
 		Dictionary<uint32, List<Node>> children_base = null ~ DeleteDictionaryAndValues!(_);
+		Node parent = null;
 
 		public this()
 		{
@@ -41,17 +42,39 @@ namespace ari.en
 					children_base.Add(base_id, new List<Node>());
 				children_base[base_id].Add(_child);
 			}
+
+			_child.parent = this;
 		}
 
 		public void RemoveChild(Node _child)
 		{
 			let id = _child.GetId();
-			children[id].Remove(_child);
+			bool removed = children[id].Remove(_child);
 			let base_id = _child.GetBaseId();
 			if (id != base_id)
 			{
-				children_base[base_id].Remove(_child);
+				removed = children_base[base_id].Remove(_child);
 			}
+			if (removed)
+				_child.parent = null;
+		}
+
+		public bool HasChildWithId(uint32 _id)
+		{
+			if (children.ContainsKey(_id) && children[_id].Count > 0)
+				return true;
+			if (children_base.ContainsKey(_id) && children_base[_id].Count > 0)
+				return true;
+			return false;
+		}
+
+		public List<Node> GetChildren(uint32 _id)
+		{
+			if (children.ContainsKey(_id) && children[_id].Count > 0)
+				return children[_id];
+			if (children_base.ContainsKey(_id) && children_base[_id].Count > 0)
+				return children_base[_id];
+			return null;
 		}
 	}
 }

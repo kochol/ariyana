@@ -21,6 +21,7 @@ namespace ari.en
 		}
 	}
 
+	[Component("Entity", "Node")]
 	public class Entity: Node
 	{
 		public bool* Replicates;
