@@ -4,6 +4,7 @@ FileVersion = 1
 Name = "ari_core"
 TargetType = "BeefLib"
 StartupObject = "ari_core.Program"
+DefaultNamespace = "ari.core"
 
 [Configs.Debug.Win64]
 LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_core.lib", "$(ProjectDir)/../dist/win64/Debug/sx.lib", "$(ProjectDir)/../dist/win64/Debug/ari_core.lib", "$(ProjectDir)/../dist/win64/Debug/memory-allocators.lib"]
