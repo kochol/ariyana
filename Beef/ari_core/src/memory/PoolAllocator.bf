@@ -5,6 +5,12 @@ namespace ari.core
 	class PoolAllocator
 	{
 		void* obj = null;
+		bool valid = false;
+
+		public bool Valid
+		{
+			get => valid;
+		}
 
 		[CLink]
 		static extern void* CreatePoolAllocator(uint32 totalSize, uint32 chunkSize);
@@ -42,6 +48,7 @@ namespace ari.core
 		public void Init()
 		{
 			PoolInit(obj);
+			valid = true;
 		}
 
 		public void Reset()
