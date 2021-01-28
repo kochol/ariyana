@@ -5,14 +5,18 @@ namespace ari.core
 {
 	class HandleManager<T>
 	{
-		static Dictionary<uint32, void*> handles = new Dictionary<uint32, void*>() ~ delete _;
+		static Dictionary<uint32, T> handles = new Dictionary<uint32, T>() ~ delete _;
 		static uint32 LastHandle = 0;
 
 		public static uint32 CreateHandle(T obj)
 		{
-			void* ptr = Internal.UnsafeCastToPtr(obj);
-			handles.Add(LastHandle, ptr);
+			handles.Add(LastHandle, obj);
 			return LastHandle++;
+		}
+
+		public static T GetByHandle(ref uint32 handle)
+		{
+			return handles[handle];
 		}
 
 		public static bool IsValid(ref uint32 handle)
