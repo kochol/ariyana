@@ -4,7 +4,7 @@ using System.Collections;
 namespace ari.en
 {
 	[Component("Node")]
-	public class Node 
+	public class Node : IComponent
 	{
 		String name = null ~ delete _;
 		public StringView Name {

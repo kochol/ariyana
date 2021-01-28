@@ -35,6 +35,9 @@ namespace ari.en
 			Compiler.EmitTypeBody(type, scope $"""
 				public static uint32 Id = {cmp_id};
 				public static uint32 BaseId = {base_id};
+
+				public uint32 GetId() {{ return {cmp_id}; }}
+				public uint32 GetBaseId() {{ return {base_id}; }}
 				""");
 		}
 	}
