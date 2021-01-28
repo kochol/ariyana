@@ -2,16 +2,16 @@ using System.Collections;
 
 namespace ari.core
 {
-	class MemoryPool<T>
+	class MemoryPool
 	{
-		static List<FreeListAllocator> allocators = new List<FreeListAllocator>() ~ Shutdown();
-		static Dictionary<int, int> objects = new Dictionary<int, int>() ~ delete _;
+		List<FreeListAllocator> allocators = new List<FreeListAllocator>() ~ Shutdown();
+		Dictionary<int, int> objects = new Dictionary<int, int>() ~ delete _;
 
-		public static int MinGrow = 65536; // 64Kb
-		public static int MaxGrow = 1048576; // 1MB
-		static int LastGrow = MinGrow;
+		public int MinGrow = 65536; // 64Kb
+		public int MaxGrow = 1048576; // 1MB
+		int LastGrow = MinGrow;
 
-		public static void Setup(int size)
+		public void Setup(int size)
 		{
 			if (allocators.Count > 0)
 				return;
@@ -22,12 +22,12 @@ namespace ari.core
 			LastGrow = size;
 		}
 
-		public static void Shutdown()
+		public void Shutdown()
 		{
 			DeleteContainerAndItems!(allocators);
 		}
 
-		public static void* Alloc(int size, int align)
+		public void* Alloc(int size, int align)
 		{
 			for (int i = 0; i < allocators.Count; i++)
 			{
@@ -53,11 +53,20 @@ namespace ari.core
 			return r;
 		}
 
-		public static void Free(void* ptr)
+		public void Free(void* ptr)
 		{
 			let i = (int)ptr;
 			let a = objects.GetAndRemove(i).Value.value;
 			allocators[a].Free(ptr);
+		}
+	}
+
+	class MemoryPool<T>
+	{
+		static MemoryPool pool = new MemoryPool() ~ delete _;
+
+		public static MemoryPool Pool {
+			get => pool;
 		}
 	}
 }
