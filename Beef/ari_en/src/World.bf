@@ -30,6 +30,10 @@ namespace ari.en
 		{
 		}
 
+		//////////////////////////////////////////////////
+		// Systems
+		/////////////////////////////////////////////////
+
 		// Add system
 		public void AddSystem(AriSystem pSystem)
 		{
@@ -37,6 +41,9 @@ namespace ari.en
 			pSystem.[Friend]Configure(this);
 		}
 
+		//////////////////////////////////////////////
+		// Entity
+		/////////////////////////////////////////////
 		public void AddEntity(Entity _entity)
 		{
 			_entity.[Friend]world = this;
@@ -58,5 +65,11 @@ namespace ari.en
 			return EntityHandle(HandleManager<Entity>.CreateHandle(e), e);
 		}
 
+		public static void DeleteEntity(ref EntityHandle entity)
+		{
+			HandleManager<Entity>.RemoveHandle(ref entity.Handle);
+			var p = MemoryPool<Entity>.Pool;
+			delete:p entity.Entity;
+		}
 	}
 }
