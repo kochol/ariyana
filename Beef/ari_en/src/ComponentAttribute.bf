@@ -2,7 +2,7 @@ using System;
 
 namespace ari.en
 {
-	[AttributeUsage(.Struct | .Class, .AlwaysIncludeTarget | .ReflectAttribute, ReflectUser = .All, AlwaysIncludeUser = .IncludeAllMethods | .AssumeInstantiated)]
+	[AttributeUsage(.Class, .AlwaysIncludeTarget | .ReflectAttribute, ReflectUser = .All, AlwaysIncludeUser = .IncludeAllMethods | .AssumeInstantiated)]
 	public struct ComponentAttribute : Attribute, IComptimeTypeApply
 	{
 		uint32 cmp_id;
