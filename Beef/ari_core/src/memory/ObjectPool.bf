@@ -3,21 +3,21 @@ using System.Collections;
 
 namespace ari.core
 {
-	class ObjectPool<T>
+	class ObjectPool
 	{
 		static List<PoolAllocator> allocators = new List<PoolAllocator>() ~ Shutdown();
 		static Dictionary<int, int> objects = new Dictionary<int, int>() ~ delete _;
 
-		public static int MinGrow = 10;
-		public static int MaxGrow = 100;
+		public static int MinGrow = 100;
+		public static int MaxGrow = 1000;
 		static int LastGrow = MinGrow;
 
-		public static void Setup(int size)
+		public static void Setup(int size, int data_size)
 		{
 			if (allocators.Count > 0)
 				return;
 
-			var a = new PoolAllocator((uint32)(size * sizeof(T)), (uint32)sizeof(T));
+			var a = new PoolAllocator((uint32)(size * data_size), (uint32)data_size);
 			a.Init();
 			allocators.Add(a);
 			LastGrow = size;
@@ -61,5 +61,14 @@ namespace ari.core
 			allocators[a].Free(ptr);
 		}
 
+	}
+
+	class ObjectPool<T>
+	{
+		static ObjectPool pool = new ObjectPool() ~ delete _;
+
+		public static ObjectPool Pool {
+			get => pool;
+		}
 	}
 }
