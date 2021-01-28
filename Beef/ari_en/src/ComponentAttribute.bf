@@ -45,8 +45,8 @@ namespace ari.en
 					public static readonly new uint32 Id = {cmp_id};
 					public static readonly new uint32 BaseId = {base_id};
 
-					public virtual override uint32 GetId() {{ return {cmp_id}; }}
-					public virtual override uint32 GetBaseId() {{ return {base_id}; }}
+					public override uint32 GetId() {{ return {cmp_id}; }}
+					public override uint32 GetBaseId() {{ return {base_id}; }}
 					""");
 		}
 	}
