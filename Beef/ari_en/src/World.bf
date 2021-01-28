@@ -104,5 +104,17 @@ namespace ari.en
 			var p = MemoryPool<Entity>.Pool;
 			delete:p entity.Entity;
 		}
+
+		/////////////////////////////////////////////////
+		// Components
+		////////////////////////////////////////////////
+
+		static ComponentHandle<T> CreateComponent<T>() where T : IComponent, class, new
+		{
+			var p = ObjectPool<T>.Pool;
+			p.Setup(p.MinGrow);
+			T cmp = new:p [Friend]T();
+			return ComponentHandle<T>(HandleManager<T>.CreateHandle(cmp), cmp, => HandleManager<T>.IsValid);
+		}
 	}
 }
