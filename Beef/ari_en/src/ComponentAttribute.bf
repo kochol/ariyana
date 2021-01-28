@@ -32,13 +32,22 @@ namespace ari.en
 		[Comptime]
 		public void ApplyToType(Type type)
 		{
-			Compiler.EmitTypeBody(type, scope $"""
-				public static uint32 Id = {cmp_id};
-				public static uint32 BaseId = {base_id};
+			if (cmp_id == base_id)
+				Compiler.EmitTypeBody(type, scope $"""
+					public static readonly uint32 Id = {cmp_id};
+					public static readonly uint32 BaseId = {base_id};
+	
+					public virtual uint32 GetId() {{ return {cmp_id}; }}
+					public virtual uint32 GetBaseId() {{ return {base_id}; }}
+					""");
+			else
+				Compiler.EmitTypeBody(type, scope $"""
+					public static readonly new uint32 Id = {cmp_id};
+					public static readonly new uint32 BaseId = {base_id};
 
-				public uint32 GetId() {{ return {cmp_id}; }}
-				public uint32 GetBaseId() {{ return {base_id}; }}
-				""");
+					public virtual override uint32 GetId() {{ return {cmp_id}; }}
+					public virtual override uint32 GetBaseId() {{ return {base_id}; }}
+					""");
 		}
 	}
 }
