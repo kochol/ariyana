@@ -25,9 +25,42 @@ namespace ari.en
 				sys.[Friend]Update(this, _elapsedTime);
 		}
 
+		///////////////////////////////////////////////////////
+		// Events
+		//////////////////////////////////////////////////////
+		Dictionary<TypeIndex, List<Object>> subscribers = new System.Collections.Dictionary<uint32, System.Collections.List<System.Object>>()
+			~ DeleteDictionaryAndValues!(_);
+
 		// Emit
-		public void Emit(ari_event* _event, ref WindowHandle _handle)
+		public void Emit<T>(ref T event)
 		{
+			let index = AriTypeId<T>.GetTypeId();
+			if (subscribers.ContainsKey(index))
+			{
+				for (var s in subscribers[index])
+				{
+					var d = (delegate void(ref T))s;
+					d.Invoke(ref event);
+				}
+			}
+		}
+
+		// Subscribe
+		public void Subscribe<T>(delegate void(ref T) fn)
+		{
+			let index = AriTypeId<T>.GetTypeId();
+			if (!subscribers.ContainsKey(index))
+			{
+				subscribers.Add(index, new List<Object>());
+			}
+			subscribers[index].Add(fn);
+		}
+
+		// Unsubscribe
+		public void Unsubscribe<T>(delegate void(ref T) fn)
+		{
+			let index = AriTypeId<T>.GetTypeId();
+			subscribers[index].Remove(fn);
 		}
 
 		//////////////////////////////////////////////////
