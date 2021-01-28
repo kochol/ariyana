@@ -11,8 +11,14 @@ namespace ari.core
 		public int MinGrow = 100;
 		public int MaxGrow = 1000;
 		int LastGrow = MinGrow;
+		int data_size;
 
-		public void Setup(int count, int data_size)
+		protected this(int _data_size)
+		{
+			data_size = _data_size;
+		}
+
+		public void Setup(int count)
 		{
 			if (allocators.Count > 0)
 				return;
@@ -65,7 +71,7 @@ namespace ari.core
 
 	class ObjectPool<T>
 	{
-		static ObjectPool pool = new ObjectPool() ~ delete _;
+		static ObjectPool pool = new [Friend]ObjectPool(sizeof(T)) ~ delete _;
 
 		public static ObjectPool Pool {
 			get => pool;
