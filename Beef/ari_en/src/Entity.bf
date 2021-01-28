@@ -1,23 +1,27 @@
 using System;
+using ari.core;
 
 namespace ari.en
 {
-	[CRepr]
 	public struct EntityHandle
 	{
 		public uint32 Handle = uint32.MaxValue;
-		public uint32 Index = uint32.MaxValue;
-		public void* _entity = null;
+		public Entity Entity = null;
 
-		[CLink]
-		static extern bool IsValidEntity(ref uint32 _entityHandle);
+		public this() { }
+
+		public this(uint32 handle, Entity entity)
+		{
+			Handle = handle;
+			Entity = entity;
+		}
 
 		public bool IsValid() mut
 		{
-			if (Handle == uint32.MaxValue || Index == uint32.MaxValue)
+			if (Handle == uint32.MaxValue)
 				return false;
 
-			return IsValidEntity(ref Handle);
+			return HandleManager<Entity>.IsValid(ref Handle);
 		}
 	}
 
@@ -25,20 +29,14 @@ namespace ari.en
 	public class Entity: Node
 	{
 		public bool* Replicates;
-		public EntityHandle Handle;
 		protected World world = null;
 
-		protected this(EntityHandle _handle)
+		protected this()
 		{
-			Handle = _handle;
 		}
-
-		[CLink]
-		static extern void DeleteEntityWorld(ref EntityHandle _entity);
 
 		public ~this()
 		{
-			DeleteEntityWorld(ref Handle);
 		}
 	}
 }
