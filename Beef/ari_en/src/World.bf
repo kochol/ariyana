@@ -77,9 +77,10 @@ namespace ari.en
 		//////////////////////////////////////////////
 		// Entity
 		/////////////////////////////////////////////
-		public void AddEntity(Entity _entity)
+		public void AddEntity(ref EntityHandle _entity)
 		{
-			_entity.[Friend]world = this;
+			_entity.Entity.[Friend]world = this;
+			Emit<OnEntityCreated>(ref OnEntityCreated { Entity = _entity });
 		}
 
 		public static EntityHandle CreateEntity()
@@ -124,6 +125,7 @@ namespace ari.en
 			T cmp = new:p [Friend]T();
 			return ComponentHandle<T>(HandleManager<T>.CreateHandle(cmp), cmp, => HandleManager<T>.IsValid);
 		}
+
 
 	}
 }
