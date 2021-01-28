@@ -5,30 +5,30 @@ namespace ari.core
 {
 	class ObjectPool
 	{
-		static List<PoolAllocator> allocators = new List<PoolAllocator>() ~ Shutdown();
-		static Dictionary<int, int> objects = new Dictionary<int, int>() ~ delete _;
+		List<PoolAllocator> allocators = new List<PoolAllocator>() ~ Shutdown();
+		Dictionary<int, int> objects = new Dictionary<int, int>() ~ delete _;
 
-		public static int MinGrow = 100;
-		public static int MaxGrow = 1000;
-		static int LastGrow = MinGrow;
+		public int MinGrow = 100;
+		public int MaxGrow = 1000;
+		int LastGrow = MinGrow;
 
-		public static void Setup(int size, int data_size)
+		public void Setup(int count, int data_size)
 		{
 			if (allocators.Count > 0)
 				return;
 
-			var a = new PoolAllocator((uint32)(size * data_size), (uint32)data_size);
+			var a = new PoolAllocator((uint32)(count * data_size), (uint32)data_size);
 			a.Init();
 			allocators.Add(a);
-			LastGrow = size;
+			LastGrow = count;
 		}
 
-		public static void Shutdown()
+		public void Shutdown()
 		{
 			DeleteContainerAndItems!(allocators);
 		}
 
-		public static void* Alloc(int size, int align)
+		public void* Alloc(int size, int align)
 		{
 			for (int i = 0; i < allocators.Count; i++)
 			{
@@ -54,7 +54,7 @@ namespace ari.core
 			return r;
 		}
 
-		public static void Free(void* ptr)
+		public void Free(void* ptr)
 		{
 			let i = (int)ptr;
 			let a = objects.GetAndRemove(i).Value.value;
