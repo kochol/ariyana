@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 
 namespace ari.core
 {
@@ -7,8 +8,9 @@ namespace ari.core
 		static Dictionary<uint32, void*> handles = new Dictionary<uint32, void*>() ~ delete _;
 		static uint32 LastHandle = 0;
 
-		public static uint32 CreateHandle(void* ptr)
+		public static uint32 CreateHandle(T obj)
 		{
+			void* ptr = Internal.UnsafeCastToPtr(obj);
 			handles.Add(LastHandle, ptr);
 			return LastHandle++;
 		}
