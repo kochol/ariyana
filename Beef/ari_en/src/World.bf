@@ -44,16 +44,16 @@ namespace ari.en
 
 		public static EntityHandle CreateEntity()
 		{
-			MemoryPool<Entity>.Pool.Setup(MemoryPool<Entity>.Pool.MinGrow);
 			var p = MemoryPool<Entity>.Pool;
+			p.Setup(p.MinGrow);
 			Entity e = new:p [Friend]Entity();
 			return EntityHandle(HandleManager<Entity>.CreateHandle(e), e);
 		}
 
 		public static EntityHandle CreateEntity<T>() where T : Entity
 		{
-			MemoryPool<Entity>.Pool.Setup(MemoryPool<Entity>.Pool.MinGrow);
 			var p = MemoryPool<Entity>.Pool;
+			p.Setup(p.MinGrow);
 			T e = new:p [Friend]T();
 			return EntityHandle(HandleManager<Entity>.CreateHandle(e), e);
 		}

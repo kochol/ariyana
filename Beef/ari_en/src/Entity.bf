@@ -28,7 +28,7 @@ namespace ari.en
 	[Component("Entity", "Node")]
 	public class Entity: Node
 	{
-		public bool* Replicates;
+		public bool Replicates;
 		protected World world = null;
 
 		protected this()
