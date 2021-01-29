@@ -52,7 +52,7 @@ namespace ari.core
 			else if (LastGrow > MaxGrow)
 				LastGrow = MaxGrow;
 
-			var a = new PoolAllocator((uint32)(LastGrow * sizeof(T)), (uint32)sizeof(T));
+			var a = new PoolAllocator((uint32)(LastGrow * data_size), (uint32)data_size);
 			a.Init();
 			allocators.Add(a);
 			let r = a.Alloc(size, align);
@@ -71,7 +71,7 @@ namespace ari.core
 
 	class ObjectPool<T>
 	{
-		static ObjectPool pool = new [Friend]ObjectPool(sizeof(T)) ~ delete _;
+		static ObjectPool pool = new [Friend]ObjectPool(typeof(T).InstanceSize) ~ delete _;
 
 		public static ObjectPool Pool {
 			get => pool;
