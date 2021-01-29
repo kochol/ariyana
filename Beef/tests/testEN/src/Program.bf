@@ -16,7 +16,7 @@ namespace testEN
 
 		static void Test<T>() where T: IComponent
 		{
-			T.CreateComponent();
+			T.CreateComponentGeneral();
 		}
 	}
 }

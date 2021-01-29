@@ -46,17 +46,26 @@ namespace ari.en
 					public virtual uint32 GetId() {{ return {cmp_id}; }}
 					public virtual uint32 GetBaseId() {{ return {base_id}; }}
 
-					public static void AddComponent(World _world, ref EntityHandle _entity, ref ComponentHandle<IComponent> _cmp)
+					public static void AddComponent(World _world, ref EntityHandle _entity, ref ComponentHandle<{cmp_name}> _cmp)
+					{{
+						_world.AddComponent<{cmp_name}>(ref _entity, ref _cmp);
+					}}
+					public static void AddComponentGeneral(World _world, ref EntityHandle _entity, ref ComponentHandle<IComponent> _cmp)
 					{{
 						var cmp = _cmp.CastTo<{cmp_name}>();
 						_world.AddComponent<{cmp_name}>(ref _entity, ref cmp);
+						_cmp.Owner = cmp.Owner;
 					}}
 	
-					public static ComponentHandle<IComponent> CreateComponent()
+					public static ComponentHandle<{cmp_name}> CreateComponent()
+					{{
+						return World.CreateComponent<{cmp_name}>();
+					}}
+					public static ComponentHandle<IComponent> CreateComponentGeneral()
 					{{
 						return World.CreateComponent<{cmp_name}>().CastTo<IComponent>();
 					}}
-	
+
 					""");
 			else
 				Compiler.EmitTypeBody(type, scope $"""
@@ -66,25 +75,34 @@ namespace ari.en
 					public override uint32 GetId() {{ return {cmp_id}; }}
 					public override uint32 GetBaseId() {{ return {base_id}; }}
 
-					public static void AddComponent(World _world, ref EntityHandle _entity, ref ComponentHandle<IComponent> _cmp)
+					public static void AddComponent(World _world, ref EntityHandle _entity, ref ComponentHandle<{cmp_name}> _cmp)
+					{{
+						_world.AddDerivedComponent<{cmp_name}, {base_name}>(ref _entity, ref _cmp);
+					}}
+					public static void AddComponentGeneral(World _world, ref EntityHandle _entity, ref ComponentHandle<IComponent> _cmp)
 					{{
 						var cmp = _cmp.CastTo<{cmp_name}>();
 						_world.AddDerivedComponent<{cmp_name}, {base_name}>(ref _entity, ref cmp);
+						_cmp.Owner = cmp.Owner;
 					}}
 
-					public static ComponentHandle<IComponent> CreateComponent()
+					public static ComponentHandle<{cmp_name}> CreateComponent()
+					{{
+						return World.CreateComponent<{cmp_name}, {base_name}>();
+					}}
+					public static ComponentHandle<IComponent> CreateComponentGeneral()
 					{{
 						return World.CreateComponent<{cmp_name}, {base_name}>().CastTo<IComponent>();
 					}}
 					""");
 
 			Compiler.EmitTypeBody(type, scope $"""
-				public static void DeleteComponent(ref ComponentHandle<IComponent> _cmp)
+				public static void DeleteComponentGeneral(ref ComponentHandle<IComponent> _cmp)
 				{{
 
 				}}
 
-				public static void DisposeComponent(World _world, ref ComponentHandle<IComponent> _cmp)
+				public static void DisposeComponentGeneral(World _world, ref ComponentHandle<IComponent> _cmp)
 				{{
 					var cmp = _cmp.CastTo<{cmp_name}>();
 					_world.DisposeComponent<{cmp_name}>(ref cmp);
