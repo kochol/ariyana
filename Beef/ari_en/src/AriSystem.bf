@@ -31,8 +31,8 @@ namespace ari.en
 
 		public void AddChild(World world, AriSystem system)
 		{
-			if (IsNativeSystem)
-				AddChildSystem(world.[Friend]_obj, _obj, system._obj);
+			//if (IsNativeSystem)
+				//AddChildSystem(world.[Friend]_obj, _obj, system._obj);
 
 			system.Configure(world);
 		}

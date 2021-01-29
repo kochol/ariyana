@@ -19,7 +19,7 @@ namespace ari.en
 
 		public void AddComponent(Entity _entity, Camera _camera)
 		{
-			AddCameraToWorld(_obj, ref _entity.Handle, _camera.[Friend]handle);
+			//AddCameraToWorld(_obj, ref _entity.Handle, _camera.[Friend]handle);
 			_camera.[Friend]handle.Owner = _entity;
 		}
 
@@ -38,7 +38,7 @@ namespace ari.en
 
 		public void AddComponent(Entity _entity, BoxShape _box)
 		{
-			AddBoxShapeToWorld(_obj, ref _entity.Handle, _box.[Friend]handle);
+			//AddBoxShapeToWorld(_obj, ref _entity.Handle, _box.[Friend]handle);
 			_box.[Friend]handle.Owner = _entity;
 		}
 	}

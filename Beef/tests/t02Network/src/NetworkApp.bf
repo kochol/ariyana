@@ -12,7 +12,7 @@ namespace t02Network
 		RenderSystem m_renderSystem = new RenderSystem();
 		SceneSystem m_sceneSystem = new SceneSystem();
 		ServerSystem m_serverSystem = new ServerSystem();
-		Entity m_entity;
+		EntityHandle m_entity;
 		Camera m_cam;
 		BoxShape m_box;
 		PropertyReplicator m_pr;
@@ -53,25 +53,25 @@ namespace t02Network
 
 			// Create entity
 			m_entity = World.CreateEntity();
-			*m_entity.Replicates = true;
+			m_entity.Entity.Replicates = true;
 
 			// Add camera
 			m_cam = World.CreateCamera();
 			m_cam.Position.Set(3.0f);
 			m_cam.Target.z = 0.0f;
-			m_world.AddComponent(m_entity, m_cam);
+			//m_world.AddComponent(m_entity, m_cam);
 
 			// Add box
 			m_box = World.CreateBoxShape();
-			m_world.AddComponent(m_entity, m_box);
+			//m_world.AddComponent(m_entity, m_box);
 
 			// Add PropertyReplicator
 			m_pr = World.CreatePropertyReplicator();
-			m_world.AddComponent(m_entity, m_pr);
+			//m_world.AddComponent(m_entity, m_pr);
 			m_pr.AddProperty(m_box, "Rotation");
 
 			// At last add entity to world
-			m_world.AddEntity(m_entity);
+			m_world.AddEntity(ref m_entity);
 
 			// Add RPCs
 			m_rpc_test = Net.AddRPC("RpcTest", .MultiCast, new => RpcTest);
@@ -103,7 +103,7 @@ namespace t02Network
 			base.OnCleanup();
 			delete m_renderSystem;
 			delete m_sceneSystem;
-			delete m_entity;
+			World.DeleteEntity(ref m_entity);
 			delete m_cam;
 			delete m_box;
 			delete m_pr;

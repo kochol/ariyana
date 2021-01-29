@@ -19,7 +19,7 @@ namespace ari.en
 
 		public void AddComponent(Entity _entity, Camera2D _cam)
 		{
-			AddCamera2dToWorld(_obj, ref _entity.Handle, ref _cam.[Friend]handle);
+			//AddCamera2dToWorld(_obj, ref _entity.Handle, ref _cam.[Friend]handle);
 			_cam.[Friend]handle.Owner = _entity;
 		}
 
@@ -28,7 +28,7 @@ namespace ari.en
 
 		public void RemoveComponent(Entity _entity, Camera2D _cam, bool _dispose)
 		{
-			RemoveCamera2dFromWorld(_obj, ref _entity.Handle, ref _cam.[Friend]handle, _dispose);
+			//RemoveCamera2dFromWorld(_obj, ref _entity.Handle, ref _cam.[Friend]handle, _dispose);
 			_cam.[Friend]handle.Owner = null;
 			if (_dispose)
 				delete _cam;
@@ -49,7 +49,7 @@ namespace ari.en
 
 		public void AddComponent(Entity _entity, Sprite2D _cmp)
 		{
-			AddSprite2dToWorld(_obj, ref _entity.Handle, ref _cmp.[Friend]handle);
+			//AddSprite2dToWorld(_obj, ref _entity.Handle, ref _cmp.[Friend]handle);
 			_cmp.[Friend]handle.Owner = _entity;
 		}
 
@@ -58,7 +58,7 @@ namespace ari.en
 
 		public void RemoveComponent(Entity _entity, ref Sprite2D _cmp, bool _dispose)
 		{
-			RemoveSprite2dFromWorld(_obj, ref _entity.Handle, ref _cmp.[Friend]handle, _dispose);
+			//RemoveSprite2dFromWorld(_obj, ref _entity.Handle, ref _cmp.[Friend]handle, _dispose);
 			_cmp.[Friend]handle.Owner = null;
 			if (_dispose)
 			{
@@ -82,7 +82,7 @@ namespace ari.en
 
 		public void AddComponent(Entity _entity, Canvas _cmp)
 		{
-			AddCanvasToWorld(_obj, ref _entity.Handle, ref _cmp.[Friend]handle);
+			//AddCanvasToWorld(_obj, ref _entity.Handle, ref _cmp.[Friend]handle);
 			_cmp.[Friend]handle.Owner = _entity;
 		}
 
@@ -91,7 +91,7 @@ namespace ari.en
 
 		public void RemoveComponent(Entity _entity, Canvas _cmp, bool _dispose)
 		{
-			RemoveCanvasFromWorld(_obj, ref _entity.Handle, ref _cmp.[Friend]handle, _dispose);
+			//RemoveCanvasFromWorld(_obj, ref _entity.Handle, ref _cmp.[Friend]handle, _dispose);
 			_cmp.[Friend]handle.Owner = null;
 			if (_dispose)
 				delete _cmp;
