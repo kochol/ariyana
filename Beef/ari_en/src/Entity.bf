@@ -1,5 +1,6 @@
 using System;
 using ari.core;
+using System.Collections;
 
 namespace ari.en
 {
@@ -30,6 +31,10 @@ namespace ari.en
 	{
 		public bool Replicates;
 		protected World world = null;
+
+		protected Dictionary<uint32, // component id
+			List<uint32>> // component handle
+			components = new Dictionary<uint32, List<uint32>>() ~ DeleteDictionaryAndValues!(_);
 
 		protected this()
 		{

@@ -9,6 +9,10 @@ namespace ari.en
 	{
 		List<AriSystem> BeefSystems = new List<AriSystem>() ~ DeleteContainerAndItems!(_);
 
+		Dictionary<uint32, // component id
+			List<uint32>> // component handle
+			components = new Dictionary<uint32, List<uint32>>() ~ DeleteDictionaryAndValues!(_);
+
 		// Constructor
 		public this()
 		{
@@ -109,6 +113,51 @@ namespace ari.en
 		/////////////////////////////////////////////////
 		// Components
 		////////////////////////////////////////////////
+
+		public void AddComponent<T>(ref EntityHandle _entity, ref ComponentHandle<T> _cmp) where T : IComponent
+		{
+			let cmpId = _cmp.Component.GetId();
+
+			// Add component to the world
+			if (!components.ContainsKey(cmpId))
+				components.Add(cmpId, new List<uint32>());
+			components[cmpId].Add(_cmp.Handle);
+
+			// Add component to the entity
+			var en_cmps = _entity.Entity.[Friend]components;
+			if (!en_cmps.ContainsKey(cmpId))
+				en_cmps.Add(cmpId, new List<uint32>());
+			en_cmps[cmpId].Add(_cmp.Handle);
+
+			// Set the component owner
+			_cmp.Owner = _entity.Entity;
+
+			// Emit to the world
+			Emit<OnComponentAssigned<T>>(ref OnComponentAssigned<T> { Entity = _entity, Component = _cmp.Component });
+		}
+
+		public void AddDerivedComponent<T, Base>(ref EntityHandle _entity, ref ComponentHandle<T> _cmp) where T : IComponent
+			where Base : IComponent
+		{
+			let cmpId = _cmp.Component.GetBaseId();
+
+			// Add component to the world
+			if (!components.ContainsKey(cmpId))
+				components.Add(cmpId, new List<uint32>());
+			components[cmpId].Add(_cmp.Handle);
+
+			// Add component to the entity
+			var en_cmps = _entity.Entity.[Friend]components;
+			if (!en_cmps.ContainsKey(cmpId))
+				en_cmps.Add(cmpId, new List<uint32>());
+			en_cmps[cmpId].Add(_cmp.Handle);
+
+			// Emit to the world
+			Emit<OnComponentAssigned<Base>>(ref OnComponentAssigned<Base> { Entity = _entity, Component = (Base)(IComponent)_cmp.Component });
+
+			// Also add T class to the list
+			AddComponent<T>(ref _entity, ref _cmp);
+		}
 
 		public static ComponentHandle<T> CreateComponent<T>() where T : IComponent, class, new
 		{
