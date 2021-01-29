@@ -10,8 +10,10 @@ namespace ari.en
 		List<AriSystem> BeefSystems = new List<AriSystem>() ~ DeleteContainerAndItems!(_);
 
 		Dictionary<uint32, // component id
-			List<uint32>> // component handle
-			components = new Dictionary<uint32, List<uint32>>() ~ DeleteDictionaryAndValues!(_);
+			Dictionary<uint32, Entity>> // component handle
+			components = new Dictionary<uint32, Dictionary<uint32, Entity>>() ~ DeleteDictionaryAndValues!(_);
+
+		int turn_index = 0;
 
 		// Constructor
 		public this()
@@ -120,8 +122,8 @@ namespace ari.en
 
 			// Add component to the world
 			if (!components.ContainsKey(cmpId))
-				components.Add(cmpId, new List<uint32>());
-			components[cmpId].Add(_cmp.Handle);
+				components.Add(cmpId, new Dictionary<uint32, Entity>());
+			components[cmpId].Add(_cmp.Handle, _entity.Entity);
 
 			// Add component to the entity
 			var en_cmps = _entity.Entity.[Friend]components;
@@ -143,8 +145,8 @@ namespace ari.en
 
 			// Add component to the world
 			if (!components.ContainsKey(cmpId))
-				components.Add(cmpId, new List<uint32>());
-			components[cmpId].Add(_cmp.Handle);
+				components.Add(cmpId, new Dictionary<uint32, Entity>());
+			components[cmpId].Add(_cmp.Handle, _entity.Entity);
 
 			// Add component to the entity
 			var en_cmps = _entity.Entity.[Friend]components;
@@ -175,6 +177,45 @@ namespace ari.en
 			return ComponentHandle<T>(HandleManager<T>.CreateHandle(cmp), cmp, => HandleManager<T>.IsValid);
 		}
 
+		struct cmp_to_dispose_data
+		{
+			public uint32 Id;
+			public uint32 BaseId;
+			public uint32 Handle;
+		}
 
+		[ThreadStatic]
+		static List<List<cmp_to_dispose_data>> cmp_to_dispose = null;
+		List<List<cmp_to_dispose_data>> dispose_lists = new List<List<cmp_to_dispose_data>>() ~ DeleteContainerAndItems!(_);
+
+		public void DisposeComponent<T>(ref ComponentHandle<T> _cmp) where T : IComponent
+		{
+			if (cmp_to_dispose == null)
+			{
+				cmp_to_dispose = new List<List<cmp_to_dispose_data>>();
+				for (int i = 0; i < 3; i++)
+				{
+					cmp_to_dispose.Add(new List<cmp_to_dispose_data>());
+					dispose_lists.Add(cmp_to_dispose[i]);
+				}
+			}
+			let id = _cmp.Component.GetId();
+			let base_id = _cmp.Component.GetBaseId();
+			cmp_to_dispose[turn_index].Add(cmp_to_dispose_data
+				{
+					Id = id,
+					BaseId = base_id,
+					Handle = _cmp.Handle
+				});
+			components[id][_cmp.Handle] = null;
+
+			_cmp.Owner = null;
+			_cmp.Handle = uint32.MaxValue;
+
+			if (id != base_id)
+			{
+				components[base_id][_cmp.Handle] = null;
+			}
+		}
 	}
 }

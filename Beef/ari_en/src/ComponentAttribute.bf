@@ -7,16 +7,22 @@ namespace ari.en
 	{
 		uint32 cmp_id;
 		uint32 base_id;
+		String cmp_name;
+		String base_name;
 
-		public this(String cmp_name)
+		public this(String _cmp_name)
 		{
-			cmp_id = base_id = Hash.HashStringFNV32(cmp_name);
+			cmp_id = base_id = Hash.HashStringFNV32(_cmp_name);
+			cmp_name = _cmp_name;
+			base_name = null;
 		}
 
-		public this(String cmp_name, String base_name)
+		public this(String _cmp_name, String _base_name)
 		{
-			cmp_id = Hash.HashStringFNV32(cmp_name);
-			base_id = Hash.HashStringFNV32(base_name);
+			cmp_id = Hash.HashStringFNV32(_cmp_name);
+			base_id = Hash.HashStringFNV32(_base_name);
+			cmp_name = _cmp_name;
+			base_name = _base_name;
 		}
 
 		public uint32 Id
@@ -39,6 +45,18 @@ namespace ari.en
 	
 					public virtual uint32 GetId() {{ return {cmp_id}; }}
 					public virtual uint32 GetBaseId() {{ return {base_id}; }}
+
+					public static void AddComponent(World _world, ref EntityHandle _entity, ref ComponentHandle<IComponent> _cmp)
+					{{
+						var cmp = _cmp.CastTo<{cmp_name}>();
+						_world.AddComponent<{cmp_name}>(ref _entity, ref cmp);
+					}}
+	
+					public static ComponentHandle<IComponent> CreateComponent()
+					{{
+						return World.CreateComponent<{cmp_name}>().CastTo<IComponent>();
+					}}
+	
 					""");
 			else
 				Compiler.EmitTypeBody(type, scope $"""
@@ -47,7 +65,31 @@ namespace ari.en
 
 					public override uint32 GetId() {{ return {cmp_id}; }}
 					public override uint32 GetBaseId() {{ return {base_id}; }}
+
+					public static void AddComponent(World _world, ref EntityHandle _entity, ref ComponentHandle<IComponent> _cmp)
+					{{
+						var cmp = _cmp.CastTo<{cmp_name}>();
+						_world.AddDerivedComponent<{cmp_name}, {base_name}>(ref _entity, ref cmp);
+					}}
+
+					public static ComponentHandle<IComponent> CreateComponent()
+					{{
+						return World.CreateComponent<{cmp_name}, {base_name}>().CastTo<IComponent>();
+					}}
 					""");
+
+			Compiler.EmitTypeBody(type, scope $"""
+				public static void DeleteComponent(ref ComponentHandle<IComponent> _cmp)
+				{{
+
+				}}
+
+				public static void DisposeComponent(World _world, ref ComponentHandle<IComponent> _cmp)
+				{{
+					var cmp = _cmp.CastTo<{cmp_name}>();
+					_world.DisposeComponent<{cmp_name}>(ref cmp);
+				}}
+				""");
 		}
 	}
 }

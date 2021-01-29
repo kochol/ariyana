@@ -17,6 +17,11 @@ namespace ari.en
 			isValid = isValidFn;
 		}
 
+		public ComponentHandle<TO> CastTo<TO>() where TO: IComponent
+		{
+			return ComponentHandle<TO>(Handle, (TO)(IComponent)Component, isValid);
+		}
+
 		public bool IsValid() mut
 		{
 			if (Handle == uint32.MaxValue)
