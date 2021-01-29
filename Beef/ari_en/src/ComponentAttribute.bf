@@ -97,6 +97,8 @@ namespace ari.en
 					""");
 
 			Compiler.EmitTypeBody(type, scope $"""
+				static bool is_registered_with_cmp_mgr = ComponentManager.RegisterComponent<{cmp_name}>({cmp_id});
+
 				public static void DeleteComponentGeneral(ref ComponentHandle<IComponent> _cmp)
 				{{
 
