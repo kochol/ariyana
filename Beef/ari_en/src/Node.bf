@@ -53,7 +53,7 @@ namespace ari.en
 			let base_id = _child.GetBaseId();
 			if (id != base_id)
 			{
-				removed = children_base[base_id].Remove(_child);
+				children_base[base_id].Remove(_child);
 			}
 			if (removed)
 				_child.parent = null;
