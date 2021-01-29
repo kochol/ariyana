@@ -61,19 +61,19 @@ namespace ari.en
 
 		public bool HasChildWithId(uint32 _id)
 		{
-			if (children.ContainsKey(_id) && children[_id].Count > 0)
-				return true;
 			if (children_base.ContainsKey(_id) && children_base[_id].Count > 0)
+				return true;
+			if (children.ContainsKey(_id) && children[_id].Count > 0)
 				return true;
 			return false;
 		}
 
 		public List<Node> GetChildren(uint32 _id)
 		{
-			if (children.ContainsKey(_id) && children[_id].Count > 0)
-				return children[_id];
 			if (children_base.ContainsKey(_id) && children_base[_id].Count > 0)
 				return children_base[_id];
+			if (children.ContainsKey(_id) && children[_id].Count > 0)
+				return children[_id];
 			return null;
 		}
 	}

@@ -14,7 +14,7 @@ namespace ari
             return index;
         }
 
-        static TypeIndex nextIndex;
+        static TypeIndex nextIndex = 0;
         TypeIndex index;
     }
 
