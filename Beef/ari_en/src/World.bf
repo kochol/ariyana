@@ -169,12 +169,13 @@ namespace ari.en
 			return ComponentHandle<T>(HandleManager<T>.CreateHandle(cmp), cmp, => HandleManager<T>.IsValid);
 		}
 
-		public static ComponentHandle<T> CreateComponent<T, Base>() where T : IComponent, class, new
+		public static ComponentHandle<T> CreateComponent<T, Base>() where Base : IComponent
+			where T : class, new, IComponent
 		{
 			var p = MemoryPool<Base>.Pool;
 			p.Setup(p.MinGrow);
 			T cmp = new:p [Friend]T();
-			return ComponentHandle<T>(HandleManager<T>.CreateHandle(cmp), cmp, => HandleManager<T>.IsValid);
+			return ComponentHandle<T>(HandleManager<Base>.CreateHandle((Base)(IComponent)cmp), cmp, => HandleManager<T>.IsValid);
 		}
 
 		struct cmp_to_dispose_data

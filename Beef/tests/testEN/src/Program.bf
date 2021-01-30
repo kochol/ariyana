@@ -8,7 +8,8 @@ namespace testEN
 		public static void Main()
 		{
 			var n = scope Node();
-			Console.WriteLine(sizeof(Node));
+			var n2 = Node.CreateComponent();
+			Console.WriteLine(typeof(Node).InstanceSize);
 			Console.WriteLine(n.GetId());
 			Test<Node>();
 			Console.Read();
