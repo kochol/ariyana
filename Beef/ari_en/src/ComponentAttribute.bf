@@ -66,6 +66,12 @@ namespace ari.en
 						return World.CreateComponent<{cmp_name}>().CastTo<IComponent>();
 					}}
 
+					public static void DeleteComponentGeneral(ref ComponentHandle<IComponent> _cmp)
+					{{
+						var cmp = _cmp.CastTo<{cmp_name}>();
+						World.DeleteComponent<{cmp_name}>(ref cmp);
+					}}
+
 					""");
 			else
 				Compiler.EmitTypeBody(type, scope $"""
@@ -94,15 +100,17 @@ namespace ari.en
 					{{
 						return World.CreateComponent<{cmp_name}, {base_name}>().CastTo<IComponent>();
 					}}
+
+					public static void DeleteComponentGeneral(ref ComponentHandle<IComponent> _cmp)
+					{{
+						var cmp = _cmp.CastTo<{cmp_name}>();
+						World.DeleteComponent<{cmp_name}, {base_name}>(ref cmp);
+					}}
+	
 					""");
 
 			Compiler.EmitTypeBody(type, scope $"""
 				static bool is_registered_with_cmp_mgr = ComponentManager.RegisterComponent<{cmp_name}>({cmp_id});
-
-				public static void DeleteComponentGeneral(ref ComponentHandle<IComponent> _cmp)
-				{{
-
-				}}
 
 				public static void DisposeComponentGeneral(World _world, ref ComponentHandle<IComponent> _cmp)
 				{{

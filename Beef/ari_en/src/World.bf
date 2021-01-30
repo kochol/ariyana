@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using ari.io;
 using ari.core;
+using System.Threading;
 
 namespace ari.en
 {
@@ -29,6 +30,20 @@ namespace ari.en
 		{
 			for (var sys in BeefSystems)
 				sys.[Friend]Update(this, _elapsedTime);
+
+			turn_index++;
+			if (turn_index > 2)
+				turn_index = 0;
+
+			// delete components
+			for (int i = turn_index; i < dispose_lists.Count; i += 3)
+			{
+				for (var c in dispose_lists[i])
+				{
+					ComponentManager.DeleteComponent(ref c);
+				}
+				dispose_lists[i].Clear();
+			}
 		}
 
 		///////////////////////////////////////////////////////
@@ -192,36 +207,27 @@ namespace ari.en
 			HandleManager<Base>.RemoveHandle(ref _cmp.Handle);
 		}
 
-		struct cmp_to_dispose_data
-		{
-			public uint32 Id;
-			public uint32 BaseId;
-			public uint32 Handle;
-		}
-
 		[ThreadStatic]
-		static List<List<cmp_to_dispose_data>> cmp_to_dispose = null;
-		List<List<cmp_to_dispose_data>> dispose_lists = new List<List<cmp_to_dispose_data>>() ~ DeleteContainerAndItems!(_);
+		static List<List<ComponentHandle<IComponent>>> cmp_to_dispose = null;
+		List<List<ComponentHandle<IComponent>>> dispose_lists = new List<List<ComponentHandle<IComponent>>>() ~ DeleteContainerAndItems!(_);
+		Monitor dispose_lock = new Monitor() ~ delete _;
 
 		public void DisposeComponent<T>(ref ComponentHandle<T> _cmp) where T : IComponent
 		{
 			if (cmp_to_dispose == null)
 			{
-				cmp_to_dispose = new List<List<cmp_to_dispose_data>>();
+				cmp_to_dispose = new List<List<ComponentHandle<IComponent>>>(3);
+				dispose_lock.Enter();
 				for (int i = 0; i < 3; i++)
 				{
-					cmp_to_dispose.Add(new List<cmp_to_dispose_data>());
+					cmp_to_dispose.Add(new List<ComponentHandle<IComponent>>());
 					dispose_lists.Add(cmp_to_dispose[i]);
 				}
+				dispose_lock.Exit();
 			}
 			let id = _cmp.Component.GetId();
 			let base_id = _cmp.Component.GetBaseId();
-			cmp_to_dispose[turn_index].Add(cmp_to_dispose_data
-				{
-					Id = id,
-					BaseId = base_id,
-					Handle = _cmp.Handle
-				});
+			cmp_to_dispose[turn_index].Add(_cmp.CastTo<IComponent>());
 			components[id][_cmp.Handle] = null;
 
 			_cmp.Owner = null;

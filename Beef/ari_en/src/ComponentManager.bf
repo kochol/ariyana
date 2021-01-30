@@ -26,5 +26,25 @@ namespace ari.en
 
 			return true;
 		}
+
+		public static void AddComponent(World _world, ref EntityHandle _entity, ref ComponentHandle<IComponent> _cmp)
+		{
+			components_data[_cmp.Component.GetId()].AddFn(_world, ref _entity, ref _cmp);
+		}
+
+		public static ComponentHandle<IComponent> CreateComponent(uint32 cmp_id)
+		{
+			return components_data[cmp_id].CreateFn();
+		}
+
+		public static void DeleteComponent(ref ComponentHandle<IComponent> _cmp)
+		{
+			components_data[_cmp.Component.GetId()].DeleteFn(ref _cmp);
+		}
+
+		public static void DisposeComponent(World _world, ref ComponentHandle<IComponent> _cmp)
+		{
+			components_data[_cmp.Component.GetId()].DisposeFn(_world, ref _cmp);
+		}
 	}
 }
