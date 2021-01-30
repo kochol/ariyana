@@ -178,6 +178,20 @@ namespace ari.en
 			return ComponentHandle<T>(HandleManager<Base>.CreateHandle((Base)(IComponent)cmp), cmp, => HandleManager<T>.IsValid);
 		}
 
+		public static void DeleteComponent<T>(ref ComponentHandle<T> _cmp) where T : IComponent, delete
+		{
+			var p = ObjectPool<T>.Pool;
+			delete:p _cmp.Component;
+			HandleManager<T>.RemoveHandle(ref _cmp.Handle);
+		}
+
+		public static void DeleteComponent<T, Base>(ref ComponentHandle<T> _cmp) where T : IComponent, delete
+		{
+			var p = MemoryPool<Base>.Pool;
+			delete:p _cmp.Component;
+			HandleManager<Base>.RemoveHandle(ref _cmp.Handle);
+		}
+
 		struct cmp_to_dispose_data
 		{
 			public uint32 Id;
