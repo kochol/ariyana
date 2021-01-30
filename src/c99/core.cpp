@@ -154,34 +154,3 @@ double ari_tm_ns(uint64_t ticks)
 {
 	return sx_tm_ns(ticks);
 }
-
-// SPSC Queue
-void* ari_queue_spsc_create(int item_sz, int capacity)
-{
-	return sx_queue_spsc_create(sx_alloc_malloc(), item_sz, capacity);
-}
-
-void ari_queue_spsc_destroy(void* queue)
-{
-	sx_queue_spsc_destroy((sx_queue_spsc*)queue, sx_alloc_malloc());
-}
-
-bool ari_queue_spsc_produce(void* queue, const void* data)
-{
-	return sx_queue_spsc_produce((sx_queue_spsc*)queue, data);
-}
-
-bool ari_queue_spsc_consume(void* queue, void* data)
-{
-	return sx_queue_spsc_consume((sx_queue_spsc*)queue, data);
-}
-
-bool ari_queue_spsc_grow(void* queue)
-{
-	return sx_queue_spsc_grow((sx_queue_spsc*)queue, sx_alloc_malloc());
-}
-
-bool ari_queue_spsc_full(const void* queue)
-{
-	return sx_queue_spsc_full((sx_queue_spsc*)queue);
-}
