@@ -1,5 +1,5 @@
 FileVersion = 1
-Dependencies = {corlib = "*", ari_io = "*"}
+Dependencies = {corlib = "*", ari_io = "*", ari_math = "*"}
 
 [Project]
 Name = "ari_gfx"

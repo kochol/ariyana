@@ -20,10 +20,6 @@ namespace ari.en
 		Dictionary<uint32, List<Node>> children_base = null ~ DeleteDictionaryAndValues!(_);
 		Node parent = null;
 
-		public this()
-		{
-		}
-
 		public void AddChild(Node _child)
 		{
 			if (children == null)

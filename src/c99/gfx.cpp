@@ -50,6 +50,11 @@ void SetWindowSize(int _width, int _height, bool _soft)
     ari::gfx::SetWindowSize(_width, _height, _soft);
 }
 
+void GetViewportSize(RectI& _rect)
+{
+    _rect = ari::gfx::GetViewportSize();
+}
+
 // Texture
 bool IsValidTexture(uint32_t& _handle)
 {
