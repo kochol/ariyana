@@ -39,9 +39,24 @@ namespace ari.en
 		public void ApplyToType(Type type)
 		{
 			if (cmp_id == base_id)
+			{
+				if (type.IsSubtypeOf(typeof(Node)))
+				{
+					Compiler.EmitTypeBody(type, scope $"""
+						public static readonly new uint32 Id = {cmp_id};
+						public static readonly new uint32 BaseId = {base_id};
+
+						""");
+				}
+				else
+				{
+					Compiler.EmitTypeBody(type, scope $"""
+						public static readonly uint32 Id = {cmp_id};
+						public static readonly uint32 BaseId = {base_id};
+
+						""");
+				}
 				Compiler.EmitTypeBody(type, scope $"""
-					public static readonly uint32 Id = {cmp_id};
-					public static readonly uint32 BaseId = {base_id};
 	
 					public virtual uint32 GetId() {{ return {cmp_id}; }}
 					public virtual uint32 GetBaseId() {{ return {base_id}; }}
@@ -73,6 +88,7 @@ namespace ari.en
 					}}
 
 					""");
+			}
 			else
 				Compiler.EmitTypeBody(type, scope $"""
 					public static readonly new uint32 Id = {cmp_id};
