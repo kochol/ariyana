@@ -1,3 +1,5 @@
+using System;
+
 namespace ari.math
 {
 	[CRepr]

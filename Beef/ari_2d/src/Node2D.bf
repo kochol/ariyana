@@ -4,7 +4,7 @@ using ari.math;
 namespace ari.en
 {
 	[Component("Node2D")]
-	public class Node2D : Node, IComponent
+	public class Node2D : Node
 	{
 		public float2 Position;
 		public float  Rotation;

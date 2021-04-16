@@ -1,36 +1,23 @@
 using System;
+using ari.math;
 
 namespace ari.en
 {
+	[Component("Sprite2D", "Node2D")]
 	public class Sprite2D : Node2D
 	{
-		public TextureHandle* Texture;
-		public Color		* Color;
-		public Vector4		* UV;
+		public TextureHandle Texture = .();
+		public Color		 Color = .WHITE;
+		public float4		 UV = .(0, 0, 1, 1);
 
-		public this(Node2dHandle _handle) : base(_handle)
+		public this()
 		{
-
+			is_renderable = true;
 		}
 
-		[CRepr]
-		struct Sprite2dMembers
- 		{
-			 public TextureHandle	* Texture;
-			 public Color		 	* Color;
-			 public Vector4			* UV;
-		}
-
-		[CLink]
-		static extern Sprite2dMembers GetSprite2dMembers(void* _node);
-
-		protected override void Init()
+		public override void Render(in int _frameTurnIndex)
 		{
-			base.Init();
-			var m 	= GetSprite2dMembers(handle._obj);
-			Texture = m.Texture;
-			Color   = m.Color;
-			UV 		= m.UV;
+			
 		}
 	}
 }
