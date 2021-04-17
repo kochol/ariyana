@@ -51,33 +51,14 @@ namespace ari
 	public static class Gfx
 	{
 		static float4x4 g_mView, g_mProj, g_mViewProj, g_mWorld, g_mWorldViewProj;
+		public static RectI ViewPortSize { get; set; }
 
-		[CLink]
-		public static extern bool SetupGfx(GfxSetup* setup);
-
-		[CLink]
-		public static extern TextureHandle LoadTexture(char8* path);
-
-		[CLink]
-		public static extern void SetClearColor(ref Color _color);
-
-		[CLink]
-		public static extern void BeginDefaultPass();
-
-		[CLink]
-		public static extern void EndPass();
-
-		[CLink]
-		public static extern void Commit();
-
-		[CLink]
-		public static extern void Present();
-
-		[CLink]
-		public static extern void SetWindowSize(int32 _width, int32 _height, bool _soft);
-
-		[CLink]
-		public static extern void GetViewportSize(out RectI _rect);
+		public static void SetupGfx(GfxSetup* _setup)
+		{
+			sokol.Gfx.Desc desc = .();
+			desc.context = sokol.Glue.context();
+			sokol.Gfx.setup(&desc);
+		}
 
 		public static void SetViewMatrix(in float4x4 _view)
 		{
@@ -137,6 +118,12 @@ namespace ari
 		public static float4x4 GetWorldViewProjMatrix()
 		{
 			return g_mWorldViewProj;
+		}
+
+		public static TextureHandle LoadTexture(String _path)
+		{
+			// TODO: Add texture loading
+			return .();
 		}
 
 	}

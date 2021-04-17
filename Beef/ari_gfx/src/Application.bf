@@ -19,8 +19,14 @@ namespace ari
 		[Export, CLink, AlwaysInclude]
 		static void OnInit()
 		{
+			// Init timer
+			sokol.Time.setup();
+
+			// get the app setup configs
+			Gfx.SetupGfx(GetGfxSetup());
+
 			g_app.OnInit();
-			LastTime = Timer.Now();
+			LastTime = sokol.Time.now();
 		}
 
 		[Export, CLink, AlwaysInclude]
@@ -32,7 +38,7 @@ namespace ari
 			Io.UpdateIo();
 
 			// calculate the elapsed time
-			float elapsed = (float)Timer.ToSeconds(Timer.LapTime(ref LastTime));
+			var elapsed = (float)sokol.Time.sec(sokol.Time.laptime(&LastTime));
 
 			// Update the app
 			g_app.OnFrame(elapsed);
@@ -47,21 +53,18 @@ namespace ari
 		}
 
 		[Export, CLink, AlwaysInclude]
-		static void OnEvent(ari_event* _event)
+		static void OnEvent(sokol.App.Event* _event)
 		{
 			WindowHandle h;
 			h.Handle = h.Index = 0;
-			g_app.OnEvent(_event, ref h);
+			g_app.OnEvent((ari_event*)_event, ref h);
 		}
 
 		[Export, CLink, AlwaysInclude]
-		static void OnFail()
+		static void OnFail(char8* errMsg)
 		{
 			
 		}
-
-		[CLink]
-		static extern void SetOnEventCallBack(OnEventCB _event_cb);
 
 		static uint64 FrameNumber;
 
@@ -77,13 +80,19 @@ namespace ari
 		public static void RunApplication(Application _app)
 		{
 			g_app = _app;
+			// Init SAPP
+			sokol.App.Desc desc = .();
+			desc.init_cb = => OnInit;
+			desc.frame_cb = => OnFrame;
+			desc.event_cb = => OnEvent;
+			desc.cleanup_cb = => OnCleanUp;
+			desc.fail_cb = => OnFail;
+			GfxSetup* setup = _app.GetGfxSetup();
+			desc.window_title = setup.window.Title == null ? "Ari 0.8" : setup.window.Title;
 
-			// Init timer
-			Timer.Init();
+			sokol.App.run(&desc);
 
-			// get the app setup configs
-			Gfx.SetupGfx(_app.GetGfxSetup());
-
+			/*
 #if BF_PLATFORM_ANDROID
 			while(Io.Run())
 			{
@@ -130,6 +139,7 @@ namespace ari
 			// clean up the app
 			_app.OnCleanup();
 #endif // !BF_PLATFORM_ANDROID
+			*/
 		}
 	}
 

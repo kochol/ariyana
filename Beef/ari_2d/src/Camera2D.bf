@@ -25,8 +25,7 @@ namespace ari.en
 
 		public override void Render(in int _frameTurnIndex)
 		{
-			RectI rect;
-			Gfx.GetViewportSize(out rect);
+			RectI rect = Gfx.ViewPortSize;
 			proj = float4x4.Ortho(rect.width, rect.height, 0.1f, 100, 0, false);
 			Gfx.SetViewProjMatrix(final_mat[_frameTurnIndex], proj);
 		}
