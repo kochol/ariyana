@@ -1,23 +1,11 @@
 using System;
+using System.Collections;
 
 namespace ari.en
 {
 	public class AriSystem
 	{
-		protected void* _obj = null;
-		protected bool IsNativeSystem = false;
-
-		[CLink]
-		static extern void DeleteSystem(void* _obj);
-
-		public ~this()
-		{
-			if (_obj != null)
-			{
-				DeleteSystem(_obj);
-				_obj = null;
-			}
-		}
+		List<AriSystem> m_children = null ~ delete _;
 
 		// World call this on configure
 		protected virtual void Configure(World _world) { }
@@ -26,13 +14,11 @@ namespace ari.en
 
 		protected virtual void Update(World _world, float _elapsed) { }
 
-		[CLink]
-		static extern void AddChildSystem(void* _world, void* _obj, void* _system);
-
 		public void AddChild(World world, AriSystem system)
 		{
-			//if (IsNativeSystem)
-				//AddChildSystem(world.[Friend]_obj, _obj, system._obj);
+			if (m_children == null)
+				m_children = new List<AriSystem>();
+			m_children.Add(system);
 
 			system.Configure(world);
 		}
