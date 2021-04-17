@@ -6,6 +6,7 @@ namespace ari.net
 {
 	public abstract class NetworkSystem: AriSystem
 	{
+		protected void* _obj;
 		protected enum SystemNetworkType
 		{
 			Server,
