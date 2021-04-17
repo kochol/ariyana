@@ -20,7 +20,7 @@ namespace ari
 
 	class AriTypeId<T>
 	{
-		static TypeRegistry m_sTypeReg;
+		static TypeRegistry m_sTypeReg = new TypeRegistry() ~ delete _;
 
 		public static TypeIndex GetTypeId()
 		{
