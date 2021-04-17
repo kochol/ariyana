@@ -10,6 +10,7 @@ namespace ari.io
 		public bool FullScreen = false;
 		public bool HighDpi = false;
 		public float DpiScale = 1.0f;
+		public String Title = null;
 	}
 
 	[CRepr]

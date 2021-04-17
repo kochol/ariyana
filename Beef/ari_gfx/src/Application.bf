@@ -26,7 +26,7 @@ namespace ari
 		[Export, CLink, AlwaysInclude]
 		static void OnFrame()
 		{
-			*FrameNumber += 1;
+			FrameNumber += 1;
 
 			// update Io threads
 			Io.UpdateIo();
@@ -61,12 +61,9 @@ namespace ari
 		}
 
 		[CLink]
-		static extern uint64* GetFrameNumberPointer();
-
-		[CLink]
 		static extern void SetOnEventCallBack(OnEventCB _event_cb);
 
-		static uint64* FrameNumber;
+		static uint64 FrameNumber;
 
 		static Application g_app = null;
 
@@ -79,7 +76,6 @@ namespace ari
 
 		public static void RunApplication(Application _app)
 		{
-			FrameNumber = GetFrameNumberPointer();
 			g_app = _app;
 
 			// Init timer
@@ -108,7 +104,7 @@ namespace ari
 			// run the loop
 			while (!Application.Exit && Io.Run())
 			{
-				*FrameNumber += 1;
+				FrameNumber += 1;
 
 				// update Io threads
 				Io.UpdateIo();
