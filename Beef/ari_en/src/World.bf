@@ -60,14 +60,14 @@ namespace ari.en
 			{
 				for (var s in subscribers[index])
 				{
-					var d = (delegate void(ref T))s;
-					d.Invoke(ref event);
+					var d = (delegate void(World, ref T))s;
+					d.Invoke(this, ref event);
 				}
 			}
 		}
 
 		// Subscribe
-		public void Subscribe<T>(delegate void(ref T) fn)
+		public void Subscribe<T>(delegate void(World, ref T) fn)
 		{
 			let index = AriTypeId<T>.GetTypeId();
 			if (!subscribers.ContainsKey(index))
@@ -78,7 +78,7 @@ namespace ari.en
 		}
 
 		// Unsubscribe
-		public void Unsubscribe<T>(delegate void(ref T) fn)
+		public void Unsubscribe<T>(delegate void(World, ref T) fn)
 		{
 			let index = AriTypeId<T>.GetTypeId();
 			subscribers[index].Remove(fn);
