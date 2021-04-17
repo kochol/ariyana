@@ -11,10 +11,6 @@
 #include "core/memory/ObjectPool.hpp"
 #include "Application.hpp"
 
-#ifdef ARI_GLFW
-#include "io/private/flextgl/flextGL.h"
-#endif
-
 #if defined(ARI_ANDROID) && defined(ARI_NO_MAIN)
     #include <EGL/egl.h>
     #if defined(SOKOL_GLES3)
@@ -26,14 +22,7 @@
         #include <GLES2/gl2.h>
         #include <GLES2/gl2ext.h>
     #endif
-#else
-#define SOKOL_GFX_IMPL
 #endif
-#include "sokol_gfx.h"
-
-// Include shaders
-#include "basic.glsl.h"
-#include "mesh.glsl.h"
 
 namespace ari
 {
@@ -131,60 +120,6 @@ namespace ari
 
 		ShaderHandle g_shaders[int(ShaderType::Count)];
 
-		void SetupShaders()
-		{
-			g_shaders[int(ShaderType::Basic)] = CreateShader(ari_basic_shader_desc());
-			g_shaders[int(ShaderType::BasicTexture)] = CreateShader(ari_basic_tex_shader_desc());
-			g_shaders[int(ShaderType::BasicVertexColor)] = CreateShader(ari_basic_vertex_color_shader_desc());
-
-			// Init material shaders
-			ShaderDescShaderHandle sh;
-			sh.desc = ari_mesh__shader_desc();
-			sh.Setup("mesh_");
-			MaterialShaders.Add(sh.hash, sh);
-			sh.desc = ari_mesh_T_shader_desc();
-			sh.Setup("mesh_T");
-			MaterialShaders.Add(sh.hash, sh);
-
-			sh.desc = ari_mesh_VC_shader_desc();
-			sh.Setup("mesh_VC");
-			MaterialShaders.Add(sh.hash, sh);
-
-			sh.desc = ari_mesh_TND_shader_desc();
-			sh.Setup("mesh_TND");
-			MaterialShaders.Add(sh.hash, sh);
-			sh.desc = ari_mesh_TNP_shader_desc();
-			sh.Setup("mesh_TNP");
-			MaterialShaders.Add(sh.hash, sh);
-
-			sh.desc = ari_mesh_TNAD_shader_desc();
-			sh.Setup("mesh_TNAD");
-			MaterialShaders.Add(sh.hash, sh);
-			sh.desc = ari_mesh_TNAP_shader_desc();
-			sh.Setup("mesh_TNAP");
-			MaterialShaders.Add(sh.hash, sh);
-
-			sh.desc = ari_mesh_TNMD_shader_desc();
-			sh.Setup("mesh_TNMD");
-			MaterialShaders.Add(sh.hash, sh);
-			sh.desc = ari_mesh_TNMP_shader_desc();
-			sh.Setup("mesh_TNMP");
-			MaterialShaders.Add(sh.hash, sh);
-
-			sh.desc = ari_mesh_VCND_shader_desc();
-			sh.Setup("mesh_VCND");
-			MaterialShaders.Add(sh.hash, sh);
-			sh.desc = ari_mesh_VCNP_shader_desc();
-			sh.Setup("mesh_VCNP");
-			MaterialShaders.Add(sh.hash, sh);
-			sh.desc = ari_mesh_ND_shader_desc();
-			sh.Setup("mesh_ND");
-			MaterialShaders.Add(sh.hash, sh);
-			sh.desc = ari_mesh_NP_shader_desc();
-			sh.Setup("mesh_NP");
-			MaterialShaders.Add(sh.hash, sh);
-		}
-
 		void SetMaterialShader(Material& material)
 		{
 			static core::StringBuilder str;
@@ -256,174 +191,56 @@ namespace ari
 		//------------------------------------------------------------------------------
 		BufferHandle CreateVertexBuffer(int size, void* content, BufferUsage usage)
 		{
-			sg_buffer_desc desc;
-			core::Memory::Fill(&desc, sizeof(sg_buffer_desc), 0);
-			desc.size = size;
-			desc.content = content;
-			desc.usage = (sg_usage)usage;
-			const sg_buffer buffer = sg_make_buffer(&desc);
-			return { core::HandleManager<BufferHandle>::CreateHandleByIndex(buffer.id), buffer.id };
+			return BufferHandle();
 		}
 
 		//------------------------------------------------------------------------------
 		BufferHandle CreateIndexBuffer(int size, void* content, BufferUsage usage)
 		{
-			sg_buffer_desc desc;
-			core::Memory::Fill(&desc, sizeof(sg_buffer_desc), 0);
-			desc.size = size;
-			desc.content = content;
-			desc.usage = (sg_usage)usage;
-			desc.type = SG_BUFFERTYPE_INDEXBUFFER;
-			const sg_buffer buffer = sg_make_buffer(&desc);
-			return { core::HandleManager<BufferHandle>::CreateHandleByIndex(buffer.id), buffer.id };
+			return BufferHandle();
 		}
 
 		//------------------------------------------------------------------------------
 		void DestroyBuffer(BufferHandle& buffer)
 		{
-			sg_destroy_buffer({ buffer.Index });
-			core::HandleManager<BufferHandle>::RemoveHandle(buffer.Handle);
-			buffer.Handle = buffer.Index = core::aInvalidHandle;
 		}
 
 		//------------------------------------------------------------------------------
 		ShaderHandle CreateShader(const sg_shader_desc* desc)
 		{
-#ifdef ARI_SERVER
-			uint32_t i = 0;
-			return { core::HandleManager<ShaderHandle>::GetNewHandle(i), 0 };
-#else
-			const sg_shader shader = sg_make_shader(desc);
-			return { core::HandleManager<ShaderHandle>::CreateHandleByIndex(shader.id), shader.id };
-#endif
+			return ShaderHandle();
 		}
 
 		//------------------------------------------------------------------------------
 		void DestroyShader(ShaderHandle& shader)
 		{
-			sg_destroy_shader({ shader.Index });
-			core::HandleManager<ShaderHandle>::RemoveHandle(shader.Handle);
-			shader.Handle = shader.Index = core::aInvalidHandle;
 		}
-
-		//------------------------------------------------------------------------------
-		PipelineHandle CreatePipelineInternal(const PipelineSetup& setup)
-		{
-			sg_pipeline_desc desc;
-			core::Memory::Fill(&desc, sizeof(sg_pipeline_desc), 0);
-			desc.shader.id = setup.shader.Index;
-			for (int i = 0; i < ARI_MAX_SHADERSTAGE_BUFFERS; ++i)
-			{
-				desc.layout.buffers[i].step_func = sg_vertex_step(setup.layout.buffers[i].step);
-				desc.layout.buffers[i].step_rate = setup.layout.buffers[i].stepRate;
-				desc.layout.buffers[i].stride = setup.layout.buffers[i].stride;
-			}
-			for (int i = 0; i < ARI_MAX_VERTEX_ATTRIBUTES; ++i)
-			{
-				desc.layout.attrs[i].format = sg_vertex_format(setup.layout.attrs[i].format);
-				desc.layout.attrs[i].buffer_index = setup.layout.attrs[i].bufferIndex;
-				desc.layout.attrs[i].offset = setup.layout.attrs[i].offset;
-			}
-			desc.index_type = sg_index_type(setup.index_type);
-			desc.rasterizer.cull_mode = SG_CULLMODE_BACK;
-			desc.rasterizer.face_winding = SG_FACEWINDING_CCW;
-			desc.depth_stencil.depth_write_enabled = true;
-			desc.depth_stencil.depth_compare_func = SG_COMPAREFUNC_LESS_EQUAL;
-
-			// set blending
-			desc.blend.enabled = setup.blend.enabled;
-			desc.blend.src_factor_rgb = sg_blend_factor(setup.blend.src_factor_rgb);
-			desc.blend.dst_factor_rgb = sg_blend_factor(setup.blend.dst_factor_rgb);
-			desc.blend.op_rgb = sg_blend_op(setup.blend.op_rgb);
-			desc.blend.src_factor_alpha = sg_blend_factor(setup.blend.src_factor_alpha);
-			desc.blend.dst_factor_alpha = sg_blend_factor(setup.blend.dst_factor_alpha);
-			desc.blend.op_alpha = sg_blend_op(setup.blend.op_alpha);
-			desc.blend.color_write_mask = setup.blend.color_write_mask;
-			desc.blend.color_attachment_count = setup.blend.color_attachment_count;
-			desc.blend.color_format = sg_pixel_format(setup.blend.color_format);
-			desc.blend.depth_format = sg_pixel_format(setup.blend.depth_format);
-			core::Memory::Copy(setup.blend.blend_color, desc.blend.blend_color, 4 * sizeof(float));
-
-			const sg_pipeline pipeline = sg_make_pipeline(&desc);
-			return { core::HandleManager<PipelineHandle>::CreateHandleByIndex(pipeline.id), pipeline.id };
-		}
-
-		//------------------------------------------------------------------------------
-		core::Array<core::KeyValuePair<gfx::PipelineSetup, gfx::PipelineHandle>> g_aPipelines;
 
 		//------------------------------------------------------------------------------
 		PipelineHandle CreatePipeline(const PipelineSetup& setup)
 		{
-			for (auto& pair : g_aPipelines)
-			{
-				const auto& p = pair.Key();
-				if (p == setup)
-					return pair.Value();
-			}
-			const auto pipe = gfx::CreatePipelineInternal(setup);
-			g_aPipelines.Add({ setup, pipe });
-			return pipe;
+			return PipelineHandle();
 		}
 
 		//------------------------------------------------------------------------------
 		void DestroyPipeline(PipelineHandle& pipeline)
 		{
-			sg_destroy_pipeline({ pipeline.Index });
-			for (int i = 0; i < g_aPipelines.Size(); i++)
-			{
-				if (g_aPipelines[i].Value().Handle == pipeline.Handle)
-				{
-					g_aPipelines.Erase(i);
-					break;
-				}
-			}
-			core::HandleManager<PipelineHandle>::RemoveHandle(pipeline.Handle);
-			pipeline.Handle = pipeline.Index = core::aInvalidHandle;
 		}
 
 		//------------------------------------------------------------------------------
 		void SetPipelineBlendState(PipelineHandle& pipeline, const BlendState& blend)
 		{
-			for (int i = 0; i < g_aPipelines.Size(); i++)
-			{
-				if (g_aPipelines[i].Value().Handle == pipeline.Handle)
-				{
-					if (!(g_aPipelines[i].key.blend == blend))
-					{
-						// create a new pipeline
-						PipelineSetup setup = g_aPipelines[i].Key();
-						setup.blend = blend;
-						pipeline = CreatePipeline(setup);
-					}
-					return;
-				}
-			}
 		}
 
 		//------------------------------------------------------------------------------
 		void SetPipelineShader(PipelineHandle& pipeline, const ShaderHandle& shader)
 		{
-			for (int i = 0; i < g_aPipelines.Size(); i++)
-			{
-				if (g_aPipelines[i].Value().Handle == pipeline.Handle)
-				{
-					if (g_aPipelines[i].key.shader.Handle != shader.Handle)
-					{
-						// create a new pipeline
-						PipelineSetup setup = g_aPipelines[i].Key();
-						setup.shader = shader;
-						pipeline = CreatePipeline(setup);
-					}
-					return;
-				}
-			}
 		}
 
 
 		//------------------------------------------------------------------------------
 		void ApplyPipeline(const PipelineHandle& pipeline)
 		{
-			sg_apply_pipeline({ pipeline.Index });
 		}
 
 		void SetUniformData(const MaterialUniformInfo& ui, Material* material, float* data)
@@ -549,38 +366,26 @@ namespace ari
 		//------------------------------------------------------------------------------
 		void ApplyUniforms(ShaderStage _stage, int _ub_index, const void* _data, int _size)
 		{
-			sg_apply_uniforms((sg_shader_stage)_stage, _ub_index, _data, _size);
 		}
 
 		//------------------------------------------------------------------------------
 		void BeginDefaultPass(const io::WindowHandle& _handle)
 		{
-			sg_pass_action pass;
-			core::Memory::Fill(&pass, sizeof(sg_pass_action), 0);
-			pass.colors->action = SG_ACTION_CLEAR;
-			core::Memory::Copy(g_clear_color.f, pass.colors->val, sizeof(g_clear_color.f));
-
-			const core::RectI r = io::GetWindowSize(_handle);
-
-			sg_begin_default_pass(&pass, r.width, r.height);
 		}
 
 		//------------------------------------------------------------------------------
 		void EndPass()
 		{
-			sg_end_pass();
 		}
 
 		//------------------------------------------------------------------------------
 		void Commit()
 		{
-			sg_commit();
 		}
 
 		//------------------------------------------------------------------------------
 		void Draw(int base_element, int num_elements, int num_instances)
 		{
-			sg_draw(base_element, num_elements, num_instances);
 		}
 
 		//------------------------------------------------------------------------------

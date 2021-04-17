@@ -108,11 +108,12 @@ namespace ari::gfx
 		desc.mag_filter = SG_FILTER_LINEAR;
 
 		for (auto i = 0u; i < TinyKtx_NumberOfMipmaps(ctx); ++i) {
-			desc.content.subimage[0][i].size = TinyKtx_ImageSize(ctx, i);
-			void* pixels = core::Memory::Alloc(desc.content.subimage[0][i].size);
-			desc.content.subimage[0][i].ptr = pixels;
+			// TODO: update to the latest sokol syntax
+			//desc.content.subimage[0][i].size = TinyKtx_ImageSize(ctx, i);
+			//void* pixels = core::Memory::Alloc(desc.content.subimage[0][i].size);
+			//desc.content.subimage[0][i].ptr = pixels;
 
-			core::Memory::Copy(TinyKtx_ImageRawData(ctx, i), pixels, desc.content.subimage[0][i].size);
+			//core::Memory::Copy(TinyKtx_ImageRawData(ctx, i), pixels, desc.content.subimage[0][i].size);
 		}
 
 		TinyKtx_DestroyContext(ctx);
