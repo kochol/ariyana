@@ -3,9 +3,6 @@ using ari.io;
 
 namespace ari
 {
-
-	function void OnEventCB(ari_event* _event, ref WindowHandle _handle);
-
 	static
 	{
 		[Export, CLink, AlwaysInclude]
@@ -63,7 +60,7 @@ namespace ari
 		[Export, CLink, AlwaysInclude]
 		static void OnFail(char8* errMsg)
 		{
-			
+			ari.core.Logger.Error(errMsg);
 		}
 
 		static uint64 FrameNumber;
@@ -89,6 +86,12 @@ namespace ari
 			desc.fail_cb = => OnFail;
 			GfxSetup* setup = _app.GetGfxSetup();
 			desc.window_title = setup.window.Title == null ? "Ari 0.8" : setup.window.Title;
+			desc.width = setup.window.Width;
+			desc.height = setup.window.Height;
+			desc.high_dpi = setup.window.HighDpi;
+			desc.sample_count = setup.sample_count;
+			desc.swap_interval = setup.swap_interval;
+			desc.fullscreen = setup.window.FullScreen;
 
 			sokol.App.run(&desc);
 

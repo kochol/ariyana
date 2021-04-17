@@ -5,6 +5,7 @@ using curl;
 using System.Collections;
 using ari.io;
 using ari.en;
+using ari.core;
 
 namespace ari.user
 {

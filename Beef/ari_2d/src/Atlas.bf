@@ -1,6 +1,7 @@
 using System;
 using ari.io;
 using JSON_Beef.Serialization;
+using ari.core;
 
 namespace ari.en
 {
