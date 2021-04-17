@@ -10,3 +10,6 @@
 [submodule "Beef/deps/imgui-beef"]
 	path = Beef/deps/imgui-beef
 	url = https://github.com/kochol/imgui-beef.git
+[submodule ".\\Beef\\deps\\sokol-beef"]
+	path = .\\Beef\\deps\\sokol-beef
+	url = https://github.com/kochol/sokol-beef
