@@ -25,68 +25,6 @@ void ARI_FREE_MEM(void* _ptr)
 	ari::core::Memory::Free(_ptr);
 }
 
-// Pool allocator
-void* CreatePoolAllocator(uint32_t totalSize, uint32_t chunkSize)
-{
-	return ari::core::Memory::New<PoolAllocator>(totalSize, chunkSize);
-}
-
-void DeletePoolAllocator(void* obj)
-{
-	ari::core::Memory::Delete(reinterpret_cast<PoolAllocator*>(obj));
-}
-
-void* PoolAllocate(void* obj, uint32_t size, uint32_t alignment)
-{
-	return reinterpret_cast<PoolAllocator*>(obj)->Allocate(size, alignment);
-}
-
-void PoolFree(void* obj, void* ptr)
-{
-	reinterpret_cast<PoolAllocator*>(obj)->Free(ptr);
-}
-
-void PoolInit(void* obj)
-{
-	reinterpret_cast<PoolAllocator*>(obj)->Init();
-}
-
-void PoolReset(void* obj)
-{
-	reinterpret_cast<PoolAllocator*>(obj)->Reset();
-}
-
-// Free list allocator
-void* CreateFreeListAllocator(uint32_t totalSize, uint32_t pPolicy)
-{
-	return ari::core::Memory::New<FreeListAllocator>(totalSize, (FreeListAllocator::PlacementPolicy)pPolicy);
-}
-
-void DeleteFreeListAllocator(void* obj)
-{
-	ari::core::Memory::Delete(reinterpret_cast<FreeListAllocator*>(obj));
-}
-
-void* FreeListAllocate(void* obj, uint32_t size, uint32_t alignment)
-{
-	return reinterpret_cast<FreeListAllocator*>(obj)->Allocate(size, alignment);
-}
-
-void FreeListFree(void* obj, void* ptr)
-{
-	reinterpret_cast<FreeListAllocator*>(obj)->Free(ptr);
-}
-
-void FreeListInit(void* obj)
-{
-	reinterpret_cast<FreeListAllocator*>(obj)->Init();
-}
-
-void FreeListReset(void* obj)
-{
-	reinterpret_cast<FreeListAllocator*>(obj)->Reset();
-}
-
 // log functions
 void ari_log_debug(char* _text)
 {
