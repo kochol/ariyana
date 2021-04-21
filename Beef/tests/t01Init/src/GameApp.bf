@@ -51,8 +51,6 @@ namespace t01Init
 		public override void OnCleanup()
 		{
 			base.OnCleanup();
-			delete _renderSystem;
-			delete _sceneSystem;
 			delete _fs;
 			World.DeleteEntity(ref _entity);
 			delete _box;

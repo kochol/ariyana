@@ -1,59 +1,82 @@
 using System;
+using System.Diagnostics;
 
 namespace ari.core
 {
-	class PoolAllocator
+	class PoolAllocator: Allocator
 	{
-		void* obj = null;
 		bool valid = false;
+		struct  FreeHeader {};
+		typealias Node = StackLinkedList<FreeHeader>.Node;
+		StackLinkedList<FreeHeader> m_freeList;
+
+		void * m_start_ptr = null;
+		int m_chunkSize;
 
 		public bool Valid
 		{
 			get => valid;
 		}
 
-		[CLink]
-		static extern void* CreatePoolAllocator(uint32 totalSize, uint32 chunkSize);
-		[CLink]
-		static extern void DeletePoolAllocator(void* obj);
-		[CLink]
-		static extern void* PoolAllocate(void* obj, uint32 size, uint32 alignment);
-		[CLink]
-		static extern void PoolFree(void* obj, void* ptr);
-		[CLink]
-		static extern void PoolInit(void* obj);
-		[CLink]
-		static extern void PoolReset(void* obj);
-
-		public this(uint32 totalSize, uint32 chunkSize)
+		public this(uint32 totalSize, uint32 chunkSize): base(totalSize)
 		{
-			obj = CreatePoolAllocator(totalSize, chunkSize);
+			Debug.Assert(chunkSize >= 8, "Chunk size must be greater or equal to 8");
+			Debug.Assert(totalSize % chunkSize == 0, "Total Size must be a multiple of Chunk Size");
+			this.m_chunkSize = chunkSize;
 		}
 
 		public ~this()
 		{
-			DeletePoolAllocator(obj);
 		}
 
-		public void* Alloc(int size, int align)
+		public override void* Allocate(int size, int align)
 		{
-			return PoolAllocate(obj, (uint32)size, (uint32)align);
+			Debug.Assert(size == this.m_chunkSize, "Allocation size must be equal to chunk size");
+
+		    Node * freePosition = m_freeList.Pop();
+
+		    if (freePosition == null) // The pool allocator is full
+		        return null;
+
+		    m_used += m_chunkSize;
+		    m_peak = Math.Max(m_peak, m_used);
+
+			return (void*) freePosition;
 		}
 
-		public void Free(void* ptr)
+		public override void Free(void* ptr)
 		{
-			PoolFree(obj, ptr);
+			m_used -= m_chunkSize;
+
+			m_freeList.Push((Node *) ptr);
 		}
 
-		public void Init()
+		public override void Init()
 		{
-			PoolInit(obj);
+			m_start_ptr = new uint8[m_totalSize]* (?);
+			this.Reset();
 			valid = true;
 		}
 
 		public void Reset()
 		{
-			PoolReset(obj);
+			m_used = 0;
+			m_peak = 0;
+			// Create a linked-list with all free positions
+			int nChunks = m_totalSize / m_chunkSize;
+			for (int i = 0; i < nChunks; ++i)
+			{
+			    int address = (int) m_start_ptr + i * m_chunkSize;
+			    m_freeList.Push((Node *)(void*) address);
+			}
 		}
+
+#if BF_ENABLE_REALTIME_LEAK_CHECK
+		protected override void GCMarkMembers()
+		{
+			GC.Mark(m_start_ptr, m_totalSize);
+		}
+#endif
+
 	}
 }

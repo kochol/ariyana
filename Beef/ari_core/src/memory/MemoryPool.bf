@@ -1,4 +1,5 @@
 using System.Collections;
+using System;
 
 namespace ari.core
 {
@@ -31,7 +32,7 @@ namespace ari.core
 		{
 			for (int i = 0; i < allocators.Count; i++)
 			{
-				let r = allocators[i].Alloc(size, align);
+				let r = allocators[i].Allocate(size, align);
 				if (r != null)
 				{
 					objects.Add((int)r, i);
@@ -48,7 +49,7 @@ namespace ari.core
 			var a = new FreeListAllocator((uint32)LastGrow, .FIND_FIRST);
 			a.Init();
 			allocators.Add(a);
-			let r = a.Alloc(size, align);
+			let r = a.Allocate(size, align);
 			objects.Add((int)r, allocators.Count - 1);
 			return r;
 		}
