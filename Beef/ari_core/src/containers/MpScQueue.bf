@@ -162,5 +162,35 @@ namespace ari.core
 			_push_data = last_data.Next;
 		}
 
+		public bool TryPop(ref T item)
+		{
+			var data = _pop_data;
+			while (data != null)
+			{
+				if (data.TryPop(ref item))
+				{
+					_pop_data = data;
+					return true;
+				}
+				if (Volatile.Read(ref data.[Friend]_tail) >= data.Capacity)
+				{
+					data = data.Next;
+				}
+				else
+					break;
+			}
+			data = Volatile.Read(ref _head);
+			while (data != _pop_data)
+			{
+				if (data.TryPop(ref item))
+				{
+					_pop_data = data;
+					return true;
+				}
+				data = data.Next;
+			}
+			return false;
+		}
+
 	} // MpScQueue<T>
 }
