@@ -111,10 +111,9 @@ namespace ari.core
 					Volatile.Write(ref _push_data, data);
 					return;
 				}
-				let data_next = Volatile.Read(ref data.Next);
 				if (data.Capacity > maxCap)
 					maxCap = data.Capacity;
-				data = data_next;
+				data = Volatile.Read(ref data.Next);
 			}
 
 			// Create a new bin
@@ -149,6 +148,11 @@ namespace ari.core
 				data = data.Next;
 			}
 			return false;
+		}
+
+		public void Reset()
+		{
+			_push_data = _pop_data = _head;
 		}
 
 	} // MpScQueue<T>
