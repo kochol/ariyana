@@ -28,7 +28,6 @@ namespace ari.core
 				_max = _capacity;
 				_buff = buff;
 				Prev = prev;
-				Interlocked.Fence(.Release);
 			}
 
 			public bool Push(ref T item)
@@ -52,14 +51,15 @@ namespace ari.core
 
 			public bool TryPop(ref T item)
 			{
-				item = Interlocked.Exchange(ref _buff[_tail], default, .Acquire);
-				if (item == default)
+				let ret = Interlocked.Exchange(ref _buff[_tail], default, .Acquire);
+				if (ret == default)
 					return false;
 
 				if (++_tail >= _max)
 					_tail = 0;
 				let r = Interlocked.Sub(ref _count, 1, .Release);
 				Runtime.Assert(r >= 0);
+				item = ret;
 				return true;
 			}
 

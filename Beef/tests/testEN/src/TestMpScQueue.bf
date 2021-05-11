@@ -7,17 +7,20 @@ namespace testEN
 	class TestMpScQueue
 	{
 		const int _writers_count = 64;
+		const int _max_val = 100000;
 		Thread[] _writerThreads = null ~ delete _;
 		Thread _readerThread = null;
 		int32 _i = 0;
-		MpScQueue<int32> _queue = new MpScQueue<int32>() ~ delete _;
+		MpScQueue<int32> _queue = new MpScQueue<int32>(1024) ~ delete _;
+		bool[] _checks = new bool[_max_val] ~ delete _;
+		bool _run = true;
 
 		void WriteThread()
 		{
 			while (true)
 			{
 				var i = Interlocked.Add(ref _i, 1, .Acquire);
-				if (i > 100000)
+				if (i >= _max_val)
 					return;
 				_queue.Push(ref i);
 			}
@@ -26,15 +29,21 @@ namespace testEN
 		void ReadThread()
 		{
 			int32 i = 0;
-			int32 c = 2;
-			while(c < 100000)
+			int32 c = 1;
+			while(c < _max_val && _run)
 			{
 				if (_queue.TryPop(ref i))
 				{
-					//if (i != c)
+					if (_checks[i] == true)
 					{
 						Console.Write(i);
-						Console.Write("\t");
+						Console.Write("\t :D");
+					}
+					_checks[i] = true;
+					//if (i != c)
+					{
+						//Console.Write(i);
+						//Console.Write("\t");
 					}
 					c++;
 				}
@@ -46,17 +55,32 @@ namespace testEN
 			_writerThreads = new Thread[_writers_count];
 			
 			_readerThread = new Thread(new => ReadThread);
-			_readerThread.Start();
+			_readerThread.Start(false);
 
 			Thread.Sleep(20);
 
 			for (int i = 0; i < _writers_count; i++)
 			{
 				_writerThreads[i] = new Thread(new => WriteThread);
-				_writerThreads[i].Start(true);
+				_writerThreads[i].Start(false);
 			}
 
+			_readerThread.Join(1000);
+			_run = false;
+			for (int i = 1; i < _max_val; i++)
+			{
+				if (!_checks[i])
+					Console.WriteLine(i);
+			}
 			_readerThread.Join();
+			delete _readerThread;
+
+			for (int i = 0; i < _writers_count; i++)
+			{
+				_writerThreads[i].Join();
+				delete _writerThreads[i];
+			}
+
 		}
 	}
 }
