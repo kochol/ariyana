@@ -27,6 +27,7 @@ namespace ari.core
 
 		public ~this()
 		{
+			delete m_start_ptr;
 		}
 
 		public override void* Allocate(int size, int align)

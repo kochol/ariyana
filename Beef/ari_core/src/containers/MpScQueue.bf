@@ -31,9 +31,9 @@ namespace ari.core
 				Interlocked.Fence(.Release);
 			}
 
-			public bool Push(ref T item, out bool reset)
+			public bool Push(ref T item)
 			{
-				reset = false;
+				Runtime.Assert(item != default, "This queue can not store null or 0 values.");
 				let count = Interlocked.Add(ref _count, 1, .Acquire);
 				if (count >= _max)
 				{
@@ -43,34 +43,23 @@ namespace ari.core
 				}
 
 				/* increment the head, which gives us 'exclusive' access to that element */
-				let head = Interlocked.Add(ref _head, 1, .Acquire);
-				Runtime.Assert(_buff[head % _max] == default);
+				let head = Interlocked.Add(ref _head, 1, .Acquire) - 1;
 				let rv = Interlocked.Exchange(ref _buff[head % _max], item, .Release);
 				Runtime.Assert(rv == default);
-
-				let tail = Volatile.Read(ref _tail);
-				if (tail >= _max)
-				{
-					reset = true;
-					Volatile.Write(ref _tail, 0);
-				}
 
 				return true;
 			}
 
 			public bool TryPop(ref T item)
 			{
-				let tail = Volatile.Read(ref _tail);
-				if (tail >= _max)
+				item = Interlocked.Exchange(ref _buff[_tail], default, .Acquire);
+				if (item == default)
 					return false;
 
-				let ret = Interlocked.Exchange(ref _buff[tail], default, .Acquire);
-				if (ret == default)
-					return false;
-
-				Interlocked.Add(ref _tail, 1, .Acquire);
+				if (++_tail >= _max)
+					_tail = 0;
 				let r = Interlocked.Sub(ref _count, 1, .Release);
-				Runtime.Assert(r > 0);
+				Runtime.Assert(r >= 0);
 				return true;
 			}
 
@@ -89,48 +78,21 @@ namespace ari.core
 			_push_data = data;
 		}
 
-		void PushBinReseted()
+		public ~this()
 		{
-			_monitor.Enter();
-			defer _monitor.Exit();
-
-			// move current push bin to the last
-			if (_push_data.Next == null)
-				return;
-			var last_bin = _head;
-			while (last_bin.Next != null)
-			{
-				last_bin = last_bin.Next;
-			}
-			if (_push_data.Prev == null)
-			{
-				Volatile.Write(ref _head, _push_data.Next);
-				Volatile.Write(ref _push_data.Next.Prev, null);
-				Volatile.Write(ref _push_data.Next, null);
-				Volatile.Write(ref _push_data.Prev, last_bin);
-				Volatile.Write(ref last_bin.Next, _push_data);
-				return;
-			}
-			Volatile.Write(ref _push_data.Prev.Next, _push_data.Next);
-			Volatile.Write(ref _push_data.Next.Prev, _push_data.Prev);
-			Volatile.Write(ref _push_data.Next, null);
-			Volatile.Write(ref _push_data.Prev, last_bin);
-			Volatile.Write(ref last_bin.Next, _push_data);
+			delete _head;
 		}
 
 		public void Push(ref T item)
 		{
 			var data = Volatile.Read(ref _push_data);
 			var last_data = data;
-			bool reset;
 			int32 maxCap = 16;
 			while (data != null)
 			{
-				if (data.Push(ref item, out reset))
+				if (data.Push(ref item))
 				{
 					Volatile.Write(ref _push_data, data);
-					if (reset)
-						PushBinReseted();
 					return;
 				}
 				let data_next = Volatile.Read(ref data.Next);
@@ -141,13 +103,12 @@ namespace ari.core
 				data = data_next;
 			}
 			data = _head;
-			while (data != _push_data)
+			let push_data = Volatile.Read(ref _push_data);
+			while (data != push_data)
 			{
-				if (data.Push(ref item, out reset))
+				if (data.Push(ref item))
 				{
 					Volatile.Write(ref _push_data, data);
-					if (reset)
-						PushBinReseted();
 					return;
 				}
 				let data_next = Volatile.Read(ref data.Next);
@@ -157,9 +118,12 @@ namespace ari.core
 			}
 
 			// Create a new bin
-			Volatile.Write(ref last_data.Next, new MpScQueueBin(maxCap * 2, last_data));
-			last_data.Next.Push(ref item, out reset);
-			_push_data = last_data.Next;
+			_monitor.Enter();
+			if (last_data.Next == null)
+				Volatile.Write(ref last_data.Next, new MpScQueueBin(maxCap * 2, last_data));
+			last_data.Next.Push(ref item);
+			Volatile.Write(ref _push_data, last_data.Next);
+			_monitor.Exit();
 		}
 
 		public bool TryPop(ref T item)
@@ -172,12 +136,7 @@ namespace ari.core
 					_pop_data = data;
 					return true;
 				}
-				if (Volatile.Read(ref data.[Friend]_tail) >= data.Capacity)
-				{
-					data = data.Next;
-				}
-				else
-					break;
+				data = data.Next;
 			}
 			data = Volatile.Read(ref _head);
 			while (data != _pop_data)

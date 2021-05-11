@@ -7,6 +7,9 @@ namespace testEN
 	{
 		public static void Main()
 		{
+			var testQueue = new TestMpScQueue();
+			testQueue.Run();
+			delete testQueue;
 			var n = scope Node();
 			var n2 = Node.CreateComponent();
 			Console.WriteLine(typeof(Node).InstanceSize);

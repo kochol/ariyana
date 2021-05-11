@@ -3,7 +3,7 @@ Projects = {t01Init = {Path = "tests/t01Init"}, CurlBeef = {Path = "deps/CurlBee
 ExtraPlatforms = ["armv7-none-linux-android21"]
 
 [Workspace]
-StartupProject = "t01Init"
+StartupProject = "testEN"
 
 [Configs.Test.Win32]
 ConfigSelections = {t01Init = {Config = "Debug"}}
