@@ -119,11 +119,17 @@ namespace ari.core
 			// Create a new bin
 			_monitor.Enter();
 			if (last_data.Next == null)
-				Volatile.Write(ref last_data.Next, new MpScQueueBin(maxCap * 2, last_data));
-			last_data.Next.Push(ref item);
+			{
+				let new_bin = new MpScQueueBin(maxCap * 2, last_data);
+				Volatile.Write(ref last_data.Next, new_bin);
+			}
 			Volatile.Write(ref _push_data, last_data.Next);
 			_monitor.Exit();
-		}
+			if (!last_data.Next.Push(ref item))
+			{
+				Push(ref item);
+			}
+		} // Push
 
 		public bool TryPop(ref T item)
 		{
