@@ -11,7 +11,7 @@ namespace testEN
 		Thread[] _writerThreads = null ~ delete _;
 		Thread _readerThread = null;
 		int32 _i = 0;
-		MpScQueue<int32> _queue = new MpScQueue<int32>(1024) ~ delete _;
+		MpScQueue<int32> _queue = new MpScQueue<int32>() ~ delete _;
 		bool[] _checks = new bool[_max_val] ~ delete _;
 		bool _run = true;
 
@@ -48,6 +48,7 @@ namespace testEN
 					c++;
 				}
 			}
+
 		}
 
 		public void Run()

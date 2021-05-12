@@ -34,7 +34,7 @@ namespace ari.core
 			{
 				Runtime.Assert(item != default, "This queue can not store null or 0 values.");
 				let count = Interlocked.Add(ref _count, 1, .Acquire);
-				if (count >= _max)
+				if (count > _max)
 				{
 					// Queue is full
 					Interlocked.Sub(ref _count, 1, .Release);
@@ -85,7 +85,8 @@ namespace ari.core
 
 		public void Push(ref T item)
 		{
-			var data = Volatile.Read(ref _push_data);
+			let push_data = Volatile.Read(ref _push_data);
+			var data = push_data;
 			var last_data = data;
 			int32 maxCap = 16;
 			while (data != null)
@@ -103,7 +104,6 @@ namespace ari.core
 				data = data_next;
 			}
 			data = _head;
-			let push_data = Volatile.Read(ref _push_data);
 			while (data != push_data)
 			{
 				if (data.Push(ref item))
