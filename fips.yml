@@ -31,6 +31,9 @@ imports:
         git: https://github.com/kochol/imgui-beef.git
     sokol-beef:
         git: https://github.com/kochol/sokol-beef
+        branch: main
+    Atma-Json:
+        git: https://github.com/kochol/Atma.Json.git
 
 exports:
     header-dirs :
