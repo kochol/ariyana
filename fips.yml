@@ -19,6 +19,18 @@ imports:
         git: https://github.com/kochol/yojimbo.git
     fips-MetaStuff:
         git: https://github.com/kochol/fips-MetaStuff.git
+    pmfx-shader:
+        git: https://github.com/polymonster/pmfx-shader
+
+    # Beef modules
+    CurlBeef:
+        git: https://github.com/kochol/CurlBeef.git
+    Beef-Extensions:
+        git: https://github.com/kochol/Beef-Extensions-Lib.git
+    imgui-beef:
+        git: https://github.com/kochol/imgui-beef.git
+    sokol-beef:
+        git: https://github.com/kochol/sokol-beef
 
 exports:
     header-dirs :
