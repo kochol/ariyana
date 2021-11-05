@@ -131,7 +131,7 @@ namespace ari.en
 		// Components
 		////////////////////////////////////////////////
 
-		public void AddComponent<T>(ref EntityHandle _entity, ref ComponentHandle<T> _cmp) where T : IComponent
+		public void AddComponent<T>(ref EntityHandle _entity, ref ComponentHandle<T> _cmp) where T : IComponent, class
 		{
 			let cmpId = _cmp.Component.GetId();
 
@@ -153,7 +153,7 @@ namespace ari.en
 			Emit<OnComponentAssigned<T>>(ref OnComponentAssigned<T> { Entity = _entity, Component = _cmp.Component });
 		}
 
-		public void AddDerivedComponent<T, Base>(ref EntityHandle _entity, ref ComponentHandle<T> _cmp) where T : IComponent
+		public void AddDerivedComponent<T, Base>(ref EntityHandle _entity, ref ComponentHandle<T> _cmp) where T : IComponent, class
 			where Base : IComponent
 		{
 			let cmpId = _cmp.Component.GetBaseId();
@@ -193,14 +193,14 @@ namespace ari.en
 			return ComponentHandle<T>(HandleManager<Base>.CreateHandle((Base)(IComponent)cmp), cmp, => HandleManager<T>.IsValid);
 		}
 
-		public static void DeleteComponent<T>(ref ComponentHandle<T> _cmp) where T : IComponent, delete
+		public static void DeleteComponent<T>(ref ComponentHandle<T> _cmp) where T : IComponent, delete, class
 		{
 			var p = ObjectPool<T>.Pool;
 			delete:p _cmp.Component;
 			HandleManager<T>.RemoveHandle(ref _cmp.Handle);
 		}
 
-		public static void DeleteComponent<T, Base>(ref ComponentHandle<T> _cmp) where T : IComponent, delete
+		public static void DeleteComponent<T, Base>(ref ComponentHandle<T> _cmp) where T : IComponent, delete, class
 		{
 			var p = MemoryPool<Base>.Pool;
 			delete:p _cmp.Component;
@@ -212,7 +212,7 @@ namespace ari.en
 		List<List<ComponentHandle<IComponent>>> dispose_lists = new List<List<ComponentHandle<IComponent>>>() ~ DeleteContainerAndItems!(_);
 		Monitor dispose_lock = new Monitor() ~ delete _;
 
-		public void DisposeComponent<T>(ref ComponentHandle<T> _cmp) where T : IComponent
+		public void DisposeComponent<T>(ref ComponentHandle<T> _cmp) where T : IComponent, class
 		{
 			if (cmp_to_dispose == null)
 			{

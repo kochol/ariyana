@@ -17,7 +17,7 @@ namespace ari.en
 			isValid = isValidFn;
 		}
 
-		public ComponentHandle<TO> CastTo<TO>() where TO: IComponent
+		public ComponentHandle<TO> CastTo<TO>() where TO: IComponent, class
 		{
 			return ComponentHandle<TO>(Handle, (TO)(IComponent)Component, isValid);
 		}
