@@ -31,16 +31,6 @@ fips_begin_module(ari_io)
         fips_files(
             WindowServer.cpp
         )    
-    elseif (ARI_GLFW AND ARI_OPENGL)
-        fips_deps(glfw3)
-        fips_dir(private/glfw)
-        fips_files(
-            WindowGlfw.cpp
-        )
-        fips_dir(private/flextgl)
-        fips_files(
-            flextGL.h           flextGL.c
-        )
     else()
         fips_dir(private/sapp)
         fips_files(

@@ -18,7 +18,7 @@ namespace ari.en
 
 		public void AddComponent(Entity _entity, PropertyReplicator _pr)
 		{
-			AddPropertyReplicatorToWorld(_obj, ref _entity.Handle, ref _pr.[Friend]handle);
+			//AddPropertyReplicatorToWorld(_obj, ref _entity.Handle, ref _pr.[Friend]handle);
 		}
 	}
 }

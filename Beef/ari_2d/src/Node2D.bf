@@ -1,60 +1,18 @@
 using System;
+using ari.math;
 
 namespace ari.en
 {
-	[CRepr]
-	struct Node2dHandle
-	{	
-		public uint32 Handle = uint32.MaxValue;
-		public uint32 Index = uint32.MaxValue;
-		public void* _obj = null;
-		public Entity Owner = null;
-
-		[CLink]
-		static extern bool IsValidNode2D(ref uint32 _handle);
-
-		bool IsValid() mut
-		{
-			if (Handle == uint32.MaxValue || Index == uint32.MaxValue)
-				return false;
-
-			return IsValidNode2D(ref Handle);
-		}
-	}
-
+	[Component("Node2D")]
 	public class Node2D : Node
 	{
-		public Vector2* Position;
-		public float* Rotation;
-		public Vector2* Scale;
+		public float2 Position;
+		public float  Rotation;
+		public float2 Scale = .(1, 1);
 
-		protected Node2dHandle handle;
+		public virtual void Render(in int _frameTurnIndex) { }
 
-		// Constructor
-		public this(Node2dHandle _handle) : base(_handle._obj)
-		{
-			this.handle = _handle;
-		}
-
-		[CRepr]
-		struct Node2dMembers
-		{
-			public Vector2* Position;
-			public float* Rotation;
-			public Vector2* Scale;
-		}
-
-		[CLink]
-		static extern Node2dMembers GetNode2dMembers(void* _node);
-
-		// Init the members
-		protected virtual void Init()
-		{
-			Runtime.Assert(handle._obj != null);
-			var m = GetNode2dMembers(handle._obj);
-			Position = m.Position;
-			Rotation = m.Rotation;
-			Scale = m.Scale;
-		}
+		protected float4x4[3] final_mat;
+		protected bool is_renderable = false;
 	}
 }

@@ -3,36 +3,42 @@ using System.Collections;
 
 namespace ari.core
 {
-	class ObjectPool<T>
+	class ObjectPool
 	{
-		static List<PoolAllocator> allocators = new List<PoolAllocator>() ~ Shutdown();
-		static Dictionary<int, int> objects = new Dictionary<int, int>() ~ delete _;
+		List<PoolAllocator> allocators = new List<PoolAllocator>() ~ Shutdown();
+		Dictionary<int, int> objects = new Dictionary<int, int>() ~ delete _;
 
-		public static int MinGrow = 10;
-		public static int MaxGrow = 100;
-		static int LastGrow = MinGrow;
+		public int MinGrow = 100;
+		public int MaxGrow = 1000;
+		int LastGrow = MinGrow;
+		int data_size;
 
-		public static void Setup(int size)
+		protected this(int _data_size)
+		{
+			data_size = _data_size;
+		}
+
+		public void Setup(int count)
 		{
 			if (allocators.Count > 0)
 				return;
 
-			var a = new PoolAllocator((uint32)(size * sizeof(T)), (uint32)sizeof(T));
+			var a = new PoolAllocator((uint32)(count * data_size), (uint32)data_size);
 			a.Init();
 			allocators.Add(a);
-			LastGrow = size;
+			LastGrow = count;
 		}
 
-		public static void Shutdown()
+		public void Shutdown()
 		{
 			DeleteContainerAndItems!(allocators);
 		}
 
-		public static void* Alloc(int size, int align)
+		public void* Alloc(int size, int align)
 		{
 			for (int i = 0; i < allocators.Count; i++)
 			{
-				let r = allocators[i].Alloc(size, align);
+				let r = allocators[i].Allocate(size, align);
 				if (r != null)
 				{
 					objects.Add((int)r, i);
@@ -46,20 +52,29 @@ namespace ari.core
 			else if (LastGrow > MaxGrow)
 				LastGrow = MaxGrow;
 
-			var a = new PoolAllocator((uint32)(LastGrow * sizeof(T)), (uint32)sizeof(T));
+			var a = new PoolAllocator((uint32)(LastGrow * data_size), (uint32)data_size);
 			a.Init();
 			allocators.Add(a);
-			let r = a.Alloc(size, align);
+			let r = a.Allocate(size, align);
 			objects.Add((int)r, allocators.Count - 1);
 			return r;
 		}
 
-		public static void Free(void* ptr)
+		public void Free(void* ptr)
 		{
 			let i = (int)ptr;
 			let a = objects.GetAndRemove(i).Value.value;
 			allocators[a].Free(ptr);
 		}
 
+	}
+
+	class ObjectPool<T>
+	{
+		static ObjectPool pool = new [Friend]ObjectPool(typeof(T).InstanceSize) ~ delete _;
+
+		public static ObjectPool Pool {
+			get => pool;
+		}
 	}
 }

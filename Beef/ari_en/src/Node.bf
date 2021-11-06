@@ -1,60 +1,76 @@
 using System;
+using System.Collections;
 
-namespace ari
+namespace ari.en
 {
-	public class Node
+	[Component("Node")]
+	public class Node : IComponent
 	{
-		void* _obj;
-
-		String _name;
-
-		[CLink]
-		static extern void SetNodeName(void* _obj, char8* _name);
-
-		public String Name
-		{
-			get
-			{
-				return _name;
-			}
-			set
-			{
-				Runtime.Assert(_obj != null);
-				_name = value;
-				SetNodeName(_obj, _name);
+		String name = null ~ delete _;
+		public StringView Name {
+			get => name;
+			set {
+				if (name == null)
+					name = new String();
+				name.Set(value);
 			}
 		}
 
-		[CLink]
-		static extern char8* GetNodeName(void* _obj);
-
-		protected this(void* obj)
-		{
-			_obj = obj;
-			_name = new String(GetNodeName(_obj));
-		}
-
-		public ~this()
-		{
-			_obj = null;
-			delete _name;
-		}
-
-		[CLink]
-		static extern void NodeAddChild(void* _node, void* _child);
+		Dictionary<uint32, List<Node>> children = null ~ DeleteDictionaryAndValues!(_);
+		Dictionary<uint32, List<Node>> children_base = null ~ DeleteDictionaryAndValues!(_);
+		Node parent = null;
 
 		public void AddChild(Node _child)
 		{
-			NodeAddChild(_obj, _child._obj);
-		}
+			if (children == null)
+			{
+				children = new Dictionary<uint32, List<Node>>();
+			}
+			let id = _child.GetId();
+			if (!children.ContainsKey(_child.GetId()))
+				children.Add(id, new List<Node>());
+			children[id].Add(_child);
 
-		[CLink]
-		static extern void NodeRemoveChild(void* _node, void* _child);
+			let base_id = _child.GetBaseId();
+			if (id != base_id)
+			{
+				if (!children_base.ContainsKey(base_id))
+					children_base.Add(base_id, new List<Node>());
+				children_base[base_id].Add(_child);
+			}
+
+			_child.parent = this;
+		}
 
 		public void RemoveChild(Node _child)
 		{
-			NodeRemoveChild(_obj, _child._obj);
+			let id = _child.GetId();
+			bool removed = children[id].Remove(_child);
+			let base_id = _child.GetBaseId();
+			if (id != base_id)
+			{
+				children_base[base_id].Remove(_child);
+			}
+			if (removed)
+				_child.parent = null;
 		}
 
+		public bool HasChildWithId(uint32 _id)
+		{
+			if (children_base.ContainsKey(_id) && children_base[_id].Count > 0)
+				return true;
+			if (children.ContainsKey(_id) && children[_id].Count > 0)
+				return true;
+			return false;
+		}
+
+		public List<Node> GetChildren(uint32 _id)
+		{
+			if (children_base.ContainsKey(_id) && children_base[_id].Count > 0)
+				return children_base[_id];
+			if (children.ContainsKey(_id) && children[_id].Count > 0)
+				return children[_id];
+			return null;
+		}
 	}
 }

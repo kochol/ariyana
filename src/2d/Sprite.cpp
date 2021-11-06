@@ -74,7 +74,7 @@ namespace ari::en
 
 			// Create shader, pipeline and binding
 			gfx::PipelineSetup pipeline_setup;
-			pipeline_setup.shader = gfx::CreateShader(ari_sprite_shader_desc());
+			pipeline_setup.shader = gfx::CreateShader(ari_sprite_shader_desc(sg_backend::SG_BACKEND_D3D11));
 			// position
 			pipeline_setup.layout.attrs[0].format = gfx::VertexFormat::Float2;
 			// texCoord

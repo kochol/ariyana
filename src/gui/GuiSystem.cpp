@@ -4,10 +4,6 @@
 #include "cimgui/imgui/imgui.h"
 
 #ifndef ARI_SERVER
-#ifdef ARI_GLFW
-#define SOKOL_APP_IMPL
-#define SOKOL_NO_ENTRY
-#endif
 
 #include "sokol_app.h"
 

@@ -1,0 +1,7 @@
+FileVersion = 1
+
+[Project]
+Name = "ari_math"
+TargetType = "BeefLib"
+StartupObject = "ari_math.Program"
+DefaultNamespace = "ari.math"

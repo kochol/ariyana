@@ -1,0 +1,6 @@
+FileVersion = 1
+Dependencies = {corlib = "*", ari_en = "*", ari_gfx = "*"}
+
+[Project]
+Name = "testEN"
+StartupObject = "testEN.Program"

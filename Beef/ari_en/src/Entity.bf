@@ -1,43 +1,46 @@
 using System;
+using ari.core;
+using System.Collections;
 
 namespace ari.en
 {
-	[CRepr]
 	public struct EntityHandle
 	{
 		public uint32 Handle = uint32.MaxValue;
-		public uint32 Index = uint32.MaxValue;
-		public void* _entity = null;
+		public Entity Entity = null;
 
-		[CLink]
-		static extern bool IsValidEntity(ref uint32 _entityHandle);
+		public this() { }
+
+		public this(uint32 handle, Entity entity)
+		{
+			Handle = handle;
+			Entity = entity;
+		}
 
 		public bool IsValid() mut
 		{
-			if (Handle == uint32.MaxValue || Index == uint32.MaxValue)
+			if (Handle == uint32.MaxValue)
 				return false;
 
-			return IsValidEntity(ref Handle);
+			return HandleManager<Entity>.IsValid(ref Handle);
 		}
 	}
 
 	public class Entity: Node
 	{
-		public bool* Replicates;
-		public EntityHandle Handle;
+		public bool Replicates;
 		protected World world = null;
 
-		protected this(EntityHandle _handle): base(_handle._entity)
-		{
-			Handle = _handle;
-		}
+		protected Dictionary<uint32, // component id
+			List<uint32>> // component handle
+			components = new Dictionary<uint32, List<uint32>>() ~ DeleteDictionaryAndValues!(_);
 
-		[CLink]
-		static extern void DeleteEntityWorld(ref EntityHandle _entity);
+		protected this()
+		{
+		}
 
 		public ~this()
 		{
-			DeleteEntityWorld(ref Handle);
 		}
 	}
 }

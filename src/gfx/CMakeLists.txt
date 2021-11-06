@@ -32,12 +32,6 @@ fips_begin_module(ari_gfx)
         fips_files(
             gfx_server.cpp
         )
-    elseif (ARI_GLFW AND ARI_OPENGL)
-        add_definitions(-DARI_GLFW=1)
-        fips_dir(private/glfw)
-        fips_files(
-            gfx_glfw.cpp
-        )
     else()
         fips_dir(private/sapp)
         fips_files(

@@ -3,7 +3,7 @@ using System.Threading;
 
 namespace ari.core
 {
-public class SpScQueue<T> 
+	public class SpScQueue<T> 
 	{
 		class SpScQueueBin
 		{
@@ -67,21 +67,21 @@ public class SpScQueue<T>
 			}
 		} // class SpScQueueBin
 
-		SpScQueueBin _data;
+		SpScQueueBin _head;
 		SpScQueueBin _pop_data;
 		SpScQueueBin _push_data;
 
 		public this(int32 capacity = 16)
 		{
 			let data = new SpScQueueBin(capacity);
-			_data = data;
+			_head = data;
 			_pop_data = data;
 			_push_data = data;
 		}
 
 		public ~this()
 		{
-			delete _data;
+			delete _head;
 		}
 
 		void PushBinReseted()
@@ -89,14 +89,14 @@ public class SpScQueue<T>
 			// move current push bin to the last
 			if (_push_data.Next == null)
 				return;
-			var last_bin = _data;
+			var last_bin = _head;
 			while (last_bin.Next != null)
 			{
 				last_bin = last_bin.Next;
 			}
 			if (_push_data.Prev == null)
 			{
-				Volatile.Write(ref _data, _push_data.Next);
+				Volatile.Write(ref _head, _push_data.Next);
 				Volatile.Write(ref _push_data.Next.Prev, null);
 				Volatile.Write(ref _push_data.Next, null);
 				Volatile.Write(ref _push_data.Prev, last_bin);
@@ -127,11 +127,11 @@ public class SpScQueue<T>
 				}
 				if (data.Next == null)
 					last_data = data;
-				if (data.[Friend]Capacity > maxCap)
-					maxCap = data.[Friend]Capacity;
+				if (data.Capacity > maxCap)
+					maxCap = data.Capacity;
 				data = data.Next;
 			}
-			data = _data;
+			data = _head;
 			while (data != _push_data)
 			{
 				if (data.Push(ref item, out reset))
@@ -169,7 +169,7 @@ public class SpScQueue<T>
 				else
 					break;
 			}
-			data = Volatile.Read(ref _data);
+			data = Volatile.Read(ref _head);
 			while (data != _pop_data)
 			{
 				if (data.TryPop(ref item))

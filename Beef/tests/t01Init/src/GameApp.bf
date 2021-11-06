@@ -11,7 +11,7 @@ namespace t01Init
 		RenderSystem _renderSystem = new RenderSystem();
 		SceneSystem _sceneSystem = new SceneSystem();
 		FileSystemLocal _fs = new FileSystemLocal();
-		Entity _entity;
+		EntityHandle _entity;
 		BoxShape _box;
 		Camera _cam;
 
@@ -24,16 +24,16 @@ namespace t01Init
 			Io.RegisterFileSystem("file", _fs);
 
 			_entity = World.CreateEntity();
-			_world.AddEntity(_entity);
+			_world.AddEntity(ref _entity);
 
 			_cam = World.CreateCamera();
 			_cam.Position.x = _cam.Position.y = _cam.Position.z = 3.0f;
 			_cam.Target.z = 0.0f;
-			_world.AddComponent(_entity, _cam);
+			//_world.AddComponent(ref _entity, ref _cam);
 
 			_box = World.CreateBoxShape();
 			*_box.Texture = Gfx.LoadTexture("res:baboon.png");
-			_world.AddComponent(_entity, _box);
+			//_world.AddComponent(_entity, _box);
 		}
 
 		public override void OnFrame(float _elapsedTime)
@@ -51,10 +51,8 @@ namespace t01Init
 		public override void OnCleanup()
 		{
 			base.OnCleanup();
-			delete _renderSystem;
-			delete _sceneSystem;
 			delete _fs;
-			delete _entity;
+			World.DeleteEntity(ref _entity);
 			delete _box;
 			delete _cam;
 			delete _world;

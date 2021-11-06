@@ -12,7 +12,6 @@ namespace ari.net
 		{
 			m_network_type = SystemNetworkType.Server;
 			_obj = CreateServerSystem();
-			IsNativeSystem = true;
 		}
 
 		[CLink]
@@ -58,8 +57,8 @@ namespace ari.net
 		protected override void Configure(World _world)
 		{
 			base.Configure(_world);
-			SetOnClientConnectCb(_obj, _world.[Friend]_obj, Internal.UnsafeCastToPtr(this),
-				 => OnClientConnectedCb, => OnClientDisconnectedCb);
+			//SetOnClientConnectCb(_obj, _world.[Friend]_obj, Internal.UnsafeCastToPtr(this),
+				// => OnClientConnectedCb, => OnClientDisconnectedCb);
 		}
 
 		[CLink]

@@ -13,7 +13,6 @@ else()
 endif()
 
 option(ARI_OPENGL "Use OpenGL as rendering backend" ON)
-option(ARI_GLFW "Use glfw on desktop" OFF)
 option(ARI_C99 "Create c99 API for engine" OFF)
 option(ARI_SERVER "Create headless engine" OFF)
 

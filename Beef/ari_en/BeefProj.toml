@@ -5,6 +5,7 @@ Dependencies = {corlib = "*", ari_core = "*", ari_io = "*"}
 Name = "ari_en"
 TargetType = "BeefLib"
 StartupObject = "ari_en.Program"
+DefaultNamespace = "ari.en"
 
 [Configs.Debug.Win64]
 LibPaths = ["$(ProjectDir)/../dist/win64/Debug/cari_en.lib", "$(ProjectDir)/../dist/win64/Debug/ari_en.lib", "$(ProjectDir)/../dist/win64/Debug/yojimbo.lib", "$(ProjectDir)/../dist/win64/Debug/mbedcrypto.lib", "$(ProjectDir)/../dist/win64/Debug/mbedtls.lib", "$(ProjectDir)/../dist/win64/Debug/mbedx509.lib", "$(ProjectDir)/../dist/win64/Debug/sodium.lib"]

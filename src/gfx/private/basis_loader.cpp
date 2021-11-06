@@ -117,14 +117,16 @@ namespace ari::gfx
                 transcoder.get_image_level_info(buffer->Data(), buffer->Size(), info, i, m);
                 uint32_t image_sz = info.m_total_blocks * bytes_per_block;
                
-                desc.content.subimage[i][m].size = image_sz;
-                void* pixels = core::Memory::Alloc(image_sz);
-                desc.content.subimage[i][m].ptr = pixels;
+                // TODO: fix the errors
+                //desc.content.subimage[i][m].size = image_sz;
+                //void* pixels = core::Memory::Alloc(image_sz);
+                //desc.content.subimage[i][m].ptr = pixels;
 
-                transcoder.transcode_image_level(buffer->Data(), buffer->Size(),
+                // TODO: fix the errors
+                /*transcoder.transcode_image_level(buffer->Data(), buffer->Size(),
                     i, m,
                     pixels, info.m_total_blocks,
-                    tx_fmt);
+                    tx_fmt);*/
             }
         }
 

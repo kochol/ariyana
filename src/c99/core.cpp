@@ -25,68 +25,6 @@ void ARI_FREE_MEM(void* _ptr)
 	ari::core::Memory::Free(_ptr);
 }
 
-// Pool allocator
-void* CreatePoolAllocator(uint32_t totalSize, uint32_t chunkSize)
-{
-	return ari::core::Memory::New<PoolAllocator>(totalSize, chunkSize);
-}
-
-void DeletePoolAllocator(void* obj)
-{
-	ari::core::Memory::Delete(reinterpret_cast<PoolAllocator*>(obj));
-}
-
-void* PoolAllocate(void* obj, uint32_t size, uint32_t alignment)
-{
-	return reinterpret_cast<PoolAllocator*>(obj)->Allocate(size, alignment);
-}
-
-void PoolFree(void* obj, void* ptr)
-{
-	reinterpret_cast<PoolAllocator*>(obj)->Free(ptr);
-}
-
-void PoolInit(void* obj)
-{
-	reinterpret_cast<PoolAllocator*>(obj)->Init();
-}
-
-void PoolReset(void* obj)
-{
-	reinterpret_cast<PoolAllocator*>(obj)->Reset();
-}
-
-// Free list allocator
-void* CreateFreeListAllocator(uint32_t totalSize, uint32_t pPolicy)
-{
-	return ari::core::Memory::New<FreeListAllocator>(totalSize, (FreeListAllocator::PlacementPolicy)pPolicy);
-}
-
-void DeleteFreeListAllocator(void* obj)
-{
-	ari::core::Memory::Delete(reinterpret_cast<FreeListAllocator*>(obj));
-}
-
-void* FreeListAllocate(void* obj, uint32_t size, uint32_t alignment)
-{
-	return reinterpret_cast<FreeListAllocator*>(obj)->Allocate(size, alignment);
-}
-
-void FreeListFree(void* obj, void* ptr)
-{
-	reinterpret_cast<FreeListAllocator*>(obj)->Free(ptr);
-}
-
-void FreeListInit(void* obj)
-{
-	reinterpret_cast<FreeListAllocator*>(obj)->Init();
-}
-
-void FreeListReset(void* obj)
-{
-	reinterpret_cast<FreeListAllocator*>(obj)->Reset();
-}
-
 // log functions
 void ari_log_debug(char* _text)
 {
@@ -153,35 +91,4 @@ double ari_tm_us(uint64_t ticks)
 double ari_tm_ns(uint64_t ticks)
 {
 	return sx_tm_ns(ticks);
-}
-
-// SPSC Queue
-void* ari_queue_spsc_create(int item_sz, int capacity)
-{
-	return sx_queue_spsc_create(sx_alloc_malloc(), item_sz, capacity);
-}
-
-void ari_queue_spsc_destroy(void* queue)
-{
-	sx_queue_spsc_destroy((sx_queue_spsc*)queue, sx_alloc_malloc());
-}
-
-bool ari_queue_spsc_produce(void* queue, const void* data)
-{
-	return sx_queue_spsc_produce((sx_queue_spsc*)queue, data);
-}
-
-bool ari_queue_spsc_consume(void* queue, void* data)
-{
-	return sx_queue_spsc_consume((sx_queue_spsc*)queue, data);
-}
-
-bool ari_queue_spsc_grow(void* queue)
-{
-	return sx_queue_spsc_grow((sx_queue_spsc*)queue, sx_alloc_malloc());
-}
-
-bool ari_queue_spsc_full(const void* queue)
-{
-	return sx_queue_spsc_full((sx_queue_spsc*)queue);
 }

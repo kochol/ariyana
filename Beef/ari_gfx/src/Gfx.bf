@@ -1,5 +1,6 @@
 using System;
 using ari.io;
+using ari.math;
 
 namespace ari
 {
@@ -49,28 +50,86 @@ namespace ari
 
 	public static class Gfx
 	{
-		[CLink]
-		public static extern bool SetupGfx(GfxSetup* setup);
+		static float4x4 g_mView, g_mProj, g_mViewProj, g_mWorld, g_mWorldViewProj;
+		public static RectI ViewPortSize { get; set; }
 
-		[CLink]
-		public static extern TextureHandle LoadTexture(char8* path);
+		public static void SetupGfx(GfxSetup* _setup)
+		{
+			sokol.Gfx.Desc desc = .();
+			desc.context = sokol.Glue.context();
+			sokol.Gfx.setup(&desc);
+		}
 
-		[CLink]
-		public static extern void SetClearColor(ref Color _color);
+		public static void SetViewMatrix(in float4x4 _view)
+		{
+			g_mView = _view;
+			g_mViewProj = g_mProj * g_mView;
+		}
 
-		[CLink]
-		public static extern void BeginDefaultPass();
+		public static float4x4 GetViewMatrix()
+		{
+			return g_mView;
+		}
 
-		[CLink]
-		public static extern void EndPass();
+		//------------------------------------------------------------------------------
+		public static void SetProjMatrix(in float4x4 _proj)
+		{
+			g_mProj = _proj;
+			g_mViewProj = g_mProj * g_mView;
+		}
 
-		[CLink]
-		public static extern void Commit();
+		//------------------------------------------------------------------------------
+		public static float4x4 GetProjMatrix()
+		{
+			return g_mProj;
+		}
 
-		[CLink]
-		public static extern void Present();
+		public static void SetWorldMatrix(in float4x4 _world)
+		{
+			g_mWorld = _world;
+			g_mWorldViewProj = g_mViewProj * g_mWorld;
+		}
 
-		[CLink]
-		public static extern void SetWindowSize(int32 _width, int32 _height, bool _soft);
+		public static float4x4 GetWorldMatrix()
+		{
+			return g_mWorld;
+		}
+
+		//------------------------------------------------------------------------------
+		public static void SetViewProjMatrix(in float4x4 _view, in float4x4 _proj)
+		{
+			g_mView = _view;
+			g_mProj = _proj;
+			g_mViewProj = g_mProj * g_mView;
+		}
+
+		//------------------------------------------------------------------------------
+		public static float4x4 GetViewProjMatrix()
+		{
+			return g_mViewProj;
+		}
+
+		public static void SetWorldViewProjMatrix(in float4x4 _world, in float4x4 _view, in float4x4 _proj)
+		{
+			SetViewProjMatrix(_view, _proj);
+			SetWorldMatrix(_world);
+		}
+
+		public static float4x4 GetWorldViewProjMatrix()
+		{
+			return g_mWorldViewProj;
+		}
+
+		public static TextureHandle LoadTexture(String _path)
+		{
+			// TODO: Add texture loading
+			return .();
+		}
+
+		public static void LoadShader(String _path)
+		{
+
+		}
+
 	}
 }

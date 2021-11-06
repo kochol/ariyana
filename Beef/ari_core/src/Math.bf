@@ -188,14 +188,4 @@ namespace ari
 		public static readonly Color RAYWHITE = Color(0.9607f, 0.9607f, 0.9607f, 1.0f);
 	}
 
-	[CRepr]
-	public struct Rect<T>
-	{
-		public T x;
-		public T y;
-		public T width;
-		public T height;
-	}
-
-	typealias RectI = Rect<int32>;
 }

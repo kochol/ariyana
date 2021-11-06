@@ -1,6 +1,6 @@
 using System;
 
-namespace ari
+namespace ari.io
 {
 	public class FileSystemLocal : FileSystemBase
 	{
