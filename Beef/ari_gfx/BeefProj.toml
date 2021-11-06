@@ -5,6 +5,7 @@ Dependencies = {corlib = "*", ari_io = "*", ari_math = "*", sokol-beef = "*"}
 Name = "ari_gfx"
 TargetType = "BeefLib"
 StartupObject = "ari_gfx.Program"
+DefaultNamespace = "ari.gfx"
 
 [Configs.Debug.Win64]
 LibPaths = ["opengl32.lib", "gdi32.lib", "shell32.lib", "User32.lib", "$(ProjectDir)/../dist/win64/Debug/cari_gfx.lib", "$(ProjectDir)/../dist/win64/Debug/ari_gfx.lib"]
