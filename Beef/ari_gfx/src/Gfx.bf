@@ -126,5 +126,10 @@ namespace ari
 			return .();
 		}
 
+		public static void LoadShader(String _path)
+		{
+
+		}
+
 	}
 }
