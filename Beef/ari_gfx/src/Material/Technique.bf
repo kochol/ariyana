@@ -16,8 +16,8 @@ namespace ari.gfx.Material
 
 		public String name;
 
-		public int permutation_id;
-		public int permutation_option_mask;
+		public uint32 permutation_id;
+		public uint32 permutation_option_mask;
 		public List<Permutation> permutations;
 
 		public List<TextureSample> texture_sampler_bindings;

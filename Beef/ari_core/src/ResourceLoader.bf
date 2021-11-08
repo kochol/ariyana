@@ -6,6 +6,6 @@ namespace ari.core
 	{
 		public bool CanLoadResource(String path);
 
-		public T LoadResource<T>(String path);
+		public T LoadResource<T>(String path) where T : Resource;
 	}
 }

@@ -3,7 +3,7 @@ using System;
 
 namespace ari.core
 {
-	class HandleManager<T>
+	public class HandleManager<T>
 	{
 		static Dictionary<uint32, T> handles = new Dictionary<uint32, T>() ~ delete _;
 		static uint32 LastHandle = 0;

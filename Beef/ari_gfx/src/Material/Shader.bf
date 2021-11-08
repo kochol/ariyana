@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
+using ari.core;
 
 namespace ari.gfx.Material
 {
-	class Shader
+	class Shader : Resource
 	{
 		public String cmdline;
 
