@@ -3,6 +3,7 @@ namespace ari.core
 	public enum ResourceState
 	{
 		NotLoaded,
+		Loading,
 		Failed,
 		NotFound,
 		Ready,
