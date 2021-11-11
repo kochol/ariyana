@@ -19,13 +19,20 @@ namespace ari::io
 	{
 		fs_local_instance = this;
 		
-		// Set root: and res:
+		// Set root:, ari: and res:
+		core::StringBuilder engine = ARI_ENGINE_PATH;
 		core::StringBuilder root = "file://";
+#if SX_PLATFORM_ANDROID
+		engine = "file:/";
+#endif
+		engine.Append("/ari_assets/");
+
 #if !SX_PLATFORM_ANDROID
 		root.Append(sx_os_path_pwd(nullptr, 0));
 		root.Append("/");
 #endif
 		AddAssigns("root:", root.GetString());
+		AddAssigns("ari:", engine.GetString());
 
 #if !SX_PLATFORM_ANDROID
 		root.Append("assets/");
@@ -33,7 +40,7 @@ namespace ari::io
 		// On android platform assets folder is inside the APK
 		root.Set("file://assets/");
 #endif
-		AddAssigns("res:", root.GetString());
+		AddAssigns("res:", root.GetString());		
 	}
 
 	//------------------------------------------------------------------------------

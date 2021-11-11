@@ -5,4 +5,5 @@ fips_begin_module(ari_fs_local)
     fips_files(
         FileSystemLocal.hpp     FileSystemLocal.cpp
     )
+    add_definitions(-DARI_ENGINE_PATH="${PROJECT_SOURCE_DIR}")
 fips_end_module()
