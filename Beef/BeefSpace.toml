@@ -1,9 +1,10 @@
 FileVersion = 1
 Projects = {t01Init = {Path = "tests/t01Init"}, CurlBeef = {Path = "../../CurlBeef"}, BeefExtensionsLib = {Path = "../../Beef-Extensions"}, ari_core = {Path = "ari_core"}, ari_2d = {Path = "ari_2d"}, ari_gfx = {Path = "ari_gfx"}, ari_en = {Path = "ari_en"}, ari_io = {Path = "ari_io"}, ari_net = {Path = "ari_net"}, ari_gui = {Path = "ari_gui"}, ari_3d = {Path = "ari_3d"}, ari_net_3d = {Path = "ari_net_3d"}, t02Network = {Path = "tests/t02Network"}, t02NetworkClient = {Path = "tests/t02NetworkClient"}, ari_user = {Path = "ari_user"}, ari_biz = {Path = "ari_biz"}, testEN = {Path = "tests/testEN"}, ari_math = {Path = "ari_math"}, sokol-beef = {Path = "../../sokol-beef"}, "Atma.Json" = {Path = "../../Atma-Json/src/Atma.Json"}}
+WorkspaceFolders = {Engine = ["ari_2d", "ari_3d", "ari_biz", "ari_core", "ari_en", "ari_gfx", "ari_gui", "ari_io", "ari_math", "ari_net", "ari_net_3d", "ari_user"], "Engine/Deps" = ["Atma.Json", "BeefExtensionsLib", "CurlBeef", "sokol-beef"], Tests = ["t01Init", "t02Network", "t02NetworkClient", "testEN"]}
 ExtraPlatforms = ["armv7-none-linux-android21"]
 
 [Workspace]
-StartupProject = "t01Init"
+StartupProject = "testEN"
 
 [Configs.Test.Win32]
 ConfigSelections = {t01Init = {Config = "Debug"}}

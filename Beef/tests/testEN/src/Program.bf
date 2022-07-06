@@ -10,17 +10,16 @@ namespace testEN
 			var testQueue = new TestMpScQueue();
 			testQueue.Run();
 			delete testQueue;
-			var n = scope Node();
-			var n2 = Node.CreateComponent();
+			var n = Node.CreateComponent();
 			Console.WriteLine(typeof(Node).InstanceSize);
-			Console.WriteLine(n.GetId());
+			Console.WriteLine(n.Component.GetId());
 			Test<Node>();
 			Console.Read();
 		}
 
-		static void Test<T>() where T: IComponent
+		static ComponentHandle<IComponent> Test<T>() where T: IComponent
 		{
-			T.CreateComponentGeneral();
+			return T.CreateComponentGeneral();
 		}
 	}
 }

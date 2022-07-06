@@ -55,7 +55,7 @@ namespace ari.net
 
 			RPC rpc = null;
 			if (dic_q_rpcs[_rpc.function_hash].Count > 0)
-				rpc = dic_q_rpcs[_rpc.function_hash].Dequeue();
+				rpc = dic_q_rpcs[_rpc.function_hash].PopFront();
 			if (rpc == null)
 				rpc = _rpc.Clone();
 
@@ -75,7 +75,7 @@ namespace ari.net
 			rpc_t.refcount--;
 			if (rpc_t.refcount == 0)
 			{
-				dic_q_rpcs[rpc_t.rpc.function_hash].Enqueue(rpc_t.rpc);
+				dic_q_rpcs[rpc_t.rpc.function_hash].Add(rpc_t.rpc);
 				dic_rpcs.Remove(_index);
 			}
 		}

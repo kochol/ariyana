@@ -153,7 +153,7 @@ namespace ari.en
 			Emit<OnComponentAssigned<T>>(ref OnComponentAssigned<T> { Entity = _entity, Component = _cmp.Component });
 		}
 
-		public void AddDerivedComponent<T, Base>(ref EntityHandle _entity, ref ComponentHandle<T> _cmp) where T : IComponent, class
+		public void AddComponent<T, Base>(ref EntityHandle _entity, ref ComponentHandle<T> _cmp) where T : IComponent, class
 			where Base : IComponent
 		{
 			let cmpId = _cmp.Component.GetBaseId();
