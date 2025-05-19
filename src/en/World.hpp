@@ -141,7 +141,7 @@ namespace ari::en
 			{
 				for (auto* base : subscribers.ValueAtIndex(found))
 				{
-					auto* sub = reinterpret_cast<EventSubscriber<T>*>(base);
+					auto* sub = static_cast<EventSubscriber<T>*>(base);
 					sub->Receive(this, event);
 				}
 			}
